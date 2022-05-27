@@ -54,4 +54,10 @@ trait InputRender
 		return Html::el('div')->class('input-group')
 			->addHtml($prepend . $input . $append . $errorMessage);
 	}
+	
+	
+	public function render()
+	{
+		return $this->getCoreControl();
+	}
 }

@@ -63,10 +63,10 @@
 						{else}
 							{var $result = $form->processInput($input)}
 
-							{if !$input instanceof \Nette\Forms\Controls\HiddenField}
+							{if $input instanceof \Nette\Forms\Controls\HiddenField}
 								{input $input}
 							{elseif $result}
-								{inputCore $input}
+								{$input->render()}
 							{else}
 								{var $submits[] = $input}
 							{/if}
