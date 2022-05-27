@@ -43,6 +43,8 @@ class Form extends \Nette\Application\UI\Form
 
 	public function getSubmitterArray(): array
 	{
+		$submitterArray = [];
+		
 		foreach($this->getBoxes() as $box)
 		{
 			$submitterArray[] = array_merge($submitterArray, $box->getSubmitterArray());
