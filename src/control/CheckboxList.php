@@ -111,9 +111,9 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList
 			->class('form-group row')
 			->addHtml($labelDiv . $inputDiv);
 		
-		if($input->getOption('id'))
+		if($this->getOption('id'))
 		{
-			$outerDiv->id($input->getOption('id'));
+			$outerDiv->id($this->getOption('id'));
 		}
 		
 		return $outerDiv;

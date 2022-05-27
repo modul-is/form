@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ModulIS\Form\Control;
 
 use Nette\Utils\Html;
-use ModulIS\Form\Helper;
 
 class MultiWhisperer extends MultiSelectBox
 {

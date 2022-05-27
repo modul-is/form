@@ -85,9 +85,9 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox
 			->class('form-group row')
 			->addHtml($inputDiv);
 		
-		if($input->getOption('id'))
+		if($this->getOption('id'))
 		{
-			$outerDiv->id($input->getOption('id'));
+			$outerDiv->id($this->getOption('id'));
 		}
 		
 		return $outerDiv;
