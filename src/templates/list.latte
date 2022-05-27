@@ -1,0 +1,11 @@
+<div class="container">
+	<div class="row">
+		<div n:foreach="$input->getItems() as $key => $label" class="form-check form-check-inline mr-0 {if $input->itemsPerRow}col-{12/$input->itemsPerRow}{else}col-12{/if} {$classList}">
+			<label>
+				{input $input:$key:, class => $classList}
+				<span class="label-text ">{label $input:$key: /}</span>
+				{include tooltip.latte, input => $input, key => $key}
+			</label>
+		</div>
+	</div>
+</div>

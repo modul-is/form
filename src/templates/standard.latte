@@ -1,0 +1,17 @@
+{if !empty($input->prepend) || !empty($input->append)}
+	<div class="input-group">
+		{if $input->prepend}
+			<div class="input-group-prepend">
+				<span class="input-group-text">{$input->prepend|noescape}</span>
+			</div>
+		{/if}
+		{input $input, class => $classList}
+		{if $input->append}
+			<div class="input-group-append">
+				<span class="input-group-text">{$input->append|noescape}</span>
+			</div>
+		{/if}
+	</div>
+{else}	
+	{input $input, class => $classList}
+{/if}
