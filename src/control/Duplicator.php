@@ -107,7 +107,7 @@ class Duplicator extends \ModulIS\Form\Container
 	}
 
 
-	protected function createContainer(): ?DuplicatorContainer
+	protected function createContainer(): ?\ModulIS\Form\DuplicatorContainer
 	{
 		$class = self::$containerClass;
 		return new $class;
@@ -281,7 +281,7 @@ class Duplicator extends \ModulIS\Form\Container
 
 	public function addSubmit(string $name, $caption = null): SubmitButton
 	{
-		return $this[$name] = new DuplicatorCreateSubmit($caption);
+		return $this[$name] = new \ModulIS\Form\DuplicatorContainer($caption);
 	}
 
 
