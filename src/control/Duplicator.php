@@ -281,7 +281,7 @@ class Duplicator extends \ModulIS\Form\Container
 
 	public function addSubmit(string $name, $caption = null): SubmitButton
 	{
-		return $this[$name] = new \ModulIS\Form\DuplicatorContainer($caption);
+		return $this[$name] = new DuplicatorCreateSubmit($caption);
 	}
 
 
