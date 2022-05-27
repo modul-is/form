@@ -8,6 +8,11 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 {
 	protected bool $renderManually = false;
 
+	
+	protected function beforeRender()
+	{
+	}
+	
 
 	public function render()
 	{
