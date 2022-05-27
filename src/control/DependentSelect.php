@@ -28,7 +28,7 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox
 	
 	public function render()
 	{
-		if($this->getOption('hide') || !$this->autoRenderSkip)
+		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
 			return null;
 		}

@@ -70,7 +70,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox
 	
 	public function render()
 	{
-		if($this->getOption('hide') || !$this->autoRenderSkip)
+		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
 			return null;
 		}

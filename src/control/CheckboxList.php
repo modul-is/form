@@ -90,7 +90,7 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList
 	
 	public function render()
 	{
-		if($this->getOption('hide') || !$this->autoRenderSkip)
+		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
 			return null;
 		}

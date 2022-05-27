@@ -20,7 +20,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput
 	
 	public function render()
 	{
-		if($this->getOption('hide') || !$this->autoRenderSkip)
+		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
 			return null;
 		}

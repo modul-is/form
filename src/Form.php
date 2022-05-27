@@ -47,7 +47,7 @@ class Form extends \Nette\Application\UI\Form
 		
 		foreach($this->getBoxes() as $box)
 		{
-			$submitterArray[] = array_merge($submitterArray, $box->getSubmitterArray());
+			$submitterArray = array_merge($submitterArray, $box->getSubmitterArray());
 		}
 		
 		return $submitterArray;

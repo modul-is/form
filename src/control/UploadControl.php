@@ -76,7 +76,7 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl
 	
 	public function render()
 	{
-		if($this->getOption('hide') || !$this->autoRenderSkip)
+		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
 			return null;
 		}
