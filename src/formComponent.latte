@@ -17,7 +17,7 @@
 							<div class="alert alert-danger">
 								{icon exclamation-triangle} Container inputs not implemented yet.
 							</div>
-						{elseif $input instanceof \ModulIS\Form\Duplicator}
+						{elseif $input instanceof \ModulIS\Form\Control\Duplicator}
 							<div id="container{$input->name|capitalize}" class="card card-accent-primary">
 								{if $input->getTitle()}
 									<div class="card-header">
@@ -78,9 +78,9 @@
 
 			<div class="card-footer">
 				{foreach $submits as $submit}
-					{if $submit instanceof \ModulIS\Form\Link}
+					{if $submit instanceof \ModulIS\Form\Control\Link}
 						{$submit->getControl()}
-					{elseif $submit instanceof \ModulIS\Form\Duplicator}
+					{elseif $submit instanceof \ModulIS\Form\Control\Duplicator}
 					{else}
 						<button formnovalidate n:name="$submit" class="btn {$submit->getControlPrototype()->__get('class')} {if !empty($submit->color)}btn-{$submit->color}{else}btn-default{/if}" {if $submit->getOption('id')}id="{$submit->getOption('id')}"{/if}>
 							{if !empty($submit->icon)}

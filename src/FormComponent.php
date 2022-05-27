@@ -17,8 +17,10 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 	public function render()
 	{
 		$this->beforeRender();
+		
+		$reflection = new \Nette\Application\UI\ComponentReflection(self::class);
 
-		$template = $this->getLatteName($this->getReflection()->getParentClass()->getFileName());
+		$template = $this->getLatteName($reflection->getFileName());
 
 		if($this->renderManually)
 		{

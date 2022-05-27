@@ -54,7 +54,7 @@ class Form extends \Nette\Application\UI\Form
 		{
 			return 'templates/hidden.latte';
 		}
-		elseif($input instanceof Button || $input instanceof SubmitButton || $input instanceof Link)
+		elseif($input instanceof Control\Button || $input instanceof Control\SubmitButton || $input instanceof Control\Link)
 		{
 			return false;
 		}
