@@ -65,7 +65,7 @@ final class Box
 				continue;
 			}
 			
-			$controlArray = $control;
+			$controlArray[] = $control;
 		}
 		
 		return $controlArray;
@@ -83,7 +83,7 @@ final class Box
 		{
 			if($control instanceof Control\Button || $control instanceof Control\SubmitButton || $control instanceof Control\Link)
 			{
-				$controlArray = $control;
+				$controlArray[] = $control;
 			}
 		}
 		
