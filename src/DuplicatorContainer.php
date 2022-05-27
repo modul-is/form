@@ -6,8 +6,8 @@ namespace ModulIS\Form;
 
 class DuplicatorContainer extends Container
 {
-	public function addSubmit(string $name, $caption = null): SubmitButton
+	public function addSubmit(string $name, $caption = null): Control\DuplicatorRemoveSubmit
 	{
-		return $this[$name] = new DuplicatorRemoveSubmit($caption);
+		return $this[$name] = new Control\DuplicatorRemoveSubmit($caption);
 	}
 }
