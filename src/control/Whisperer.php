@@ -20,7 +20,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 	public array|\Closure|null $onChangeCallback = null;
 
-	private array $parents;
+	private $parents;
 
 	private int $delay = 500;
 

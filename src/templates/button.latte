@@ -1,8 +1,0 @@
-<div n:if="!$input->getOption('hide')" n:class="col-sm-12">
-	<button n:name="$input" class="btn {$input->getControlPrototype()->__get('class')} {if !empty($input->color)}btn-{$input->color}{else}btn-default{/if}" {if $input->getOption('id')}id="{$input->getOption('id')}"{/if}>
-		{if !empty($input->icon)}
-			{icon $input->icon}
-		{/if}
-		{$input->getLabel()}
-	</button>
-</div>
