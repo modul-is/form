@@ -71,9 +71,9 @@ class Form extends \Nette\Application\UI\Form
 		return $this;
 	}
 
-	public function addHidden(string $name, $default = null): Controls\Hidden
+	public function addHidden(string $name, $default = null): Control\Hidden
 	{
-		return $this[$name] = (new Controls\Hidden)
+		return $this[$name] = (new Control\Hidden)
 			->setDefaultValue($default);
 	}
 	
