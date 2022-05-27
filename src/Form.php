@@ -41,23 +41,14 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	/**
-	 * Call a right renderer
-	 */
-	public function processInput($input)
+	public function getSubmitterArray(): array
 	{
-		if($input->getOption('template'))
+		foreach($this->getBoxes() as $box)
 		{
-			return $input->getOption('template');
+			$submitterArray = array_merge($submitterArray, $box->getSubmitterArray());
 		}
-		elseif($input instanceof Control\Button || $input instanceof Control\SubmitButton || $input instanceof Control\Link)
-		{
-			return false;
-		}
-		else
-		{
-			return 'templates/input.latte';
-		}
+		
+		return $submitterArray;
 	}
 
 

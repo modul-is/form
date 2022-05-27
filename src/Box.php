@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
-use Nette;
+use ModulIS\Form\Control;
 
 final class Box
 {
-	use Nette\SmartObject;
-
 	protected \SplObjectStorage $controls;
 
 	private array $options = [];
@@ -45,11 +43,51 @@ final class Box
 			}
 		}
 	}
-
-
+	
+	
 	public function getControls(): array
 	{
 		return iterator_to_array($this->controls);
+	}
+
+
+	public function getInputArray(): array
+	{
+		$controlArray = [];
+		
+		/**
+		 * Skip submitters
+		 */
+		foreach(iterator_to_array($this->controls) as $control)
+		{
+			if($control instanceof Control\Button || $control instanceof Control\SubmitButton || $control instanceof Control\Link)
+			{
+				continue;
+			}
+			
+			$controlArray = $control;
+		}
+		
+		return $controlArray;
+	}
+	
+	
+	public function getSubmitterArray(): array
+	{
+		$controlArray = [];
+		
+		/**
+		 * Only submitters
+		 */
+		foreach(iterator_to_array($this->controls) as $control)
+		{
+			if($control instanceof Control\Button || $control instanceof Control\SubmitButton || $control instanceof Control\Link)
+			{
+				$controlArray = $control;
+			}
+		}
+		
+		return $controlArray;
 	}
 
 

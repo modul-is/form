@@ -1,7 +1,5 @@
 {snippet form}
 	{form form class => 'form-horizontal ' . ($form->color ? $form->color) . ($form->ajax ? ' ajax'),  style=> 'margin-bottom: 0;', novalidate => $form->noValidate}
-		{var $submits = []}
-
 		{foreach $form->getBoxes() as $boxTitle => $box}
 			<div class="card" {if $box->getOption('id')}id="{$box->getOption('id')}"{/if}>
 				{if $boxTitle || $form->title}
@@ -10,9 +8,7 @@
 					</div>
 				{/if}
 				<div class="card-body">
-					{foreach $box->getControls() as $input}
-						{continueIf !empty($input->autoRenderSkip)}
-
+					{foreach $box->getInputArray() as $input}
 						{if $input instanceof \ModulIS\Form\Container && !$input instanceof \ModulIS\Form\Duplicator}
 							<div class="alert alert-danger">
 								{icon exclamation-triangle} Container inputs not implemented yet.
@@ -61,14 +57,10 @@
 								</div>
 							</div>
 						{else}
-							{var $result = $form->processInput($input)}
-
 							{if $input instanceof \Nette\Forms\Controls\HiddenField}
 								{input $input}
-							{elseif $result}
-								{$input->render()}
 							{else}
-								{var $submits[] = $input}
+								{$input->render()}
 							{/if}
 						{/if}
 					{/foreach}
@@ -79,7 +71,7 @@
 		{/foreach}
 
 			<div class="card-footer">
-				{foreach $submits as $submit}
+				{foreach $form->getSubmitterArray() as $submit}
 					{if $submit instanceof \ModulIS\Form\Control\Link}
 						{$submit->getControl()}
 					{elseif $submit instanceof \ModulIS\Form\Control\Duplicator}
