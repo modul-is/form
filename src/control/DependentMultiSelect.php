@@ -6,6 +6,8 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 
+use Nette\Utils\Html;
+
 class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBox
 {
 	use Helper\InputGroup;

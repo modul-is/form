@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
+use Nette\Utils\Html;
 
 class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox
 {

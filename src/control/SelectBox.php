@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
+use Nette\Utils\Html;
 
 class SelectBox extends \Nette\Forms\Controls\SelectBox
 {
