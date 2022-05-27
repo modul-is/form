@@ -71,7 +71,13 @@ class Form extends \Nette\Application\UI\Form
 		return $this;
 	}
 
-
+	public function addHidden(string $name, $default = null): Controls\Hidden
+	{
+		return $this[$name] = (new Controls\Hidden)
+			->setDefaultValue($default);
+	}
+	
+	
 	public function addText(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label, $maxLength))

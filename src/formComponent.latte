@@ -64,7 +64,7 @@
 							{var $result = $form->processInput($input)}
 
 							{if $result}
-								{include $result, input => $input}
+								{inputCore $input}
 							{else}
 								{var $submits[] = $input}
 							{/if}
