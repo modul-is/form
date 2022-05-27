@@ -9,59 +9,14 @@
 				{/if}
 				<div class="card-body">
 					{foreach $box->getInputArray() as $input}
-						{if $input instanceof \ModulIS\Form\Container && !$input instanceof \ModulIS\Form\Duplicator}
+						{if $input instanceof \ModulIS\Form\Container && !$input instanceof \ModulIS\Form\Control\Duplicator}
 							<div class="alert alert-danger">
 								{icon exclamation-triangle} Container inputs not implemented yet.
 							</div>
-						{elseif $input instanceof \ModulIS\Form\Control\Duplicator}
-							<div id="container{$input->name|capitalize}" class="card card-accent-primary">
-								{if $input->getTitle()}
-									<div class="card-header">
-										{$input->getTitle()}
-									</div>
-								{/if}
-								<div class="card-body">
-									{foreach $input->getComponents() as $multiKey => $multiContainer}
-										{var $multiPosition = $iterator->getCounter()}
-										{if $multiContainer instanceof  Nette\Forms\Controls\SubmitButton}
-										{else}
-											{foreach $multiContainer->getComponents() as $multiInput}
-												{if $multiInput instanceof \Nette\Forms\Controls\SubmitButton}
-													<button type="submit" name="{$input->getName()}[{$multiContainer->getName()}][{$multiInput->getName()}]" class="btn btn-xs btn-danger float-right {$form->ajax ? 'ajax'}" formnovalidate="">
-														{icon times} {$multiInput->caption}
-													</button>
-													<div class="clearfix"></div>
-												{else}
-													{var $result = $form->processInput($multiInput)}
-
-													{if $result}
-														{include $form->processInput($multiInput), input => $multiInput}
-													{else}
-														Container inputs not implemented yet.
-													{/if}
-												{/if}
-												{if $iterator->isLast()}
-													<hr />
-												{/if}
-											{/foreach}
-										{/if}
-									{/foreach}
-								</div>
-								<div class="card-footer">
-									{if !$input instanceof \Nette\Forms\Controls\HiddenField && $input->getCurrentGroup()}
-
-									{/if}
-									<button type="submit" name="{$input->getName()}[add]" class="btn btn-primary float-left btn-xs {$form->ajax ? 'ajax'}" value="Přidat" formnovalidate="" data-nette-validation-scope="[&quot;multiplier&quot;]" label="Přidat" {if $input[add]->isDisabled()}disabled{/if}>
-										{if $input[add]->isDisabled()}{icon info}{else}{icon plus}{/if} {$input[add]->caption}
-									</button>
-								</div>
-							</div>
+						{elseif $input instanceof \Nette\Forms\Controls\HiddenField}
+							{input $input}
 						{else}
-							{if $input instanceof \Nette\Forms\Controls\HiddenField}
-								{input $input}
-							{else}
-								{$input->render()}
-							{/if}
+							{$input->render()}
 						{/if}
 					{/foreach}
 				</div>
@@ -74,7 +29,6 @@
 				{foreach $form->getSubmitterArray() as $submit}
 					{if $submit instanceof \ModulIS\Form\Control\Link}
 						{$submit->getControl()}
-					{elseif $submit instanceof \ModulIS\Form\Control\Duplicator}
 					{else}
 						<button formnovalidate n:name="$submit" class="btn {$submit->getControlPrototype()->__get('class')} {if !empty($submit->color)}btn-{$submit->color}{else}btn-default{/if}" {if $submit->getOption('id')}id="{$submit->getOption('id')}"{/if}>
 							{if !empty($submit->icon)}

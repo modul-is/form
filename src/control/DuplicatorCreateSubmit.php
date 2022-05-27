@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Control;
 
-use ModulIS\Form\Helper;
+use Nette\Utils\Html;
 
 class DuplicatorCreateSubmit extends SubmitButton
 {
@@ -29,5 +29,29 @@ class DuplicatorCreateSubmit extends SubmitButton
 
 			$button->getForm()->onSuccess = [];
 		};
+	}
+	
+	
+	public function render()
+	{
+		/** @var Duplicator $duplicator */
+		$duplicator = $this->lookup(Duplicator::class);
+			
+		$attributes = [
+			'name' => $duplicator->getName() . '[add]',
+			'value' => 'Přidat',
+			'formnovalidate' => '',
+			'data-nette-validation-scope' => '["multiplier"]',
+			'label' => 'Přidat',
+			'type' => 'submit'
+		];
+		
+		$icon = \Kravcik\Macros\FontAwesomeMacro::renderIcon($this->isDisabled() ? 'info' : 'plus');
+		
+		return Html::el('button')
+			->class('btn btn-primary float-left btn-xs ' . ($this->getForm()->ajax ? 'ajax' : ''))
+			->addAttributes($attributes)
+			->disabled($this->isDisabled())
+			->addHtml($icon . $this->getCaption());
 	}
 }
