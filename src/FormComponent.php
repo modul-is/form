@@ -43,6 +43,32 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 
 		return implode(DIRECTORY_SEPARATOR, $array);
 	}
+	
+	
+	/**
+	 * Magic fucntion for render functions, render latte file with the same name as component and name of called function
+	 */
+	public function __call($name, $arguments)
+	{
+		if(\Nette\Utils\Strings::startsWith($name, 'render'))
+		{
+			$array = explode(DIRECTORY_SEPARATOR, $this->getReflection()->getFileName());
+
+			end($array);
+
+			/**
+			 * Strip 'render' from called function name and put the rest after name of component eg. renderJs -> componentNameJs
+			 */
+			$array[key($array)] = lcfirst(str_replace('.php', ucfirst(str_replace('render', '', $name)) . '.latte', $array[key($array)]));
+
+			$this->template->setFile(implode(DIRECTORY_SEPARATOR, $array));
+			$this->template->render();
+		}
+		else
+		{
+			parent::__call($name, $arguments);
+		}
+	}
 
 
 	public function getForm()
