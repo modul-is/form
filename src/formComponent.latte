@@ -27,16 +27,7 @@
 
 			<div class="card-footer">
 				{foreach $form->getSubmitterArray() as $submit}
-					{if $submit instanceof \ModulIS\Form\Control\Link}
-						{$submit->getControl()}
-					{else}
-						<button formnovalidate n:name="$submit" class="btn {$submit->getControlPrototype()->__get('class')} {if !empty($submit->color)}btn-{$submit->color}{else}btn-default{/if}" {if $submit->getOption('id')}id="{$submit->getOption('id')}"{/if}>
-							{if !empty($submit->icon)}
-								{icon $submit->icon}
-							{/if}
-							{$submit->getCaption()}
-						</button>
-					{/if}
+					{$submit->render()}
 				{/foreach}
 			</div>
 		{/form}
