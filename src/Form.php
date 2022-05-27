@@ -50,10 +50,6 @@ class Form extends \Nette\Application\UI\Form
 		{
 			return $input->getOption('template');
 		}
-		elseif($input instanceof \Nette\Forms\Controls\HiddenField)
-		{
-			return 'templates/hidden.latte';
-		}
 		elseif($input instanceof Control\Button || $input instanceof Control\SubmitButton || $input instanceof Control\Link)
 		{
 			return false;

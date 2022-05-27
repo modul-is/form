@@ -28,7 +28,7 @@ class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBo
 	
 	public function render()
 	{
-		if($this->getOption('hide'))
+		if($this->getOption('hide') || !$this->autoRenderSkip)
 		{
 			return null;
 		}

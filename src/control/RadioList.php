@@ -89,7 +89,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList
 	
 	public function render()
 	{
-		if($this->getOption('hide'))
+		if($this->getOption('hide') || !$this->autoRenderSkip)
 		{
 			return null;
 		}

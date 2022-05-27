@@ -20,7 +20,7 @@ class TextArea extends \Nette\Forms\Controls\TextArea
 	
 	public function render()
 	{
-		if($this->getOption('hide'))
+		if($this->getOption('hide') || !$this->autoRenderSkip)
 		{
 			return null;
 		}

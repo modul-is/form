@@ -20,7 +20,7 @@ class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox
 	
 	public function render()
 	{
-		if($this->getOption('hide'))
+		if($this->getOption('hide') || !$this->autoRenderSkip)
 		{
 			return null;
 		}

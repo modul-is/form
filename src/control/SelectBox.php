@@ -20,7 +20,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox
 	
 	public function render()
 	{
-		if($this->getOption('hide'))
+		if($this->getOption('hide') || !$this->autoRenderSkip)
 		{
 			return null;
 		}
