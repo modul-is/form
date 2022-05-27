@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
+use Nette\Utils\Html;
 
 class TextInput extends \Nette\Forms\Controls\TextInput
 {
@@ -15,4 +16,36 @@ class TextInput extends \Nette\Forms\Controls\TextInput
 	use Helper\Label;
 	use Helper\InputRender;
 	use Helper\AutoRenderSkip;
+	
+	
+	public function render()
+	{
+		if($this->getOption('hide'))
+		{
+			return null;
+		}
+		
+		$label = $this->getCoreLabel();
+		
+		$labelDiv = Html::el('div')
+			->class('col-sm-4 control-label align-self-center')
+			->addHtml($label);
+		
+		$input = $this->getCoreControl();
+		
+		$inputDiv = Html::el('div')
+			->class('col-sm-8')
+			->addHtml($input);
+		
+		$outerDiv = Html::el('div')
+			->class('form-group row')
+			->addHtml($labelDiv . $inputDiv);
+		
+		if($input->getOption('id'))
+		{
+			$outerDiv->id($input->getOption('id'));
+		}
+		
+		return $outerDiv;
+	}
 }
