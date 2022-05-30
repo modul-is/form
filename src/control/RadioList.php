@@ -93,6 +93,11 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 		{
 			return '';
 		}
+		
+		if($this->getOption('template'))
+		{
+			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
+		}
 
 		$label = $this->getCoreLabel();
 

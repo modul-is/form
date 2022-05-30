@@ -24,6 +24,11 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 		{
 			return '';
 		}
+		
+		if($this->getOption('template'))
+		{
+			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
+		}
 
 		$label = $this->getCoreLabel();
 

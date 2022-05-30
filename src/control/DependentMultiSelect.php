@@ -32,6 +32,11 @@ class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBo
 		{
 			return '';
 		}
+		
+		if($this->getOption('template'))
+		{
+			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
+		}
 
 		$label = $this->getCoreLabel();
 

@@ -16,4 +16,12 @@ trait ControlPart
 	{
 		return $this->getCoreLabel();
 	}
+	
+	
+	public function setTemplate(string $path): static
+	{
+		$this->setOption('template', $path);
+		
+		return $this;
+	}
 }

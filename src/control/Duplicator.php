@@ -54,8 +54,13 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	}
 
 
-	public function render(): Html
+	public function render(): Html|string
 	{
+		if($this->getOption('template'))
+		{
+			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
+		}
+		
 		if($this->getTitle())
 		{
 			$header = Html::el('div')
