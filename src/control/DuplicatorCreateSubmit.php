@@ -48,8 +48,11 @@ class DuplicatorCreateSubmit extends SubmitButton
 
 		$icon = \Kravcik\Macros\FontAwesomeMacro::renderIcon($this->isDisabled() ? 'info' : 'plus');
 
+		/** @var \ModulIS\Form\Form $form */
+		$form = $this->getForm();
+		
 		return Html::el('button')
-			->class('btn btn-primary float-left btn-xs ' . ($this->getForm()->ajax ? 'ajax' : ''))
+			->class('btn btn-primary float-left btn-xs ' . ($form->ajax ? 'ajax' : ''))
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
 			->addHtml($icon . $this->getCaption());

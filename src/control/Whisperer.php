@@ -306,26 +306,13 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 	}
 
 
-	/**
-	 * Adds a validation condition based on another control a returns new branch.
-	 *
-	 * @throws \Exception
-	 */
-	public function addConditionOn(\Nette\Forms\Control $control, $validator, $value = null): \Nette\Forms\Rules
-	{
-		throw new \Exception("AddConditionOn() doesn't work with Whisperer");
-
-//		return parent::addConditionOn($control, $validator, $value);
-	}
-
-
 	public function validate(): void
 	{
 		parent::validate();
 
 		foreach($this->getRules() as $rule)
 		{
-			if($rule->control == $this && $rule->validator == Form::FILLED && in_array($this->getValue(), [null, false, ''], true))
+			if($rule->control == $this && $rule->validator == \ModulIS\Form\Form::FILLED && in_array($this->getValue(), [null, false, ''], true))
 			{
 				$this->addError(\Nette\Forms\Validator::formatMessage($rule, true), false);
 			}

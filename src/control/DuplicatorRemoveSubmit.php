@@ -45,9 +45,12 @@ class DuplicatorRemoveSubmit extends SubmitButton
 			'formnovalidate' => '',
 			'type' => 'submit'
 		];
+		
+		/** @var \ModulIS\Form\Form $form */
+		$form = $this->getForm();
 
 		$button = Html::el('button')
-			->class('btn btn-xs btn-danger float-right ' . ($this->getForm()->ajax ? 'ajax' : ''))
+			->class('btn btn-xs btn-danger float-right ' . ($form->ajax ? 'ajax' : ''))
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
 			->addHtml(\Kravcik\Macros\FontAwesomeMacro::renderIcon('times') . $this->getCaption());

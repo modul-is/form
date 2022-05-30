@@ -23,7 +23,7 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton
 			->name($this->getName())
 			->class('btn ' . $input->getAttribute('class') . ' btn-' . $color)
 			->type('submit')
-			->formnovalidate('')
+			->formnovalidate(true)
 			->addHtml($this->icon ? \Kravcik\Macros\FontAwesomeMacro::renderIcon($this->icon, []) . '&nbsp;' : '')
 			->addHtml($this->getCaption());
 
