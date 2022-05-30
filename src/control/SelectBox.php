@@ -18,14 +18,13 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 
-
 	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
 			return '';
 		}
-		
+
 		if($this->getOption('template'))
 		{
 			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);

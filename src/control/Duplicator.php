@@ -27,7 +27,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	private array $created = [];
 
 	private array|null $httpPost = null;
-	
+
 	private array $options = [];
 
 
@@ -55,8 +55,8 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 		$this->createDefault = $createDefault;
 		$this->forceDefault = $forceDefault;
 	}
-	
-	
+
+
 	public function setOption(string $key, $value): self
 	{
 		if ($value === null)
@@ -84,12 +84,12 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 		{
 			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
 		}
-		
+
 		if($this->autoRenderSkip === true)
 		{
 			return '';
 		}
-		
+
 		if($this->getTitle())
 		{
 			$header = Html::el('div')

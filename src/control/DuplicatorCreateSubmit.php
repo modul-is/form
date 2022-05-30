@@ -50,7 +50,7 @@ class DuplicatorCreateSubmit extends SubmitButton
 
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
-		
+
 		return Html::el('button')
 			->class('btn btn-primary float-left btn-xs ' . ($form->ajax ? 'ajax' : ''))
 			->addAttributes($attributes)

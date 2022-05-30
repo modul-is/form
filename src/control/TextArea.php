@@ -24,7 +24,7 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable
 		{
 			return '';
 		}
-		
+
 		if($this->getOption('template'))
 		{
 			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);

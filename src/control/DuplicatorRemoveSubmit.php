@@ -45,7 +45,7 @@ class DuplicatorRemoveSubmit extends SubmitButton
 			'formnovalidate' => '',
 			'type' => 'submit'
 		];
-		
+
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
 

@@ -12,8 +12,8 @@ class Hidden extends \Nette\Forms\Controls\HiddenField implements Renderable
 	{
 		return $this->getControl();
 	}
-	
-	
+
+
 	public function render(): Html
 	{
 		return $this->getCoreControl();
