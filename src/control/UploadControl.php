@@ -72,36 +72,36 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl
 		return Html::el('div')->class('input-group')
 			->addHtml($prepend . $wrapDiv . $append . $errorMessage);
 	}
-	
-	
+
+
 	public function render()
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
 			return null;
 		}
-		
+
 		$label = $this->getCoreLabel();
-		
+
 		$labelDiv = Html::el('div')
 			->class('col-sm-4 control-label align-self-center')
 			->addHtml($label);
-		
+
 		$input = $this->getCoreControl();
-		
+
 		$inputDiv = Html::el('div')
 			->class('col-sm-8')
 			->addHtml($input);
-		
+
 		$outerDiv = Html::el('div')
 			->class('form-group row')
 			->addHtml($labelDiv . $inputDiv);
-		
+
 		if($input->getOption('id'))
 		{
 			$outerDiv->id($input->getOption('id'));
 		}
-		
+
 		return $outerDiv;
 	}
 }

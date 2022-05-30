@@ -41,8 +41,8 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton
 
 		return $button;
 	}
-	
-	
+
+
 	public function render()
 	{
 		return $this->getCoreControl();

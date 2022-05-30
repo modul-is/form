@@ -32,29 +32,29 @@ class DuplicatorRemoveSubmit extends SubmitButton
 			$duplicator->removeComponent($button->parent);
 		};
 	}
-	
-	
+
+
 	public function render()
 	{
 		/** @var Duplicator $duplicator */
 		$duplicator = $this->lookup(Duplicator::class);
 		$duplicatorContainer = $this->lookup(\ModulIS\Form\DuplicatorContainer::class);
-			
+
 		$attributes = [
 			'name' => $duplicator->getName() . '[' . $duplicatorContainer->getName() . ']' . '[' . $this->getName() . ']',
 			'formnovalidate' => '',
 			'type' => 'submit'
-		];	
-		
+		];
+
 		$button = Html::el('button')
 			->class('btn btn-xs btn-danger float-right ' . ($this->getForm()->ajax ? 'ajax' : ''))
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
 			->addHtml(\Kravcik\Macros\FontAwesomeMacro::renderIcon('times') . $this->getCaption());
-		
+
 		$clearfix = Html::el('div')
 			->class('clearfix');
-		
+
 		return $button . $clearfix;
 	}
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
-use ModulIS\Form\Control;
 
 class Container extends \Nette\Forms\Container
 {

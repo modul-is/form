@@ -33,8 +33,8 @@ class Button extends \Nette\Forms\Controls\Button
 
 		return $button;
 	}
-	
-	
+
+
 	public function render()
 	{
 		return $this->getCoreControl();

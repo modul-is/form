@@ -14,7 +14,6 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox
 	use Helper\ControlPart;
 	use Helper\AutoRenderSkip;
 
-
 	public function getCoreLabel()
 	{
 		return null;
@@ -66,30 +65,30 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox
 				->addHtml($errorMessage);
 		}
 	}
-	
-	
+
+
 	public function render()
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
 			return null;
 		}
-		
+
 		$input = $this->getCoreControl();
-		
+
 		$inputDiv = Html::el('div')
 			->class('col-sm-8 offset-sm-4')
 			->addHtml($input);
-		
+
 		$outerDiv = Html::el('div')
 			->class('form-group row')
 			->addHtml($inputDiv);
-		
+
 		if($this->getOption('id'))
 		{
 			$outerDiv->id($this->getOption('id'));
 		}
-		
+
 		return $outerDiv;
 	}
 }

@@ -8,16 +8,16 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 {
 	protected bool $renderManually = false;
 
-	
+
 	protected function beforeRender()
 	{
 	}
-	
+
 
 	public function render()
 	{
 		$this->beforeRender();
-		
+
 		$reflection = new \Nette\Application\UI\ComponentReflection(self::class);
 
 		$template = $this->getLatteName($reflection->getFileName());
@@ -35,8 +35,8 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 		$this->template->form = $this->getComponent('form');
 		$this->template->render();
 	}
-	
-	
+
+
 	/**
 	 * Return path to latte file for given class path
 	 */
@@ -50,8 +50,8 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 
 		return implode(DIRECTORY_SEPARATOR, $array);
 	}
-	
-	
+
+
 	/**
 	 * Magic fucntion for render functions, render latte file with the same name as component and name of called function
 	 */

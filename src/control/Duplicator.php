@@ -52,10 +52,10 @@ class Duplicator extends \ModulIS\Form\Container
 		$this->createDefault = $createDefault;
 		$this->forceDefault = $forceDefault;
 	}
-	
-	
+
+
 	public function render()
-	{		
+	{
 		if($this->getTitle())
 		{
 			$header = Html::el('div')
@@ -66,30 +66,30 @@ class Duplicator extends \ModulIS\Form\Container
 		{
 			$header = null;
 		}
-		
+
 		$inputs = null;
-		
+
 		foreach($this->getComponents() as $container)
 		{
 			if($container instanceof \Nette\Forms\Controls\SubmitButton)
 			{
 				continue;
 			}
-			
+
 			foreach($container->getComponents() as $duplicatorInput)
 			{
 				$inputs .= $duplicatorInput->render();
 			}
-			
+
 			$inputs . '<hr />';
 		}
-		
+
 		$body = Html::el('div')
 			->class('card-body')
 			->addHtml($inputs . '<hr />');
-		
+
 		$createButton = null;
-		
+
 		foreach($this->getButtons() as $button)
 		{
 			if($button instanceof DuplicatorCreateSubmit)
@@ -97,11 +97,11 @@ class Duplicator extends \ModulIS\Form\Container
 				$createButton .= $button->render();
 			}
 		}
-		
+
 		$footer = Html::el('div')
 			->class('card-footer')
 			->addHtml($createButton);
-		
+
 		return Html::el('div')
 			->id('container' . \Nette\Utils\Strings::capitalize($this->getName()))
 			->class('card card-accent-primary')

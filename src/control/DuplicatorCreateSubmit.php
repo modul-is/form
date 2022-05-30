@@ -30,13 +30,13 @@ class DuplicatorCreateSubmit extends SubmitButton
 			$button->getForm()->onSuccess = [];
 		};
 	}
-	
-	
+
+
 	public function render()
 	{
 		/** @var Duplicator $duplicator */
 		$duplicator = $this->lookup(Duplicator::class);
-			
+
 		$attributes = [
 			'name' => $duplicator->getName() . '[add]',
 			'value' => 'Přidat',
@@ -45,9 +45,9 @@ class DuplicatorCreateSubmit extends SubmitButton
 			'label' => 'Přidat',
 			'type' => 'submit'
 		];
-		
+
 		$icon = \Kravcik\Macros\FontAwesomeMacro::renderIcon($this->isDisabled() ? 'info' : 'plus');
-		
+
 		return Html::el('button')
 			->class('btn btn-primary float-left btn-xs ' . ($this->getForm()->ajax ? 'ajax' : ''))
 			->addAttributes($attributes)

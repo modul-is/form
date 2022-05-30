@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
-use ModulIS\Form\Control;
 
 class Form extends \Nette\Application\UI\Form
 {
@@ -44,12 +43,12 @@ class Form extends \Nette\Application\UI\Form
 	public function getSubmitterArray(): array
 	{
 		$submitterArray = [];
-		
+
 		foreach($this->getBoxes() as $box)
 		{
 			$submitterArray = array_merge($submitterArray, $box->getSubmitterArray());
 		}
-		
+
 		return $submitterArray;
 	}
 
@@ -60,13 +59,14 @@ class Form extends \Nette\Application\UI\Form
 		return $this;
 	}
 
+
 	public function addHidden(string $name, $default = null): Control\Hidden
 	{
 		return $this[$name] = (new Control\Hidden)
 			->setDefaultValue($default);
 	}
-	
-	
+
+
 	public function addText(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label, $maxLength))

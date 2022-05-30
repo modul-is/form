@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
-use ModulIS\Form\Control;
 
 final class Box
 {
@@ -43,8 +42,8 @@ final class Box
 			}
 		}
 	}
-	
-	
+
+
 	public function getControls(): array
 	{
 		return iterator_to_array($this->controls);
@@ -54,7 +53,7 @@ final class Box
 	public function getInputArray(): array
 	{
 		$controlArray = [];
-		
+
 		/**
 		 * Skip submitters
 		 */
@@ -64,18 +63,18 @@ final class Box
 			{
 				continue;
 			}
-			
+
 			$controlArray[] = $control;
 		}
-		
+
 		return $controlArray;
 	}
-	
-	
+
+
 	public function getSubmitterArray(): array
 	{
 		$controlArray = [];
-		
+
 		/**
 		 * Only submitters
 		 */
@@ -86,7 +85,7 @@ final class Box
 				$controlArray[] = $control;
 			}
 		}
-		
+
 		return $controlArray;
 	}
 

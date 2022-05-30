@@ -35,8 +35,8 @@ class Link extends \Nette\Forms\Controls\BaseControl
 		$el->class('btn' . $btnColor);
 		return $el;
 	}
-	
-	
+
+
 	public function render()
 	{
 		return $this->getCoreControl();
