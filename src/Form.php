@@ -222,7 +222,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function addBox($caption = 0): Box
+	public function addBox(int|string $caption = 0): Box
 	{
 		$this->boxes[$caption] ??= new Box;
 
