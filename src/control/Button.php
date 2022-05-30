@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
+use Nette\Utils\Html;
 
-class Button extends \Nette\Forms\Controls\Button
+class Button extends \Nette\Forms\Controls\Button implements Renderable
 {
 	use Helper\Icon;
 	use Helper\Color;
@@ -20,7 +21,7 @@ class Button extends \Nette\Forms\Controls\Button
 
 		$color = !empty($this->color) ? $this->color : 'gray';
 
-		$button = \Nette\Utils\Html::el('button')
+		$button = Html::el('button')
 			->name($this->getName())
 			->class('btn ' . $input->getAttribute('class') . ' btn-' . $color)
 			->addHtml($this->icon ? \Kravcik\Macros\FontAwesomeMacro::renderIcon($this->icon, []) : '')
@@ -35,7 +36,7 @@ class Button extends \Nette\Forms\Controls\Button
 	}
 
 
-	public function render()
+	public function render(): Html|string
 	{
 		return $this->getCoreControl();
 	}

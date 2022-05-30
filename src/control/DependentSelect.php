@@ -8,7 +8,7 @@ use ModulIS\Form\Helper;
 
 use Nette\Utils\Html;
 
-class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox
+class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implements Renderable
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -26,11 +26,11 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox
 	}
 
 
-	public function render()
+	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
-			return null;
+			return '';
 		}
 
 		$label = $this->getCoreLabel();

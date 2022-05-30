@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use Nette\Utils\Html;
 use ModulIS\Form\Helper;
 
-class Link extends \Nette\Forms\Controls\BaseControl
+class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 {
 	use Helper\Icon;
 	use Helper\Color;
@@ -22,7 +22,7 @@ class Link extends \Nette\Forms\Controls\BaseControl
 	}
 
 
-	public function getControl()
+	public function getControl(): Html
 	{
 		$this->setOption('rendered', true);
 
@@ -37,13 +37,13 @@ class Link extends \Nette\Forms\Controls\BaseControl
 	}
 
 
-	public function render()
+	public function render(): Html
 	{
 		return $this->getCoreControl();
 	}
 
 
-	public function getCoreControl()
+	public function getCoreControl(): Html
 	{
 		return $this->getControl();
 	}

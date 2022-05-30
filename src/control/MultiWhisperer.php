@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 class MultiWhisperer extends MultiSelectBox
 {
-	public function getCoreControl()
+	public function getCoreControl(): Html
 	{
 		$input = $this->getControl();
 

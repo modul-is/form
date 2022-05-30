@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use Nette;
 use Nette\Utils\Html;
 
-class Duplicator extends \ModulIS\Form\Container
+class Duplicator extends \ModulIS\Form\Container implements Renderable
 {
 	use \ModulIS\Form\Helper\AutoRenderSkip;
 
@@ -54,7 +54,7 @@ class Duplicator extends \ModulIS\Form\Container
 	}
 
 
-	public function render()
+	public function render(): Html
 	{
 		if($this->getTitle())
 		{
@@ -69,13 +69,15 @@ class Duplicator extends \ModulIS\Form\Container
 
 		$inputs = null;
 
+		/** @var \ModulIS\Form\DuplicatorContainer|DuplicatorCreateSubmit $container */
 		foreach($this->getComponents() as $container)
 		{
-			if($container instanceof \Nette\Forms\Controls\SubmitButton)
+			if($container instanceof DuplicatorCreateSubmit)
 			{
 				continue;
 			}
 
+			/** @var Renderable $duplicatorInput */
 			foreach($container->getComponents() as $duplicatorInput)
 			{
 				$inputs .= $duplicatorInput->render();

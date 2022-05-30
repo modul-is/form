@@ -32,7 +32,7 @@ class DuplicatorCreateSubmit extends SubmitButton
 	}
 
 
-	public function render()
+	public function render(): Html
 	{
 		/** @var Duplicator $duplicator */
 		$duplicator = $this->lookup(Duplicator::class);

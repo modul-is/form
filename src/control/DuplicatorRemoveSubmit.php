@@ -34,7 +34,7 @@ class DuplicatorRemoveSubmit extends SubmitButton
 	}
 
 
-	public function render()
+	public function render(): Html|string
 	{
 		/** @var Duplicator $duplicator */
 		$duplicator = $this->lookup(Duplicator::class);

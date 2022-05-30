@@ -8,7 +8,7 @@ use ModulIS\Form\Helper;
 
 use Nette\Utils\Html;
 
-class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBox
+class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBox implements Renderable
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -26,11 +26,11 @@ class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBo
 	}
 
 
-	public function render()
+	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
-			return null;
+			return '';
 		}
 
 		$label = $this->getCoreLabel();

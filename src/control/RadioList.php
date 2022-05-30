@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use Nette\Utils\Html;
 use ModulIS\Form\Helper;
 
-class RadioList extends \Nette\Forms\Controls\RadioList
+class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 {
 	use Helper\Color;
 	use Helper\Input;
@@ -16,7 +16,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList
 	use Helper\Label;
 	use Helper\AutoRenderSkip;
 
-	public function getCoreControl()
+	public function getCoreControl(): string
 	{
 		$inputArray = [];
 
@@ -87,11 +87,11 @@ class RadioList extends \Nette\Forms\Controls\RadioList
 	}
 
 
-	public function render()
+	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
-			return null;
+			return '';
 		}
 
 		$label = $this->getCoreLabel();

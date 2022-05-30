@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
-class TextArea extends \Nette\Forms\Controls\TextArea
+class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -17,11 +17,11 @@ class TextArea extends \Nette\Forms\Controls\TextArea
 	use Helper\InputRender;
 	use Helper\AutoRenderSkip;
 
-	public function render()
+	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
-			return null;
+			return '';
 		}
 
 		$label = $this->getCoreLabel();

@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use Nette\Utils\Html;
 use ModulIS\Form\Helper;
 
-class UploadControl extends \Nette\Forms\Controls\UploadControl
+class UploadControl extends \Nette\Forms\Controls\UploadControl implements Renderable
 {
 	use Helper\Color;
 	use Helper\Input;
@@ -17,7 +17,7 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl
 	use Helper\InputGroup;
 	use Helper\AutoRenderSkip;
 
-	public function getCoreControl()
+	public function getCoreControl(): Html
 	{
 		$input = $this->getControl();
 
@@ -74,11 +74,11 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl
 	}
 
 
-	public function render()
+	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
-			return null;
+			return '';
 		}
 
 		$label = $this->getCoreLabel();
@@ -97,9 +97,9 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl
 			->class('form-group row')
 			->addHtml($labelDiv . $inputDiv);
 
-		if($input->getOption('id'))
+		if($this->getOption('id'))
 		{
-			$outerDiv->id($input->getOption('id'));
+			$outerDiv->id($this->getOption('id'));
 		}
 
 		return $outerDiv;

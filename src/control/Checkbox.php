@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use Nette\Utils\Html;
 use ModulIS\Form\Helper;
 
-class Checkbox extends \Nette\Forms\Controls\Checkbox
+class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 {
 	use Helper\Color;
 	use Helper\Input;
@@ -67,11 +67,11 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox
 	}
 
 
-	public function render()
+	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
-			return null;
+			return '';
 		}
 
 		$input = $this->getCoreControl();

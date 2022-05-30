@@ -7,13 +7,13 @@ namespace ModulIS\Form\Control;
 use Nette\Utils\Html;
 use ModulIS\Form\Helper;
 
-class SubmitButton extends \Nette\Forms\Controls\SubmitButton
+class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Renderable
 {
 	use Helper\Icon;
 	use Helper\Color;
 	use Helper\AutoRenderSkip;
 
-	public function getCoreControl()
+	public function getCoreControl(): Html
 	{
 		$input = $this->getControl();
 
@@ -43,7 +43,7 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton
 	}
 
 
-	public function render()
+	public function render(): Html
 	{
 		return $this->getCoreControl();
 	}
