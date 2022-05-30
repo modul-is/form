@@ -26,6 +26,8 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	private array $created = [];
 
 	private array|null $httpPost = null;
+	
+	private array $options = [];
 
 
 	public function __construct($factory, int $createDefault = 0, bool $forceDefault = false)
@@ -51,6 +53,27 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 		$this->createDefault = $createDefault;
 		$this->forceDefault = $forceDefault;
+	}
+	
+	
+	public function setOption(string $key, $value): self
+	{
+		if ($value === null)
+		{
+			unset($this->options[$key]);
+		}
+		else
+		{
+			$this->options[$key] = $value;
+		}
+
+		return $this;
+	}
+
+
+	public function getOption($key, $default = null)
+	{
+		return $this->options[$key] ?? $default;
 	}
 
 
