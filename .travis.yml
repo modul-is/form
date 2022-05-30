@@ -7,7 +7,7 @@ before_script:
   # Update Composer
   - travis_retry composer self-update
 
-  # Install Nette Tester & Coding Standard
+  # Install dependencies
   - travis_retry composer install --no-interaction --prefer-source
 
 script:
