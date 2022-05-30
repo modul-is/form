@@ -13,7 +13,7 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable
 	use Helper\Color;
 	use Helper\AutoRenderSkip;
 
-	public function getCoreControl()
+	public function getCoreControl(): Html|string
 	{
 		$input = $this->getControl();
 

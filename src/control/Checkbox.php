@@ -20,7 +20,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	}
 
 
-	public function getCoreControl()
+	public function getCoreControl(): Html
 	{
 		$input = $this->getControlPart();
 
