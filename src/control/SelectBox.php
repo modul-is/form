@@ -16,6 +16,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 	use Helper\Label;
 	use Helper\InputRender;
 	use Helper\AutoRenderSkip;
+	use Helper\Template;
 
 
 	public function render(): Html|string

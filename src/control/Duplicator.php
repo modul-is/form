@@ -10,6 +10,7 @@ use Nette\Utils\Html;
 class Duplicator extends \ModulIS\Form\Container implements Renderable
 {
 	use \ModulIS\Form\Helper\AutoRenderSkip;
+	use \ModulIS\Form\Helper\Template;
 
 	public bool $forceDefault = false;
 

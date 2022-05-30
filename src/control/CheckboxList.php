@@ -15,6 +15,7 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 	use Helper\ControlPart;
 	use Helper\Label;
 	use Helper\AutoRenderSkip;
+	use Helper\Template;
 
 	public function getCoreControl(): Html|string
 	{

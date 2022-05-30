@@ -13,6 +13,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	use Helper\Input;
 	use Helper\ControlPart;
 	use Helper\AutoRenderSkip;
+	use Helper\Template;
 
 	public function getCoreLabel()
 	{

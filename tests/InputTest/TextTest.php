@@ -5,73 +5,113 @@ declare(strict_types=1);
 require_once __DIR__ . '/../bootstrap.php';
 
 use Tester\Assert;
+use ModulIS\Form\Form;
 
-class SelectTest extends Tester\TestCase
+class TextTest extends Tester\TestCase
 {
 	public function testRender()
 	{
-		$form = new \ModulIS\Form\Form;
+		$form = new Form;
 		
-		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second']);
+		$form->addText('text', 'Text');
 		
-		$string = '<div class="form-group row"><div class="col-sm-4 control-label align-self-center"><label for="frm-select" class="col-form-label ">Select</label></div><div class="col-sm-8"><div class="input-group"><select name="select" id="frm-select" class="form-control  "><option value="first">First</option><option value="second">Second</option></select></div></div></div>';
+		$string = '<div class="form-group row"><div class="col-sm-4 control-label align-self-center"><label for="frm-text" class="col-form-label ">Text</label></div><div class="col-sm-8"><div class="input-group"><input type="text" name="text" id="frm-text" class="form-control  "></div></div></div>';
 		
-		Assert::same($string, $form->getComponent('select')->render()->__toString());
+		Assert::same($string, $form->getComponent('text')->render()->__toString());
+	}
+	
+	
+	public function testRenderPrepend()
+	{
+		$form = new Form;
+		
+		$form->addText('text', 'Text')
+			->setPrepend('prepend');
+		
+		$string = '<div class="form-group row"><div class="col-sm-4 control-label align-self-center"><label for="frm-text" class="col-form-label ">Text</label></div><div class="col-sm-8"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">prepend</span></div><input type="text" name="text" id="frm-text" class="form-control  "></div></div></div>';
+		
+		Assert::same($string, $form->getComponent('text')->render()->__toString());
+	}
+	
+	
+	public function testRenderAppend()
+	{
+		$form = new Form;
+		
+		$form->addText('text', 'Text')
+			->setAppend('append');
+		
+		$string = '<div class="form-group row"><div class="col-sm-4 control-label align-self-center"><label for="frm-text" class="col-form-label ">Text</label></div><div class="col-sm-8"><div class="input-group"><input type="text" name="text" id="frm-text" class="form-control  "><div class="input-group-append"><span class="input-group-text">append</span></div></div></div></div>';
+		
+		Assert::same($string, $form->getComponent('text')->render()->__toString());
+	}
+	
+	
+	public function testRenderIcon()
+	{
+		$form = new Form;
+		
+		$form->addText('text', 'Text')
+			->setIcon('user');
+		
+		$string = '<div class="form-group row"><div class="col-sm-4 control-label align-self-center"><label for="frm-text" class="col-form-label ">Text</label></div><div class="col-sm-8"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><span class="fal fa-user fa-fw"></span></span></div><input type="text" name="text" id="frm-text" class="form-control  "></div></div></div>';
+		
+		Assert::same($string, $form->getComponent('text')->render()->__toString());
 	}
 	
 	
 	public function testRenderOptionId()
 	{
-		$form = new \ModulIS\Form\Form;
+		$form = new Form;
 		
-		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
+		$form->addText('text', 'Text')
 			->setOption('id', 'customId');
 		
-		$string = '<div class="form-group row" id="customId"><div class="col-sm-4 control-label align-self-center"><label for="frm-select" class="col-form-label ">Select</label></div><div class="col-sm-8"><div class="input-group"><select name="select" id="frm-select" class="form-control  "><option value="first">First</option><option value="second">Second</option></select></div></div></div>';
+		$string = '<div class="form-group row" id="customId"><div class="col-sm-4 control-label align-self-center"><label for="frm-text" class="col-form-label ">Text</label></div><div class="col-sm-8"><div class="input-group"><input type="text" name="text" id="frm-text" class="form-control  "></div></div></div>';
 		
-		Assert::same($string, $form->getComponent('select')->render()->__toString());
+		Assert::same($string, $form->getComponent('text')->render()->__toString());
 	}
 	
 	
 	public function testRenderCustomTemplate()
 	{
-		$form = new \ModulIS\Form\Form;
+		$form = new Form;
 		
-		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
-			->setTemplate(__DIR__ . '/customSelect.latte');
+		$form->addText('text', 'Text')
+			->setTemplate(__DIR__ . '/customText.latte');
 		
 		$string = 'custom-template';
 		
-		Assert::same($string, $form->getComponent('select')->render());
+		Assert::same($string, $form->getComponent('text')->render());
 	}
 	
 	
 	public function testRenderHidden()
 	{
-		$form = new \ModulIS\Form\Form;
+		$form = new Form;
 		
-		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
+		$form->addText('text', 'Text')
 			->setOption('hide', true);
 		
 		$string = '';
 		
-		Assert::same($string, $form->getComponent('select')->render());
+		Assert::same($string, $form->getComponent('text')->render());
 	}
 	
 	
 	public function testRenderSkip()
 	{
-		$form = new \ModulIS\Form\Form;
+		$form = new Form;
 		
-		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
+		$form->addText('text', 'Text')
 			->setAutoRenderSkip();
 		
 		$string = '';
 		
-		Assert::same($string, $form->getComponent('select')->render());
+		Assert::same($string, $form->getComponent('text')->render());
 	}
 
 }
 
-$testcase = new SelectTest;
+$testcase = new TextTest;
 $testcase->run();

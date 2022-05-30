@@ -5,73 +5,84 @@ declare(strict_types=1);
 require_once __DIR__ . '/../bootstrap.php';
 
 use Tester\Assert;
+use ModulIS\Form\Form;
 
-class SelectTest extends Tester\TestCase
+class DuplicatorTest extends Tester\TestCase
 {
 	public function testRender()
 	{
-		$form = new \ModulIS\Form\Form;
+		$form = new Form;
 		
-		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second']);
+		$duplicator = $form->addDuplicator('duplicator', function(\ModulIS\Form\DuplicatorContainer $container)
+		{
+			$container->addText('text', 'text');
+			
+			$container->addSubmit('del', 'Smazat')
+				->setValidationScope(null)
+				->addRemoveOnClick();
+		});
 		
-		$string = '<div class="form-group row"><div class="col-sm-4 control-label align-self-center"><label for="frm-select" class="col-form-label ">Select</label></div><div class="col-sm-8"><div class="input-group"><select name="select" id="frm-select" class="form-control  "><option value="first">First</option><option value="second">Second</option></select></div></div></div>';
+		$duplicator->addSubmit('add', 'Přidat')
+			->setValidationScope(null)
+			->addCreateOnClick(true);
 		
-		Assert::same($string, $form->getComponent('select')->render()->__toString());
-	}
-	
-	
-	public function testRenderOptionId()
-	{
-		$form = new \ModulIS\Form\Form;
+		$duplicator->setValues([['text' => 'Text']]);
 		
-		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
-			->setOption('id', 'customId');
+		$string = '<div id="containerDuplicator" class="card card-accent-primary"><div class="card-body"><div class="form-group row"><div class="col-sm-4 control-label align-self-center"><label for="frm-duplicator-0-text" class="col-form-label ">text</label></div><div class="col-sm-8"><div class="input-group"><input type="text" name="duplicator[0][text]" id="frm-duplicator-0-text" value="Text" class="form-control  "></div></div></div><button class="btn btn-xs btn-danger float-right " name="duplicator[0][del]" formnovalidate="" type="submit"><span class="fal fa-times fa-fw"></span>Smazat</button><div class="clearfix"></div><hr /></div><div class="card-footer"><button class="btn btn-primary float-left btn-xs " name="duplicator[add]" value="Přidat" formnovalidate="" data-nette-validation-scope=\'["multiplier"]\' label="Přidat" type="submit"><span class="fal fa-plus fa-fw"></span>Přidat</button></div></div>';
 		
-		$string = '<div class="form-group row" id="customId"><div class="col-sm-4 control-label align-self-center"><label for="frm-select" class="col-form-label ">Select</label></div><div class="col-sm-8"><div class="input-group"><select name="select" id="frm-select" class="form-control  "><option value="first">First</option><option value="second">Second</option></select></div></div></div>';
-		
-		Assert::same($string, $form->getComponent('select')->render()->__toString());
+		Assert::same($string, $form->getComponent('duplicator')->render()->__toString());
 	}
 	
 	
 	public function testRenderCustomTemplate()
 	{
-		$form = new \ModulIS\Form\Form;
+		$form = new Form;
 		
-		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
-			->setTemplate(__DIR__ . '/customSelect.latte');
+		$duplicator = $form->addDuplicator('duplicator', function(\ModulIS\Form\DuplicatorContainer $container)
+		{
+			$container->addText('text', 'text');
+			
+			$container->addSubmit('del', 'Smazat')
+				->setValidationScope(null)
+				->addRemoveOnClick();
+		});
+		
+		$duplicator->addSubmit('add', 'Přidat')
+			->setValidationScope(null)
+			->addCreateOnClick(true);
+		
+		$duplicator->setTemplate(__DIR__ . '/customDuplicator.latte');
 		
 		$string = 'custom-template';
 		
-		Assert::same($string, $form->getComponent('select')->render());
+		Assert::same($string, $form->getComponent('duplicator')->render());
 	}
-	
-	
-	public function testRenderHidden()
-	{
-		$form = new \ModulIS\Form\Form;
-		
-		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
-			->setOption('hide', true);
-		
-		$string = '';
-		
-		Assert::same($string, $form->getComponent('select')->render());
-	}
-	
+
 	
 	public function testRenderSkip()
 	{
-		$form = new \ModulIS\Form\Form;
+		$form = new Form;
 		
-		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
-			->setAutoRenderSkip();
+		$duplicator = $form->addDuplicator('duplicator', function(\ModulIS\Form\DuplicatorContainer $container)
+		{
+			$container->addText('text', 'text');
+			
+			$container->addSubmit('del', 'Smazat')
+				->setValidationScope(null)
+				->addRemoveOnClick();
+		});
+		
+		$duplicator->addSubmit('add', 'Přidat')
+			->setValidationScope(null)
+			->addCreateOnClick(true);
+		
+		$duplicator->setAutoRenderSkip();
 		
 		$string = '';
 		
-		Assert::same($string, $form->getComponent('select')->render());
+		Assert::same($string, $form->getComponent('duplicator')->render());
 	}
-
 }
 
-$testcase = new SelectTest;
+$testcase = new DuplicatorTest;
 $testcase->run();

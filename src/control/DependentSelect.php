@@ -17,6 +17,7 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 	use Helper\Label;
 	use Helper\InputRender;
 	use Helper\AutoRenderSkip;
+	use Helper\Template;
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{
