@@ -18,7 +18,8 @@
     {
         "phpstan/phpstan-nette": "^1",
 		"modul-is/coding-standard": "^4",
-        "kravcik/nette-macro-fontawesome": "^4"
+        "kravcik/nette-macro-fontawesome": "^4",
+        "nette/tester": "^2.1"
     },
     "autoload":
     {
