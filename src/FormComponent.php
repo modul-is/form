@@ -78,7 +78,7 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 	}
 
 
-	public function getForm()
+	public function getForm(): Form
 	{
 		return new Form;
 	}

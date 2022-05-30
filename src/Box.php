@@ -26,13 +26,13 @@ final class Box
 	}
 
 
-	public function remove(\Nette\Forms\IControl $control)
+	public function remove(\Nette\Forms\IControl $control): void
 	{
-			$this->controls->detach($control);
+		$this->controls->detach($control);
 	}
 
 
-	public function removeOrphans()
+	public function removeOrphans(): void
 	{
 		foreach($this->controls as $control)
 		{

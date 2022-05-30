@@ -238,7 +238,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function addComponent(\Nette\ComponentModel\IComponent $component, $name, $insertBefore = null)
+	public function addComponent(\Nette\ComponentModel\IComponent $component, $name, $insertBefore = null): self
 	{
 		$this->boxes[$this->boxCurrent ?? 0]->add($component);
 
@@ -272,7 +272,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function addContainer($name): \Nette\Forms\Container
+	public function addContainer($name): Container
 	{
 		$control = new Container;
 
