@@ -58,6 +58,48 @@ class TextAreaTest extends Tester\TestCase
 
 		Assert::same($string, $form->getComponent('text')->render()->__toString());
 	}
+	
+	
+	public function testRenderInputFloatingLabel()
+	{
+		$form = new Form;
+
+		$form->addTextArea('text', 'Area')
+			->setFloatingLabel(true);
+
+		$string = '<div class="form-floating mb-3"><textarea name="text" id="frm-text" class=" form-control" placeholder="Area"></textarea><label for="frm-text">Area</label></div>';
+
+		Assert::same($string, $form->getComponent('text')->render()->__toString());
+	}
+	
+	
+	public function testRenderFormFloatingLabel()
+	{
+		$form = new Form;
+		
+		$form->setFloatingLabel(true);
+
+		$form->addTextArea('text', 'Area');
+
+		$string = '<div class="form-floating mb-3"><textarea name="text" id="frm-text" class=" form-control" placeholder="Area"></textarea><label for="frm-text">Area</label></div>';
+
+		Assert::same($string, $form->getComponent('text')->render()->__toString());
+	}
+	
+	
+	public function testRenderFormFloatingLabelInputDisable()
+	{
+		$form = new Form;
+		
+		$form->setFloatingLabel(true);
+
+		$form->addTextArea('text', 'Area')
+			->setFloatingLabel(false);
+
+		$string = '<div class="form-group row"><div class="col-sm-4 control-label align-self-center"><label for="frm-text" class="col-form-label ">Area</label></div><div class="col-sm-8"><div class="input-group"><textarea name="text" id="frm-text" class="form-control  "></textarea></div></div></div>';
+
+		Assert::same($string, $form->getComponent('text')->render()->__toString());
+	}
 
 
 	public function testRenderOptionId()

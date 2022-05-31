@@ -58,6 +58,48 @@ class TextTest extends Tester\TestCase
 
 		Assert::same($string, $form->getComponent('text')->render()->__toString());
 	}
+	
+	
+	public function testRenderInputFloatingLabel()
+	{
+		$form = new Form;
+
+		$form->addText('text', 'Text')
+			->setFloatingLabel(true);
+
+		$string = '<div class="form-floating mb-3"><input type="text" name="text" id="frm-text" class=" form-control" placeholder="Text"><label for="frm-text">Text</label></div>';
+
+		Assert::same($string, $form->getComponent('text')->render()->__toString());
+	}
+	
+	
+	public function testRenderFormFloatingLabel()
+	{
+		$form = new Form;
+		
+		$form->setFloatingLabel(true);
+
+		$form->addText('text', 'Text');
+
+		$string = '<div class="form-floating mb-3"><input type="text" name="text" id="frm-text" class=" form-control" placeholder="Text"><label for="frm-text">Text</label></div>';
+
+		Assert::same($string, $form->getComponent('text')->render()->__toString());
+	}
+	
+	
+	public function testRenderFormFloatingLabelInputDisable()
+	{
+		$form = new Form;
+		
+		$form->setFloatingLabel(true);
+
+		$form->addText('text', 'Text')
+			->setFloatingLabel(false);
+
+		$string = '<div class="form-group row"><div class="col-sm-4 control-label align-self-center"><label for="frm-text" class="col-form-label ">Text</label></div><div class="col-sm-8"><div class="input-group"><input type="text" name="text" id="frm-text" class="form-control  "></div></div></div>';
+
+		Assert::same($string, $form->getComponent('text')->render()->__toString());
+	}
 
 
 	public function testRenderOptionId()

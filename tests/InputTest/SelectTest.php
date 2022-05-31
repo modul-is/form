@@ -31,6 +31,48 @@ class SelectTest extends Tester\TestCase
 
 		Assert::same($string, $form->getComponent('select')->render()->__toString());
 	}
+	
+	
+	public function testRenderInputFloatingLabel()
+	{
+		$form = new ModulIS\Form\Form;
+
+		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
+			->setFloatingLabel(true);
+
+		$string = '<div class="form-floating mb-3"><select name="select" id="frm-select" class=" form-control" placeholder="Select"><option value="first">First</option><option value="second">Second</option></select><label for="frm-select">Select</label></div>';
+
+		Assert::same($string, $form->getComponent('select')->render()->__toString());
+	}
+	
+	
+	public function testRenderFormFloatingLabel()
+	{
+		$form = new ModulIS\Form\Form;
+		
+		$form->setFloatingLabel(true);
+
+		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second']);
+
+		$string = '<div class="form-floating mb-3"><select name="select" id="frm-select" class=" form-control" placeholder="Select"><option value="first">First</option><option value="second">Second</option></select><label for="frm-select">Select</label></div>';
+
+		Assert::same($string, $form->getComponent('select')->render()->__toString());
+	}
+
+
+	public function testRenderFormFloatingLabelInputDisable()
+	{
+		$form = new ModulIS\Form\Form;
+		
+		$form->setFloatingLabel(true);
+
+		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
+			->setFloatingLabel(false);
+
+		$string = '<div class="form-group row"><div class="col-sm-4 control-label align-self-center"><label for="frm-select" class="col-form-label ">Select</label></div><div class="col-sm-8"><div class="input-group"><select name="select" id="frm-select" class="form-control  "><option value="first">First</option><option value="second">Second</option></select></div></div></div>';
+
+		Assert::same($string, $form->getComponent('select')->render()->__toString());
+	}
 
 
 	public function testRenderCustomTemplate()
