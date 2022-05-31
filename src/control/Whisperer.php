@@ -25,6 +25,43 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 	private int $delay = 500;
 
 
+	public function render(): Html|string
+	{
+		if($this->getOption('hide') || $this->autoRenderSkip)
+		{
+			return '';
+		}
+
+		if($this->getOption('template'))
+		{
+			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
+		}
+		
+		$label = $this->getCoreLabel();
+
+		$labelDiv = Html::el('div')
+			->class('col-sm-4 control-label align-self-center')
+			->addHtml($label);
+
+		$input = $this->getCoreControl();
+
+		$inputDiv = Html::el('div')
+			->class('col-sm-8')
+			->addHtml($input);
+
+		$outerDiv = Html::el('div')
+			->class('form-group row')
+			->addHtml($labelDiv . $inputDiv);
+
+		if($this->getOption('id'))
+		{
+			$outerDiv->id($this->getOption('id'));
+		}
+
+		return $outerDiv;
+	}
+	
+	
 	public function setOnSelectCallback(array|\Closure $callback): self
 	{
 		$this->onSelectCallback = $callback;

@@ -30,18 +30,6 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable
 		{
 			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
 		}
-
-		$label = $this->getCoreLabel();
-
-		$labelDiv = Html::el('div')
-			->class('col-sm-4 control-label align-self-center')
-			->addHtml($label);
-
-		$input = $this->getCoreControl();
-
-		$inputDiv = Html::el('div')
-			->class('col-sm-8')
-			->addHtml($input);
 		
 		$floatingLabel = $this->getFloatingLabel();
 		
@@ -52,11 +40,37 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable
 		{
 			$floatingLabel = $this->getForm()->getFloatingLabel();
 		}
+		
+		if($floatingLabel)
+		{
+			$input = $this->getControl();
+			$input->class($input->getAttribute('class') . ' form-control');
+			$input->placeholder($this->getCaption());
+			
+			$label = $this->getLabel();
+			
+			$outerDiv = Html::el('div')
+				->class('form-floating mb-3')
+				->addHtml($input . $label);
+		}
+		else
+		{
+			$label = $this->getCoreLabel();
+			$input = $this->getCoreControl();
+		
+			$labelDiv = Html::el('div')
+				->class('col-sm-4 control-label align-self-center')
+				->addHtml($label);
 
-		$outerDiv = Html::el('div')
-			->class('form-group row' . ($floatingLabel ? ' form-floating' : ''))
-			->addHtml($labelDiv . $inputDiv);
+			$inputDiv = Html::el('div')
+				->class('col-sm-8')
+				->addHtml($input);
 
+			$outerDiv = Html::el('div')
+				->class('form-group row')
+				->addHtml($labelDiv . $inputDiv);
+		}
+		
 		if($this->getOption('id'))
 		{
 			$outerDiv->id($this->getOption('id'));

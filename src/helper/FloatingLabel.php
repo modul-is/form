@@ -15,7 +15,7 @@ trait FloatingLabel
 	}
 	
 	
-	public function getFloatingLabel(): bool
+	public function getFloatingLabel(): ?bool
 	{
 		return $this->floatingLabel;
 	}
