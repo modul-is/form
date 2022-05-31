@@ -17,6 +17,7 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable
 	use Helper\InputRender;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
+	use Helper\FloatingLabel;
 
 	public function render(): Html|string
 	{
@@ -42,8 +43,18 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable
 			->class('col-sm-8')
 			->addHtml($input);
 
+		$floatingLabel = $this->getFloatingLabel();
+		
+		/**
+		 * If floating label not set - take it from form
+		 */
+		if($floatingLabel === null)
+		{
+			$floatingLabel = $this->getForm()->getFloatingLabel();
+		}
+		
 		$outerDiv = Html::el('div')
-			->class('form-group row')
+			->class('form-group row' . ($floatingLabel ? ' form-floating' : ''))
 			->addHtml($labelDiv . $inputDiv);
 
 		if($this->getOption('id'))

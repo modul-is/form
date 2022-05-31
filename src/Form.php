@@ -26,6 +26,8 @@ class Form extends \Nette\Application\UI\Form
 	public ?string $icon = null;
 
 	public bool $noValidate = true;
+	
+	public bool $floatingLabel = false;
 
 	protected array $boxes = [];
 
@@ -269,6 +271,18 @@ class Form extends \Nette\Application\UI\Form
 	public function setNoValidate(bool $noValidate): void
 	{
 		$this->noValidate = $noValidate;
+	}
+	
+	
+	public function setFloatingLabel(bool $floatingLabel): void
+	{
+		$this->floatingLabel = $floatingLabel;
+	}
+	
+	
+	public function getFloatingLabel(): bool
+	{
+		return $this->floatingLabel;
 	}
 
 
