@@ -38,7 +38,10 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable
 		 */
 		if($floatingLabel === null)
 		{
-			$floatingLabel = $this->getForm()->getFloatingLabel();
+			/** @var \ModulIS\Form\Form $form */
+			$form = $this->getForm();
+			
+			$floatingLabel = $form->getFloatingLabel();
 		}
 
 		if($floatingLabel)
@@ -68,7 +71,7 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable
 				->addHtml($input);
 
 			$outerDiv = Html::el('div')
-				->class('form-group row' . ($floatingLabel ? ' form-floating' : ''))
+				->class('form-group row')
 				->addHtml($labelDiv . $inputDiv);
 		}
 

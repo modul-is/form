@@ -211,7 +211,7 @@ class Container extends \Nette\Forms\Container
 	{
 		$components = $this->getComponents();
 
-		if(count($components) === 0)
+		if(iterator_count($components) === 0)
 		{
 			return '';
 		}
@@ -272,6 +272,7 @@ class Container extends \Nette\Forms\Container
 		{
 			$inputs = null;
 
+			/** @var Control\Renderable $control */
 			foreach($components as $control)
 			{
 				$colDiv = Html::el('div')

@@ -38,7 +38,10 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable
 		 */
 		if($floatingLabel === null)
 		{
-			$floatingLabel = $this->getForm()->getFloatingLabel();
+			/** @var \ModulIS\Form\Form $form */
+			$form = $this->getForm();
+			
+			$floatingLabel = $form->getFloatingLabel();
 		}
 
 		if($floatingLabel)
