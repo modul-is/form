@@ -10,11 +10,59 @@ use ModulIS\Form\Control;
 class Container extends \Nette\Forms\Container
 {
 	public string $color = 'white';
+	
+	private ?string $title = null;
+	
+	private ?string $id = null;
+	
+	private int $inputsPerRow = 1;
+
+	private bool $showCard = false;
 
 
+	public function setId(string $id): self
+	{
+		$this->id = $id;
+		
+		return $this;
+	}
+	
+	
 	public function setColor(string $color): self
 	{
 		$this->color = $color;
+		
+		return $this;
+	}
+	
+	
+	public function setInputsPerRow(int $inputsPerRow): self
+	{
+		$allowedInputsPerRow = [1, 2, 3, 4, 6, 12];
+		
+		if(!in_array($inputsPerRow, $allowedInputsPerRow))
+		{
+			throw new \Exception("Invalid number of 'inputsPerRow', allowed are [" . implode(",", $allowedInputsPerRow) . ']');
+		}
+		
+		$this->inputsPerRow = $inputsPerRow;
+		
+		return $this;
+	}
+	
+	
+	public function setTitle(string $title): self
+	{
+		$this->title = $title;
+		
+		return $this;
+	}
+	
+	
+	public function showCard(bool $showCard): self
+	{
+		$this->showCard = $showCard;
+		
 		return $this;
 	}
 
@@ -162,42 +210,82 @@ class Container extends \Nette\Forms\Container
 	
 	public function render()
 	{
-		$cardHeaderDiv = Html::el('div')
-			->class('card-header ' . ($this->color ? 'bg-' . $this->color : ''))
-			->addHtml($this->getName());
-		
-		$inputs = null;
-		
-		foreach($this->getControls() as $control)
+		if($this->showCard)
 		{
-			$inputs .= $control->render();
-		}
+			$cardHeaderDiv = null;
 		
-		$cardBodyDiv = Html::el('div')
-			->class('card-body')
-			->addHtml($inputs);
-		
-		$submitterArray = $this->getSubmitterArray();
-		
-		$cardFooterDiv = null;
-		
-		if($submitterArray)
-		{
-			$submitterHtml = null;
-			
-			foreach($submitterArray as $submitter)
+			if($this->title)
 			{
-				$submitterHtml .= $submitter->render();
+				$cardHeaderDiv = Html::el('div')
+					->class('card-header ' . ($this->color ? 'bg-' . $this->color : ''))
+					->addHtml($this->title);
+			}
+
+			$inputs = null;
+
+			foreach($this->getInputArray() as $control)
+			{
+				$colDiv = Html::el('div')
+					->class('col-' . strval(12 / $this->inputsPerRow))
+					->addHtml($control->render());
+
+				$inputs .= $colDiv;
+			}
+
+			$rowDiv = Html::el('div')
+				->class('row')
+				->addHtml($inputs);
+
+			$cardBodyDiv = Html::el('div')
+				->class('card-body')
+				->addHtml($rowDiv);
+
+			$submitterArray = $this->getSubmitterArray();
+
+			$cardFooterDiv = null;
+
+			if($submitterArray)
+			{
+				$submitterHtml = null;
+
+				foreach($submitterArray as $submitter)
+				{
+					$submitterHtml .= $submitter->render();
+				}
+
+				$cardFooterDiv = Html::el('div')
+					->class('card-footer')
+					->addHtml($submitterHtml);
+			}
+
+			$outerDiv = Html::el('div')
+				->class('card')
+				->addHtml($cardHeaderDiv . $cardBodyDiv . $cardFooterDiv);
+		}
+		else
+		{
+			$inputs = null;
+
+			foreach($this->getComponents() as $control)
+			{
+				$colDiv = Html::el('div')
+					->class('col-' . strval(12 / $this->inputsPerRow))
+					->addHtml($control->render());
+
+				$inputs .= $colDiv;
 			}
 			
-			$cardFooterDiv = Html::el('div')
-				->class('card-footer')
-				->addHtml($submitterHtml);
+			$outerDiv = Html::el('div')
+				->class('row')
+				->addHtml($inputs);
 		}
 		
-		return Html::el('div')
-			->class('card')
-			->addHtml($cardHeaderDiv . $cardBodyDiv . $cardFooterDiv);
+		if($this->id)
+		{
+			$outerDiv->id($this->id);
+		}
+		
+		return $outerDiv;
 	}
 
 
