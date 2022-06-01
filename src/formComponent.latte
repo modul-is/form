@@ -9,11 +9,7 @@
 				{/if}
 				<div class="card-body">
 					{foreach $box->getInputArray() as $input}
-						{if $input instanceof \ModulIS\Form\Container && !$input instanceof \ModulIS\Form\Control\Duplicator}
-							<div class="alert alert-danger">
-								{icon exclamation-triangle} Container inputs not implemented yet.
-							</div>
-						{elseif $input instanceof \Nette\Forms\Controls\HiddenField}
+						{if $input instanceof \Nette\Forms\Controls\HiddenField}
 							{input $input}
 						{else}
 							{$input->render()}

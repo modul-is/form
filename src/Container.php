@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
+use Nette\Utils\Html;
+use ModulIS\Form\Control;
 
 class Container extends \Nette\Forms\Container
 {
@@ -155,6 +157,87 @@ class Container extends \Nette\Forms\Container
 		}
 
 		return $this[$name] = $whisperer;
+	}
+	
+	
+	public function render()
+	{
+		$cardHeaderDiv = Html::el('div')
+			->class('card-header ' . ($this->color ? 'bg-' . $this->color : ''))
+			->addHtml($this->getName());
+		
+		$inputs = null;
+		
+		foreach($this->getControls() as $control)
+		{
+			$inputs .= $control->render();
+		}
+		
+		$cardBodyDiv = Html::el('div')
+			->class('card-body')
+			->addHtml($inputs);
+		
+		$submitterArray = $this->getSubmitterArray();
+		
+		$cardFooterDiv = null;
+		
+		if($submitterArray)
+		{
+			$submitterHtml = null;
+			
+			foreach($submitterArray as $submitter)
+			{
+				$submitterHtml .= $submitter->render();
+			}
+			
+			$cardFooterDiv = Html::el('div')
+				->class('card-footer')
+				->addHtml($submitterHtml);
+		}
+		
+		return Html::el('div')
+			->class('card')
+			->addHtml($cardHeaderDiv . $cardBodyDiv . $cardFooterDiv);
+	}
+
+
+	public function getInputArray(): array
+	{
+		$controlArray = [];
+
+		/**
+		 * Skip submitters
+		 */
+		foreach($this->getComponents() as $control)
+		{
+			if($control instanceof Control\Button || $control instanceof Control\SubmitButton || $control instanceof Control\Link)
+			{
+				continue;
+			}
+
+			$controlArray[] = $control;
+		}
+
+		return $controlArray;
+	}
+
+
+	public function getSubmitterArray(): array
+	{
+		$controlArray = [];
+
+		/**
+		 * Only submitters
+		 */
+		foreach($this->getComponents() as $control)
+		{
+			if($control instanceof Control\Button || $control instanceof Control\SubmitButton || $control instanceof Control\Link)
+			{
+				$controlArray[] = $control;
+			}
+		}
+
+		return $controlArray;
 	}
 
 
