@@ -208,8 +208,15 @@ class Container extends \Nette\Forms\Container
 	}
 	
 	
-	public function render()
+	public function render(): string|Html
 	{
+		$components = $this->getComponents();
+		
+		if(count($components) === 0)
+		{
+			return '';
+		}
+		
 		if($this->showCard)
 		{
 			$cardHeaderDiv = null;
@@ -266,7 +273,7 @@ class Container extends \Nette\Forms\Container
 		{
 			$inputs = null;
 
-			foreach($this->getComponents() as $control)
+			foreach($components as $control)
 			{
 				$colDiv = Html::el('div')
 					->class('col-' . strval(12 / $this->inputsPerRow))

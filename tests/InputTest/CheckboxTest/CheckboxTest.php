@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 use Tester\Assert;
 use ModulIS\Form\Form;
@@ -14,10 +14,10 @@ class CheckboxTest extends Tester\TestCase
 		$form = new Form;
 
 		$form->addCheckbox('check', 'Check');
+		
+		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/basic.latte'));
 
-		$checkboxString = '<div class="form-group row"><div class="col-sm-8 offset-sm-4"><div class="form-check "><label><input type="checkbox" name="check" id="frm-check"><span class="label-text ">Check</span></label></div></div></div>';
-
-		Assert::same($checkboxString, $form->getComponent('check')->render()->__toString());
+		Assert::same($html, $form->getComponent('check')->render()->__toString());
 	}
 
 
@@ -28,9 +28,9 @@ class CheckboxTest extends Tester\TestCase
 		$form->addCheckbox('check', 'Check')
 			->setOption('id', 'customId');
 
-		$checkboxString = '<div class="form-group row" id="customId"><div class="col-sm-8 offset-sm-4"><div class="form-check "><label><input type="checkbox" name="check" id="frm-check"><span class="label-text ">Check</span></label></div></div></div>';
+		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/id.latte'));
 
-		Assert::same($checkboxString, $form->getComponent('check')->render()->__toString());
+		Assert::same($html, $form->getComponent('check')->render()->__toString());
 	}
 
 
@@ -39,7 +39,7 @@ class CheckboxTest extends Tester\TestCase
 		$form = new Form;
 
 		$form->addCheckbox('check', 'Check')
-			->setTemplate(__DIR__ . '/customCheckbox.latte');
+			->setTemplate(__DIR__ . '/custom.latte');
 
 		$checkboxString = 'custom-template';
 

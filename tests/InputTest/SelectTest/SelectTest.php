@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 use Tester\Assert;
 
@@ -14,9 +14,9 @@ class SelectTest extends Tester\TestCase
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second']);
 
-		$string = '<div class="form-group row"><div class="col-sm-4 control-label align-self-center"><label for="frm-select" class="col-form-label ">Select</label></div><div class="col-sm-8"><div class="input-group"><select name="select" id="frm-select" class="form-control  "><option value="first">First</option><option value="second">Second</option></select></div></div></div>';
+		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/basic.latte'));
 
-		Assert::same($string, $form->getComponent('select')->render()->__toString());
+		Assert::same($html, $form->getComponent('select')->render()->__toString());
 	}
 
 
@@ -40,9 +40,9 @@ class SelectTest extends Tester\TestCase
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
 			->setFloatingLabel(true);
 
-		$string = '<div class="form-floating mb-3"><select name="select" id="frm-select" class=" form-control" placeholder="Select"><option value="first">First</option><option value="second">Second</option></select><label for="frm-select">Select</label></div>';
+		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
 
-		Assert::same($string, $form->getComponent('select')->render()->__toString());
+		Assert::same($html, $form->getComponent('select')->render()->__toString());
 	}
 	
 	
@@ -54,9 +54,9 @@ class SelectTest extends Tester\TestCase
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second']);
 
-		$string = '<div class="form-floating mb-3"><select name="select" id="frm-select" class=" form-control" placeholder="Select"><option value="first">First</option><option value="second">Second</option></select><label for="frm-select">Select</label></div>';
+		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
 
-		Assert::same($string, $form->getComponent('select')->render()->__toString());
+		Assert::same($html, $form->getComponent('select')->render()->__toString());
 	}
 
 
@@ -69,9 +69,9 @@ class SelectTest extends Tester\TestCase
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
 			->setFloatingLabel(false);
 
-		$string = '<div class="form-group row"><div class="col-sm-4 control-label align-self-center"><label for="frm-select" class="col-form-label ">Select</label></div><div class="col-sm-8"><div class="input-group"><select name="select" id="frm-select" class="form-control  "><option value="first">First</option><option value="second">Second</option></select></div></div></div>';
+		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/basic.latte'));
 
-		Assert::same($string, $form->getComponent('select')->render()->__toString());
+		Assert::same($html, $form->getComponent('select')->render()->__toString());
 	}
 
 
@@ -80,7 +80,7 @@ class SelectTest extends Tester\TestCase
 		$form = new ModulIS\Form\Form;
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
-			->setTemplate(__DIR__ . '/customSelect.latte');
+			->setTemplate(__DIR__ . '/custom.latte');
 
 		$string = 'custom-template';
 
