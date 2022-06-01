@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace ModulIS\Form;
 
 use Nette\Utils\Html;
-use ModulIS\Form\Control;
 
 class Container extends \Nette\Forms\Container
 {
 	public string $color = 'white';
-	
+
 	private ?string $title = null;
-	
+
 	private ?string $id = null;
-	
+
 	private int $inputsPerRow = 1;
 
 	private bool $showCard = false;
@@ -23,46 +22,46 @@ class Container extends \Nette\Forms\Container
 	public function setId(string $id): self
 	{
 		$this->id = $id;
-		
+
 		return $this;
 	}
-	
-	
+
+
 	public function setColor(string $color): self
 	{
 		$this->color = $color;
-		
+
 		return $this;
 	}
-	
-	
+
+
 	public function setInputsPerRow(int $inputsPerRow): self
 	{
 		$allowedInputsPerRow = [1, 2, 3, 4, 6, 12];
-		
-		if(!in_array($inputsPerRow, $allowedInputsPerRow))
+
+		if(!in_array($inputsPerRow, $allowedInputsPerRow, true))
 		{
-			throw new \Exception("Invalid number of 'inputsPerRow', allowed are [" . implode(",", $allowedInputsPerRow) . ']');
+			throw new \Exception("Invalid number of 'inputsPerRow', allowed are [" . implode(',', $allowedInputsPerRow) . ']');
 		}
-		
+
 		$this->inputsPerRow = $inputsPerRow;
-		
+
 		return $this;
 	}
-	
-	
+
+
 	public function setTitle(string $title): self
 	{
 		$this->title = $title;
-		
+
 		return $this;
 	}
-	
-	
+
+
 	public function showCard(bool $showCard): self
 	{
 		$this->showCard = $showCard;
-		
+
 		return $this;
 	}
 
@@ -206,21 +205,21 @@ class Container extends \Nette\Forms\Container
 
 		return $this[$name] = $whisperer;
 	}
-	
-	
+
+
 	public function render(): string|Html
 	{
 		$components = $this->getComponents();
-		
+
 		if(count($components) === 0)
 		{
 			return '';
 		}
-		
+
 		if($this->showCard)
 		{
 			$cardHeaderDiv = null;
-		
+
 			if($this->title)
 			{
 				$cardHeaderDiv = Html::el('div')
@@ -281,17 +280,17 @@ class Container extends \Nette\Forms\Container
 
 				$inputs .= $colDiv;
 			}
-			
+
 			$outerDiv = Html::el('div')
 				->class('row')
 				->addHtml($inputs);
 		}
-		
+
 		if($this->id)
 		{
 			$outerDiv->id($this->id);
 		}
-		
+
 		return $outerDiv;
 	}
 

@@ -36,7 +36,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 		{
 			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
 		}
-		
+
 		$label = $this->getCoreLabel();
 
 		$labelDiv = Html::el('div')
@@ -60,8 +60,8 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 		return $outerDiv;
 	}
-	
-	
+
+
 	public function setOnSelectCallback(array|\Closure $callback): self
 	{
 		$this->onSelectCallback = $callback;

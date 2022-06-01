@@ -1,5 +1,5 @@
 {
-    "name": "modul-is/form",
+	"name": "modul-is/form",
 	"type": "library",
 	"description": "Simplified nette forms",
 	"keywords": ["php", "nette", "form"],

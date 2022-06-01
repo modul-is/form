@@ -37,6 +37,12 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 	}
 
 
+	protected function setRenderManually(bool $renderManually): void
+	{
+		$this->renderManually = $renderManually;
+	}
+
+
 	/**
 	 * Return path to latte file for given class path
 	 */

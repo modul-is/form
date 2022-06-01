@@ -11,7 +11,7 @@ class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Ren
 {
 	use Helper\InputGroup;
 	use Helper\Color;
-	use Helper\Input;
+	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
 	use Helper\InputRender;

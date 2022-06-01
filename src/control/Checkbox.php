@@ -10,7 +10,7 @@ use ModulIS\Form\Helper;
 class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 {
 	use Helper\Color;
-	use Helper\Input;
+	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;

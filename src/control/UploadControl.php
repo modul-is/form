@@ -10,7 +10,7 @@ use ModulIS\Form\Helper;
 class UploadControl extends \Nette\Forms\Controls\UploadControl implements Renderable
 {
 	use Helper\Color;
-	use Helper\Input;
+	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
 	use Helper\InputRender;

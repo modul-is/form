@@ -11,7 +11,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 {
 	use Helper\InputGroup;
 	use Helper\Color;
-	use Helper\Input;
+	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
 	use Helper\InputRender;
@@ -30,9 +30,9 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 		{
 			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
 		}
-		
+
 		$floatingLabel = $this->getFloatingLabel();
-		
+
 		/**
 		 * If floating label not set - take it from form
 		 */
@@ -40,15 +40,15 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 		{
 			$floatingLabel = $this->getForm()->getFloatingLabel();
 		}
-		
+
 		if($floatingLabel)
 		{
 			$input = $this->getControl();
 			$input->class($input->getAttribute('class') . ' form-control');
 			$input->placeholder($this->getCaption());
-			
+
 			$label = $this->getLabel();
-			
+
 			$outerDiv = Html::el('div')
 				->class('form-floating mb-3')
 				->addHtml($input . $label);
@@ -66,7 +66,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 			$inputDiv = Html::el('div')
 				->class('col-sm-8')
 				->addHtml($input);
-		
+
 			$outerDiv = Html::el('div')
 				->class('form-group row')
 				->addHtml($labelDiv . $inputDiv);

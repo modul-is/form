@@ -12,7 +12,7 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 {
 	use Helper\InputGroup;
 	use Helper\Color;
-	use Helper\Input;
+	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
 	use Helper\InputRender;

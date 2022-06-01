@@ -10,7 +10,7 @@ use ModulIS\Form\Helper;
 class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 {
 	use Helper\Color;
-	use Helper\Input;
+	use Helper\Tooltip;
 	use Helper\CoreList;
 	use Helper\ControlPart;
 	use Helper\Label;
