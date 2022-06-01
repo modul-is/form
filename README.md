@@ -49,11 +49,11 @@ Inputs are rendered in `card-body` div
 Submitters, links and buttons in `card-footer`
 
 ### Container
-Container works as standard Nette Continer and adds these new features
+Container works as standard Nette Continer and has these new features
 
 + `setId()` - add html id to outer div of container
-+ `setInputsPerRow()` - sets how many inputs render in one row
-+ `showCard()` - show container as BS card
++ `setInputsPerRow()` - sets how many inputs are rendered in one row
++ `showCard()` - show container as BS5 card
 + `setTitle()` - show title of container (only works when container is rendered as card)
 + `setColor()` - set color of conatiner (only works when container is rendered as card)
 
