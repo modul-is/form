@@ -17,6 +17,8 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 	use Helper\InputGroup;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
+	use Helper\ValidationSuccessMessage;
+
 
 	public function getCoreControl(): Html
 	{

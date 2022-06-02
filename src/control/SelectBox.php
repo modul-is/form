@@ -18,6 +18,8 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\FloatingLabel;
+	use Helper\ValidationSuccessMessage;
+
 
 	public function render(): Html|string
 	{

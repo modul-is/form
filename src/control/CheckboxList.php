@@ -16,6 +16,8 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 	use Helper\Label;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
+	use Helper\ValidationSuccessMessage;
+
 
 	public function getCoreControl(): Html|string
 	{
@@ -68,13 +70,19 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 				->addHtml($labelWrap);
 		}
 
-		$errorMessage = null;
+		$validationFeedBack = null;
 
 		if($this->hasErrors())
 		{
-			$errorMessage = Html::el('div')
+			$validationFeedBack = Html::el('div')
 				->class('check-invalid')
 				->addHtml($this->getError());
+		}
+		elseif($this->getValidationSuccessMessage())
+		{
+			$validationFeedBack = Html::el('div')
+				->class('valid-feedback')
+				->addHtml($this->getValidationSuccessMessage());
 		}
 
 		$wrapRow = Html::el('div')
@@ -85,7 +93,7 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 			->class('container')
 			->addHtml($wrapRow);
 
-		return $wrapContainer . $errorMessage;
+		return $wrapContainer . $validationFeedBack;
 	}
 
 

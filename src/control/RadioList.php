@@ -16,6 +16,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 	use Helper\Label;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
+	use Helper\ValidationSuccessMessage;
 
 	public function getCoreControl(): string
 	{
@@ -67,13 +68,19 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 				->addHtml($labelWrap);
 		}
 
-		$errorMessage = null;
+		$validationFeedBack = null;
 
 		if($this->hasErrors())
 		{
-			$errorMessage = Html::el('div')
+			$validationFeedBack = Html::el('div')
 				->class('check-invalid')
 				->addHtml($this->getError());
+		}
+		elseif($this->getValidationSuccessMessage())
+		{
+			$validationFeedBack = Html::el('div')
+				->class('valid-feedback')
+				->addHtml($this->getValidationSuccessMessage());
 		}
 
 		$wrapRow = Html::el('div')
@@ -84,7 +91,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 			->class('container')
 			->addHtml($wrapRow);
 
-		return $wrapContainer . $errorMessage;
+		return $wrapContainer . $validationFeedBack;
 	}
 
 

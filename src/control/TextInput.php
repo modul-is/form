@@ -18,6 +18,8 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\FloatingLabel;
+	use Helper\ValidationSuccessMessage;
+
 
 	public function render(): Html|string
 	{

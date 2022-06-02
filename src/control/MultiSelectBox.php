@@ -17,6 +17,8 @@ class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Ren
 	use Helper\InputRender;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
+	use Helper\ValidationSuccessMessage;
+
 
 	public function render(): Html|string
 	{

@@ -14,6 +14,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	use Helper\ControlPart;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
+	use Helper\ValidationSuccessMessage;
 
 	public function getCoreLabel()
 	{
@@ -40,15 +41,23 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 		$wrap = Html::el('div')
 			->class('form-check ');
 
-		$errorMessage = '';
+		$validationFeedBack = null;
 
 		if($this->hasErrors())
 		{
-			$errorMessage = Html::el('div')
+			$validationFeedBack = Html::el('div')
 				->class('check-invalid')
 				->addHtml($this->getError());
 		}
+		elseif($this->getValidationSuccessMessage())
+		{
+			$validationFeedBack = Html::el('div')
+				->class('valid-feedback')
+				->addHtml($this->getValidationSuccessMessage());
+		}
 
+		$wrap->addHtml($labelWrap);
+		
 		if($this->tooltip)
 		{
 			$tooltip = Html::el('span')
@@ -56,15 +65,11 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 				->addAttributes(['data-placement' => 'top', 'data-toggle' => 'tooltip'])
 				->addHtml(\Kravcik\Macros\FontAwesomeMacro::renderIcon('question-circle', ['color' => 'blue']));
 
-			return $wrap->addHtml($labelWrap)
-				->addHtml($tooltip)
-				->addHtml($errorMessage);
+			$wrap->addHtml($tooltip);
 		}
-		else
-		{
-			return $wrap->addHtml($labelWrap)
-				->addHtml($errorMessage);
-		}
+
+		return $wrap->addHtml($validationFeedBack);
+		
 	}
 
 

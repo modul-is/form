@@ -2,32 +2,32 @@
 	"name": "modul-is/form",
 	"type": "library",
 	"description": "Simplified nette forms",
-	"keywords": ["php", "nette", "form"],
+	"keywords": ["php", "nette", "form", "bs5"],
 	"homepage": "https://github.com/modul-is/form",
 	"license": "MIT",
     "require":
     {
 		"php": "^8",
-        "nette/finder": "^2.5",
-        "nette/forms": "^3.0",
-        "nette/security": "^3.1",
-        "nasext/dependent-select-box": "^5.1",
-        "nette/application": "^3.1"
+		"nette/finder": "^2.5",
+		"nette/forms": "^3.0",
+		"nette/security": "^3.1",
+		"nasext/dependent-select-box": "^5.1",
+		"nette/application": "^3.1",
+		"kravcik/nette-macro-fontawesome": "^4"
     },
     "require-dev":
     {
-        "phpstan/phpstan-nette": "^1",
+		"phpstan/phpstan-nette": "^1",
 		"modul-is/coding-standard": "^4",
-        "kravcik/nette-macro-fontawesome": "^4",
-        "nette/tester": "^2.1"
+		"nette/tester": "^2.1"
     },
     "autoload":
     {
-        "classmap": ["src/"]
+		"classmap": ["src/"]
     },
     "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }

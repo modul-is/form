@@ -12,19 +12,27 @@ trait InputRender
 	{
 		$input = $this->getControl();
 
-		$errorClass = '';
-		$errorMessage = null;
+		$validationClass = null;
+		$validationFeedBack = null;
 
 		if($this->hasErrors())
 		{
-			$errorClass = 'is-invalid';
+			$validationClass = 'is-invalid';
 
-			$errorMessage = Html::el('div')
+			$validationFeedBack = Html::el('div')
 				->class('invalid-feedback')
 				->addHtml($this->getError());
 		}
+		elseif($this->getValidationSuccessMessage())
+		{
+			$validationClass = 'is-valid';
+			
+			$validationFeedBack = Html::el('div')
+				->class('valid-feedback')
+				->addHtml($this->getValidationSuccessMessage());
+		}
 
-		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . ' ' . $errorClass]);
+		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . ' ' . $validationClass]);
 
 		$prepend = null;
 		$append = null;
@@ -52,6 +60,6 @@ trait InputRender
 		}
 
 		return Html::el('div')->class('input-group')
-			->addHtml($prepend . $input . $append . $errorMessage);
+			->addHtml($prepend . $input . $append . $validationFeedBack);
 	}
 }
