@@ -23,13 +23,16 @@ trait InputRender
 				->class('invalid-feedback')
 				->addHtml($this->getError());
 		}
-		elseif($this->getValidationSuccessMessage())
+		else
 		{
 			$validationClass = 'is-valid';
 			
-			$validationFeedBack = Html::el('div')
-				->class('valid-feedback')
-				->addHtml($this->getValidationSuccessMessage());
+			if($this->getValidationSuccessMessage())
+			{
+				$validationFeedBack = Html::el('div')
+					->class('valid-feedback')
+					->addHtml($this->getValidationSuccessMessage());
+			}
 		}
 
 		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . ' ' . $validationClass]);
