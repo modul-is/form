@@ -8,6 +8,9 @@ use Nette\Utils\Html;
 
 trait InputRender
 {
+	public string $controlClass = 'form-control';
+	
+	
 	public function getCoreControl()
 	{
 		$input = $this->getControl();
@@ -38,7 +41,7 @@ trait InputRender
 			}
 		}
 
-		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . ' ' . $validationClass]);
+		$input->addAttributes(['class' => $this->controlClass. ' ' . $input->getAttribute('class') . ' ' . $validationClass]);
 
 		$prepend = null;
 		$append = null;

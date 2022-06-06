@@ -19,6 +19,14 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 	use Helper\Template;
 	use Helper\FloatingLabel;
 	use Helper\ValidationSuccessMessage;
+	
+	
+	public function __construct($label = null, ?array $items = null)
+	{
+		parent::__construct($label, $items);
+		
+		$this->controlClass = 'form-control';
+	}
 
 
 	public function render(): Html|string
