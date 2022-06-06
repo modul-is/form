@@ -1,0 +1,306 @@
+/*
+ * Helper file for checkboxes and their colors
+ */
+
+label{
+    position: relative;
+    cursor: pointer;
+    color: #666;
+
+}
+
+input[type="checkbox"], input[type="radio"]{
+    display: none;
+    visibility: hidden;
+}
+
+/*Check box*/
+input[type="checkbox"] + .label-text:before,
+/* summernote checkboxes */
+div.checkbox.sn-checkbox-open-in-new-window > label > input[type="checkbox"],
+div.checkbox.sn-checkbox-use-protocol > label > input[type="checkbox"]
+{
+    content: "\f0c8";
+    font-family: "Font Awesome 5 Pro";
+    speak: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing:antialiased;
+    width: 1em;
+    display: inline-block;
+    visibility: visible;
+    margin-right: 5px;
+    line-height: 1.2em;
+    font-size: 1.2em;
+}
+
+input[type="checkbox"]:checked + .label-text:before{
+    content: "\f14a";
+    color: #2980b9;
+    animation: effect 250ms ease-in;
+    font-weight: 900;
+}
+
+input[type="checkbox"]:disabled + .label-text{
+    color: #aaa;
+}
+
+input[type="checkbox"]:disabled + .label-text:before{
+    color: #ccc;
+}
+
+input:not([checked]) input[type="checkbox"]:disabled + .label-text:before{
+    content: "\f0c8";
+}
+
+@keyframes effect
+{
+    0%{transform: scale(0);}
+    25%{transform: scale(1.3);}
+    75%{transform: scale(1.4);}
+    100%{transform: scale(1);}
+}
+
+/** BOOTSTRAP COLORS */
+input[type="checkbox"]:checked.checkbox-primary + .label-text::before
+{
+    color: #428bca;
+}
+
+input[type="checkbox"]:checked.checkbox-danger + .label-text::before
+{
+    color: #d9534f;
+}
+
+input[type="checkbox"]:checked.checkbox-info + .label-text::before
+{
+    color: #5bc0de;
+}
+
+input[type="checkbox"]:checked.checkbox-warning + .label-text::before
+{
+    color: #f0ad4e;
+}
+
+input[type="checkbox"]:checked.checkbox-success + .label-text::before
+{
+    color: #5cb85c;
+}
+
+/** PINK */
+input[type="checkbox"]:checked.checkbox-pink + .label-text::before
+{
+    color: #ff0080;
+}
+
+input[type="checkbox"]:checked.checkbox-pink-light + .label-text::before
+{
+    color: #ff99bb;
+}
+
+input[type="checkbox"]:checked.checkbox-pink-dark + .label-text::before
+{
+    color: #d5006a;
+}
+
+/** BLACK */
+input[type="checkbox"]:checked.checkbox-black + .label-text::before
+{
+    color: #000;
+}
+
+/** BROWN */
+input[type="checkbox"]:checked.checkbox-brown + .label-text::before
+{
+    color: #994e00;
+}
+
+input[type="checkbox"]:checked.checkbox-brown-light + .label-text::before
+{
+    color: #b35b00;
+}
+
+input[type="checkbox"]:checked.checkbox-brown-dark + .label-text::before
+{
+    color: #663400;
+}
+
+/** GREY (GRAY) */
+input[type="checkbox"]:checked.checkbox-grey + .label-text::before,
+input[type="checkbox"]:checked.checkbox-gray + .label-text::before
+{
+    color: #999;
+}
+
+input[type="checkbox"]:checked.checkbox-grey-light + .label-text::before,
+input[type="checkbox"]:checked.checkbox-gray-light + .label-text::before
+{
+    color: #c2c2c2;
+}
+
+input[type="checkbox"]:checked.checkbox-grey-dark + .label-text::before,
+input[type="checkbox"]:checked.checkbox-gray-dark + .label-text::before
+{
+    color: #6b6b6b;
+}
+
+/** PURPLE */
+input[type="checkbox"]:checked.checkbox-purple + .label-text::before
+{
+    color: #9032c2;
+}
+
+input[type="checkbox"]:checked.checkbox-purple-light + .label-text::before
+{
+    color: #c089dd;
+}
+
+input[type="checkbox"]:checked.checkbox-purple-dark + .label-text::before
+{
+    color: #57167a;
+}
+
+/** VIOLET */
+input[type="checkbox"]:checked.checkbox-violet + .label-text::before
+{
+    color: #941958;
+}
+
+input[type="checkbox"]:checked.checkbox-violet-light + .label-text::before
+{
+    color: #de3b8f;
+}
+
+input[type="checkbox"]:checked.checkbox-violet-dark + .label-text::before
+{
+    color: #68113e;
+}
+
+/** MAROON */
+input[type="checkbox"]:checked.checkbox-maroon + .label-text::before
+{
+    color: #e55082;
+}
+
+input[type="checkbox"]:checked.checkbox-maroon-light + .label-text::before
+{
+    color: #eb7aa0;
+}
+
+input[type="checkbox"]:checked.checkbox-maroon-dark + .label-text::before
+{
+    color: #ca195a;
+}
+
+/** RED */
+input[type="checkbox"]:checked.checkbox-red + .label-text::before
+{
+    color: #ff2a2a;
+}
+
+input[type="checkbox"]:checked.checkbox-red-light + .label-text::before
+{
+    color: #ff5555;
+}
+
+input[type="checkbox"]:checked.checkbox-red-dark + .label-text::before
+{
+    color: #dd0000;
+}
+
+/** ORANGE */
+input[type="checkbox"]:checked.checkbox-orange + .label-text::before
+{
+    color: #ff7000;
+}
+
+input[type="checkbox"]:checked.checkbox-orange-light + .label-text::before
+{
+    color: #ff8133;
+}
+
+input[type="checkbox"]:checked.checkbox-orange-dark + .label-text::before
+{
+    color: #cd5100;
+}
+
+/** YELLOW */
+input[type="checkbox"]:checked.checkbox-yellow + .label-text::before
+{
+    color: #f6f622;
+}
+
+input[type="checkbox"]:checked.checkbox-yellow-light + .label-text::before
+{
+    color: #f6f661;
+}
+
+input[type="checkbox"]:checked.checkbox-yellow-dark + .label-text::before
+{
+    color: #efcf00;
+}
+
+/** GREEN */
+input[type="checkbox"]:checked.checkbox-green + .label-text::before
+{
+    color: #009900;
+}
+
+input[type="checkbox"]:checked.checkbox-green-light + .label-text::before
+{
+    color: #8bc34a;
+}
+
+input[type="checkbox"]:checked.checkbox-green-dark + .label-text::before
+{
+    color: #398439;
+}
+
+/** TEAL */
+input[type="checkbox"]:checked.checkbox-teal + .label-text::before
+{
+    color: #30cccc;
+}
+
+input[type="checkbox"]:checked.checkbox-teal-light + .label-text::before
+{
+    color: #7ce9e9;
+}
+
+input[type="checkbox"]:checked.checkbox-teal-dark + .label-text::before
+{
+    color: #2aa9a9;
+}
+
+/** BLUE */
+input[type="checkbox"]:checked.checkbox-blue + .label-text::before
+{
+    color: #006fe6;
+}
+
+input[type="checkbox"]:checked.checkbox-blue-light + .label-text::before
+{
+    color: #3395ff;
+}
+
+input[type="checkbox"]:checked.checkbox-blue-dark + .label-text::before
+{
+    color: #0053ad;
+}
+
+/** NAVY */
+input[type="checkbox"]:checked.checkbox-navy + .label-text::before
+{
+    color: #00367b;
+}
+
+input[type="checkbox"]:checked.checkbox-navy-light + .label-text::before
+{
+    color: #4da6ff;
+}
+
+input[type="checkbox"]:checked.checkbox-navy-dark + .label-text::before
+{
+    color: #00264d;
+}
