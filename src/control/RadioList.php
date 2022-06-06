@@ -20,17 +20,22 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 
 	public function getCoreControl(): string
 	{
-		$inputArray = [];
+		$inputs = null;
 
 		foreach($this->getItems() as $key => $input)
 		{
 			$input = $this->getControlPart($key);
+			
+			$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;
+		
+			$input->class('form-check-input ' . $input->getAttribute('class') . $inputColorClass);
+			
 			$label = $this->getLabelPart($key);
+			
+			$label->class('form-check-label');
 
-			$labelSpan = Html::el('span')
-				->class('label-text ' . $input->getAttribute('class'))
-				->addHtml($label);
-
+			$tooltip = null;
+			
 			if(isset($this->tooltips[$key]))
 			{
 				$tooltip = Html::el('span')
@@ -38,48 +43,36 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 					->addAttributes(['data-placement' => 'top', 'data-toggle' => 'tooltip'])
 					->addHtml(\Kravcik\Macros\FontAwesomeMacro::renderIcon('question-circle', ['color' => 'blue']));
 
-				$labelSpan->addHtml($tooltip);
+				$label->addHtml($tooltip);
 			}
 
-			$labelWrap = Html::el('label')
-				->addHtml($input)
-				->addHtml($labelSpan);
-
-			$class = 'form-check-inline mr-0 col';
-
-			if($this->itemsPerRow)
-			{
-				$class .= '-' . 12 / $this->itemsPerRow;
-			}
+			$class = 'form-check-inline mr-0 col-' . 12 / $this->itemsPerRow;
 
 			if($this->itemClass)
 			{
 				$class .= ' ' . $this->itemClass;
 			}
 
-			if($this->color)
-			{
-				$class .= ' radiobox-' . $this->color;
-				$input->setAttribute('class', $input->getAttribute('class') . ' radiobox-' . $this->color);
-			}
-
-			$inputArray[] = Html::el('div')
+			$inputs .= Html::el('div')
 				->class('form-check ' . $class)
-				->addHtml($labelWrap);
+				->addHtml($input . $label . $tooltip);
 		}
 
 		$validationFeedBack = null;
+		$validationClass = null;
 
 		if($this->getForm()->isSubmitted())
 		{
 			if($this->hasErrors())
 			{
+				$validationClass = 'is-invalid';
 				$validationFeedBack = Html::el('div')
 					->class('check-invalid')
 					->addHtml($this->getError());
 			}
 			elseif($this->getValidationSuccessMessage())
 			{
+				$validationClass = 'is-valid';
 				$validationFeedBack = Html::el('div')
 					->class('valid-feedback')
 					->addHtml($this->getValidationSuccessMessage());
@@ -88,7 +81,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 
 		$wrapRow = Html::el('div')
 			->class('row')
-			->addHtml(implode('', $inputArray));
+			->addHtml($inputs);
 
 		$wrapContainer = Html::el('div')
 			->class('container')

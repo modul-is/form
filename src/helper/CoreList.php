@@ -8,7 +8,7 @@ trait CoreList
 {
 	public array $tooltips = [];
 
-	public int $itemsPerRow = 0;
+	public int $itemsPerRow = 1;
 
 	public ?string $itemClass = null;
 

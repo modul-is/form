@@ -33,7 +33,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 		{
 			if($this->hasErrors())
 			{
-				$validationClass = 'is-invalid';
+				$validationClass = ' is-invalid';
 				
 				$validationMessage = Html::el('div')
 					->class('invalid-feedback')
@@ -41,7 +41,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 			}
 			elseif($this->getValidationSuccessMessage())
 			{
-				$validationClass = 'is-valid';
+				$validationClass = ' is-valid';
 				
 				$validationMessage = Html::el('div')
 					->class('valid-feedback')
@@ -49,12 +49,9 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 			}
 		}
 		
-		$input->class('form-check-input' . $input->getAttribute('class') . ' ' . $validationClass);
+		$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;
 		
-		if($this->color)
-		{
-			$input->setAttribute('class', $input->getAttribute('class') . ' checkbox-' . $this->color);
-		}
+		$input->class('form-check-input ' . $input->getAttribute('class') . $validationClass . $inputColorClass);
 
 		$label = Html::el('label')
 			->setAttribute('for', $this->getHtmlId())
