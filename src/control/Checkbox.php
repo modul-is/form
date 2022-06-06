@@ -15,6 +15,17 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\ValidationSuccessMessage;
+	
+	private bool $switch = false;
+	
+	
+	public function setSwitch(bool $switch = true): self
+	{
+		$this->switch = $switch;
+		
+		return $this;
+	}
+
 
 	public function getCoreLabel()
 	{
@@ -58,8 +69,10 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 			->class('form-check-label')
 			->addHtml($this->caption);
 		
+		$switchClass = $this->switch ? ' form-switch' : null;
+		
 		$wrapDiv = Html::el('div')
-			->class('form-check')
+			->class('form-check' . $switchClass)
 			->addHtml($input . $label);
 		
 		if($this->tooltip)
