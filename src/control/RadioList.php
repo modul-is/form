@@ -42,8 +42,6 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 					->title($this->tooltips[$key])
 					->addAttributes(['data-placement' => 'top', 'data-toggle' => 'tooltip'])
 					->addHtml(\Kravcik\Macros\FontAwesomeMacro::renderIcon('question-circle', ['color' => 'blue']));
-
-				$label->addHtml($tooltip);
 			}
 
 			$class = 'form-check-inline mr-0 col-' . 12 / $this->itemsPerRow;
@@ -84,7 +82,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 			->addHtml($inputs);
 
 		$wrapContainer = Html::el('div')
-			->class('container')
+			->class('container ' . $validationClass)
 			->addHtml($wrapRow);
 
 		return $wrapContainer . $validationFeedBack;
