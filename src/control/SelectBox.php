@@ -25,7 +25,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 	{
 		parent::__construct($label, $items);
 		
-		$this->controlClass = 'form-control';
+		$this->controlClass = 'form-select';
 	}
 
 
