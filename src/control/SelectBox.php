@@ -81,7 +81,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 				->addHtml($input);
 
 			$outerDiv = Html::el('div')
-				->class('mb3 row')
+				->class('mb-3 row')
 				->addHtml($labelDiv . $inputDiv);
 		}
 
