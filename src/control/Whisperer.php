@@ -50,7 +50,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 			->addHtml($input);
 
 		$outerDiv = Html::el('div')
-			->class('form-group row')
+			->class('mb-3 row')
 			->addHtml($labelDiv . $inputDiv);
 
 		if($this->getOption('id'))

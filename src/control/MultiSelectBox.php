@@ -45,7 +45,7 @@ class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Ren
 			->addHtml($input);
 
 		$outerDiv = Html::el('div')
-			->class('form-group row')
+			->class('mb-3 row')
 			->addHtml($labelDiv . $inputDiv);
 
 		if($this->getOption('id'))

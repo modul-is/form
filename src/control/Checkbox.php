@@ -95,7 +95,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 			->addHtml($input);
 
 		$outerDiv = Html::el('div')
-			->class('form-group row')
+			->class('mb-3 row')
 			->addHtml($inputDiv);
 
 		if($this->getOption('id'))

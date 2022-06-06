@@ -72,7 +72,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable
 				->addHtml($input);
 
 			$outerDiv = Html::el('div')
-				->class('form-group row')
+				->class('mb-3 row')
 				->addHtml($labelDiv . $inputDiv);
 		}
 
