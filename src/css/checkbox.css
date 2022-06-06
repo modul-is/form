@@ -46,239 +46,284 @@ input[type="checkbox"]:disabled{
 /** BOOTSTRAP COLORS */
 input[type="checkbox"]:checked.checkbox-primary
 {
-    color: #428bca;
+	background-color: #428bca;
+	border-color: #428bca;
 }
 
 input[type="checkbox"]:checked.checkbox-danger
 {
-    color: #d9534f;
+    background-color: #d9534f;
+	border-color: #d9534f;
 }
 
 input[type="checkbox"]:checked.checkbox-info
 {
-    color: #5bc0de;
+	background-color: #5bc0de;
+	border-color: #5bc0de;
 }
 
 input[type="checkbox"]:checked.checkbox-warning
 {
-    color: #f0ad4e;
+	background-color: #f0ad4e;
+	border-color: #f0ad4e;
 }
 
 input[type="checkbox"]:checked.checkbox-success
 {
-    color: #5cb85c;
+	background-color: #5cb85c;
+	border-color: #5cb85c;
 }
 
 /** PINK */
 input[type="checkbox"]:checked.checkbox-pink
 {
-    color: #ff0080;
+	background-color: #ff0080;
+	border-color: #ff0080;
 }
 
 input[type="checkbox"]:checked.checkbox-pink-light
 {
-    color: #ff99bb;
+	background-color: #ff99bb;
+	border-color: #ff99bb;
 }
 
 input[type="checkbox"]:checked.checkbox-pink-dark
 {
-    color: #d5006a;
+	background-color: #d5006a;
+	border-color: #d5006a;
 }
 
 /** BLACK */
 input[type="checkbox"]:checked.checkbox-black
 {
-    color: #000;
+	background-color: #000;
+	border-color: #000;
 }
 
 /** BROWN */
 input[type="checkbox"]:checked.checkbox-brown
 {
-    color: #994e00;
+	background-color: #994e00;
+	border-color: #994e00;
 }
 
 input[type="checkbox"]:checked.checkbox-brown-light
 {
-    color: #b35b00;
+	background-color: #b35b00;
+	border-color: #b35b00;
 }
 
 input[type="checkbox"]:checked.checkbox-brown-dark 
 {
-    color: #663400;
+	background-color: #663400;
+	border-color: #663400;
 }
 
 /** GREY (GRAY) */
 input[type="checkbox"]:checked.checkbox-grey
 {
-    color: #999;
+	background-color: #999;
+	border-color: #999;
 }
 
 input[type="checkbox"]:checked.checkbox-grey-light
 {
-    color: #c2c2c2;
+	background-color: #c2c2c2;
+	border-color: #c2c2c2;
 }
 
 input[type="checkbox"]:checked.checkbox-grey-dark
 {
-    color: #6b6b6b;
+	background-color: #6b6b6b;
+	border-color: #6b6b6b;
 }
 
 /** PURPLE */
 input[type="checkbox"]:checked.checkbox-purple
 {
-    color: #9032c2;
+	background-color: #9032c2;
+	border-color: #9032c2;
 }
 
 input[type="checkbox"]:checked.checkbox-purple-light
 {
-    color: #c089dd;
+	background-color: #c089dd;
+	border-color: #c089dd;
 }
 
 input[type="checkbox"]:checked.checkbox-purple-dark
 {
-    color: #57167a;
+	background-color: #57167a;
+	border-color: #57167a;
 }
 
 /** VIOLET */
 input[type="checkbox"]:checked.checkbox-violet
 {
-    color: #941958;
+	background-color: #941958;
+	border-color: #941958;
 }
 
 input[type="checkbox"]:checked.checkbox-violet-light
 {
-    color: #de3b8f;
+	background-color: #de3b8f;
+	border-color: #de3b8f;
 }
 
 input[type="checkbox"]:checked.checkbox-violet-dark
 {
-    color: #68113e;
+	background-color: #68113e;
+	border-color: #68113e;
 }
 
 /** MAROON */
 input[type="checkbox"]:checked.checkbox-maroon
 {
-    color: #e55082;
+	background-color: #e55082;
+	border-color: #e55082;
 }
 
 input[type="checkbox"]:checked.checkbox-maroon-light
 {
-    color: #eb7aa0;
+	background-color: #eb7aa0;
+	border-color: #eb7aa0;
 }
 
 input[type="checkbox"]:checked.checkbox-maroon-dark
 {
-    color: #ca195a;
+	background-color: #ca195a;
+	border-color: #ca195a;
 }
 
 /** RED */
 input[type="checkbox"]:checked.checkbox-red
 {
-    color: #ff2a2a;
+	background-color: #ff2a2a;
+	border-color: #ff2a2a;
 }
 
 input[type="checkbox"]:checked.checkbox-red-light
 {
-    color: #ff5555;
+	background-color: #ff5555;
+	border-color: #ff5555;
 }
 
 input[type="checkbox"]:checked.checkbox-red-dark
 {
-    color: #dd0000;
+	background-color: #dd0000;
+	border-color: #dd0000;
 }
 
 /** ORANGE */
 input[type="checkbox"]:checked.checkbox-orange
 {
-    color: #ff7000;
+	background-color: #ff7000;
+	border-color: #ff7000;
 }
 
 input[type="checkbox"]:checked.checkbox-orange-light
 {
-    color: #ff8133;
+	background-color: #ff8133;
+	border-color: #ff8133;
 }
 
 input[type="checkbox"]:checked.checkbox-orange-dark
 {
-    color: #cd5100;
+	background-color: #cd5100;
+	border-color: #cd5100;
 }
 
 /** YELLOW */
 input[type="checkbox"]:checked.checkbox-yellow
 {
-    color: #f6f622;
+	background-color: #f6f622;
+	border-color: #f6f622;
 }
 
 input[type="checkbox"]:checked.checkbox-yellow-light
 {
-    color: #f6f661;
+	background-color: #f6f661;
+	border-color: #f6f661;
 }
 
 input[type="checkbox"]:checked.checkbox-yellow-dark
 {
-    color: #efcf00;
+	background-color: #efcf00;
+	border-color: #efcf00;
 }
 
 /** GREEN */
 input[type="checkbox"]:checked.checkbox-green
 {
-    color: #009900;
+	background-color: #009900;
+	border-color: #009900;
 }
 
 input[type="checkbox"]:checked.checkbox-green-light
 {
-    color: #8bc34a;
+	background-color: #8bc34a;
+	border-color: #8bc34a;
 }
 
 input[type="checkbox"]:checked.checkbox-green-dark
 {
-    color: #398439;
+	background-color: #398439;
+	border-color: #398439;
 }
 
 /** TEAL */
 input[type="checkbox"]:checked.checkbox-teal
 {
-    color: #30cccc;
+	background-color: #30cccc;
+	border-color: #30cccc;
 }
 
 input[type="checkbox"]:checked.checkbox-teal-light
 {
-    color: #7ce9e9;
+	background-color: #7ce9e9;
+	border-color: #7ce9e9;
 }
 
 input[type="checkbox"]:checked.checkbox-teal-dark
 {
-    color: #2aa9a9;
+	background-color: #2aa9a9;
+	border-color: #2aa9a9;
 }
 
 /** BLUE */
 input[type="checkbox"]:checked.checkbox-blue
 {
-    color: #006fe6;
+	background-color: #006fe6;
+	border-color: #006fe6;
 }
 
 input[type="checkbox"]:checked.checkbox-blue-light
 {
-    color: #3395ff;
+	background-color: #3395ff;
+	border-color: #3395ff;
 }
 
 input[type="checkbox"]:checked.checkbox-blue-dark
 {
-    color: #0053ad;
+	background-color: #0053ad;
+	border-color: #0053ad;
 }
 
 /** NAVY */
 input[type="checkbox"]:checked.checkbox-navy
 {
-    color: #00367b;
+	background-color: #00367b;
+	border-color: #00367b;
 }
 
 input[type="checkbox"]:checked.checkbox-navy-light
 {
-    color: #4da6ff;
+	background-color: #4da6ff;
+	border-color: #4da6ff;
 }
 
 input[type="checkbox"]:checked.checkbox-navy-dark
 {
-    color: #00264d;
+	background-color: #00264d;
+	border-color: #00264d;
 }
