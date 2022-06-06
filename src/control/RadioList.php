@@ -70,17 +70,20 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 
 		$validationFeedBack = null;
 
-		if($this->hasErrors())
+		if($this->getForm()->isSubmitted())
 		{
-			$validationFeedBack = Html::el('div')
-				->class('check-invalid')
-				->addHtml($this->getError());
-		}
-		elseif($this->getValidationSuccessMessage())
-		{
-			$validationFeedBack = Html::el('div')
-				->class('valid-feedback')
-				->addHtml($this->getValidationSuccessMessage());
+			if($this->hasErrors())
+			{
+				$validationFeedBack = Html::el('div')
+					->class('check-invalid')
+					->addHtml($this->getError());
+			}
+			elseif($this->getValidationSuccessMessage())
+			{
+				$validationFeedBack = Html::el('div')
+					->class('valid-feedback')
+					->addHtml($this->getValidationSuccessMessage());
+			}
 		}
 
 		$wrapRow = Html::el('div')

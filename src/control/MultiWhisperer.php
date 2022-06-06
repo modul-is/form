@@ -12,49 +12,55 @@ class MultiWhisperer extends MultiSelectBox
 	{
 		$input = $this->getControl();
 
-		$errorClass = '';
-		$errorMessage = null;
+		$validationClass = null;
+		$validationFeedBack = null;
 
-		if($this->hasErrors())
+		if($this->getForm()->isSubmitted())
 		{
-			$errorClass = ' is-invalid';
+			if($this->hasErrors())
+			{
+				$validationClass = 'is-invalid';
 
-			$errorMessage = Html::el('div')
-				->class('invalid-feedback')
-				->addHtml($this->getError());
+				$validationFeedBack = Html::el('div')
+					->class('invalid-feedback')
+					->addHtml($this->getError());
+			}
+			elseif($this->isRequired())
+			{
+				$validationClass = 'is-valid';
+
+				if($this->getValidationSuccessMessage())
+				{
+					$validationFeedBack = Html::el('div')
+						->class('valid-feedback')
+						->addHtml($this->getValidationSuccessMessage());
+				}
+			}
 		}
 
 		$chosenClass = $this->isRequired() ? ' form-control-chosen-required' : ' form-control-chosen';
 
-		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . $errorClass . $chosenClass]);
+		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . $validationClass . $chosenClass]);
 
 		$prepend = null;
 		$append = null;
 
 		if(!empty($this->prepend))
 		{
-			$prependText = Html::el('span')
+			$prepend = Html::el('span')
 				->class('input-group-text')
 				->addHtml($this->prepend);
-
-			$prepend = Html::el('div')
-				->class('input-group-prepend')
-				->addHtml($prependText);
 		}
 
 		if(!empty($this->append))
 		{
-			$appendText = Html::el('span')
+			$append = Html::el('span')
 				->class('input-group-text')
 				->addHtml($this->append);
-
-			$append = Html::el('div')
-				->class('input-group-append')
-				->addHtml($appendText);
 		}
 
 		return Html::el('div')->class('input-group')
-			->addHtml($prepend . $input . $append . $errorMessage);
+			->addHtml($prepend . $input . $append . $validationFeedBack);
 	}
 
 

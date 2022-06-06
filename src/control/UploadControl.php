@@ -24,19 +24,32 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 	{
 		$input = $this->getControl();
 
-		$errorClass = '';
-		$errorMessage = null;
+		$validationClass = '';
+		$validationFeedBack = null;
 
-		if($this->hasErrors())
+		if($this->getForm()->isSubmitted())
 		{
-			$errorClass = 'is-invalid';
+			if($this->hasErrors())
+			{
+				$validationClass = 'is-invalid';
 
-			$errorMessage = Html::el('div')
-				->class('invalid-feedback')
-				->addHtml($this->getError());
-		}
+				$validationFeedBack = Html::el('div')
+					->class('invalid-feedback')
+					->addHtml($this->getError());
+			}
+			elseif($this->isRequired())
+			{
+				$validationClass = 'is-valid';
 
-		$input->addAttributes(['class' => 'upload custom-file-input ' . $input->getAttribute('class') . ' ' . $errorClass]);
+				if($this->getValidationSuccessMessage())
+				{
+					$validationFeedBack = Html::el('div')
+						->class('valid-feedback')
+						->addHtml($this->getValidationSuccessMessage());
+				}
+		}}
+
+		$input->addAttributes(['class' => 'upload custom-file-input ' . $input->getAttribute('class') . ' ' . $validationClass]);
 		
 		$label = Html::el('label')
 			->class('custom-file-label')
@@ -66,7 +79,7 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 		}
 
 		return Html::el('div')->class('input-group')
-			->addHtml($prepend . $wrapDiv . $append . $errorMessage);
+			->addHtml($prepend . $wrapDiv . $append . $validationFeedBack);
 	}
 
 

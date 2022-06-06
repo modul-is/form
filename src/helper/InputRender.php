@@ -15,23 +15,26 @@ trait InputRender
 		$validationClass = null;
 		$validationFeedBack = null;
 
-		if($this->hasErrors())
+		if($this->getForm()->isSubmitted())
 		{
-			$validationClass = 'is-invalid';
-
-			$validationFeedBack = Html::el('div')
-				->class('invalid-feedback')
-				->addHtml($this->getError());
-		}
-		else
-		{
-			$validationClass = 'is-valid';
-			
-			if($this->getValidationSuccessMessage())
+			if($this->hasErrors())
 			{
+				$validationClass = 'is-invalid';
+
 				$validationFeedBack = Html::el('div')
-					->class('valid-feedback')
-					->addHtml($this->getValidationSuccessMessage());
+					->class('invalid-feedback')
+					->addHtml($this->getError());
+			}
+			elseif($this->isRequired())
+			{
+				$validationClass = 'is-valid';
+
+				if($this->getValidationSuccessMessage())
+				{
+					$validationFeedBack = Html::el('div')
+						->class('valid-feedback')
+						->addHtml($this->getValidationSuccessMessage());
+				}
 			}
 		}
 
