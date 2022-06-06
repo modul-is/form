@@ -3,10 +3,7 @@
  */
 
 label{
-    position: relative;
     cursor: pointer;
-    color: #666;
-
 }
 
 /*Check box*/
@@ -30,23 +27,12 @@ div.checkbox.sn-checkbox-use-protocol > label > input[type="checkbox"]
     font-size: 1.2em;
 }
 
-input[type="checkbox"]:checked + .label-text:before{
-    content: "\f14a";
-    color: #2980b9;
-    animation: effect 250ms ease-in;
-    font-weight: 900;
-}
-
-input[type="checkbox"]:disabled + .label-text{
+input[type="checkbox"]:disabled{
     color: #aaa;
 }
 
-input[type="checkbox"]:disabled + .label-text:before{
+input[type="checkbox"]:disabled{
     color: #ccc;
-}
-
-input:not([checked]) input[type="checkbox"]:disabled + .label-text:before{
-    content: "\f0c8";
 }
 
 @keyframes effect
@@ -58,244 +44,241 @@ input:not([checked]) input[type="checkbox"]:disabled + .label-text:before{
 }
 
 /** BOOTSTRAP COLORS */
-input[type="checkbox"]:checked.checkbox-primary + .label-text::before
+input[type="checkbox"]:checked.checkbox-primary
 {
     color: #428bca;
 }
 
-input[type="checkbox"]:checked.checkbox-danger + .label-text::before
+input[type="checkbox"]:checked.checkbox-danger
 {
     color: #d9534f;
 }
 
-input[type="checkbox"]:checked.checkbox-info + .label-text::before
+input[type="checkbox"]:checked.checkbox-info
 {
     color: #5bc0de;
 }
 
-input[type="checkbox"]:checked.checkbox-warning + .label-text::before
+input[type="checkbox"]:checked.checkbox-warning
 {
     color: #f0ad4e;
 }
 
-input[type="checkbox"]:checked.checkbox-success + .label-text::before
+input[type="checkbox"]:checked.checkbox-success
 {
     color: #5cb85c;
 }
 
 /** PINK */
-input[type="checkbox"]:checked.checkbox-pink + .label-text::before
+input[type="checkbox"]:checked.checkbox-pink
 {
     color: #ff0080;
 }
 
-input[type="checkbox"]:checked.checkbox-pink-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-pink-light
 {
     color: #ff99bb;
 }
 
-input[type="checkbox"]:checked.checkbox-pink-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-pink-dark
 {
     color: #d5006a;
 }
 
 /** BLACK */
-input[type="checkbox"]:checked.checkbox-black + .label-text::before
+input[type="checkbox"]:checked.checkbox-black
 {
     color: #000;
 }
 
 /** BROWN */
-input[type="checkbox"]:checked.checkbox-brown + .label-text::before
+input[type="checkbox"]:checked.checkbox-brown
 {
     color: #994e00;
 }
 
-input[type="checkbox"]:checked.checkbox-brown-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-brown-light
 {
     color: #b35b00;
 }
 
-input[type="checkbox"]:checked.checkbox-brown-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-brown-dark 
 {
     color: #663400;
 }
 
 /** GREY (GRAY) */
-input[type="checkbox"]:checked.checkbox-grey + .label-text::before,
-input[type="checkbox"]:checked.checkbox-gray + .label-text::before
+input[type="checkbox"]:checked.checkbox-grey
 {
     color: #999;
 }
 
-input[type="checkbox"]:checked.checkbox-grey-light + .label-text::before,
-input[type="checkbox"]:checked.checkbox-gray-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-grey-light
 {
     color: #c2c2c2;
 }
 
-input[type="checkbox"]:checked.checkbox-grey-dark + .label-text::before,
-input[type="checkbox"]:checked.checkbox-gray-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-grey-dark
 {
     color: #6b6b6b;
 }
 
 /** PURPLE */
-input[type="checkbox"]:checked.checkbox-purple + .label-text::before
+input[type="checkbox"]:checked.checkbox-purple
 {
     color: #9032c2;
 }
 
-input[type="checkbox"]:checked.checkbox-purple-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-purple-light
 {
     color: #c089dd;
 }
 
-input[type="checkbox"]:checked.checkbox-purple-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-purple-dark
 {
     color: #57167a;
 }
 
 /** VIOLET */
-input[type="checkbox"]:checked.checkbox-violet + .label-text::before
+input[type="checkbox"]:checked.checkbox-violet
 {
     color: #941958;
 }
 
-input[type="checkbox"]:checked.checkbox-violet-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-violet-light
 {
     color: #de3b8f;
 }
 
-input[type="checkbox"]:checked.checkbox-violet-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-violet-dark
 {
     color: #68113e;
 }
 
 /** MAROON */
-input[type="checkbox"]:checked.checkbox-maroon + .label-text::before
+input[type="checkbox"]:checked.checkbox-maroon
 {
     color: #e55082;
 }
 
-input[type="checkbox"]:checked.checkbox-maroon-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-maroon-light
 {
     color: #eb7aa0;
 }
 
-input[type="checkbox"]:checked.checkbox-maroon-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-maroon-dark
 {
     color: #ca195a;
 }
 
 /** RED */
-input[type="checkbox"]:checked.checkbox-red + .label-text::before
+input[type="checkbox"]:checked.checkbox-red
 {
     color: #ff2a2a;
 }
 
-input[type="checkbox"]:checked.checkbox-red-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-red-light
 {
     color: #ff5555;
 }
 
-input[type="checkbox"]:checked.checkbox-red-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-red-dark
 {
     color: #dd0000;
 }
 
 /** ORANGE */
-input[type="checkbox"]:checked.checkbox-orange + .label-text::before
+input[type="checkbox"]:checked.checkbox-orange
 {
     color: #ff7000;
 }
 
-input[type="checkbox"]:checked.checkbox-orange-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-orange-light
 {
     color: #ff8133;
 }
 
-input[type="checkbox"]:checked.checkbox-orange-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-orange-dark
 {
     color: #cd5100;
 }
 
 /** YELLOW */
-input[type="checkbox"]:checked.checkbox-yellow + .label-text::before
+input[type="checkbox"]:checked.checkbox-yellow
 {
     color: #f6f622;
 }
 
-input[type="checkbox"]:checked.checkbox-yellow-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-yellow-light
 {
     color: #f6f661;
 }
 
-input[type="checkbox"]:checked.checkbox-yellow-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-yellow-dark
 {
     color: #efcf00;
 }
 
 /** GREEN */
-input[type="checkbox"]:checked.checkbox-green + .label-text::before
+input[type="checkbox"]:checked.checkbox-green
 {
     color: #009900;
 }
 
-input[type="checkbox"]:checked.checkbox-green-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-green-light
 {
     color: #8bc34a;
 }
 
-input[type="checkbox"]:checked.checkbox-green-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-green-dark
 {
     color: #398439;
 }
 
 /** TEAL */
-input[type="checkbox"]:checked.checkbox-teal + .label-text::before
+input[type="checkbox"]:checked.checkbox-teal
 {
     color: #30cccc;
 }
 
-input[type="checkbox"]:checked.checkbox-teal-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-teal-light
 {
     color: #7ce9e9;
 }
 
-input[type="checkbox"]:checked.checkbox-teal-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-teal-dark
 {
     color: #2aa9a9;
 }
 
 /** BLUE */
-input[type="checkbox"]:checked.checkbox-blue + .label-text::before
+input[type="checkbox"]:checked.checkbox-blue
 {
     color: #006fe6;
 }
 
-input[type="checkbox"]:checked.checkbox-blue-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-blue-light
 {
     color: #3395ff;
 }
 
-input[type="checkbox"]:checked.checkbox-blue-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-blue-dark
 {
     color: #0053ad;
 }
 
 /** NAVY */
-input[type="checkbox"]:checked.checkbox-navy + .label-text::before
+input[type="checkbox"]:checked.checkbox-navy
 {
     color: #00367b;
 }
 
-input[type="checkbox"]:checked.checkbox-navy-light + .label-text::before
+input[type="checkbox"]:checked.checkbox-navy-light
 {
     color: #4da6ff;
 }
 
-input[type="checkbox"]:checked.checkbox-navy-dark + .label-text::before
+input[type="checkbox"]:checked.checkbox-navy-dark
 {
     color: #00264d;
 }
