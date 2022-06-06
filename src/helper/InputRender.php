@@ -42,24 +42,16 @@ trait InputRender
 
 		if(!empty($this->prepend))
 		{
-			$prependText = Html::el('span')
+			$prepend = Html::el('span')
 				->class('input-group-text')
 				->addHtml($this->prepend);
-
-			$prepend = Html::el('div')
-				->class('input-group-prepend')
-				->addHtml($prependText);
 		}
 
 		if(!empty($this->append))
 		{
-			$appendText = Html::el('span')
+			$append = Html::el('span')
 				->class('input-group-text')
 				->addHtml($this->append);
-
-			$append = Html::el('div')
-				->class('input-group-append')
-				->addHtml($appendText);
 		}
 
 		return Html::el('div')->class('input-group')

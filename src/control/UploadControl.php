@@ -37,39 +37,32 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 		}
 
 		$input->addAttributes(['class' => 'upload custom-file-input ' . $input->getAttribute('class') . ' ' . $errorClass]);
+		
 		$label = Html::el('label')
-				->class('custom-file-label')
-				->for($this->getHtmlId())
-				->setText('Není vybrán soubor');
+			->class('custom-file-label')
+			->for($this->getHtmlId())
+			->setText('Není vybrán soubor');
 
 		$wrapDiv = Html::el('div')
-				->class('custom-file')
-				->addHtml($input)
-				->addHtml($label);
+			->class('custom-file')
+			->addHtml($input)
+			->addHtml($label);
 
 		$prepend = null;
 		$append = null;
 
 		if(!empty($this->prepend))
 		{
-			$prependText = Html::el('span')
+			$prepend = Html::el('span')
 				->class('input-group-text')
 				->addHtml($this->prepend);
-
-			$prepend = Html::el('div')
-				->class('input-group-prepend')
-				->addHtml($prependText);
 		}
 
 		if(!empty($this->append))
 		{
-			$appendText = Html::el('span')
+			$append = Html::el('span')
 				->class('input-group-text')
 				->addHtml($this->append);
-
-			$append = Html::el('div')
-				->class('input-group-append')
-				->addHtml($appendText);
 		}
 
 		return Html::el('div')->class('input-group')
