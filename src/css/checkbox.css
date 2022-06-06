@@ -9,11 +9,6 @@ label{
 
 }
 
-input[type="checkbox"], input[type="radio"]{
-    display: none;
-    visibility: hidden;
-}
-
 /*Check box*/
 input[type="checkbox"] + .label-text:before,
 /* summernote checkboxes */

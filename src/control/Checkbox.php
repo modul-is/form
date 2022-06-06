@@ -22,44 +22,48 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	}
 
 
-	public function getCoreControl(): Html
+	public function getCoreControl(): string|Html
 	{
 		$input = $this->getControlPart();
-
-		$label = Html::el('span')
-			->class('label-text ' . $input->getAttribute('class'))
-			->addHtml($this->caption);
-
+		
+		$validationClass = null;
+		$validationMessage = null;
+		
+		if($this->getForm()->isSubmitted())
+		{
+			if($this->hasErrors())
+			{
+				$validationClass = 'is-invalid';
+				
+				$validationMessage = Html::el('div')
+					->class('invalid-feedback')
+					->addHtml($this->getError());
+			}
+			elseif($this->getValidationSuccessMessage())
+			{
+				$validationClass = 'is-valid';
+				
+				$validationMessage = Html::el('div')
+					->class('valid-feedback')
+					->addHtml($this->getValidationSuccessMessage());
+			}
+		}
+		
+		$input->class('form-check-input' . $input->getAttribute('class') . ' ' . $validationClass);
+		
 		if($this->color)
 		{
 			$input->setAttribute('class', $input->getAttribute('class') . ' checkbox-' . $this->color);
 		}
 
-		$labelWrap = Html::el('label')
+		$label = Html::el('label')
+			->setAttribute('for', $this->getHtmlId())
+			->class('form-check-label')
+			->addHtml($this->caption);
+		
+		$wrapDiv = Html::el('div')
+			->class('form-check')
 			->addHtml($input . $label);
-
-		$wrap = Html::el('div')
-			->class('form-check ');
-
-		$validationFeedBack = null;
-
-		if($this->getForm()->isSubmitted())
-		{
-			if($this->hasErrors())
-			{
-				$validationFeedBack = Html::el('div')
-					->class('check-invalid')
-					->addHtml($this->getError());
-			}
-			elseif($this->getValidationSuccessMessage())
-			{
-				$validationFeedBack = Html::el('div')
-					->class('valid-feedback')
-					->addHtml($this->getValidationSuccessMessage());
-			}
-		}
-
-		$wrap->addHtml($labelWrap);
 		
 		if($this->tooltip)
 		{
@@ -68,11 +72,10 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 				->addAttributes(['data-placement' => 'top', 'data-toggle' => 'tooltip'])
 				->addHtml(\Kravcik\Macros\FontAwesomeMacro::renderIcon('question-circle', ['color' => 'blue']));
 
-			$wrap->addHtml($tooltip);
+			$wrapDiv->addHtml($tooltip);
 		}
 
-		return $wrap->addHtml($validationFeedBack);
-		
+		return $wrapDiv->addHtml($validationMessage);
 	}
 
 
