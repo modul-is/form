@@ -75,7 +75,7 @@ trait InputRender
 		{
 			$waiting = Html::el('span')
 				->class('input-group-text focusout-waiting')
-				->addHtml(FontAwesomeMacro::renderIcon('question-circle'));
+				->addHtml(FontAwesomeMacro::renderIcon('arrow-right-to-bracket'));
 			
 			$loading = Html::el('span')
 				->class('input-group-text focusout-loading')
