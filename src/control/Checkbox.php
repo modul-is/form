@@ -15,14 +15,14 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\ValidationSuccessMessage;
-	
+
 	private bool $switch = false;
-	
-	
+
+
 	public function setSwitch(bool $switch = true): self
 	{
 		$this->switch = $switch;
-		
+
 		return $this;
 	}
 
@@ -36,16 +36,16 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	public function getCoreControl(): string|Html
 	{
 		$input = $this->getControlPart();
-		
+
 		$validationClass = null;
 		$validationMessage = null;
-		
+
 		if($this->getForm()->isSubmitted())
 		{
 			if($this->hasErrors())
 			{
 				$validationClass = ' is-invalid';
-				
+
 				$validationMessage = Html::el('div')
 					->class('invalid-feedback')
 					->addHtml($this->getError());
@@ -53,28 +53,28 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 			elseif($this->getValidationSuccessMessage())
 			{
 				$validationClass = ' is-valid';
-				
+
 				$validationMessage = Html::el('div')
 					->class('valid-feedback')
 					->addHtml($this->getValidationSuccessMessage());
 			}
 		}
-		
+
 		$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;
-		
+
 		$input->class('form-check-input ' . $input->getAttribute('class') . $validationClass . $inputColorClass);
 
 		$label = Html::el('label')
 			->setAttribute('for', $this->getHtmlId())
 			->class('form-check-label')
 			->addHtml($this->caption);
-		
+
 		$switchClass = $this->switch ? ' form-switch' : null;
-		
+
 		$wrapDiv = Html::el('div')
 			->class('form-check' . $switchClass)
 			->addHtml($input . $label);
-		
+
 		if($this->tooltip)
 		{
 			$tooltip = Html::el('span')

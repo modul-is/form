@@ -21,7 +21,6 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 	use Helper\ValidationSuccessMessage;
 	use Helper\FocusOutHelper;
 
-
 	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
@@ -43,7 +42,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 		{
 			/** @var \ModulIS\Form\Form $form */
 			$form = $this->getForm();
-			
+
 			$floatingLabel = $form->getFloatingLabel();
 		}
 

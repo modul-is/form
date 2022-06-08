@@ -22,7 +22,7 @@ trait FocusOutHelper
 		if($signal === 'focusout')
 		{
 			$value = json_decode($presenter->getHttpRequest()->getRawBody())->value;
-			
+
 			$presenter->payload->value = $value;
 			$presenter->payload->errorMessage = null;
 

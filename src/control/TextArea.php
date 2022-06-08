@@ -21,7 +21,6 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, \Ne
 	use Helper\ValidationSuccessMessage;
 	use Helper\FocusOutHelper;
 
-
 	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
@@ -43,7 +42,7 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, \Ne
 		{
 			/** @var \ModulIS\Form\Form $form */
 			$form = $this->getForm();
-			
+
 			$floatingLabel = $form->getFloatingLabel();
 		}
 

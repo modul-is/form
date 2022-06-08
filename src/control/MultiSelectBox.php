@@ -19,7 +19,6 @@ class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Ren
 	use Helper\Template;
 	use Helper\ValidationSuccessMessage;
 
-
 	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)

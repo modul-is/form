@@ -13,8 +13,8 @@ trait CoreList
 	public int $itemsPerRow = 1;
 
 	public ?string $itemClass = null;
-	
-	
+
+
 	public function getCoreControl(): Html|string
 	{
 		$inputs = null;
@@ -22,19 +22,19 @@ trait CoreList
 		foreach($this->getItems() as $key => $input)
 		{
 			$input = $this->getControlPart($key);
-			
+
 			$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;
-			
+
 			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : null;
-		
+
 			$input->class('form-check-input' . $currentClass . $inputColorClass);
-			
+
 			$label = $this->getLabelPart($key);
-			
+
 			$label->class('form-check-label');
 
 			$tooltip = null;
-			
+
 			if(isset($this->tooltips[$key]))
 			{
 				$tooltip = Html::el('span')
@@ -86,8 +86,8 @@ trait CoreList
 
 		return $wrapContainer . $validationFeedBack;
 	}
-	
-	
+
+
 	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)

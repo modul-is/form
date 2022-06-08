@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
-
 class Form extends \Nette\Application\UI\Form
 {
 	public const GREATER_EQUAL = \Nette\Application\UI\Form::MIN;
@@ -74,8 +73,8 @@ class Form extends \Nette\Application\UI\Form
 		return $this[$name] = (new Control\TextInput($label, $maxLength))
 			->setHtmlAttribute('size', $cols);
 	}
-	
-	
+
+
 	public function addDate(string $name, $label = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label))

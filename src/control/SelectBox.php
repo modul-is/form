@@ -19,12 +19,11 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 	use Helper\Template;
 	use Helper\FloatingLabel;
 	use Helper\ValidationSuccessMessage;
-	
-	
+
 	public function __construct($label = null, ?array $items = null)
 	{
 		parent::__construct($label, $items);
-		
+
 		$this->controlClass = 'form-select';
 	}
 
@@ -50,7 +49,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 		{
 			/** @var \ModulIS\Form\Form $form */
 			$form = $this->getForm();
-			
+
 			$floatingLabel = $form->getFloatingLabel();
 		}
 

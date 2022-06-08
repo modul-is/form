@@ -19,7 +19,6 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 	use Helper\Template;
 	use Helper\ValidationSuccessMessage;
 
-
 	public function getCoreControl(): Html
 	{
 		$input = $this->getControl();
@@ -50,7 +49,7 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 		}}
 
 		$input->addAttributes(['class' => 'upload custom-file-input ' . $input->getAttribute('class') . ' ' . $validationClass]);
-		
+
 		$label = Html::el('label')
 			->class('custom-file-label')
 			->for($this->getHtmlId())

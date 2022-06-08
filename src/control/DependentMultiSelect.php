@@ -20,7 +20,6 @@ class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBo
 	use Helper\Template;
 	use Helper\ValidationSuccessMessage;
 
-
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{
 		parent::__construct($label, $parents);
