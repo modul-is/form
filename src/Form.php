@@ -74,6 +74,15 @@ class Form extends \Nette\Application\UI\Form
 		return $this[$name] = (new Control\TextInput($label, $maxLength))
 			->setHtmlAttribute('size', $cols);
 	}
+	
+	
+	public function addDate(string $name, $label = null): Control\TextInput
+	{
+		return $this[$name] = (new Control\TextInput($label))
+			->setHtmlAttribute('class', 'date-picker')
+			->setRequired(false)
+			->addRule(fn($input) => \Nette\Utils\DateTime::createFromFormat('d.m.Y', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
+	}
 
 
 	public function addPassword(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
