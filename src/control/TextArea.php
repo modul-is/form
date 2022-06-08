@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
-class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable
+class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -19,6 +19,7 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable
 	use Helper\Template;
 	use Helper\FloatingLabel;
 	use Helper\ValidationSuccessMessage;
+	use Helper\FocusOutHelper;
 
 
 	public function render(): Html|string

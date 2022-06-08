@@ -6,27 +6,27 @@ namespace ModulIS\Form\Helper;
 
 trait FocusOutHelper
 {
+	public $onFocusOut = [];
 
-	
-	public ?bool $onSuccess = null;
-	
-	
+
 	public function signalReceived($signal): void
 	{
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup('Nette\\Application\\UI\\Presenter');
-		
 
-		if(!$presenter->isAjax() || $this->isDisabled())
+		if($this->isDisabled())
 		{
 			return;
 		}
-		
-		if($signal === self::S)
+
+		if($signal === 'focusout')
 		{
-			$this->onSuccess($presenter->getParameter('value'));
+			$value = json_decode($presenter->getHttpRequest()->getRawBody())->value;
 			
-			$presenter->payload->value = $presenter->getParameter('value');
+			$presenter->payload->value = $value;
+			$presenter->payload->errorMessage = null;
+
+			call_user_func_array($this->onFocusOut, [&$presenter->payload]);
 
 			$presenter->sendPayload();
 		}
@@ -34,17 +34,5 @@ trait FocusOutHelper
 		{
 			throw new Exception("Unknown signal '$signal' for input '" . $this->getName() . "'");
 		}
-	}
-
-
-	public function setFloatingLabel(bool $floatingLabel): void
-	{
-		$this->floatingLabel = $floatingLabel;
-	}
-
-
-	public function getFloatingLabel(): ?bool
-	{
-		return $this->floatingLabel;
 	}
 }

@@ -26,6 +26,8 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 		parent::__construct($label, $parents);
 
 		$this->setDependentCallback($dependentCallback);
+		
+		$this->controlClass = 'form-select';
 	}
 
 
