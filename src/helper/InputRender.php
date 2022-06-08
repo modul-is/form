@@ -44,7 +44,7 @@ trait InputRender
 
 		$input->addAttributes(['class' => $this->controlClass. ' ' . $input->getAttribute('class') . ' ' . $validationClass]);
 		
-		if($this->onFocusOut)
+		if(!empty($this->onFocusOut))
 		{
 			/** @var \Nette\Application\UI\Presenter $presenter */
 			$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
@@ -71,7 +71,7 @@ trait InputRender
 		
 		$focusOutTooltip = null;
 		
-		if($this->onFocusOut)
+		if(!empty($this->onFocusOut))
 		{
 			$waiting = Html::el('span')
 				->class('input-group-text focusout-waiting')
