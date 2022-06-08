@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Helper;
 
+use Nette\Utils\Html;
+
 trait CoreList
 {
 	public array $tooltips = [];
@@ -22,8 +24,10 @@ trait CoreList
 			$input = $this->getControlPart($key);
 			
 			$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;
+			
+			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : null;
 		
-			$input->class('form-check-input ' . $input->getAttribute('class') . $inputColorClass);
+			$input->class('form-check-input' . $currentClass . $inputColorClass);
 			
 			$label = $this->getLabelPart($key);
 			
@@ -58,14 +62,14 @@ trait CoreList
 		{
 			if($this->hasErrors())
 			{
-				$validationClass = 'is-invalid';
+				$validationClass = ' is-invalid';
 				$validationFeedBack = Html::el('div')
 					->class('check-invalid')
 					->addHtml($this->getError());
 			}
 			elseif($this->getValidationSuccessMessage())
 			{
-				$validationClass = 'is-valid';
+				$validationClass = ' is-valid';
 				$validationFeedBack = Html::el('div')
 					->class('valid-feedback')
 					->addHtml($this->getValidationSuccessMessage());
@@ -77,7 +81,7 @@ trait CoreList
 			->addHtml($inputs);
 
 		$wrapContainer = Html::el('div')
-			->class('container ' . $validationClass)
+			->class('container' . $validationClass)
 			->addHtml($wrapRow);
 
 		return $wrapContainer . $validationFeedBack;

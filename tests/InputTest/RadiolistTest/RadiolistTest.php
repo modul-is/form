@@ -5,13 +5,12 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../bootstrap.php';
 
 use Tester\Assert;
-use ModulIS\Form\Form;
 
-class RadiolistTest extends Tester\TestCase
+class RadiolistTest extends TestCase
 {
 	public function testRender()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addRadioList('radiolist', 'Radio', ['first' => 'First', 'second' => 'Second']);
 
@@ -23,7 +22,7 @@ class RadiolistTest extends Tester\TestCase
 
 	public function testRenderOptionId()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addRadioList('radiolist', 'Radio', ['first' => 'First', 'second' => 'Second'])
 			->setOption('id', 'customId');
@@ -36,7 +35,7 @@ class RadiolistTest extends Tester\TestCase
 
 	public function testRenderCustomTemplate()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addRadioList('radiolist', 'Radio', ['first' => 'First', 'second' => 'Second'])
 			->setTemplate(__DIR__ . '/custom.latte');
@@ -49,7 +48,7 @@ class RadiolistTest extends Tester\TestCase
 
 	public function testRenderHidden()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addRadioList('radiolist', 'Radio', ['first' => 'First', 'second' => 'Second'])
 			->setOption('hide', true);
@@ -62,7 +61,7 @@ class RadiolistTest extends Tester\TestCase
 
 	public function testRenderSkip()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addRadioList('radiolist', 'Radio', ['first' => 'First', 'second' => 'Second'])
 			->setAutoRenderSkip();

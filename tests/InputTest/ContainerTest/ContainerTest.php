@@ -5,13 +5,12 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../bootstrap.php';
 
 use Tester\Assert;
-use ModulIS\Form\Form;
 
-class ContainerTest extends Tester\TestCase
+class ContainerTest extends TestCase
 {
 	public function testRender()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 		
 		$container = $form->addContainer('container');
 
@@ -27,7 +26,7 @@ class ContainerTest extends Tester\TestCase
 	
 	public function testRenderInputsPerRow()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 		
 		$container = $form->addContainer('container');
 
@@ -45,7 +44,7 @@ class ContainerTest extends Tester\TestCase
 	
 	public function testRenderEmpty()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addContainer('container');
 
@@ -55,7 +54,7 @@ class ContainerTest extends Tester\TestCase
 
 	public function testRenderId()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$container = $form->addContainer('container');
 		
@@ -71,7 +70,7 @@ class ContainerTest extends Tester\TestCase
 	
 	public function testRenderCard()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$container = $form->addContainer('container');
 		

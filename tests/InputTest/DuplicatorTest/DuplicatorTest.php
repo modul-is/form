@@ -5,13 +5,12 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../bootstrap.php';
 
 use Tester\Assert;
-use ModulIS\Form\Form;
 
-class DuplicatorTest extends Tester\TestCase
+class DuplicatorTest extends TestCase
 {
 	public function testRender()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$duplicator = $form->addDuplicator('duplicator', function(ModulIS\Form\DuplicatorContainer $container)
 		{
@@ -36,7 +35,7 @@ class DuplicatorTest extends Tester\TestCase
 
 	public function testRenderCustomTemplate()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$duplicator = $form->addDuplicator('duplicator', function(ModulIS\Form\DuplicatorContainer $container)
 		{
@@ -61,7 +60,7 @@ class DuplicatorTest extends Tester\TestCase
 
 	public function testRenderSkip()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$duplicator = $form->addDuplicator('duplicator', function(ModulIS\Form\DuplicatorContainer $container)
 		{

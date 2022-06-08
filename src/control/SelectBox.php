@@ -57,7 +57,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 		if($floatingLabel)
 		{
 			$input = $this->getControl();
-			$input->class($input->getAttribute('class') . ' form-control');
+			$input->class($input->getAttribute('class') . ' form-select');
 			$input->placeholder($this->getCaption());
 
 			$label = $this->getLabel();

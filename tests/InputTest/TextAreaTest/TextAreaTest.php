@@ -5,13 +5,12 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../bootstrap.php';
 
 use Tester\Assert;
-use ModulIS\Form\Form;
 
-class TextAreaTest extends Tester\TestCase
+class TextAreaTest extends TestCase
 {
 	public function testRender()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addTextArea('text', 'Area');
 
@@ -23,7 +22,7 @@ class TextAreaTest extends Tester\TestCase
 
 	public function testRenderPrepend()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addTextArea('text', 'Area')
 			->setPrepend('prepend');
@@ -36,7 +35,7 @@ class TextAreaTest extends Tester\TestCase
 
 	public function testRenderAppend()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addTextArea('text', 'Area')
 			->setAppend('append');
@@ -49,7 +48,7 @@ class TextAreaTest extends Tester\TestCase
 
 	public function testRenderIcon()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addTextArea('text', 'Area')
 			->setIcon('user');
@@ -62,7 +61,7 @@ class TextAreaTest extends Tester\TestCase
 	
 	public function testRenderInputFloatingLabel()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addTextArea('text', 'Area')
 			->setFloatingLabel(true);
@@ -75,7 +74,7 @@ class TextAreaTest extends Tester\TestCase
 	
 	public function testRenderFormFloatingLabel()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 		
 		$form->setFloatingLabel(true);
 
@@ -89,7 +88,7 @@ class TextAreaTest extends Tester\TestCase
 	
 	public function testRenderFormFloatingLabelInputDisable()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 		
 		$form->setFloatingLabel(true);
 
@@ -104,7 +103,7 @@ class TextAreaTest extends Tester\TestCase
 
 	public function testRenderOptionId()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addTextArea('text', 'Area')
 			->setOption('id', 'customId');
@@ -117,7 +116,7 @@ class TextAreaTest extends Tester\TestCase
 
 	public function testRenderCustomTemplate()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addTextArea('text', 'Text')
 			->setTemplate(__DIR__ . '/custom.latte');
@@ -130,7 +129,7 @@ class TextAreaTest extends Tester\TestCase
 
 	public function testRenderHidden()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addTextArea('text', 'Text')
 			->setOption('hide', true);
@@ -143,7 +142,7 @@ class TextAreaTest extends Tester\TestCase
 
 	public function testRenderSkip()
 	{
-		$form = new Form;
+		$form = $this->getForm();
 
 		$form->addTextArea('text', 'Text')
 			->setAutoRenderSkip();
