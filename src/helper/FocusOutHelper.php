@@ -32,7 +32,7 @@ trait FocusOutHelper
 		}
 		else
 		{
-			throw new Exception("Unknown signal '$signal' for input '" . $this->getName() . "'");
+			throw new \Exception("Unknown signal '$signal' for input '" . $this->getName() . "'");
 		}
 	}
 }
