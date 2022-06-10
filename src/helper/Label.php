@@ -10,9 +10,9 @@ trait Label
 {
 	public function getCoreLabel()
 	{
-		$required = $this->isRequired() ? 'required' : '';
+		$required = $this->isRequired() ? ' required' : '';
 
-		$label = $this->getLabel()->class('col-form-label ' . $required);
+		$label = $this->getLabel()->class('col-form-label' . $required);
 
 		if(!$this->tooltip)
 		{

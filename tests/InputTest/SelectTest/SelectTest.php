@@ -31,8 +31,8 @@ class SelectTest extends TestCase
 
 		Assert::same($html, $form->getComponent('select')->render()->__toString());
 	}
-	
-	
+
+
 	public function testRenderInputFloatingLabel()
 	{
 		$form = $this->getForm();
@@ -44,12 +44,12 @@ class SelectTest extends TestCase
 
 		Assert::same($html, $form->getComponent('select')->render()->__toString());
 	}
-	
-	
+
+
 	public function testRenderFormFloatingLabel()
 	{
 		$form = $this->getForm();
-		
+
 		$form->setFloatingLabel(true);
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second']);
@@ -63,7 +63,7 @@ class SelectTest extends TestCase
 	public function testRenderFormFloatingLabelInputDisable()
 	{
 		$form = $this->getForm();
-		
+
 		$form->setFloatingLabel(true);
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])

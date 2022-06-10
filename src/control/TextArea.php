@@ -49,7 +49,10 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, \Ne
 		if($floatingLabel)
 		{
 			$input = $this->getControl();
-			$input->class($input->getAttribute('class') . ' form-control');
+
+			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
+
+			$input->class('form-control' . $currentClass);
 			$input->placeholder($this->getCaption());
 
 			$label = $this->getLabel();

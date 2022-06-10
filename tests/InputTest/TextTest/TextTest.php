@@ -13,7 +13,7 @@ class TextTest extends TestCase
 		$form = $this->getForm();
 
 		$form->addText('text', 'Text');
-		
+
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/basic.latte'));
 
 		Assert::same($html, $form->getComponent('text')->render()->__toString());
@@ -57,8 +57,8 @@ class TextTest extends TestCase
 
 		Assert::same($html, $form->getComponent('text')->render()->__toString());
 	}
-	
-	
+
+
 	public function testRenderInputFloatingLabel()
 	{
 		$form = $this->getForm();
@@ -70,12 +70,12 @@ class TextTest extends TestCase
 
 		Assert::same($html, $form->getComponent('text')->render()->__toString());
 	}
-	
-	
+
+
 	public function testRenderFormFloatingLabel()
 	{
 		$form = $this->getForm();
-		
+
 		$form->setFloatingLabel(true);
 
 		$form->addText('text', 'Text');
@@ -84,12 +84,12 @@ class TextTest extends TestCase
 
 		Assert::same($html, $form->getComponent('text')->render()->__toString());
 	}
-	
-	
+
+
 	public function testRenderFormFloatingLabelInputDisable()
 	{
 		$form = $this->getForm();
-		
+
 		$form->setFloatingLabel(true);
 
 		$form->addText('text', 'Text')

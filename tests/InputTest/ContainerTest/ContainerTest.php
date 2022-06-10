@@ -11,37 +11,37 @@ class ContainerTest extends TestCase
 	public function testRender()
 	{
 		$form = $this->getForm();
-		
+
 		$container = $form->addContainer('container');
 
 		$container->addText('text', 'Text');
-		
+
 		$container->addSubmit('save', 'Uložit');
-		
+
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/basic.latte'));
 
 		Assert::same($html, $form->getComponent('container')->render()->__toString());
 	}
-	
-	
+
+
 	public function testRenderInputsPerRow()
 	{
 		$form = $this->getForm();
-		
+
 		$container = $form->addContainer('container');
 
 		$container->addText('text', 'Text');
-		
+
 		$container->addText('text1', 'Text1');
-		
+
 		$container->setInputsPerRow(2);
-		
+
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/inputsPerRow.latte'));
 
 		Assert::same($html, $form->getComponent('container')->render()->__toString());
 	}
-	
-	
+
+
 	public function testRenderEmpty()
 	{
 		$form = $this->getForm();
@@ -57,7 +57,7 @@ class ContainerTest extends TestCase
 		$form = $this->getForm();
 
 		$container = $form->addContainer('container');
-		
+
 		$container->setId('customId');
 
 		$container->addText('text', 'Text');
@@ -66,16 +66,16 @@ class ContainerTest extends TestCase
 
 		Assert::same($html, $form->getComponent('container')->render()->__toString());
 	}
-	
-	
+
+
 	public function testRenderCard()
 	{
 		$form = $this->getForm();
 
 		$container = $form->addContainer('container');
-		
+
 		$container->addSubmit('save', 'Uložit');
-		
+
 		$container->showCard(true)
 			->setTitle('Title');
 

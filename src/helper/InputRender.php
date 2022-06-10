@@ -23,7 +23,7 @@ trait InputRender
 		{
 			if($this->hasErrors())
 			{
-				$validationClass = 'is-invalid';
+				$validationClass = ' is-invalid';
 
 				$validationFeedBack = Html::el('div')
 					->class('invalid-feedback')
@@ -31,7 +31,7 @@ trait InputRender
 			}
 			elseif($this->isRequired())
 			{
-				$validationClass = 'is-valid';
+				$validationClass = ' is-valid';
 
 				if($this->getValidationSuccessMessage())
 				{
@@ -42,7 +42,9 @@ trait InputRender
 			}
 		}
 
-		$input->addAttributes(['class' => $this->controlClass . ' ' . $input->getAttribute('class') . ' ' . $validationClass]);
+		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
+
+		$input->addAttributes(['class' => $this->controlClass . $currentClass . $validationClass]);
 
 		if(!empty($this->onFocusOut))
 		{

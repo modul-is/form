@@ -6,17 +6,17 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 use Tester\Assert;
 
-class TextAreaTest extends TestCase
+class DateTest extends TestCase
 {
 	public function testRender()
 	{
 		$form = $this->getForm();
 
-		$form->addTextArea('text', 'Area');
+		$form->addDate('date', 'Date');
 
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/basic.latte'));
 
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		Assert::same($html, $form->getComponent('date')->render()->__toString());
 	}
 
 
@@ -24,12 +24,12 @@ class TextAreaTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->addTextArea('text', 'Area')
+		$form->addDate('date', 'Date')
 			->setPrepend('prepend');
 
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/prepend.latte'));
 
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		Assert::same($html, $form->getComponent('date')->render()->__toString());
 	}
 
 
@@ -37,12 +37,12 @@ class TextAreaTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->addTextArea('text', 'Area')
+		$form->addDate('date', 'Date')
 			->setAppend('append');
 
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/append.latte'));
 
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		Assert::same($html, $form->getComponent('date')->render()->__toString());
 	}
 
 
@@ -50,12 +50,12 @@ class TextAreaTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->addTextArea('text', 'Area')
+		$form->addDate('date', 'Date')
 			->setIcon('user');
 
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/icon.latte'));
 
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		Assert::same($html, $form->getComponent('date')->render()->__toString());
 	}
 
 
@@ -63,12 +63,12 @@ class TextAreaTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->addTextArea('text', 'Area')
+		$form->addDate('date', 'Date')
 			->setFloatingLabel(true);
 
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
 
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		Assert::same($html, $form->getComponent('date')->render()->__toString());
 	}
 
 
@@ -78,11 +78,11 @@ class TextAreaTest extends TestCase
 
 		$form->setFloatingLabel(true);
 
-		$form->addTextArea('text', 'Area');
+		$form->addDate('date', 'Date');
 
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
 
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		Assert::same($html, $form->getComponent('date')->render()->__toString());
 	}
 
 
@@ -92,12 +92,12 @@ class TextAreaTest extends TestCase
 
 		$form->setFloatingLabel(true);
 
-		$form->addTextArea('text', 'Area')
+		$form->addDate('date', 'Date')
 			->setFloatingLabel(false);
 
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/basic.latte'));
 
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		Assert::same($html, $form->getComponent('date')->render()->__toString());
 	}
 
 
@@ -105,12 +105,12 @@ class TextAreaTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->addTextArea('text', 'Area')
+		$form->addDate('date', 'Date')
 			->setOption('id', 'customId');
 
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/id.latte'));
 
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		Assert::same($html, $form->getComponent('date')->render()->__toString());
 	}
 
 
@@ -118,12 +118,12 @@ class TextAreaTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->addTextArea('text', 'Text')
+		$form->addDate('date', 'Date')
 			->setTemplate(__DIR__ . '/custom.latte');
 
 		$string = 'custom-template';
 
-		Assert::same($string, $form->getComponent('text')->render());
+		Assert::same($string, $form->getComponent('date')->render());
 	}
 
 
@@ -131,12 +131,12 @@ class TextAreaTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->addTextArea('text', 'Text')
+		$form->addDate('date', 'Date')
 			->setOption('hide', true);
 
 		$string = '';
 
-		Assert::same($string, $form->getComponent('text')->render());
+		Assert::same($string, $form->getComponent('date')->render());
 	}
 
 
@@ -144,14 +144,14 @@ class TextAreaTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->addTextArea('text', 'Text')
+		$form->addDate('date', 'Date')
 			->setAutoRenderSkip();
 
 		$string = '';
 
-		Assert::same($string, $form->getComponent('text')->render());
+		Assert::same($string, $form->getComponent('date')->render());
 	}
 }
 
-$testcase = new TextAreaTest;
+$testcase = new DateTest;
 $testcase->run();

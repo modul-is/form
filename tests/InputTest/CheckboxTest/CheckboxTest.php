@@ -13,7 +13,7 @@ class CheckboxTest extends TestCase
 		$form = $this->getForm();
 
 		$form->addCheckbox('check', 'Check');
-		
+
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/basic.latte'));
 
 		Assert::same($html, $form->getComponent('check')->render()->__toString());

@@ -13,7 +13,7 @@ class UploadTest extends TestCase
 		$form = $this->getForm();
 
 		$form->addUpload('file', 'Vyberte soubor');
-		
+
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/basic.latte'));
 
 		Assert::same($html, $form->getComponent('file')->render()->__toString());
@@ -39,7 +39,7 @@ class UploadTest extends TestCase
 
 		$form->addUpload('file', 'Vyberte soubor')
 			->setAppend('append');
-		
+
 		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/append.latte'));
 
 		Assert::same($html, $form->getComponent('file')->render()->__toString());
