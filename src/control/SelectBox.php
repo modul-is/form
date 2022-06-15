@@ -18,22 +18,22 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 	use Helper\Template;
 	use Helper\FloatingLabel;
 	use Helper\ValidationSuccessMessage;
-	
+
 	private array $imageArray = [];
-	
-	
+
+
 	public function setImageArray(array $imageArray): self
 	{
 		$this->imageArray = $imageArray;
-		
+
 		return $this;
 	}
 
-	
+
 	public function getCoreControl()
 	{
 		$input = $this->getControl();
-		
+
 		$validationClass = null;
 		$validationFeedBack = null;
 
@@ -59,7 +59,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 				}
 			}
 		}
-		
+
 		if($this->imageArray)
 		{
 			$input->addAttributes(['style' => 'display: none;']);
@@ -82,31 +82,31 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 			{
 				$li = null;
 			}
-			
+
 			$items = $this->getItems();
-			
+
 			foreach($items as $key => $label)
 			{
 				$img = Html::el('img')
 					->src($this->imageArray[$key]);
-				
+
 				$labelWrap = Html::el('div')
 					->class('label-text mt-1 ms-2')
 					->addHtml($label);
-				
+
 				$imgWrap = Html::el('div')
 					->class('image-wrap')
 					->addHtml($img);
-				
+
 				$optionLink = Html::el('a')
 					->class('row dropdown-item')
 					->addHtml($imgWrap . $labelWrap);
-				
+
 				$li .= Html::el('li')
 					->value($key)
 					->addHtml($optionLink);
 			}
-			
+
 			if($this->getValue())
 			{
 				$promptValue = $items[$this->getValue()];
@@ -115,29 +115,29 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 			{
 				$promptValue = $this->getPrompt() ?: reset($items);
 			}
-			
+
 			$span = Html::el('span')
 				->class('prompt-text float-start')
 				->addHtml($promptValue);
-			
+
 			$button = Html::el('a')
 				->class('btn dropdown-toggle d-block' . $validationClass)
-				->id($this->getHtmlId() .'-dropdown')
+				->id($this->getHtmlId() . '-dropdown')
 				->addAttributes(['data-bs-toggle' => 'dropdown'])
 				->type('button')
 				->addHtml($span);
-			
+
 			$ul = Html::el('ul')
 				->addAttributes(['aria-labelledby' => $this->getHtmlId() . '-dropdown'])
 				->class('dropdown-menu ps-2 pe-2 w-100')
 				->addHtml($li);
-			
+
 			$div = Html::el('div')
-				->id($this->getHtmlId() .'-wrapper')
+				->id($this->getHtmlId() . '-wrapper')
 				->addAttributes(['data-parent-id' => $this->getHtmlId()])
 				->class('dropdown select-image d-block' . $validationClass)
 				->addHtml($button . $ul);
-			
+
 			return $input . $div . $validationFeedBack;
 		}
 		else
