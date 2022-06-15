@@ -124,7 +124,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 			$button = Html::el('a')
 				->class('btn dropdown-toggle d-block' . $validationClass)
 				->id($this->getHtmlId() . '-dropdown')
-				->addAttributes(['data-bs-toggle' => 'dropdown'])
+				->addAttributes(['data-bs-toggle' => 'dropdown', 'aria-expanded' => 'false'])
 				->type('button')
 				->addHtml($span);
 
@@ -143,7 +143,9 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 		}
 		else
 		{
-			$input->addAttributes(['class' => 'form-select ' . $input->getAttribute('class') . $validationClass]);
+			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
+
+			$input->addAttributes(['class' => 'form-select' . $currentClass . $validationClass]);
 
 			if(!empty($this->onFocusOut))
 			{
@@ -232,7 +234,10 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 		if($floatingLabel)
 		{
 			$input = $this->getControl();
-			$input->class($input->getAttribute('class') . ' form-select');
+
+			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
+
+			$input->class('form-select' . $currentClass);
 			$input->placeholder($this->getCaption());
 
 			$label = $this->getLabel();

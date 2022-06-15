@@ -86,6 +86,20 @@ class SelectTest extends TestCase
 
 		Assert::same($string, $form->getComponent('select')->render());
 	}
+	
+	
+	public function testRenderWithImage()
+	{
+		$form = $this->getForm();
+
+		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
+			->setPrompt('~ Vyberte ~')
+			->setImageArray(['first' => '/images/first.png', 'second' => '/images/second.png']);
+
+		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/image.latte'));
+
+		Assert::same($html, $form->getComponent('select')->render()->__toString());
+	}
 
 
 	public function testRenderHidden()
