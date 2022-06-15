@@ -6,6 +6,7 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
+use Kravcik\Macros\FontAwesomeMacro;
 
 class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 {
