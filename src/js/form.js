@@ -78,3 +78,17 @@ $('.form-control-chosen-required').chosen({
 	no_results_text: "Nebyla nalezena žádná položka - ",
 	width: '100%'
 });
+
+$('div.select-image li').on('click', function()
+{
+	let parentDiv = $(this).parents('.select-image');
+
+	parentDiv.find('.selected').removeClass('selected');
+	$(this).find('.dropdown-item').addClass('selected');
+	
+	let value = $(this).attr('value');
+	let selectedLabel = $(this).find('.label-text').text();
+
+	parentDiv.find('.prompt-text').text(selectedLabel);
+	$('#' + parentDiv.attr('data-parent-id')).val(value);
+});
