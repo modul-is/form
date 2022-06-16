@@ -29,7 +29,7 @@ trait InputGroup
 
 	public function setIcon(string $icon)
 	{
-		$this->prepend = \Kravcik\Macros\FontAwesomeMacro::renderIcon($icon, [])->toHtml();
+		$this->prepend = \Kravcik\LatteFontAwesome\IconExtenstion::renderIcon($icon, [])->toHtml();
 
 		return $this;
 	}

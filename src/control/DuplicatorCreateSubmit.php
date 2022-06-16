@@ -46,7 +46,7 @@ class DuplicatorCreateSubmit extends SubmitButton
 			'type' => 'submit'
 		];
 
-		$icon = \Kravcik\Macros\FontAwesomeMacro::renderIcon($this->isDisabled() ? 'info' : 'plus');
+		$icon = \Kravcik\LatteFontAwesome\IconExtenstion::renderIcon($this->isDisabled() ? 'info' : 'plus');
 
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
