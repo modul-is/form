@@ -79,7 +79,7 @@ class Form extends \Nette\Application\UI\Form
 	{
 		return $this[$name] = (new Control\DateInput($label))
 			->setRequired(false)
-			->addRule(fn($input) => \Nette\Utils\DateTime::createFromFormat('d.m.Y', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
+			->addRule(fn($input) => \Nette\Utils\DateTime::createFromFormat('Y-m-d', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
 	}
 
 
