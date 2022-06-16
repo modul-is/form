@@ -22,7 +22,7 @@ trait Label
 		$tooltip = Html::el('span')
 			->title($this->tooltip)
 			->addAttributes(['data-placement' => 'right', 'data-toggle' => 'tooltip'])
-			->addHtml(\Kravcik\LatteFontAwesome\IconExtenstion::renderIcon('question-circle', ['color' => 'blue']));
+			->addHtml(\Kravcik\Macros\FontAwesomeMacro::renderIcon('question-circle', ['color' => 'blue']));
 
 		return $label . $tooltip;
 	}
