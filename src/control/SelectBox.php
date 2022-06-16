@@ -6,7 +6,7 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
-use Kravcik\Macros\FontAwesomeMacro;
+use \Kravcik\LatteFontAwesome\IconExtension;
 
 class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 {
@@ -178,24 +178,24 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 			{
 				$waiting = Html::el('span')
 					->class('input-group-text focusout-waiting')
-					->addHtml(FontAwesomeMacro::renderIcon('arrow-right-to-bracket'));
+					->addHtml(IconExtension::renderIcon('arrow-right-to-bracket'));
 
 				$loading = Html::el('span')
 					->class('input-group-text focusout-loading')
 					->style('display', 'none')
-					->addHtml(FontAwesomeMacro::renderIcon('spinner fa-spin'));
+					->addHtml(IconExtension::renderIcon('spinner fa-spin'));
 
 				$success = Html::el('span')
 					->class('input-group-text focusout-success')
 					->title('')
 					->style('display', 'none')
-					->addHtml(FontAwesomeMacro::renderIcon('check', ['color' => 'green']));
+					->addHtml(IconExtension::renderIcon('check', ['color' => 'green']));
 
 				$error = Html::el('span')
 					->class('input-group-text focusout-error')
 					->title('')
 					->style('display', 'none')
-					->addHtml(FontAwesomeMacro::renderIcon('times', ['color' => 'red']));
+					->addHtml(IconExtension::renderIcon('times', ['color' => 'red']));
 
 				$focusOutTooltip = $waiting . $loading . $success . $error;
 			}
