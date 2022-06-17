@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ModulIS\Form\Helper;
 
 use Nette\Utils\Html;
-use Kravcik\Macros\FontAwesomeMacro;
+use \Kravcik\LatteFontAwesomeIcon\Extension;
 
 trait InputRender
 {
@@ -77,24 +77,24 @@ trait InputRender
 		{
 			$waiting = Html::el('span')
 				->class('input-group-text focusout-waiting')
-				->addHtml(FontAwesomeMacro::renderIcon('arrow-right-to-bracket'));
+				->addHtml(Extension::render('arrow-right-to-bracket'));
 
 			$loading = Html::el('span')
 				->class('input-group-text focusout-loading')
 				->style('display', 'none')
-				->addHtml(FontAwesomeMacro::renderIcon('spinner fa-spin'));
+				->addHtml(Extension::render('spinner fa-spin'));
 
 			$success = Html::el('span')
 				->class('input-group-text focusout-success')
 				->title('')
 				->style('display', 'none')
-				->addHtml(FontAwesomeMacro::renderIcon('check', ['color' => 'green']));
+				->addHtml(Extension::render('check', ['color' => 'green']));
 
 			$error = Html::el('span')
 				->class('input-group-text focusout-error')
 				->title('')
 				->style('display', 'none')
-				->addHtml(FontAwesomeMacro::renderIcon('times', ['color' => 'red']));
+				->addHtml(Extension::render('times', ['color' => 'red']));
 
 			$focusOutTooltip = $waiting . $loading . $success . $error;
 		}

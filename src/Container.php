@@ -66,6 +66,13 @@ class Container extends \Nette\Forms\Container
 	}
 
 
+	public function addHidden(string $name, $default = null): Control\Hidden
+	{
+		return $this[$name] = (new Control\Hidden)
+			->setDefaultValue($default);
+	}
+
+
 	public function addText(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label, $maxLength))
