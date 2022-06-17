@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63bdb5358af1fdcb4e00b9795e3b61be",
+    "content-hash": "8e4bd6dd9f9fa366303e20139867b2f1",
     "packages": [
         {
             "name": "kravcik/latte-font-awesome-icon",
-            "version": "v0.0.1",
+            "version": "v0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kravcik/latte-font-awesome-icon.git",
-                "reference": "672a43dacf3fb0f9d1dacccab51aeb11754acc32"
+                "reference": "15a685f845a5252ba0fffa4542b840bfdbe9ceb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kravcik/latte-font-awesome-icon/zipball/672a43dacf3fb0f9d1dacccab51aeb11754acc32",
-                "reference": "672a43dacf3fb0f9d1dacccab51aeb11754acc32",
+                "url": "https://api.github.com/repos/kravcik/latte-font-awesome-icon/zipball/15a685f845a5252ba0fffa4542b840bfdbe9ceb1",
+                "reference": "15a685f845a5252ba0fffa4542b840bfdbe9ceb1",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
                 "MIT"
             ],
             "description": "Simple {icon} macro for Latte, which allow short entry of font-awesome icons.",
-            "homepage": "https://github.com/kravcik/LatteFontAwesomeIcon",
+            "homepage": "https://github.com/kravcik/latte-font-awesome-icon",
             "keywords": [
                 "font awesome",
                 "latte",
@@ -52,10 +52,10 @@
                 "nette"
             ],
             "support": {
-                "issues": "https://github.com/kravcik/LatteFontAwesomeIcon/issues",
-                "source": "https://github.com/kravcik/latte-font-awesome-icon/tree/v0.0.1"
+                "issues": "https://github.com/kravcik/latte-font-awesome-icon/issues",
+                "source": "https://github.com/kravcik/latte-font-awesome-icon/tree/v0.0.2"
             },
-            "time": "2022-06-17T08:04:58+00:00"
+            "time": "2022-06-17T08:30:45+00:00"
         },
         {
             "name": "latte/latte",
