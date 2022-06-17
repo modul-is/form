@@ -40,7 +40,7 @@ trait CoreList
 				$tooltip = Html::el('span')
 					->title($this->tooltips[$key])
 					->addAttributes(['data-placement' => 'top', 'data-toggle' => 'tooltip'])
-					->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', ['color' => 'blue']));
+					->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
 			}
 
 			$class = 'form-check-inline mr-0 col-' . 12 / $this->itemsPerRow;
