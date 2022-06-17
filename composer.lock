@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e4bd6dd9f9fa366303e20139867b2f1",
+    "content-hash": "6e3595a480618bcce38104e4ef94ad2c",
     "packages": [
         {
             "name": "kravcik/latte-font-awesome-icon",
-            "version": "v0.0.2",
+            "version": "v0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kravcik/latte-font-awesome-icon.git",
-                "reference": "15a685f845a5252ba0fffa4542b840bfdbe9ceb1"
+                "reference": "bc258c6e8c40560262795391121f18a8f09149ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kravcik/latte-font-awesome-icon/zipball/15a685f845a5252ba0fffa4542b840bfdbe9ceb1",
-                "reference": "15a685f845a5252ba0fffa4542b840bfdbe9ceb1",
+                "url": "https://api.github.com/repos/kravcik/latte-font-awesome-icon/zipball/bc258c6e8c40560262795391121f18a8f09149ae",
+                "reference": "bc258c6e8c40560262795391121f18a8f09149ae",
                 "shasum": ""
             },
             "require": {
@@ -53,9 +53,9 @@
             ],
             "support": {
                 "issues": "https://github.com/kravcik/latte-font-awesome-icon/issues",
-                "source": "https://github.com/kravcik/latte-font-awesome-icon/tree/v0.0.2"
+                "source": "https://github.com/kravcik/latte-font-awesome-icon/tree/v0.0.3"
             },
-            "time": "2022-06-17T08:30:45+00:00"
+            "time": "2022-06-17T12:01:53+00:00"
         },
         {
             "name": "latte/latte",

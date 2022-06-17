@@ -13,7 +13,7 @@
 		"nette/security": "^3.1",
 		"nasext/dependent-select-box": "^5.1",
 		"nette/application": "^3.1",
-		"kravcik/latte-font-awesome-icon": "^0.0.2"
+		"kravcik/latte-font-awesome-icon": "^0"
     },
     "require-dev":
     {
