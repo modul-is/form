@@ -46,7 +46,7 @@ class DuplicatorCreateSubmit extends SubmitButton
 			'type' => 'submit'
 		];
 
-		$icon = \Kravcik\LatteFontAwesome\IconExtension::renderIcon($this->isDisabled() ? 'info' : 'plus');
+		$icon = \Kravcik\LatteFontAwesomeIcon\Extension::render($this->isDisabled() ? 'info' : 'plus');
 
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();

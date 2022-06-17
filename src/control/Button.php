@@ -24,7 +24,7 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable
 		$button = Html::el('button')
 			->name($this->getName())
 			->class('btn ' . $input->getAttribute('class') . ' btn-' . $color)
-			->addHtml($this->icon ? \Kravcik\LatteFontAwesome\IconExtension::renderIcon($this->icon, []) : '')
+			->addHtml($this->icon ? \Kravcik\LatteFontAwesomeIcon\Extension::render($this->icon, []) : '')
 			->addHtml($label);
 
 		if($this->getOption('id'))
