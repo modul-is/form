@@ -9,7 +9,7 @@ trait FloatingLabel
 	public ?bool $floatingLabel = null;
 
 
-	public function setFloatingLabel(bool $floatingLabel): self
+	public function setFloatingLabel(bool $floatingLabel = true): self
 	{
 		$this->floatingLabel = $floatingLabel;
 

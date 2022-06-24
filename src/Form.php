@@ -257,9 +257,9 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function setAjax(): void
+	public function setAjax(bool $ajax = true): void
 	{
-		$this->ajax = true;
+		$this->ajax = $ajax;
 	}
 
 
@@ -275,13 +275,13 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function setNoValidate(bool $noValidate): void
+	public function setNoValidate(bool $noValidate = true): void
 	{
 		$this->noValidate = $noValidate;
 	}
 
 
-	public function setFloatingLabel(bool $floatingLabel): void
+	public function setFloatingLabel(bool $floatingLabel = true): void
 	{
 		$this->floatingLabel = $floatingLabel;
 	}
