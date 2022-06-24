@@ -15,5 +15,5 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 	use Helper\Label;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
-	use Helper\ValidationSuccessMessage;
+	use Helper\Validation;
 }

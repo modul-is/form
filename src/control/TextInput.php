@@ -18,7 +18,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\FloatingLabel;
-	use Helper\ValidationSuccessMessage;
+	use Helper\Validation;
 	use Helper\FocusOutHelper;
 
 	public function render(): Html|string
@@ -48,11 +48,14 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 
 		if($floatingLabel)
 		{
+			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
+			$validationFeedBack = $this->getValidationFeedback();
+		
 			$input = $this->getControl();
 
 			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
 
-			$input->class('form-control' . $currentClass);
+			$input->class('form-control' . $currentClass . $validationClass);
 			$input->placeholder($this->getCaption());
 
 			$label = $this->getLabel();

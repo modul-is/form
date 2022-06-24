@@ -18,7 +18,7 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, \Ne
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\FloatingLabel;
-	use Helper\ValidationSuccessMessage;
+	use Helper\Validation;
 	use Helper\FocusOutHelper;
 
 	public function render(): Html|string

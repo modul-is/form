@@ -12,35 +12,12 @@ class MultiWhisperer extends MultiSelectBox
 	{
 		$input = $this->getControl();
 
-		$validationClass = null;
-		$validationFeedBack = null;
-
-		if($this->getForm()->isSubmitted())
-		{
-			if($this->hasErrors())
-			{
-				$validationClass = 'is-invalid';
-
-				$validationFeedBack = Html::el('div')
-					->class('invalid-feedback')
-					->addHtml($this->getError());
-			}
-			elseif($this->isRequired())
-			{
-				$validationClass = 'is-valid';
-
-				if($this->getValidationSuccessMessage())
-				{
-					$validationFeedBack = Html::el('div')
-						->class('valid-feedback')
-						->addHtml($this->getValidationSuccessMessage());
-				}
-			}
-		}
+		$validationClass = $this->getValdiationClass();
+		$validationFeedBack = $this->getValidationFeedback();
 
 		$chosenClass = $this->isRequired() ? ' form-control-chosen-required' : ' form-control-chosen';
 
-		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . $validationClass . $chosenClass]);
+		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null) . $chosenClass]);
 
 		$prepend = null;
 		$append = null;
