@@ -2,6 +2,8 @@
 
 namespace ModulIS\Form\Helper;
 
+use Nette\Utils\Html;
+
 trait Validation
 {
 	private ?string $validationSuccessMessage = null;
