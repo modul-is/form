@@ -88,13 +88,13 @@ trait InputRender
 				->class('input-group-text focusout-success')
 				->title('')
 				->style('display', 'none')
-				->addHtml(Extension::render('check', ['color' => 'green']));
+				->addHtml(Extension::render('check', color: 'green'));
 
 			$error = Html::el('span')
 				->class('input-group-text focusout-error')
 				->title('')
 				->style('display', 'none')
-				->addHtml(Extension::render('times', ['color' => 'red']));
+				->addHtml(Extension::render('times', color: 'red'));
 
 			$focusOutTooltip = $waiting . $loading . $success . $error;
 		}
