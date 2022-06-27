@@ -50,7 +50,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 		{
 			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
 			$validationFeedBack = $this->getValidationFeedback();
-		
+
 			$input = $this->getControl();
 
 			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
@@ -62,7 +62,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 
 			$outerDiv = Html::el('div')
 				->class('form-floating mb-3')
-				->addHtml($input . $label);
+				->addHtml($input . $label . $validationFeedBack);
 		}
 		else
 		{

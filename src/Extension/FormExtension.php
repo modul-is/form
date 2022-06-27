@@ -11,9 +11,9 @@ final class FormExtension extends Latte\Extension
 {
 	public function getTags(): array
 	{
-		return [		
+		return [
 			'labelCore' => [\ModulIS\Extension\CoreLabelNode::class, 'create'],
-			'inputCore' => [\ModulIS\Extension\CoreInputNode::class, 'create']			
+			'inputCore' => [\ModulIS\Extension\CoreInputNode::class, 'create']
 		];
 	}
 }

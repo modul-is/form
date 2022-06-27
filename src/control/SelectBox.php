@@ -6,7 +6,7 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
-use \Kravcik\LatteFontAwesomeIcon\Extension;
+use Kravcik\LatteFontAwesomeIcon\Extension;
 
 class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 {
@@ -210,18 +210,21 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 
 		if($floatingLabel)
 		{
+			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
+			$validationFeedBack = $this->getValidationFeedback();
+
 			$input = $this->getControl();
 
 			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
 
-			$input->class('form-select' . $currentClass);
+			$input->class('form-select' . $currentClass . $validationClass);
 			$input->placeholder($this->getCaption());
 
 			$label = $this->getLabel();
 
 			$outerDiv = Html::el('div')
 				->class('form-floating mb-3')
-				->addHtml($input . $label);
+				->addHtml($input . $label . $validationFeedBack);
 		}
 		else
 		{

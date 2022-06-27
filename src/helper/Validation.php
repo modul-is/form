@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ModulIS\Form\Helper;
 
 use Nette\Utils\Html;
@@ -21,12 +23,12 @@ trait Validation
 	{
 		return $this->validationSuccessMessage;
 	}
-	
-	
+
+
 	public function getValdiationClass(): ?string
 	{
 		$validationClass = null;
-		
+
 		if($this->getForm()->isSubmitted())
 		{
 			if($this->hasErrors())
@@ -38,15 +40,15 @@ trait Validation
 				$validationClass = 'is-valid';
 			}
 		}
-		
+
 		return $validationClass;
 	}
-	
-	
+
+
 	public function getValidationFeedback(): ?Html
 	{
 		$validationFeedBack = null;
-		
+
 		if($this->getForm()->isSubmitted())
 		{
 			if($this->hasErrors())
@@ -62,7 +64,7 @@ trait Validation
 					->addHtml($this->getValidationSuccessMessage());
 			}
 		}
-		
+
 		return $validationFeedBack;
 	}
 }

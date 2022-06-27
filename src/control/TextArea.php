@@ -48,18 +48,21 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, \Ne
 
 		if($floatingLabel)
 		{
+			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
+			$validationFeedBack = $this->getValidationFeedback();
+
 			$input = $this->getControl();
 
 			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
 
-			$input->class('form-control' . $currentClass);
+			$input->class('form-control' . $currentClass . $validationClass);
 			$input->placeholder($this->getCaption());
 
 			$label = $this->getLabel();
 
 			$outerDiv = Html::el('div')
 				->class('form-floating mb-3')
-				->addHtml($input . $label);
+				->addHtml($input . $label . $validationFeedBack);
 		}
 		else
 		{

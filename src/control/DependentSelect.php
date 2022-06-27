@@ -18,6 +18,7 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 	use Helper\InputRender;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
+	use Helper\FloatingLabel;
 	use Helper\Validation;
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
@@ -42,21 +43,55 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
 		}
 
-		$label = $this->getCoreLabel();
+		$floatingLabel = $this->getFloatingLabel();
 
-		$labelDiv = Html::el('div')
-			->class('col-sm-4 control-label align-self-center')
-			->addHtml($label);
+		/**
+		 * If floating label not set - take it from form
+		 */
+		if($floatingLabel === null)
+		{
+			/** @var \ModulIS\Form\Form $form */
+			$form = $this->getForm();
 
-		$input = $this->getCoreControl();
+			$floatingLabel = $form->getFloatingLabel();
+		}
 
-		$inputDiv = Html::el('div')
-			->class('col-sm-8')
-			->addHtml($input);
+		if($floatingLabel)
+		{
+			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
+			$validationFeedBack = $this->getValidationFeedback();
 
-		$outerDiv = Html::el('div')
-			->class('mb-3 row')
-			->addHtml($labelDiv . $inputDiv);
+			$input = $this->getControl();
+
+			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
+
+			$input->class('form-select' . $currentClass . $validationClass);
+			$input->placeholder($this->getCaption());
+
+			$label = $this->getLabel();
+
+			$outerDiv = Html::el('div')
+				->class('form-floating mb-3')
+				->addHtml($input . $label . $validationFeedBack);
+		}
+		else
+		{
+			$label = $this->getCoreLabel();
+
+			$labelDiv = Html::el('div')
+				->class('col-sm-4 control-label align-self-center')
+				->addHtml($label);
+
+			$input = $this->getCoreControl();
+
+			$inputDiv = Html::el('div')
+				->class('col-sm-8')
+				->addHtml($input);
+
+			$outerDiv = Html::el('div')
+				->class('mb-3 row')
+				->addHtml($labelDiv . $inputDiv);
+		}
 
 		if($this->getOption('id'))
 		{
