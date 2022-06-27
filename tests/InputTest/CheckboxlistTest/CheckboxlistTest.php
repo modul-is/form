@@ -14,7 +14,7 @@ class CheckboxlistTest extends TestCase
 
 		$form->addCheckboxList('checkboxlist', 'Checklist', ['first' => 'First', 'second' => 'Second']);
 
-		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/basic.latte'));
+		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
 
 		Assert::same($html, $form->getComponent('checkboxlist')->render()->__toString());
 	}
@@ -27,7 +27,7 @@ class CheckboxlistTest extends TestCase
 		$form->addCheckboxList('checkboxlist', 'Checklist', ['first' => 'First', 'second' => 'Second'])
 			->setOption('id', 'customId');
 
-		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/id.latte'));
+		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/id.latte'));
 
 		Assert::same($html, $form->getComponent('checkboxlist')->render()->__toString());
 	}

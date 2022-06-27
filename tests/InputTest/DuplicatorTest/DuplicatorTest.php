@@ -27,7 +27,7 @@ class DuplicatorTest extends TestCase
 
 		$duplicator->setValues([['text' => 'Text']]);
 
-		$html = str_replace(["\t", "\n"], '', file_get_contents(__DIR__ . '/basic.latte'));
+		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
 
 		Assert::same($html, $form->getComponent('duplicator')->render()->__toString());
 	}
