@@ -28,17 +28,11 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 
 		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
 
-		$input->addAttributes(['class' => 'upload custom-file-input' . $currentClass . $validationClass]);
+		$input->addAttributes(['class' => 'form-control' . $currentClass . $validationClass]);
 
 		$label = Html::el('label')
-			->class('custom-file-label')
-			->for($this->getHtmlId())
-			->setText('Není vybrán soubor');
-
-		$wrapDiv = Html::el('div')
-			->class('custom-file')
-			->addHtml($input)
-			->addHtml($label);
+			->class('form-label')
+			->for($this->getHtmlId());
 
 		$prepend = null;
 		$append = null;
@@ -58,7 +52,7 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 		}
 
 		return Html::el('div')->class('input-group')
-			->addHtml($prepend . $wrapDiv . $append . $validationFeedBack);
+			->addHtml($prepend . $input . $label . $append . $validationFeedBack);
 	}
 
 
