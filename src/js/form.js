@@ -53,8 +53,6 @@ $('[data-on-focusout]').focusout(function()
 	inputFocusOut($(this));
 });
 
-$('[data-whisperer], [data-whisperer-onselect], [data-whisperer-delay]').whisperer();
-$('select[data-dependentselectbox]').dependentSelectBox();
 $('.custom-file input').change(function(e)
 {
 	var files = [];
@@ -78,6 +76,9 @@ $('.form-control-chosen-required').chosen({
 	no_results_text: "Nebyla nalezena žádná položka - ",
 	width: '100%'
 });
+
+$('[data-whisperer], [data-whisperer-onselect], [data-whisperer-delay]').whisperer();
+$('select[data-dependentselectbox]').dependentSelectBox();
 
 $('div.select-image li').on('click', function()
 {
