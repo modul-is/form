@@ -27,13 +27,17 @@ class Form extends \Nette\Application\UI\Form
 	public bool $noValidate = true;
 
 	public bool $floatingLabel = false;
+	
+	protected array $boxes = [];
+
+	protected string|int $boxCurrent;
 
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent = null, $name = null)
 	{
 		parent::__construct($parent, $name);
 
-		$this->addGroup();
+		$this->addBox();
 	}
 
 
@@ -224,6 +228,32 @@ class Form extends \Nette\Application\UI\Form
 		return $this[$name] = (new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
 			->setAttribute('class', 'form-control-chosen')
 			->setAttribute('data-placeholder', 'Vyberte');
+	}
+	
+	
+	public function addBox(int|string $caption = 0): Box
+	{
+		$this->boxes[$caption] ??= new Box;
+
+		$this->boxCurrent = $caption;
+
+		return $this->boxes[$caption];
+	}
+
+
+	public function getBoxes(): array
+	{
+		return $this->boxes;
+	}
+
+
+	public function addComponent(\Nette\ComponentModel\IComponent $component, $name, $insertBefore = null): self
+	{
+		$this->boxes[$this->boxCurrent ?? 0]->add($component);
+
+		parent::addComponent($component, $name, $insertBefore);
+
+		return $this;
 	}
 
 
