@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
+use Nette\Utils\Html;
+
 class Form extends \Nette\Application\UI\Form
 {
 	public const GREATER_EQUAL = \Nette\Application\UI\Form::MIN;
@@ -28,16 +30,108 @@ class Form extends \Nette\Application\UI\Form
 
 	public bool $floatingLabel = false;
 	
-	protected array $boxes = [];
-
-	protected string|int $boxCurrent;
+	private bool $renderInline = false;
+	
+	private $groups = [];
 
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent = null, $name = null)
 	{
 		parent::__construct($parent, $name);
 
-		$this->addBox();
+		$this->addGroup();
+	}
+	
+	
+	public function renderForm()
+	{
+		$groups = null;
+		$submitters = null;
+		
+		foreach($this->getSubmitterArray() as $submitter)
+		{
+			$submitters .= $submitter->render();
+		}
+		
+		$cardFooter = Html::el('div')
+			->class('card-footer')
+			->setHtml($submitters);
+		
+		$groupArray = $this->getGroups();
+		
+		foreach($groupArray as $groupTitle => $group)
+		{
+			$inputs = null;
+			
+			foreach($group->getInputArray() as $input)
+			{
+				/**
+				 * Nette form hidden input
+				 */
+				$inputs .= $input instanceof \Nette\Forms\Controls\HiddenField ? $input->getControl() : $input->render();
+			}
+			
+			$cardBody = Html::el('div')
+				->class('card-body')
+				->setHtml($inputs);
+			
+			$carHeader = null;
+			
+			if($groupTitle || $this->getTitle())
+			{
+				$groupColor = $group->getOption('color') ? ' ' . $group->getOption('color') : null;
+				
+				$carHeader = Html::el('div')
+					->class('card-header'. $groupColor)
+					->setHtml($groupTitle ?: $this->getTitle());
+			}
+			
+			$content = $carHeader . $cardBody;
+			
+			/**
+			 * Last iteration - add footer with submitters
+			 */
+			if($groupTitle === array_key_last($groupArray))
+			{
+				$content .= $cardFooter;
+			}
+			
+			$card = Html::el('div')
+				->class('card mt-2')
+				->setHtml($content);
+			
+			if($group->getOption('id'))
+			{
+				$card->id($group->getOption('id'));
+			}
+			
+			$groups .= $card;
+		}
+		
+		return $groups;
+	}
+	
+	
+	public function addGroup($caption = null, bool $setAsCurrent = true): ControlGroup
+	{
+		$group = new ControlGroup;
+		$group->setOption('label', $caption);
+		$group->setOption('visual', true);
+
+		if($setAsCurrent)
+		{
+			$this->setCurrentGroup($group);
+		}
+
+		return !is_scalar($caption) || isset($this->groups[$caption])
+			? $this->groups[] = $group
+			: $this->groups[$caption] = $group;
+	}
+	
+	
+	public function getGroups(): array
+	{
+		return $this->groups;
 	}
 
 
@@ -45,19 +139,12 @@ class Form extends \Nette\Application\UI\Form
 	{
 		$submitterArray = [];
 
-		foreach($this->getBoxes() as $box)
+		foreach($this->getGroups() as $box)
 		{
 			$submitterArray = array_merge($submitterArray, $box->getSubmitterArray());
 		}
 
 		return $submitterArray;
-	}
-
-
-	public function setColor(string $color): self
-	{
-		$this->color = $color;
-		return $this;
 	}
 
 
@@ -231,59 +318,71 @@ class Form extends \Nette\Application\UI\Form
 	}
 	
 	
-	public function addBox(int|string $caption = 0): Box
+	public function setRenderInline(bool $renderInline = true): self
 	{
-		$this->boxes[$caption] ??= new Box;
-
-		$this->boxCurrent = $caption;
-
-		return $this->boxes[$caption];
+		$this->renderInline = $renderInline;
+		
+		return $this;
+	}
+	
+	
+	public function getRenderInline(): bool
+	{
+		return $this->renderInline;
 	}
 
 
-	public function getBoxes(): array
+	public function setAjax(bool $ajax = true): self
 	{
-		return $this->boxes;
-	}
-
-
-	public function addComponent(\Nette\ComponentModel\IComponent $component, $name, $insertBefore = null): self
-	{
-		$this->boxes[$this->boxCurrent ?? 0]->add($component);
-
-		parent::addComponent($component, $name, $insertBefore);
-
+		$this->ajax = $ajax;
+		
 		return $this;
 	}
 
 
-	public function setAjax(bool $ajax = true): void
-	{
-		$this->ajax = $ajax;
-	}
-
-
-	public function setTitle(string $title): void
+	public function setTitle(string $title): self
 	{
 		$this->title = $title;
+		
+		return $this;
+	}
+	
+	
+	public function getTitle(): ?string
+	{
+		return $this->title;
+	}
+	
+	
+	public function setColor(string $color): self
+	{
+		$this->color = $color;
+		
+		return $this;
 	}
 
 
-	public function setIcon(string $icon): void
+	public function setIcon(string $icon): self
 	{
 		$this->icon = $icon;
+		
+		return $this;
 	}
 
 
-	public function setNoValidate(bool $noValidate = true): void
+	public function setNoValidate(bool $noValidate = true): self
 	{
 		$this->noValidate = $noValidate;
+		
+		return $this;
 	}
 
 
-	public function setFloatingLabel(bool $floatingLabel = true): void
+	public function setFloatingLabel(bool $floatingLabel = true): self
 	{
 		$this->floatingLabel = $floatingLabel;
+		
+		return $this;
 	}
 
 
