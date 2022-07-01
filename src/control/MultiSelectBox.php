@@ -33,20 +33,42 @@ class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Ren
 			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
 		}
 
+		$inputClass = 'align-self-center';
+		$labelClass = 'align-self-center';
+		$wrapClass = 'mb-3';
+
+		/** @var \ModulIS\Form\Form $form */
+		$form = $this->getForm();
+		
+		if($this->getRenderInline() ?? $form->getRenderInline())
+		{
+			$inputClass .= $this->inputClass ? ' ' . $this->inputClass : null;
+			$labelClass .= $this->labelClass ? ' ' . $this->labelClass : null;
+		}
+		else
+		{
+			$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-8';
+			$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-4';
+
+			if(!$this->wrapClass)
+			{
+				$wrapClass .= ' row';
+			}
+		}
+		
 		$label = $this->getCoreLabel();
-
-		$labelDiv = Html::el('div')
-			->class('col-sm-4 control-label align-self-center')
-			->addHtml($label);
-
 		$input = $this->getCoreControl();
 
+		$labelDiv = Html::el('div')
+			->class($labelClass)
+			->addHtml($label);
+
 		$inputDiv = Html::el('div')
-			->class('col-sm-8')
+			->class($inputClass)
 			->addHtml($input);
 
 		$outerDiv = Html::el('div')
-			->class('mb-3 row')
+			->class($wrapClass)
 			->addHtml($labelDiv . $inputDiv);
 
 		if($this->getOption('id'))

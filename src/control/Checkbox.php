@@ -84,13 +84,16 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 		}
 
 		$input = $this->getCoreControl();
+		
+		$inputClass = $this->inputClass ?? 'col-sm-8 offset-sm-4';
+		$wrapClass = $this->wrapClass ? 'mb-3 ' . $this->wrapClass : 'mb-3 row';
 
 		$inputDiv = Html::el('div')
-			->class('col-sm-8 offset-sm-4')
+			->class($inputClass)
 			->addHtml($input);
 
 		$outerDiv = Html::el('div')
-			->class('mb-3 row')
+			->class($wrapClass)
 			->addHtml($inputDiv);
 
 		if($this->getOption('id'))

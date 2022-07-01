@@ -38,19 +38,9 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
 
-		$floatingLabel = $this->getFloatingLabel();
-
-		/**
-		 * If floating label not set - take it from form
-		 */
-		if($floatingLabel === null)
-		{
-			$floatingLabel = $form->getFloatingLabel();
-		}
-
 		$wrapClass = 'mb-3' . ($this->wrapClass ? ' ' . $this->wrapClass : null);
 		
-		if($floatingLabel)
+		if($this->getFloatingLabel() ?? $form->getFloatingLabel())
 		{
 			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
 			$validationFeedBack = $this->getValidationFeedback();
@@ -106,12 +96,8 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 				->addHtml($label);
 
 			$inputDiv = Html::el('div')
+				->class($inputClass)
 				->addHtml($input);
-			
-			if($inputClass)
-			{
-				$inputDiv->class($inputClass);
-			}
 
 			$outerDiv = Html::el('div')
 				->class($wrapClass)

@@ -197,20 +197,12 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
 		}
 
-		$floatingLabel = $this->getFloatingLabel();
+		/** @var \ModulIS\Form\Form $form */
+		$form = $this->getForm();
+		
+		$wrapClass = 'mb-3' . ($this->wrapClass ? ' ' . $this->wrapClass : null);
 
-		/**
-		 * If floating label not set - take it from form
-		 */
-		if($floatingLabel === null)
-		{
-			/** @var \ModulIS\Form\Form $form */
-			$form = $this->getForm();
-
-			$floatingLabel = $form->getFloatingLabel();
-		}
-
-		if($floatingLabel)
+		if($this->getFloatingLabel() ?? $form->getFloatingLabel())
 		{
 			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
 			$validationFeedBack = $this->getValidationFeedback();
@@ -223,27 +215,54 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 			$input->placeholder($this->getCaption());
 
 			$label = $this->getLabel();
+			
+			$floatingDiv = Html::el('div')
+				->class('form-floating')
+				->addHtml($input . $label . $validationFeedBack);
+			
+			if(!$this->wrapClass)
+			{
+				$wrapClass .= ' col-12';
+			}
 
 			$outerDiv = Html::el('div')
-				->class('form-floating mb-3')
-				->addHtml($input . $label . $validationFeedBack);
+				->class($wrapClass)
+				->addHtml($floatingDiv);
 		}
 		else
 		{
 			$label = $this->getCoreLabel();
+			$input = $this->getCoreControl();
+			
+			$inputClass = 'align-self-center';
+			$labelClass = 'align-self-center';
+			
+			if($this->getRenderInline() ?? $form->getRenderInline())
+			{
+				$inputClass .= $this->inputClass ? ' ' . $this->inputClass : null;
+				$labelClass .= $this->labelClass ? ' ' . $this->labelClass : null;
+			}
+			else
+			{
+				$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-8';
+				$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-4';
+				
+				if(!$this->wrapClass)
+				{
+					$wrapClass .= ' row';
+				}
+			}
 
 			$labelDiv = Html::el('div')
-				->class('col-sm-4 control-label align-self-center')
+				->class($labelClass)
 				->addHtml($label);
 
-			$input = $this->getCoreControl();
-
 			$inputDiv = Html::el('div')
-				->class('col-sm-8')
+				->class($inputClass)
 				->addHtml($input);
 
 			$outerDiv = Html::el('div')
-				->class('mb-3 row')
+				->class($wrapClass)
 				->addHtml($labelDiv . $inputDiv);
 		}
 

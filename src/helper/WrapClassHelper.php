@@ -4,11 +4,11 @@ namespace ModulIS\Form\Helper;
 
 trait WrapClassHelper
 {
-	private ?string $wrapClass = null;
+	protected ?string $wrapClass = null;
 	
-	private ?string $labelClass = null;
+	protected ?string $labelClass = null;
 	
-	private ?string $inputClass = null;
+	protected ?string $inputClass = null;
 
 	
 	public function setLabelWrapClass(string $class): self
