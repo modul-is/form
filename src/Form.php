@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ModulIS\Form;
 
 use Nette\Utils\Html;
+use Nette\Utils\DateTime;
 
 class Form extends \Nette\Application\UI\Form
 {
@@ -166,11 +167,22 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function addDate(string $name, $label = null): Control\TextInput
+	public function addDate(string $name, $label = null, string $min = null, string $max = null): Control\TextInput
 	{
-		return $this[$name] = (new Control\DateInput($label))
-			->setRequired(false)
-			->addRule(fn($input) => \Nette\Utils\DateTime::createFromFormat('Y-m-d', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
+		$dateInput = new Control\DateInput($label);
+		
+		if($min)
+		{
+			$dateInput->setHtmlAttribute('min', (new DateTime($min))->format('Y-m-d'));
+		}
+		
+		if($max)
+		{
+			$dateInput->setHtmlAttribute('max', (new DateTime($max))->format('Y-m-d'));
+		}
+			
+		return $this[$name] = $dateInput->setRequired(false)
+			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
 	}
 
 
