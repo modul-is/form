@@ -20,6 +20,8 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 	use Helper\Template;
 	use Helper\FloatingLabel;
 	use Helper\Validation;
+	use Helper\WrapClassHelper;
+	use Helper\RenderInlineHelper;
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{

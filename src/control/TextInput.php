@@ -20,7 +20,6 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 	use Helper\FloatingLabel;
 	use Helper\Validation;
 	use Helper\FocusOutHelper;
-	use Helper\ClassHelper;
 	use Helper\WrapClassHelper;
 	use Helper\RenderInlineHelper;
 
@@ -85,7 +84,6 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 			
 			$inputClass = 'align-self-center';
 			$labelClass = 'align-self-center';
-			
 			
 			if($this->getRenderInline() ?? $form->getRenderInline())
 			{

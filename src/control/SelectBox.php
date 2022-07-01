@@ -19,6 +19,8 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 	use Helper\Template;
 	use Helper\FloatingLabel;
 	use Helper\Validation;
+	use Helper\WrapClassHelper;
+	use Helper\RenderInlineHelper;
 
 	private array $imageArray = [];
 

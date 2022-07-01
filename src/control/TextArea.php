@@ -20,6 +20,8 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, \Ne
 	use Helper\FloatingLabel;
 	use Helper\Validation;
 	use Helper\FocusOutHelper;
+	use Helper\WrapClassHelper;
+	use Helper\RenderInlineHelper;
 
 	public function render(): Html|string
 	{
