@@ -20,7 +20,7 @@ trait ClassHelper
 	
 	public function setInputWrapClass(string $class): self
 	{
-		$this->labelClass = $class;
+		$this->inputClass = $class;
 		
 		return $this;
 	}

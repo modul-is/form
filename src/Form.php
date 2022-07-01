@@ -71,9 +71,13 @@ class Form extends \Nette\Application\UI\Form
 				$inputs .= $input instanceof \Nette\Forms\Controls\HiddenField ? $input->getControl() : $input->render();
 			}
 			
+			$row = Html::el('div')
+				->class('row')
+				->setHtml($inputs);
+			
 			$cardBody = Html::el('div')
 				->class('card-body')
-				->setHtml($inputs);
+				->setHtml($row);
 			
 			$carHeader = null;
 			

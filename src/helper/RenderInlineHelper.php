@@ -4,7 +4,7 @@ namespace ModulIS\Form\Helper;
 
 trait RenderInlineHelper
 {
-	private bool $renderInline = false;
+	private ?bool $renderInline = null;
 	
 	
 	public function setRenderInline(bool $renderInline = true): self
@@ -15,7 +15,7 @@ trait RenderInlineHelper
 	}
 	
 	
-	public function getRenderInline(): bool
+	public function getRenderInline(): ?bool
 	{
 		return $this->renderInline;
 	}
