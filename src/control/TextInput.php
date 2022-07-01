@@ -22,6 +22,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 	use Helper\FocusOutHelper;
 	use Helper\ClassHelper;
 	use Helper\WrapClassHelper;
+	use Helper\RenderInlineHelper;
 
 	public function render(): Html|string
 	{
