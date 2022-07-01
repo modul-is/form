@@ -38,7 +38,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
 
-		$wrapClass = 'mb-3' . ($this->wrapClass ? ' ' . $this->wrapClass : null);
+		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
 		
 		if($this->getFloatingLabel() ?? $form->getFloatingLabel())
 		{
@@ -57,11 +57,6 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 			$floatingDiv = Html::el('div')
 				->class('form-floating')
 				->addHtml($input . $label . $validationFeedBack);
-			
-			if(!$this->wrapClass)
-			{
-				$wrapClass .= ' col-12';
-			}
 			
 			$outerDiv = Html::el('div')
 				->class($wrapClass)
@@ -84,11 +79,6 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 			{
 				$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-8';
 				$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-4';
-				
-				if(!$this->wrapClass)
-				{
-					$wrapClass .= ' row';
-				}
 			}
 
 			$labelDiv = Html::el('div')
@@ -98,10 +88,14 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 			$inputDiv = Html::el('div')
 				->class($inputClass)
 				->addHtml($input);
+			
+			$rowDiv = Html::el('div')
+				->class('row')
+				->addHtml($labelDiv . $inputDiv);
 
 			$outerDiv = Html::el('div')
 				->class($wrapClass)
-				->addHtml($labelDiv . $inputDiv);
+				->addHtml($rowDiv);
 		}
 
 		if($this->getOption('id'))
