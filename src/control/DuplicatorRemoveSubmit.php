@@ -20,17 +20,18 @@ class DuplicatorRemoveSubmit extends SubmitButton
 				$callback($duplicator, $button->parent);
 			}
 
+			/** @var \ModulIS\Form\Form $form */
 			$form = $button->getForm(false);
 
 			if($form->getPresenter()->isAjax())
 			{
-				$button->lookup(\ModulIS\Form\FormComponent::class)->redrawControl('form');
+				/** @var \ModulIS\Form\FormComponent $component */
+				$component = $button->lookup(\ModulIS\Form\FormComponent::class);
+
+				$component->redrawControl('form');
 			}
 
-			if($form)
-			{
-				$form->onSuccess = [];
-			}
+			$form->onSuccess = [];
 
 			$duplicator->removeComponent($button->parent);
 		};

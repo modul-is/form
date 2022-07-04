@@ -12,6 +12,7 @@ class DuplicatorCreateSubmit extends SubmitButton
 	{
 		$this->onClick[] = function(\Nette\Forms\Controls\SubmitButton $button) use ($allowEmpty, $callback): void
 		{
+			/** @var \ModulIS\Form\Form $form */
 			$form = $button->getForm();
 
 			/** @var Duplicator $duplicator */
@@ -23,7 +24,10 @@ class DuplicatorCreateSubmit extends SubmitButton
 
 				if($form->getPresenter()->isAjax())
 				{
-					$button->lookup(\ModulIS\Form\FormComponent::class)->redrawControl('form');
+					/** @var \ModulIS\Form\FormComponent $component */
+					$component = $button->lookup(\ModulIS\Form\FormComponent::class);
+
+					$component->redrawControl('form');
 				}
 
 				if(is_callable($callback))

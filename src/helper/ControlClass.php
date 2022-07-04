@@ -8,7 +8,7 @@ trait ControlClass
 {
 	public function setClass(string $class): self
 	{
-		$this->setHtmlAttrbute('class', $class);
+		$this->setHtmlAttribute('class', $class);
 
 		return $this;
 	}
