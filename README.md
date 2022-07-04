@@ -73,3 +73,15 @@ Some inputs provide new features
 + `setWrapClass()` - set class to outer div around label and input - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Selec boxes)
 + `setLabelWrapClass()` - set class to wrap div around label - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Selec boxes)
 + `setInputWrapClass()` - set class to wrap div around input - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Selec boxes)
+
+### Duplicator example
+```
+	$duplicator = $form->addDuplicator('duplicator', function(\ModulIS\Form\DuplicatorContainer $container)
+	{
+		$container->addText('text', 'Text input');
+
+		$container->addSubmit('del', 'Smazat');
+	}, 1);
+
+	$duplicator->addSubmit('add', 'Přidat');
+```
