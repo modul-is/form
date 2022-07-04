@@ -53,9 +53,6 @@ class DuplicatorRemoveSubmit extends SubmitButton
 			->disabled($this->isDisabled())
 			->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('times') . $this->getCaption());
 
-		$clearfix = Html::el('div')
-			->class('clearfix');
-
-		return $button . $clearfix;
+		return $button;
 	}
 }

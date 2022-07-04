@@ -114,7 +114,16 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			/** @var Renderable $duplicatorInput */
 			foreach($container->getComponents() as $duplicatorInput)
 			{
-				$inputs .= $duplicatorInput->render();
+				if($duplicatorInput instanceof DuplicatorRemoveSubmit)
+				{
+					$inputs .= Html::el('div')
+						->class('mb-3 col-12')
+						->addHtml($duplicatorInput->render());
+				}
+				else
+				{
+					$inputs .= $duplicatorInput->render();
+				}
 			}
 
 			$inputs .= '<hr />';
