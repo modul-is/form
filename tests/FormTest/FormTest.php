@@ -23,7 +23,10 @@ class FormTest extends Tester\TestCase
 
 		$form->addButton('button');
 
-		$inputArray = $form->getGroups()[0]->getInputArray();
+		/** @var \ModulIS\Form\ControlGroup $group */
+		$group = $form->getGroups()[0];
+
+		$inputArray = $group->getInputArray();
 
 		$inputNameArray = [];
 
@@ -61,7 +64,7 @@ class FormTest extends Tester\TestCase
 	}
 
 
-	public function testBox()
+	public function testGroup()
 	{
 		$form = new Form;
 
@@ -69,7 +72,7 @@ class FormTest extends Tester\TestCase
 
 		$form->addSubmit('submit');
 
-		$form->addGroup(1);
+		$form->addGroup('second');
 
 		$form->addText('text');
 
@@ -79,10 +82,15 @@ class FormTest extends Tester\TestCase
 
 		$groupArray = $form->getGroups();
 
-		Assert::same(count($groupArray[0]->getInputArray()), 1);
-		Assert::same(count($groupArray[0]->getSubmitterArray()), 1);
-		Assert::same(count($groupArray[1]->getInputArray()), 1);
-		Assert::same(count($groupArray[1]->getSubmitterArray()), 2);
+		/** @var \ModulIS\Form\ControlGroup $firstGroup */
+		$firstGroup = $groupArray[0];
+		/** @var \ModulIS\Form\ControlGroup $secondGroup */
+		$secondGroup = $groupArray['second'];
+
+		Assert::same(count($firstGroup->getInputArray()), 1);
+		Assert::same(count($firstGroup->getSubmitterArray()), 1);
+		Assert::same(count($secondGroup->getInputArray()), 1);
+		Assert::same(count($secondGroup->getSubmitterArray()), 2);
 	}
 }
 

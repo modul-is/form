@@ -86,8 +86,8 @@ class SelectTest extends TestCase
 
 		Assert::same($string, $form->getComponent('select')->render());
 	}
-	
-	
+
+
 	public function testRenderWithImage()
 	{
 		$form = $this->getForm();
