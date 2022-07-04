@@ -27,8 +27,9 @@ Form supports all of the default Nette inputs and adds new ones
 + `addWhisperer()` - select box with whisperer which filters options
 + `addMultiWhisperer()` - same as whisperer, more options can be selected
 + `addDuplicator()` - container which can be duplicated many times
-+ `addDependantSelect()` - select box that can change options via ajax based on change of another input(s) 
-+ `addDependantMultiSelect()` - same as DependantSelect, but more options can be selected
++ `addDependentSelect()` - select box that can change options via ajax based on change of another input(s) 
++ `addDependentMultiSelect()` - same as DependantSelect, but more options can be selected 
++ `addDate()` - date input, can limit min and max date
 
 ## Custom settings
 
@@ -39,10 +40,11 @@ Form supports all of the default Nette inputs and adds new ones
 + `setAjax()` - form is submitted via ajax
 + `addBox()` - all inputs added after this call will render in new card
 + `setFloatingLabel()` - inputs will be rendered with [floating labels](https://getbootstrap.com/docs/5.0/forms/floating-labels/)
++ `setRenderInline()` - label and input are rendered each in separate row
 + `setRenderManually()` - set manual render, template with same name as form is used (eg. file `MyForm.php` -> `myForm.latte`)
 
-### Boxes
-Form is rendered in BS5 [card](https://getbootstrap.com/docs/5.0/components/card/) - each card represents box
+### Groups
+Form is rendered in BS5 [card](https://getbootstrap.com/docs/5.0/components/card/) - each card represents one group
 
 Inputs are rendered in `card-body` div
 
@@ -52,8 +54,7 @@ Submitters, links and buttons in `card-footer`
 Container works as standard Nette Continer and has these new features
 
 + `setId()` - add html id to outer div of container
-+ `setInputsPerRow()` - sets how many inputs are rendered in one row
-+ `showCard()` - show container as BS5 card
++ `showCard()` - show container as BS5 [card](https://getbootstrap.com/docs/5.0/components/card/)
 + `setTitle()` - show title of container (only works when container is rendered as card)
 + `setColor()` - set color of conatiner (only works when container is rendered as card)
 
@@ -63,9 +64,12 @@ Some inputs provide new features
 + `setIcon()` - add icon to input or button (Buttons, Links, Text inputs)
 + `setColor()` - add color to input or button (Buttons, Links, Checkbox, Lists)
 + `setTemplate()` - add custom latte template insted of basic render (All inputs)
-+ `setItemsPerRow()` - how many items should be rendered in one row (Lists)
 + `setPrepend()` - adds prepend part to [input group](https://getbootstrap.com/docs/5.0/forms/input-group/) (Text inputs, Select boxes)
 + `setAppend()` - adds append part to [input group](https://getbootstrap.com/docs/5.0/forms/input-group/) (Text inputs, Select boxes)
++ `setRenderInline()` - render label and input each in separate row, overwrites `renderInline` setting from Form (All non-button inputs)
 + `setFloatingLabel()` - input will be rendered with [floating labels](https://getbootstrap.com/docs/5.0/forms/floating-labels/) (Text inputs, Select box)
 + `setAutorenderSkip()` - skips rendering of input, eg. if input is rendered as part of another input with custom template (All inputs)
 + `setTooltip()` - add icon with tooltip to input (Text inputs, Checkbox, Lists, Selec boxes)
++ `setWrapClass()` - set class to outer div around label and input - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Selec boxes)
++ `setLabelWrapClass()` - set class to wrap div around label - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Selec boxes)
++ `setInputWrapClass()` - set class to wrap div around input - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Selec boxes)
