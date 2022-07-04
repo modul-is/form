@@ -29,7 +29,7 @@ class Form extends \Nette\Application\UI\Form
 
 	public bool $noValidate = true;
 
-	public bool $renderFloting = false;
+	public bool $renderFloating = false;
 
 	private bool $renderInline = false;
 

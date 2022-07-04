@@ -64,7 +64,7 @@ class DateTest extends TestCase
 		$form = $this->getForm();
 
 		$form->addDate('date', 'Date')
-			->setFloatingLabel(true);
+			->setRenderFloating();
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
 
@@ -76,7 +76,7 @@ class DateTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->setFloatingLabel(true);
+		$form->setRenderFloating();
 
 		$form->addDate('date', 'Date');
 
@@ -90,10 +90,10 @@ class DateTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->setFloatingLabel(true);
+		$form->setRenderFloating();
 
 		$form->addDate('date', 'Date')
-			->setFloatingLabel(false);
+			->setRenderFloating(false);
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
 

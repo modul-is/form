@@ -51,7 +51,7 @@ class DuplicatorRemoveSubmit extends SubmitButton
 
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
-		
+
 		$currentClass = $this->getControl()->getAttribute('class');
 
 		$button = Html::el('button')

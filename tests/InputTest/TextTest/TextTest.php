@@ -64,7 +64,7 @@ class TextTest extends TestCase
 		$form = $this->getForm();
 
 		$form->addText('text', 'Text')
-			->setFloatingLabel(true);
+			->setRenderFloating();
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
 
@@ -76,7 +76,7 @@ class TextTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->setFloatingLabel(true);
+		$form->setRenderFloating();
 
 		$form->addText('text', 'Text');
 
@@ -90,10 +90,10 @@ class TextTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->setFloatingLabel(true);
+		$form->setRenderFloating();
 
 		$form->addText('text', 'Text')
-			->setFloatingLabel(false);
+			->setRenderFloating(false);
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
 

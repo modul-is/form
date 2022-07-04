@@ -64,7 +64,7 @@ class TextAreaTest extends TestCase
 		$form = $this->getForm();
 
 		$form->addTextArea('text', 'Area')
-			->setFloatingLabel(true);
+			->setRenderFloating();
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
 
@@ -76,7 +76,7 @@ class TextAreaTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->setFloatingLabel(true);
+		$form->setRenderFloating();
 
 		$form->addTextArea('text', 'Area');
 
@@ -90,10 +90,10 @@ class TextAreaTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->setFloatingLabel(true);
+		$form->setRenderFloating();
 
 		$form->addTextArea('text', 'Area')
-			->setFloatingLabel(false);
+			->setRenderFloating(false);
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
 

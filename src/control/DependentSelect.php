@@ -24,7 +24,6 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 
-
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{
 		parent::__construct($label, $parents);

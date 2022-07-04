@@ -52,7 +52,7 @@ class DuplicatorCreateSubmit extends SubmitButton
 		];
 
 		$currentClass = $this->getControl()->getAttribute('class');
-		
+
 		$icon = \Kravcik\LatteFontAwesomeIcon\Extension::render($this->isDisabled() ? 'info' : 'plus');
 
 		/** @var \ModulIS\Form\Form $form */

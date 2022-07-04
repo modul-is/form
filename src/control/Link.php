@@ -26,7 +26,7 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 	public function getControl(): Html
 	{
 		$control = parent::getControl();
-		
+
 		$currentClass = $control->getAttribute('class') ? ' ' . $control->getAttribute('class') : '';
 		$this->setOption('rendered', true);
 

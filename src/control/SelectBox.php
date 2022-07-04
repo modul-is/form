@@ -203,7 +203,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 
 		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
 
-		if($this->getRenderFloating() ?? $form->())
+		if($this->getRenderFloating() ?? $form->getRenderFloating())
 		{
 			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
 			$validationFeedBack = $this->getValidationFeedback();

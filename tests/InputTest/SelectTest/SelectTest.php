@@ -38,7 +38,7 @@ class SelectTest extends TestCase
 		$form = $this->getForm();
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
-			->setFloatingLabel(true);
+			->setRenderFloating();
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
 
@@ -50,7 +50,7 @@ class SelectTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->setFloatingLabel(true);
+		$form->setRenderFloating();
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second']);
 
@@ -64,10 +64,10 @@ class SelectTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$form->setFloatingLabel(true);
+		$form->setRenderFloating();
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
-			->setFloatingLabel(false);
+			->setRenderFloating(false);
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
 
