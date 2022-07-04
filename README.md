@@ -76,12 +76,12 @@ Some inputs provide new features
 
 ### Duplicator example
 ```
-	$duplicator = $form->addDuplicator('duplicator', function(\ModulIS\Form\DuplicatorContainer $container)
-	{
-		$container->addText('text', 'Text input');
+$duplicator = $form->addDuplicator('duplicator', function(\ModulIS\Form\DuplicatorContainer $container)
+{
+	$container->addText('text', 'Text input');
 
-		$container->addSubmit('del', 'Smazat');
-	}, 1);
+	$container->addSubmit('del', 'Smazat');
+}, 1);
 
-	$duplicator->addSubmit('add', 'Přidat');
+$duplicator->addSubmit('add', 'Přidat');
 ```
