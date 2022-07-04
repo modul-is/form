@@ -17,10 +17,11 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 	use Helper\Label;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
-	use Helper\FloatingLabel;
+	use Helper\RenderFloating;
 	use Helper\Validation;
-	use Helper\WrapClassHelper;
-	use Helper\RenderInlineHelper;
+	use Helper\WrapClass;
+	use Helper\RenderInline;
+	use Helper\ControlClass;
 
 	private array $imageArray = [];
 
@@ -202,7 +203,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 
 		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
 
-		if($this->getFloatingLabel() ?? $form->getFloatingLabel())
+		if($this->getRenderFloating() ?? $form->())
 		{
 			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
 			$validationFeedBack = $this->getValidationFeedback();

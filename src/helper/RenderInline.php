@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Helper;
 
-trait RenderInlineHelper
+trait RenderInline
 {
 	private ?bool $renderInline = null;
 

@@ -29,7 +29,7 @@ class Form extends \Nette\Application\UI\Form
 
 	public bool $noValidate = true;
 
-	public bool $floatingLabel = false;
+	public bool $renderFloting = false;
 
 	private bool $renderInline = false;
 
@@ -437,17 +437,17 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function setFloatingLabel(bool $floatingLabel = true): self
+	public function setRenderFloating(bool $renderFloating = true): self
 	{
-		$this->floatingLabel = $floatingLabel;
+		$this->renderFloating = $renderFloating;
 
 		return $this;
 	}
 
 
-	public function getFloatingLabel(): bool
+	public function getRenderFloating(): bool
 	{
-		return $this->floatingLabel;
+		return $this->renderFloating;
 	}
 
 

@@ -51,13 +51,15 @@ class DuplicatorCreateSubmit extends SubmitButton
 			'type' => 'submit'
 		];
 
+		$currentClass = $this->getControl()->getAttribute('class');
+		
 		$icon = \Kravcik\LatteFontAwesomeIcon\Extension::render($this->isDisabled() ? 'info' : 'plus');
 
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
 
 		return Html::el('button')
-			->class('btn btn-primary float-left btn-xs ' . ($form->ajax ? 'ajax' : ''))
+			->class('btn btn-primary float-left btn-xs ' . ($form->ajax ? 'ajax' : '') . ($currentClass ? ' ' . $currentClass : ''))
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
 			->addHtml($icon . $this->getCaption());

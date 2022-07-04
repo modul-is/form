@@ -19,8 +19,8 @@ class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBo
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
-	use Helper\WrapClassHelper;
-	use Helper\RenderInlineHelper;
+	use Helper\WrapClass;
+	use Helper\RenderInline;
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{

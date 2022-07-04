@@ -11,7 +11,7 @@ trait InputGroup
 	public ?string $prepend = null;
 
 
-	public function setAppend(string $text)
+	public function setAppend(string $text): self
 	{
 		$this->append = $text;
 
@@ -19,7 +19,7 @@ trait InputGroup
 	}
 
 
-	public function setPrepend(string $text)
+	public function setPrepend(string $text): self
 	{
 		$this->prepend = $text;
 
@@ -27,7 +27,7 @@ trait InputGroup
 	}
 
 
-	public function setIcon(string $icon)
+	public function setIcon(string $icon): self
 	{
 		$this->prepend = \Kravcik\LatteFontAwesomeIcon\Extension::render($icon)->toHtml();
 

@@ -17,11 +17,12 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 	use Helper\InputRender;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
-	use Helper\FloatingLabel;
+	use Helper\RenderFloating;
 	use Helper\Validation;
-	use Helper\FocusOutHelper;
-	use Helper\WrapClassHelper;
-	use Helper\RenderInlineHelper;
+	use Helper\FocusOut;
+	use Helper\WrapClass;
+	use Helper\RenderInline;
+	use Helper\ControlClass;
 
 	public function render(): Html|string
 	{
@@ -40,7 +41,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 
 		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
 
-		if($this->getFloatingLabel() ?? $form->getFloatingLabel())
+		if($this->getRenderFloating() ?? $form->getRenderFloating())
 		{
 			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
 			$validationFeedBack = $this->getValidationFeedback();

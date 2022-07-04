@@ -12,6 +12,7 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable
 	use Helper\Icon;
 	use Helper\Color;
 	use Helper\AutoRenderSkip;
+	use Helper\ControlClass;
 
 	public function getCoreControl(): Html|string
 	{
@@ -23,7 +24,7 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable
 
 		$button = Html::el('button')
 			->name($this->getName())
-			->class('btn ' . $input->getAttribute('class') . ' btn-' . $color)
+			->class('btn btn-' . $color . ($input->getAttribute('class') ? ' ' . $input->getAttribute('class') : ''))
 			->addHtml($this->icon ? \Kravcik\LatteFontAwesomeIcon\Extension::render($this->icon) : '')
 			->addHtml($label);
 

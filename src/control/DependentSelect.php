@@ -18,10 +18,12 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 	use Helper\InputRender;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
-	use Helper\FloatingLabel;
+	use Helper\RenderFloating;
 	use Helper\Validation;
-	use Helper\WrapClassHelper;
-	use Helper\RenderInlineHelper;
+	use Helper\WrapClass;
+	use Helper\RenderInline;
+	use Helper\ControlClass;
+
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{
@@ -50,7 +52,7 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 
 		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
 
-		if($this->getFloatingLabel() ?? $form->getFloatingLabel())
+		if($this->getRenderFloating() ?? $form->getRenderFloating())
 		{
 			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
 			$validationFeedBack = $this->getValidationFeedback();

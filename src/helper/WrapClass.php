@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Helper;
 
-trait WrapClassHelper
+trait WrapClass
 {
 	protected ?string $wrapClass = null;
 
