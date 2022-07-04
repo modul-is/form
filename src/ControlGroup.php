@@ -50,8 +50,8 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	{
 		return $this->setOption('color', $color);
 	}
-	
-	
+
+
 	public function add(...$items): static
 	{
 		foreach($items as $item)
