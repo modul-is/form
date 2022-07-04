@@ -50,11 +50,8 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	{
 		return $this->setOption('color', $color);
 	}
-	
-	
-	
-	
-	
+
+
 	public function add(...$items): static
 	{
 		foreach($items as $item)
@@ -69,7 +66,7 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 			}
 			else
 			{
-				$type = is_object($item) ? get_class($item) : gettype($item);
+				$type = is_object($item) ? $item::class : gettype($item);
 				throw new \Nette\InvalidArgumentException("Control or Container items expected, $type given.");
 			}
 		}

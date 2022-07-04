@@ -119,7 +119,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 			$inputs . '<hr />';
 		}
-		
+
 		$bodyRow = Html::el('div')
 			->class('row')
 			->addHtml($inputs . '<hr />');

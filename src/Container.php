@@ -15,7 +15,7 @@ class Container extends \Nette\Forms\Container
 	private ?string $id = null;
 
 	private bool $showCard = false;
-	
+
 	private ?string $wrapClass = null;
 
 
@@ -41,8 +41,8 @@ class Container extends \Nette\Forms\Container
 
 		return $this;
 	}
-	
-	
+
+
 	public function setWrapClass(string $wrapClass): self
 	{
 		$this->wrapClass = $wrapClass;
@@ -254,7 +254,7 @@ class Container extends \Nette\Forms\Container
 				{
 					$submitterHtml .= $submitter->render();
 				}
-				
+
 				$footerRowDiv = Html::el('div')
 					->class('row')
 					->addHtml($submitterHtml);
@@ -267,7 +267,7 @@ class Container extends \Nette\Forms\Container
 			$card = Html::el('div')
 				->class('card')
 				->addHtml($cardHeaderDiv . $cardBodyDiv . $cardFooterDiv);
-			
+
 			$outerDiv = Html::el('div')
 				->class('mb-3 ' . ($this->wrapClass ?? 'col-12'))
 				->addHtml($card);
@@ -285,7 +285,7 @@ class Container extends \Nette\Forms\Container
 			$rowDiv = Html::el('div')
 				->class('row')
 				->addHtml($inputs);
-			
+
 			$outerDiv = Html::el('div')
 				->class($this->wrapClass ?? 'col-12')
 				->addHtml($rowDiv);

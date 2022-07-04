@@ -98,7 +98,7 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 		$inputDiv = Html::el('div')
 			->class($inputClass)
 			->addHtml($input);
-		
+
 		$rowDiv = Html::el('div')
 			->class('row')
 			->addHtml($labelDiv . $inputDiv);
