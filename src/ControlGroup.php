@@ -36,7 +36,7 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 		 */
 		foreach($this->getControls() as $control)
 		{
-			if($control instanceof Control\Button || $control instanceof Control\SubmitButton || $control instanceof Control\Link)
+			if(!$control instanceof Control\DuplicatorCreateSubmit && ($control instanceof Control\Button || $control instanceof Control\SubmitButton || $control instanceof Control\Link))
 			{
 				$controlArray[] = $control;
 			}
@@ -50,8 +50,8 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	{
 		return $this->setOption('color', $color);
 	}
-
-
+	
+	
 	public function add(...$items): static
 	{
 		foreach($items as $item)

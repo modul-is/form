@@ -117,16 +117,12 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 				$inputs .= $duplicatorInput->render();
 			}
 
-			$inputs . '<hr />';
+			$inputs .= '<hr />';
 		}
-
-		$bodyRow = Html::el('div')
-			->class('row')
-			->addHtml($inputs . '<hr />');
 
 		$body = Html::el('div')
 			->class('card-body')
-			->addHtml($bodyRow);
+			->addHtml($inputs);
 
 		$createButton = null;
 
@@ -142,10 +138,14 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			->class('card-footer')
 			->addHtml($createButton);
 
-		return Html::el('div')
+		$card = Html::el('div')
 			->id('container' . \Nette\Utils\Strings::capitalize($this->getName()))
 			->class('card card-accent-primary')
 			->addHtml($header . $body . $footer);
+		
+		return Html::el('div')
+			->class('mb-3 col-12')
+			->addHtml($card);
 	}
 
 

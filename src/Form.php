@@ -68,6 +68,14 @@ class Form extends \Nette\Application\UI\Form
 			foreach($group->getInputArray() as $input)
 			{
 				/**
+				 * Duplicator container render is handled within duplicator
+				 */
+				if($input instanceof DuplicatorContainer)
+				{
+					continue;
+				}
+				
+				/**
 				 * Nette form hidden input
 				 */
 				$inputs .= $input instanceof \Nette\Forms\Controls\HiddenField ? $input->getControl() : $input->render();
