@@ -33,7 +33,9 @@ class Form extends \Nette\Application\UI\Form
 
 	private bool $renderInline = false;
 
-	private $groups = [];
+	private array $groups = [];
+	
+	private array $formErrors = [];
 
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent = null, $name = null)
@@ -121,8 +123,25 @@ class Form extends \Nette\Application\UI\Form
 
 			$groups .= $card;
 		}
+		
+		$errorHtml = null;
+		
+		if($this->getFormErrors())
+		{
+			$errorString = null;
+			
+			foreach($this->getFormErrors() as $error)
+			{
+				$errorString .= $error . '<br>';
+			}
+			
+			$errorHtml = Html::el('div')
+				->class('alert alert-danger')
+				->role('alert')
+				->addHtml($errorString);
+		}
 
-		return $groups;
+		return $errorHtml . $groups;
 	}
 
 
@@ -160,6 +179,20 @@ class Form extends \Nette\Application\UI\Form
 		}
 
 		return $submitterArray;
+	}
+	
+	
+	public function addError($message, bool $translate = true): void
+	{
+		$this->formErrors[] = $message;
+		
+		parent::addError($message, $translate);
+	}
+	
+	
+	public function getFormErrors(): array
+	{
+		return $this->formErrors;
 	}
 
 

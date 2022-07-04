@@ -35,7 +35,7 @@ trait Validation
 			{
 				$validationClass = 'is-invalid';
 			}
-			elseif($this->isRequired())
+			elseif($this->isFilled())
 			{
 				$validationClass = 'is-valid';
 			}
