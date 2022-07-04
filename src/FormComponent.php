@@ -87,7 +87,7 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 	public function getForm(): Form
 	{
 		$form = new Form;
-		
+
 		$form->onError[] = function()
 		{
 			if($this->getPresenter()->isAjax())
@@ -95,7 +95,7 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 				$this->redrawControl('form');
 			}
 		};
-		
+
 		return $form;
 	}
 

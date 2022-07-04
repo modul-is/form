@@ -19,9 +19,9 @@ class DuplicatorRemoveSubmit extends SubmitButton
 			{
 				$callback($duplicator, $button->parent);
 			}
-			
+
 			$form = $button->getForm(false);
-			
+
 			if($form->getPresenter()->isAjax())
 			{
 				$button->lookup(\ModulIS\Form\FormComponent::class)->redrawControl('form');
