@@ -36,14 +36,14 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 		{
 			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
 		}
-		
+
 		$label = $this->getCoreLabel();
 		$input = $this->getCoreControl();
 
 		$inputClass = 'align-self-center';
 		$labelClass = 'align-self-center';
 		$wrapClass = 'mb-3' . ($this->wrapClass ? ' ' . $this->wrapClass : null);
-		
+
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
 

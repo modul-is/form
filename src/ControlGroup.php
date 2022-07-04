@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ModulIS\Form;
 
 class ControlGroup extends \Nette\Forms\ControlGroup
@@ -42,8 +44,8 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 
 		return $controlArray;
 	}
-	
-	
+
+
 	public function setColor(string $color): self
 	{
 		return $this->setOption('color', $color);

@@ -39,7 +39,7 @@ class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Ren
 
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
-		
+
 		if($this->getRenderInline() ?? $form->getRenderInline())
 		{
 			$inputClass .= $this->inputClass ? ' ' . $this->inputClass : null;
@@ -50,7 +50,7 @@ class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Ren
 			$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-8';
 			$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-4';
 		}
-		
+
 		$label = $this->getCoreLabel();
 		$input = $this->getCoreControl();
 
@@ -61,7 +61,7 @@ class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Ren
 		$inputDiv = Html::el('div')
 			->class($inputClass)
 			->addHtml($input);
-		
+
 		$rowDiv = Html::el('div')
 			->class('row')
 			->addHtml($labelDiv . $inputDiv);

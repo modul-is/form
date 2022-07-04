@@ -47,7 +47,7 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
-		
+
 		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
 
 		if($this->getFloatingLabel() ?? $form->getFloatingLabel())
@@ -63,11 +63,11 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 			$input->placeholder($this->getCaption());
 
 			$label = $this->getLabel();
-			
+
 			$floatingDiv = Html::el('div')
 				->class('form-floating')
 				->addHtml($input . $label . $validationFeedBack);
-			
+
 			$outerDiv = Html::el('div')
 				->class($wrapClass)
 				->addHtml($floatingDiv);
@@ -76,10 +76,10 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 		{
 			$label = $this->getCoreLabel();
 			$input = $this->getCoreControl();
-			
+
 			$inputClass = 'align-self-center';
 			$labelClass = 'align-self-center';
-			
+
 			if($this->getRenderInline() ?? $form->getRenderInline())
 			{
 				$inputClass .= $this->inputClass ? ' ' . $this->inputClass : null;
@@ -98,7 +98,7 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 			$inputDiv = Html::el('div')
 				->class($inputClass)
 				->addHtml($input);
-			
+
 			$rowDiv = Html::el('div')
 				->class('row')
 				->addHtml($labelDiv . $inputDiv);

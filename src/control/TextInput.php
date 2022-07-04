@@ -34,12 +34,12 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 		{
 			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
 		}
-		
+
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
 
 		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
-		
+
 		if($this->getFloatingLabel() ?? $form->getFloatingLabel())
 		{
 			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
@@ -57,7 +57,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 			$floatingDiv = Html::el('div')
 				->class('form-floating')
 				->addHtml($input . $label . $validationFeedBack);
-			
+
 			$outerDiv = Html::el('div')
 				->class($wrapClass)
 				->addHtml($floatingDiv);
@@ -66,14 +66,14 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 		{
 			$label = $this->getCoreLabel();
 			$input = $this->getCoreControl();
-			
+
 			$inputClass = 'align-self-center';
 			$labelClass = 'align-self-center';
-			
+
 			if($this->getRenderInline() ?? $form->getRenderInline())
 			{
-				$inputClass .= $this->inputClass ? ' ' . $this->inputClass : null;
-				$labelClass .= $this->labelClass ? ' ' . $this->labelClass : null;
+				$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-12';
+				$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-12';
 			}
 			else
 			{
@@ -88,7 +88,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 			$inputDiv = Html::el('div')
 				->class($inputClass)
 				->addHtml($input);
-			
+
 			$rowDiv = Html::el('div')
 				->class('row')
 				->addHtml($labelDiv . $inputDiv);

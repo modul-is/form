@@ -44,7 +44,7 @@ class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBo
 
 		$label = $this->getCoreLabel();
 		$input = $this->getCoreControl();
-		
+
 		$labelClass = 'align-self-center ' . ($this->labelClass ?? 'col-sm-4');
 		$inputClass = 'align-self-center ' . ($this->inputClass ?? 'col-sm-8');
 		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
@@ -60,7 +60,7 @@ class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBo
 		$rowDiv = Html::el('div')
 			->class('row')
 			->addHtml($labelDiv . $inputDiv);
-		
+
 		$outerDiv = Html::el('div')
 			->class($wrapClass)
 			->addHtml($rowDiv);

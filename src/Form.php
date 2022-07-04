@@ -30,9 +30,9 @@ class Form extends \Nette\Application\UI\Form
 	public bool $noValidate = true;
 
 	public bool $floatingLabel = false;
-	
+
 	private bool $renderInline = false;
-	
+
 	private $groups = [];
 
 
@@ -42,28 +42,28 @@ class Form extends \Nette\Application\UI\Form
 
 		$this->addGroup();
 	}
-	
-	
+
+
 	public function renderForm()
 	{
 		$groups = null;
 		$submitters = null;
-		
+
 		foreach($this->getSubmitterArray() as $submitter)
 		{
 			$submitters .= $submitter->render();
 		}
-		
+
 		$cardFooter = Html::el('div')
 			->class('card-footer')
 			->setHtml($submitters);
-		
+
 		$groupArray = $this->getGroups();
-		
+
 		foreach($groupArray as $groupTitle => $group)
 		{
 			$inputs = null;
-			
+
 			foreach($group->getInputArray() as $input)
 			{
 				/**
@@ -71,28 +71,28 @@ class Form extends \Nette\Application\UI\Form
 				 */
 				$inputs .= $input instanceof \Nette\Forms\Controls\HiddenField ? $input->getControl() : $input->render();
 			}
-			
+
 			$row = Html::el('div')
 				->class('row')
 				->setHtml($inputs);
-			
+
 			$cardBody = Html::el('div')
 				->class('card-body')
 				->setHtml($row);
-			
+
 			$carHeader = null;
-			
+
 			if($groupTitle || $this->getTitle())
 			{
 				$groupColor = $group->getOption('color') ? ' ' . $group->getOption('color') : null;
-				
+
 				$carHeader = Html::el('div')
-					->class('card-header'. $groupColor)
+					->class('card-header' . $groupColor)
 					->setHtml($groupTitle ?: $this->getTitle());
 			}
-			
+
 			$content = $carHeader . $cardBody;
-			
+
 			/**
 			 * Last iteration - add footer with submitters
 			 */
@@ -100,23 +100,23 @@ class Form extends \Nette\Application\UI\Form
 			{
 				$content .= $cardFooter;
 			}
-			
+
 			$card = Html::el('div')
 				->class('card mt-2')
 				->setHtml($content);
-			
+
 			if($group->getOption('id'))
 			{
 				$card->id($group->getOption('id'));
 			}
-			
+
 			$groups .= $card;
 		}
-		
+
 		return $groups;
 	}
-	
-	
+
+
 	public function addGroup($caption = null, bool $setAsCurrent = true): ControlGroup
 	{
 		$group = new ControlGroup;
@@ -132,8 +132,8 @@ class Form extends \Nette\Application\UI\Form
 			? $this->groups[] = $group
 			: $this->groups[$caption] = $group;
 	}
-	
-	
+
+
 	public function getGroups(): array
 	{
 		return $this->groups;
@@ -170,17 +170,17 @@ class Form extends \Nette\Application\UI\Form
 	public function addDate(string $name, $label = null, string $min = null, string $max = null): Control\TextInput
 	{
 		$dateInput = new Control\DateInput($label);
-		
+
 		if($min)
 		{
 			$dateInput->setHtmlAttribute('min', (new DateTime($min))->format('Y-m-d'));
 		}
-		
+
 		if($max)
 		{
 			$dateInput->setHtmlAttribute('max', (new DateTime($max))->format('Y-m-d'));
 		}
-			
+
 		return $this[$name] = $dateInput->setRequired(false)
 			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
 	}
@@ -332,16 +332,16 @@ class Form extends \Nette\Application\UI\Form
 			->setAttribute('class', 'form-control-chosen')
 			->setAttribute('data-placeholder', 'Vyberte');
 	}
-	
-	
+
+
 	public function setRenderInline(bool $renderInline = true): self
 	{
 		$this->renderInline = $renderInline;
-		
+
 		return $this;
 	}
-	
-	
+
+
 	public function getRenderInline(): bool
 	{
 		return $this->renderInline;
@@ -351,7 +351,7 @@ class Form extends \Nette\Application\UI\Form
 	public function setAjax(bool $ajax = true): self
 	{
 		$this->ajax = $ajax;
-		
+
 		return $this;
 	}
 
@@ -359,21 +359,21 @@ class Form extends \Nette\Application\UI\Form
 	public function setTitle(string $title): self
 	{
 		$this->title = $title;
-		
+
 		return $this;
 	}
-	
-	
+
+
 	public function getTitle(): ?string
 	{
 		return $this->title;
 	}
-	
-	
+
+
 	public function setColor(string $color): self
 	{
 		$this->color = $color;
-		
+
 		return $this;
 	}
 
@@ -381,7 +381,7 @@ class Form extends \Nette\Application\UI\Form
 	public function setIcon(string $icon): self
 	{
 		$this->icon = $icon;
-		
+
 		return $this;
 	}
 
@@ -389,7 +389,7 @@ class Form extends \Nette\Application\UI\Form
 	public function setNoValidate(bool $noValidate = true): self
 	{
 		$this->noValidate = $noValidate;
-		
+
 		return $this;
 	}
 
@@ -397,7 +397,7 @@ class Form extends \Nette\Application\UI\Form
 	public function setFloatingLabel(bool $floatingLabel = true): self
 	{
 		$this->floatingLabel = $floatingLabel;
-		
+
 		return $this;
 	}
 
