@@ -12,12 +12,19 @@ class DuplicatorCreateSubmit extends SubmitButton
 	{
 		$this->onClick[] = function(\Nette\Forms\Controls\SubmitButton $button) use ($allowEmpty, $callback): void
 		{
+			$form = $button->getForm();
+			
 			/** @var Duplicator $duplicator */
 			$duplicator = $button->lookup(Duplicator::class);
 
 			if($allowEmpty === true || $duplicator->isAllFilled() === true)
 			{
 				$newContainer = $duplicator->createOne();
+				
+				if($form->getPresenter()->isAjax())
+				{
+					$button->lookup(\ModulIS\Form\FormComponent::class)->redrawControl('form');
+				}
 
 				if(is_callable($callback))
 				{
@@ -25,7 +32,7 @@ class DuplicatorCreateSubmit extends SubmitButton
 				}
 			}
 
-			$button->getForm()->onSuccess = [];
+			$form->onSuccess = [];
 		};
 	}
 
