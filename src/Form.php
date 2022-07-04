@@ -34,7 +34,7 @@ class Form extends \Nette\Application\UI\Form
 	private bool $renderInline = false;
 
 	private array $groups = [];
-	
+
 	private array $formErrors = [];
 
 
@@ -123,21 +123,21 @@ class Form extends \Nette\Application\UI\Form
 
 			$groups .= $card;
 		}
-		
+
 		$errorHtml = null;
-		
+
 		if($this->getFormErrors())
 		{
 			$errorString = null;
-			
+
 			foreach($this->getFormErrors() as $error)
 			{
 				$errorString .= $error . '<br>';
 			}
-			
+
 			$errorHtml = Html::el('div')
 				->class('alert alert-danger')
-				->role('alert')
+				->setAttribute('role', 'alert')
 				->addHtml($errorString);
 		}
 
@@ -180,16 +180,16 @@ class Form extends \Nette\Application\UI\Form
 
 		return $submitterArray;
 	}
-	
-	
+
+
 	public function addError($message, bool $translate = true): void
 	{
 		$this->formErrors[] = $message;
-		
+
 		parent::addError($message, $translate);
 	}
-	
-	
+
+
 	public function getFormErrors(): array
 	{
 		return $this->formErrors;
