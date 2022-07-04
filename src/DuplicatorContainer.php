@@ -8,6 +8,11 @@ class DuplicatorContainer extends Container
 {
 	public function addSubmit(string $name, $caption = null): Control\DuplicatorRemoveSubmit
 	{
-		return $this[$name] = new Control\DuplicatorRemoveSubmit($caption);
+		$control = new Control\DuplicatorRemoveSubmit($caption);
+		
+		$control->setValidationScope([])
+			->addRemoveOnClick();
+		
+		return $this[$name] = $control;
 	}
 }

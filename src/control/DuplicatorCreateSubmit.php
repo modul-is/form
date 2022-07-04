@@ -10,8 +10,6 @@ class DuplicatorCreateSubmit extends SubmitButton
 {
 	public function addCreateOnClick(bool $allowEmpty = true, ?callable $callback = null)
 	{
-		$this->setValidationScope([]);
-
 		$this->onClick[] = function(\Nette\Forms\Controls\SubmitButton $button) use ($allowEmpty, $callback): void
 		{
 			/** @var Duplicator $duplicator */

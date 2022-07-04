@@ -10,8 +10,6 @@ class DuplicatorRemoveSubmit extends SubmitButton
 {
 	public function addRemoveOnClick(?callable $callback = null)
 	{
-		$this->setValidationScope([]);
-
 		$this->onClick[] = function(\Nette\Forms\Controls\SubmitButton $button) use ($callback): void
 		{
 			/** @var Duplicator $duplicator */
