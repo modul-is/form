@@ -14,9 +14,9 @@ class Container extends \Nette\Forms\Container
 
 	private ?string $id = null;
 
-	private int $inputsPerRow = 1;
-
 	private bool $showCard = false;
+	
+	private ?string $wrapClass = null;
 
 
 	public function setId(string $id): self
@@ -35,24 +35,17 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function setInputsPerRow(int $inputsPerRow): self
-	{
-		$allowedInputsPerRow = [1, 2, 3, 4, 6, 12];
-
-		if(!in_array($inputsPerRow, $allowedInputsPerRow, true))
-		{
-			throw new \Exception("Invalid number of 'inputsPerRow', allowed are [" . implode(',', $allowedInputsPerRow) . ']');
-		}
-
-		$this->inputsPerRow = $inputsPerRow;
-
-		return $this;
-	}
-
-
 	public function setTitle(string $title): self
 	{
 		$this->title = $title;
+
+		return $this;
+	}
+	
+	
+	public function setWrapClass(string $wrapClass): self
+	{
+		$this->wrapClass = $wrapClass;
 
 		return $this;
 	}
@@ -238,11 +231,7 @@ class Container extends \Nette\Forms\Container
 
 			foreach($this->getInputArray() as $control)
 			{
-				$colDiv = Html::el('div')
-					->class('col-' . strval(12 / $this->inputsPerRow))
-					->addHtml($control->render());
-
-				$inputs .= $colDiv;
+				$inputs .= $control->render();
 			}
 
 			$rowDiv = Html::el('div')
@@ -265,15 +254,23 @@ class Container extends \Nette\Forms\Container
 				{
 					$submitterHtml .= $submitter->render();
 				}
+				
+				$footerRowDiv = Html::el('div')
+					->class('row')
+					->addHtml($submitterHtml);
 
 				$cardFooterDiv = Html::el('div')
 					->class('card-footer')
-					->addHtml($submitterHtml);
+					->addHtml($footerRowDiv);
 			}
 
-			$outerDiv = Html::el('div')
+			$card = Html::el('div')
 				->class('card')
 				->addHtml($cardHeaderDiv . $cardBodyDiv . $cardFooterDiv);
+			
+			$outerDiv = Html::el('div')
+				->class('mb-3 ' . ($this->wrapClass ?? 'col-12'))
+				->addHtml($card);
 		}
 		else
 		{
@@ -282,16 +279,16 @@ class Container extends \Nette\Forms\Container
 			/** @var Control\Renderable $control */
 			foreach($components as $control)
 			{
-				$colDiv = Html::el('div')
-					->class('col-' . strval(12 / $this->inputsPerRow))
-					->addHtml($control->render());
-
-				$inputs .= $colDiv;
+				$inputs .= $control->render();
 			}
 
-			$outerDiv = Html::el('div')
+			$rowDiv = Html::el('div')
 				->class('row')
 				->addHtml($inputs);
+			
+			$outerDiv = Html::el('div')
+				->class($this->wrapClass ?? 'col-12')
+				->addHtml($rowDiv);
 		}
 
 		if($this->id)

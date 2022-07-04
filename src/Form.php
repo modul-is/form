@@ -60,6 +60,7 @@ class Form extends \Nette\Application\UI\Form
 
 		$groupArray = $this->getGroups();
 
+		/** @var ControlGroup $group */
 		foreach($groupArray as $groupTitle => $group)
 		{
 			$inputs = null;
@@ -144,9 +145,10 @@ class Form extends \Nette\Application\UI\Form
 	{
 		$submitterArray = [];
 
-		foreach($this->getGroups() as $box)
+		/** @var ControlGroup $group */
+		foreach($this->getGroups() as $group)
 		{
-			$submitterArray = array_merge($submitterArray, $box->getSubmitterArray());
+			$submitterArray = array_merge($submitterArray, $group->getSubmitterArray());
 		}
 
 		return $submitterArray;

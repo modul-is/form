@@ -45,6 +45,8 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 
 	public function render(): Html|string
 	{
-		return $this->getCoreControl();
+		return Html::el('div')
+			->class('col-12')
+			->addHtml($this->getCoreControl());
 	}
 }

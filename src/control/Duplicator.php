@@ -119,10 +119,14 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 			$inputs . '<hr />';
 		}
+		
+		$bodyRow = Html::el('div')
+			->class('row')
+			->addHtml($inputs . '<hr />');
 
 		$body = Html::el('div')
 			->class('card-body')
-			->addHtml($inputs . '<hr />');
+			->addHtml($bodyRow);
 
 		$createButton = null;
 

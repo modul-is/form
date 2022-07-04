@@ -23,7 +23,7 @@ class FormTest extends Tester\TestCase
 
 		$form->addButton('button');
 
-		$inputArray = $form->getBoxes()[0]->getInputArray();
+		$inputArray = $form->getGroups()[0]->getInputArray();
 
 		$inputNameArray = [];
 
@@ -69,7 +69,7 @@ class FormTest extends Tester\TestCase
 
 		$form->addSubmit('submit');
 
-		$form->addBox(1);
+		$form->addGroup(1);
 
 		$form->addText('text');
 
@@ -77,12 +77,12 @@ class FormTest extends Tester\TestCase
 
 		$form->addButton('button');
 
-		$boxArray = $form->getBoxes();
+		$groupArray = $form->getGroups();
 
-		Assert::same(count($boxArray[0]->getInputArray()), 1);
-		Assert::same(count($boxArray[0]->getSubmitterArray()), 1);
-		Assert::same(count($boxArray[1]->getInputArray()), 1);
-		Assert::same(count($boxArray[1]->getSubmitterArray()), 2);
+		Assert::same(count($groupArray[0]->getInputArray()), 1);
+		Assert::same(count($groupArray[0]->getSubmitterArray()), 1);
+		Assert::same(count($groupArray[1]->getInputArray()), 1);
+		Assert::same(count($groupArray[1]->getSubmitterArray()), 2);
 	}
 }
 

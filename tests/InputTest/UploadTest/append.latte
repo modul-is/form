@@ -1,14 +1,14 @@
-<div class="mb-3 row">
-	<div class="col-sm-4 control-label align-self-center">
-		<label for="frm-form-file" class="col-form-label">Vyberte soubor</label>
-	</div>
-	<div class="col-sm-8">
-		<div class="input-group">
-			<div class="custom-file">
-				<input type="file" name="file" id="frm-form-file" data-nette-rules='[{"op":":fileSize","msg":"The size of the uploaded file can be up to 419430400 bytes.","arg":419430400}]' class="upload custom-file-input">
-				<label class="custom-file-label" for="frm-form-file">Není vybrán soubor</label>
+<div class="mb-3 col-12">
+	<div class="row">
+		<div class="align-self-center col-sm-4">
+			<label for="frm-form-file" class="col-form-label">Vyberte soubor</label>
+		</div>
+		<div class="align-self-center col-sm-8">
+			<div class="input-group">
+				<input type="file" name="file" id="frm-form-file" data-nette-rules='[{"op":":fileSize","msg":"The size of the uploaded file can be up to 419430400 bytes.","arg":419430400}]' class="form-control">
+				<label class="form-label" for="frm-form-file"></label>
+				<span class="input-group-text">append</span>
 			</div>
-			<span class="input-group-text">append</span>
 		</div>
 	</div>
 </div>

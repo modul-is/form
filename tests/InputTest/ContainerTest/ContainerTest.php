@@ -24,24 +24,6 @@ class ContainerTest extends TestCase
 	}
 
 
-	public function testRenderInputsPerRow()
-	{
-		$form = $this->getForm();
-
-		$container = $form->addContainer('container');
-
-		$container->addText('text', 'Text');
-
-		$container->addText('text1', 'Text1');
-
-		$container->setInputsPerRow(2);
-
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/inputsPerRow.latte'));
-
-		Assert::same($html, $form->getComponent('container')->render()->__toString());
-	}
-
-
 	public function testRenderEmpty()
 	{
 		$form = $this->getForm();
