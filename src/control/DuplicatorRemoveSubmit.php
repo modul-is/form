@@ -56,7 +56,7 @@ class DuplicatorRemoveSubmit extends SubmitButton
 		$currentClass = $this->getControl()->getAttribute('class');
 
 		$button = Html::el('button')
-			->class('btn btn-xs btn-danger float-end' . ($form->ajax ? ' ajax' : '') . ($currentClass ? ' ' . $currentClass : ''))
+			->class('btn btn-xs btn-outline-danger float-end' . ($form->ajax ? ' ajax' : '') . ($currentClass ? ' ' . $currentClass : ''))
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
 			->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('times') . $this->getCaption());

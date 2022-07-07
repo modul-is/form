@@ -63,7 +63,7 @@ class DuplicatorCreateSubmit extends SubmitButton
 		$form = $this->getForm();
 
 		return Html::el('button')
-			->class('btn btn-primary float-left btn-xs ' . ($form->ajax ? 'ajax' : '') . ($currentClass ? ' ' . $currentClass : ''))
+			->class('btn btn-outline-primary float-left btn-xs ' . ($form->ajax ? 'ajax' : '') . ($currentClass ? ' ' . $currentClass : ''))
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
 			->addHtml($icon . $this->getCaption());
