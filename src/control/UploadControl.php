@@ -22,7 +22,7 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 
-	public function getCoreControl(): Html
+	public function getCoreControl(): string
 	{
 		$input = $this->getControl();
 
@@ -32,10 +32,6 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
 
 		$input->addAttributes(['class' => 'form-control' . $currentClass . $validationClass]);
-
-		$label = Html::el('label')
-			->class('form-label')
-			->for($this->getHtmlId());
 
 		$prepend = null;
 		$append = null;
@@ -54,8 +50,7 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 				->addHtml($this->append);
 		}
 
-		return Html::el('div')->class('input-group')
-			->addHtml($prepend . $input . $label . $append . $validationFeedBack);
+		return $prepend . $input  . $append . $validationFeedBack;
 	}
 
 
