@@ -64,7 +64,7 @@ trait CoreList
 			{
 				$validationClass = ' is-invalid';
 				$validationFeedBack = Html::el('div')
-					->class('check-invalid')
+					->class('invalid-feedback')
 					->addHtml($this->getError());
 			}
 			elseif($this->getValidationSuccessMessage())
