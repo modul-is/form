@@ -135,23 +135,6 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 				$input->setAttribute('data-on-focusout', $presenter->link($this->lookupPath('Nette\Application\UI\Presenter') . '-focusout!'));
 			}
 
-			$prepend = null;
-			$append = null;
-
-			if(!empty($this->prepend))
-			{
-				$prepend = Html::el('span')
-					->class('input-group-text')
-					->addHtml($this->prepend);
-			}
-
-			if(!empty($this->append))
-			{
-				$append = Html::el('span')
-					->class('input-group-text')
-					->addHtml($this->append);
-			}
-
 			$focusOutTooltip = null;
 
 			if(!empty($this->onFocusOut))
@@ -181,7 +164,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 			}
 
 			return Html::el('div')->class('input-group')
-				->addHtml($prepend . $input . $append . $focusOutTooltip . $validationFeedBack);
+				->addHtml($this->getPrepend() . $input . $this->getAppend() . $focusOutTooltip . $validationFeedBack);
 		}
 	}
 

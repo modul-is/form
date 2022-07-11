@@ -33,24 +33,7 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 
 		$input->addAttributes(['class' => 'form-control' . $currentClass . $validationClass]);
 
-		$prepend = null;
-		$append = null;
-
-		if(!empty($this->prepend))
-		{
-			$prepend = Html::el('span')
-				->class('input-group-text')
-				->addHtml($this->prepend);
-		}
-
-		if(!empty($this->append))
-		{
-			$append = Html::el('span')
-				->class('input-group-text')
-				->addHtml($this->append);
-		}
-
-		return $prepend . $input  . $append . $validationFeedBack;
+		return $this->getPrepend() . $input  . $this->getAppend() . $validationFeedBack;
 	}
 
 

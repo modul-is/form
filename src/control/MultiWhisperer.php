@@ -19,25 +19,8 @@ class MultiWhisperer extends MultiSelectBox
 
 		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null) . $chosenClass]);
 
-		$prepend = null;
-		$append = null;
-
-		if(!empty($this->prepend))
-		{
-			$prepend = Html::el('span')
-				->class('input-group-text')
-				->addHtml($this->prepend);
-		}
-
-		if(!empty($this->append))
-		{
-			$append = Html::el('span')
-				->class('input-group-text')
-				->addHtml($this->append);
-		}
-
 		return Html::el('div')->class('input-group')
-			->addHtml($prepend . $input . $append . $validationFeedBack);
+			->addHtml($this->getPrepend() . $input . $this->getAppend() . $validationFeedBack);
 	}
 
 
