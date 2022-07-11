@@ -400,3 +400,9 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
 	background-color: #00264d;
 	border-color: #00264d;
 }
+
+.input-group-text > .btn
+{
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
