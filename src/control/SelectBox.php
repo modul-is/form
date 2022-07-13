@@ -8,7 +8,7 @@ use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 use Kravcik\LatteFontAwesomeIcon\Extension;
 
-class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
+class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -22,6 +22,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 	use Helper\WrapClass;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
+	use Helper\FocusOut;
 
 	private array $imageArray = [];
 

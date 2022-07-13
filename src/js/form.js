@@ -15,8 +15,10 @@ Nette.validators.CodeComponentFormValidator_sameLength = function(elem, args, va
 
 async function inputFocusOut(input)
 {
+	input.siblings('.focusout-error').hide();
+	input.siblings('.focusout-success').hide();
 	input.siblings('.focusout-waiting').hide();
-	input.siblings('.focusout-loading').show();
+	input.siblings('.focusout-loading').show();;
 	
 	let requestParams = {
 		method: 'POST',
