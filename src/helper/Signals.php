@@ -13,9 +13,9 @@ trait Signals
 
 	public $onChange = [];
 
-	public string $onFocusOutSignal = 'onfocusout';
+	protected string $onFocusOutSignal = 'onfocusout';
 
-	public string $onChangeSignal = 'onchange';
+	protected string $onChangeSignal = 'onchange';
 
 
 	public function signalReceived($signal): void
