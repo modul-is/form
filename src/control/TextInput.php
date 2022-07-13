@@ -39,64 +39,13 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
 
-		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
-
 		if($this->getRenderFloating() ?? $form->getRenderFloating())
 		{
-			$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
-			$validationFeedBack = $this->getValidationFeedback();
-
-			$input = $this->getControl();
-
-			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
-
-			$input->class('form-control' . $currentClass . $validationClass);
-			$input->placeholder($this->getCaption());
-
-			$label = $this->getLabel();
-
-			$floatingDiv = Html::el('div')
-				->class('form-floating')
-				->addHtml($input . $label . $validationFeedBack);
-
-			$outerDiv = Html::el('div')
-				->class($wrapClass)
-				->addHtml($floatingDiv);
+			$outerDiv = $this->renderFloating();
 		}
 		else
 		{
-			$label = $this->getCoreLabel();
-			$input = $this->getCoreControl();
-
-			$inputClass = 'align-self-center';
-			$labelClass = 'align-self-center';
-
-			if($this->getRenderInline() ?? $form->getRenderInline())
-			{
-				$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-12';
-				$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-12';
-			}
-			else
-			{
-				$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-8';
-				$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-4';
-			}
-
-			$labelDiv = Html::el('div')
-				->class($labelClass)
-				->addHtml($label);
-
-			$inputDiv = Html::el('div')
-				->class($inputClass)
-				->addHtml($input);
-
-			$rowDiv = Html::el('div')
-				->class('row')
-				->addHtml($labelDiv . $inputDiv);
-
-			$outerDiv = Html::el('div')
-				->class($wrapClass)
-				->addHtml($rowDiv);
+			$outerDiv = $this->renderBasic();
 		}
 
 		if($this->getOption('id'))

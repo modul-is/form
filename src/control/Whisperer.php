@@ -42,7 +42,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 		$inputClass = 'align-self-center';
 		$labelClass = 'align-self-center';
-		$wrapClass = 'mb-3 ' . ($this->wrapClass ? $this->wrapClass : 'col-12');
+		$wrapClass = 'mb-3 ' . ($this->wrapClass ?: 'col-12');
 
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
@@ -65,7 +65,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 		$inputDiv = Html::el('div')
 			->class($inputClass)
 			->addHtml($input);
-		
+
 		$rowDiv = Html::el('div')
 			->class('row')
 			->addHtml($labelDiv . $inputDiv);
