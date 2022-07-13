@@ -13,12 +13,12 @@ Nette.validators.CodeComponentFormValidator_sameLength = function(elem, args, va
     return args.length === val.length;
 };
 
-async function inputFocusOut(input)
+async function inputSignal(input, url)
 {
-	input.siblings('.focusout-error').hide();
-	input.siblings('.focusout-success').hide();
-	input.siblings('.focusout-waiting').hide();
-	input.siblings('.focusout-loading').show();;
+	input.siblings('.signal-error').hide();
+	input.siblings('.signal-success').hide();
+	input.siblings('.signal-waiting').hide();
+	input.siblings('.signal-loading').show();;
 	
 	let requestParams = {
 		method: 'POST',
@@ -28,31 +28,36 @@ async function inputFocusOut(input)
 		body: JSON.stringify({value: input.val()})
 	};
 	
-	await fetch(input.attr('data-on-focusout'), requestParams)
+	await fetch(url, requestParams)
 		.then(response => response.json())
 		.then(data => {
-			input.siblings('.focusout-loading').hide();
+			input.siblings('.signal-loading').hide();
 			if(data.errorMessage)
 			{
-				errorSpan = input.siblings('.focusout-error');
+				errorSpan = input.siblings('.signal-error');
 
 				errorSpan.attr('title', data.errorMessage);
 				errorSpan.show();
 			}
 			else
 			{
-				input.siblings('.focusout-success').show();
+				input.siblings('.signal-success').show();
 			}
 		})
 		.catch((error) => {
-			input.siblings('.focusout-loading').hide();
-			input.siblings('.focusout-error').show();
+			input.siblings('.signal-loading').hide();
+			input.siblings('.signal-error').show();
 		});
 }
 
 $('[data-on-focusout]').focusout(function()
 {
-	inputFocusOut($(this));
+	inputSignal($(this), $(this).attr('data-on-focusout'));
+});
+
+$('[data-on-change]').change(function()
+{
+	inputSignal($(this), $(this).attr('data-on-change'));
 });
 
 $('.form-control-chosen').chosen({

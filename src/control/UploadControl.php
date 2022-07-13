@@ -26,7 +26,7 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 	{
 		$input = $this->getControl();
 
-		$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
+		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
 		$validationFeedBack = $this->getValidationFeedback();
 
 		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';

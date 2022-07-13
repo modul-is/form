@@ -19,7 +19,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 	use Helper\Template;
 	use Helper\RenderFloating;
 	use Helper\Validation;
-	use Helper\FocusOut;
+	use Helper\Signals;
 	use Helper\WrapClass;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
@@ -43,7 +43,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, \
 
 		if($this->getRenderFloating() ?? $form->getRenderFloating())
 		{
-			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
+			$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
 			$validationFeedBack = $this->getValidationFeedback();
 
 			$input = $this->getControl();

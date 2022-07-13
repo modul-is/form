@@ -23,6 +23,7 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 	use Helper\WrapClass;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
+	use Helper\Signals;
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{
@@ -53,7 +54,7 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 
 		if($this->getRenderFloating() ?? $form->getRenderFloating())
 		{
-			$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
+			$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
 			$validationFeedBack = $this->getValidationFeedback();
 
 			$input = $this->getControl();
