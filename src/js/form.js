@@ -50,41 +50,62 @@ async function inputSignal(input, url)
 		});
 }
 
-$('[data-on-focusout]').focusout(function()
+function initForm()
 {
-	inputSignal($(this), $(this).attr('data-on-focusout'));
-});
+	$('[data-on-focusout]').focusout(function()
+	{
+		inputSignal($(this), $(this).attr('data-on-focusout'));
+	});
 
-$('[data-on-change]').change(function()
+	$('[data-on-change]').change(function()
+	{
+		inputSignal($(this), $(this).attr('data-on-change'));
+	});
+
+	$('.form-control-chosen').chosen({
+		allow_single_deselect: true,
+		no_results_text: "Nebyla nalezena žádná položka - ",
+		width: '100%'
+	});
+
+	$('.form-control-chosen-required').chosen({
+		allow_single_deselect: false,
+		no_results_text: "Nebyla nalezena žádná položka - ",
+		width: '100%'
+	});
+
+	$('[data-whisperer], [data-whisperer-onselect], [data-whisperer-delay]').whisperer();
+	$('select[data-dependentselectbox]').dependentSelectBox();
+
+	$('div.select-image li').on('click', function()
+	{
+		let parentDiv = $(this).parents('.select-image');
+
+		parentDiv.find('.selected').removeClass('selected');
+		$(this).find('.dropdown-item').addClass('selected');
+
+		let value = $(this).attr('value');
+		let selectedLabel = $(this).find('.label-text').text();
+
+		parentDiv.find('.prompt-text').text(selectedLabel);
+		$('#' + parentDiv.attr('data-parent-id')).val(value);
+	});
+}
+
+initForm();
+
+if(typeof naja !== "undefined")
 {
-	inputSignal($(this), $(this).attr('data-on-change'));
-});
-
-$('.form-control-chosen').chosen({
-	allow_single_deselect: true,
-	no_results_text: "Nebyla nalezena žádná položka - ",
-	width: '100%'
-});
-
-$('.form-control-chosen-required').chosen({
-	allow_single_deselect: false,
-	no_results_text: "Nebyla nalezena žádná položka - ",
-	width: '100%'
-});
-
-$('[data-whisperer], [data-whisperer-onselect], [data-whisperer-delay]').whisperer();
-$('select[data-dependentselectbox]').dependentSelectBox();
-
-$('div.select-image li').on('click', function()
-{
-	let parentDiv = $(this).parents('.select-image');
-
-	parentDiv.find('.selected').removeClass('selected');
-	$(this).find('.dropdown-item').addClass('selected');
+	const formExtension =
+	{
+		initialize(naja)
+		{
+			naja.snippetHandler.addEventListener('afterUpdate', (event) =>
+			{
+				initForm();
+			});
+		}
+	};
 	
-	let value = $(this).attr('value');
-	let selectedLabel = $(this).find('.label-text').text();
-
-	parentDiv.find('.prompt-text').text(selectedLabel);
-	$('#' + parentDiv.attr('data-parent-id')).val(value);
-});
+	naja.registerExtension(formExtension);
+}

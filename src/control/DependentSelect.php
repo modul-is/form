@@ -23,7 +23,6 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 	use Helper\WrapClass;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
-	use Helper\Signals;
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{
