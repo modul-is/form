@@ -38,7 +38,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 	{
 		$input = $this->getControl();
 
-		$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
+		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
 		$validationFeedBack = $this->getValidationFeedback();
 
 		if($this->imageArray)
@@ -162,8 +162,11 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
 
 				$focusOutTooltip = $waiting . $loading . $success . $error;
 			}
+			
+			$hasValidationClass = $this->getValidationClass() && $this->hasErrors() ? ' has-validation' : null;
 
-			return Html::el('div')->class('input-group')
+			return Html::el('div')
+				->class('input-group' . $hasValidationClass)
 				->addHtml($this->getPrepend() . $input . $this->getAppend() . $focusOutTooltip . $validationFeedBack);
 		}
 	}

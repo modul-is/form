@@ -16,7 +16,7 @@ trait InputRender
 	{
 		$input = $this->getControl();
 
-		$validationClass = $this->getValdiationClass() ? ' ' . $this->getValdiationClass() : null;
+		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
 		$validationFeedBack = $this->getValidationFeedback();
 
 		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
@@ -58,8 +58,11 @@ trait InputRender
 
 			$focusOutTooltip = $waiting . $loading . $success . $error;
 		}
+		
+		$hasValidationClass = $this->getValidationClass() && $this->hasErrors() ? ' has-validation' : null;
 
-		return Html::el('div')->class('input-group')
+		return Html::el('div')
+			->class('input-group' . $hasValidationClass)
 			->addHtml($this->getPrepend() . $input . $this->getAppend() . $focusOutTooltip . $validationFeedBack);
 	}
 }

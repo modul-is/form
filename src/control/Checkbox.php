@@ -40,7 +40,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	{
 		$input = $this->getControlPart();
 
-		$validationClass = $this->getValdiationClass();
+		$validationClass = $this->getValidationClass();
 		$validationMessage = $this->getValidationFeedback();
 
 		$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;

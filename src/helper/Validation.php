@@ -25,7 +25,7 @@ trait Validation
 	}
 
 
-	public function getValdiationClass(): ?string
+	public function getValidationClass(): ?string
 	{
 		$validationClass = null;
 
