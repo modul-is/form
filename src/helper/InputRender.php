@@ -24,7 +24,7 @@ trait InputRender
 
 		$signalTooltip = null;
 
-		if(function_exists('hasSignal') && $this->hasSignal())
+		if(method_exists($this, 'hasSignal') && $this->hasSignal())
 		{
 			$this->addSignalsToInput($input);
 			$signalTooltip = $this->getSignalTooltip();
