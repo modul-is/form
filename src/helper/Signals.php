@@ -10,11 +10,11 @@ use Kravcik\LatteFontAwesomeIcon\Extension;
 trait Signals
 {
 	public $onFocusOut = [];
-	
+
 	public $onChange = [];
-	
+
 	public string $onFocusOutSignal = 'onfocusout';
-	
+
 	public string $onChangeSignal = 'onchange';
 
 
@@ -27,7 +27,7 @@ trait Signals
 		{
 			return;
 		}
-		
+
 		if($signal !== $this->onFocusOutSignal && $signal !== $this->onChangeSignal)
 		{
 			throw new \Exception("Unknown signal '$signal' for input '" . $this->getName() . "'");
@@ -37,7 +37,7 @@ trait Signals
 
 		$presenter->payload->value = $value;
 		$presenter->payload->errorMessage = null;
-			
+
 		if($signal === $this->onFocusOutSignal)
 		{
 			call_user_func_array($this->onFocusOut, [&$presenter->payload]);
@@ -49,8 +49,8 @@ trait Signals
 
 		$presenter->sendPayload();
 	}
-	
-	
+
+
 	public function getSignalTooltip(): string
 	{
 		$waiting = Html::el('span')
@@ -76,13 +76,13 @@ trait Signals
 
 		return $waiting . $loading . $success . $error;
 	}
-	
-	
+
+
 	public function addSignalsToInput(&$input)
 	{
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-			
+
 		if(!empty($this->onFocusOut))
 		{
 			$input->setAttribute('data-on-focusout', $presenter->link($this->lookupPath('Nette\Application\UI\Presenter') . '-' . $this->onFocusOutSignal . '!'));
@@ -93,8 +93,8 @@ trait Signals
 			$input->setAttribute('data-on-change', $presenter->link($this->lookupPath('Nette\Application\UI\Presenter') . '-' . $this->onChangeSignal . '!'));
 		}
 	}
-	
-	
+
+
 	public function hasSignal(): bool
 	{
 		return $this->onChange || $this->onFocusOut;

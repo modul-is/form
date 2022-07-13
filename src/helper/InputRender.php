@@ -23,13 +23,13 @@ trait InputRender
 		$input->addAttributes(['class' => $this->controlClass . $currentClass . $validationClass]);
 
 		$signalTooltip = null;
-			
+
 		if($this->hasSignal())
 		{
 			$this->addSignalsToInput($input);
 			$signalTooltip = $this->getSignalTooltip();
 		}
-		
+
 		$hasValidationClass = $this->getValidationClass() && $this->hasErrors() ? ' has-validation' : null;
 
 		return Html::el('div')
