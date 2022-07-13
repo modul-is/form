@@ -13,7 +13,7 @@ class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBo
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
-	use Helper\InputRender;
+	use Helper\InputCoreControl;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;

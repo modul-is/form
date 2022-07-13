@@ -13,7 +13,7 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
-	use Helper\InputRender;
+	use Helper\InputCoreControl;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\RenderFloating;

@@ -13,7 +13,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, F
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
-	use Helper\InputRender;
+	use Helper\InputCoreControl;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\RenderFloating;

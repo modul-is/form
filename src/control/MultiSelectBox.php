@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
-use Nette\Utils\Html;
 
 class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Renderable
 {
@@ -14,7 +13,7 @@ class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Ren
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
-	use Helper\InputRender;
+	use Helper\InputCoreControl;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;

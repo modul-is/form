@@ -14,7 +14,7 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, Flo
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
-	use Helper\InputRender;
+	use Helper\InputCoreControl;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\RenderFloating;
