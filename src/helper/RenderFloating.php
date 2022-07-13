@@ -35,17 +35,41 @@ trait RenderFloating
 
 		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
 
-		$input->class($this->controlClass . $currentClass . $validationClass);
+		$prepend = null;
+		$append = null;
+		$floatingClass = 'form-floating';
+		$inputClass = $this->controlClass . $currentClass . $validationClass;
+		
+		if($this->getPrepend() || $this->getAppend())
+		{
+			$wrapClass .= ' input-group';
+			$floatingClass .= ' flex-grow-1';
+			$inputClass .= ' rounded-0';
+			
+			$prepend = $this->getPrepend();
+			$append = $this->getAppend();
+			
+			if($prepend && !$append)
+			{
+				$inputClass .= ' rounded-end';
+			}
+			elseif($append && !$prepend)
+			{
+				$inputClass .= ' rounded-start';
+			}
+		}
+		
+		$input->class($inputClass);
 		$input->placeholder($this->getCaption());
 
 		$label = $this->getLabel();
-
+		
 		$floatingDiv = Html::el('div')
-			->class('form-floating')
+			->class($floatingClass)
 			->addHtml($input . $label . $validationFeedBack);
-
+		
 		return Html::el('div')
 			->class($wrapClass)
-			->addHtml($floatingDiv);
+			->addHtml($prepend . $floatingDiv . $append);
 	}
 }
