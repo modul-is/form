@@ -25,7 +25,7 @@ trait RenderFloating
 	}
 	
 	
-	protected function renderFloating(): Html
+	public function renderFloating(): Html
 	{
 		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
 		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
@@ -35,7 +35,7 @@ trait RenderFloating
 
 		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
 
-		$input->class('form-control' . $currentClass . $validationClass);
+		$input->class($this->controlClass . $currentClass . $validationClass);
 		$input->placeholder($this->getCaption());
 
 		$label = $this->getLabel();

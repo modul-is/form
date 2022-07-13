@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
-class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, \Nette\Application\UI\SignalReceiver
+class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -22,8 +22,17 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, \
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 	use Helper\Signals;
+	use Helper\RenderBasic;
 
 	private array $imageArray = [];
+	
+	
+	public function __construct($label = null, ?array $items = null)
+	{
+		parent::__construct($label, $items);
+		
+		$this->controlClass = 'form-select';
+	}
 
 
 	public function setImageArray(array $imageArray): self
@@ -141,89 +150,5 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, \
 				->class('input-group' . $hasValidationClass)
 				->addHtml($this->getPrepend() . $input . $this->getAppend() . $signalTooltip . $validationFeedBack);
 		}
-	}
-
-
-	public function render(): Html|string
-	{
-		if($this->getOption('hide') || $this->autoRenderSkip)
-		{
-			return '';
-		}
-
-		if($this->getOption('template'))
-		{
-			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
-		}
-
-		/** @var \ModulIS\Form\Form $form */
-		$form = $this->getForm();
-
-		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
-
-		if($this->getRenderFloating() ?? $form->getRenderFloating())
-		{
-			$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
-			$validationFeedBack = $this->getValidationFeedback();
-
-			$input = $this->getControl();
-
-			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
-
-			$input->class('form-select' . $currentClass . $validationClass);
-			$input->placeholder($this->getCaption());
-
-			$label = $this->getLabel();
-
-			$floatingDiv = Html::el('div')
-				->class('form-floating')
-				->addHtml($input . $label . $validationFeedBack);
-
-			$outerDiv = Html::el('div')
-				->class($wrapClass)
-				->addHtml($floatingDiv);
-		}
-		else
-		{
-			$label = $this->getCoreLabel();
-			$input = $this->getCoreControl();
-
-			$inputClass = 'align-self-center';
-			$labelClass = 'align-self-center';
-
-			if($this->getRenderInline() ?? $form->getRenderInline())
-			{
-				$inputClass .= $this->inputClass ? ' ' . $this->inputClass : null;
-				$labelClass .= $this->labelClass ? ' ' . $this->labelClass : null;
-			}
-			else
-			{
-				$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-8';
-				$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-4';
-			}
-
-			$labelDiv = Html::el('div')
-				->class($labelClass)
-				->addHtml($label);
-
-			$inputDiv = Html::el('div')
-				->class($inputClass)
-				->addHtml($input);
-
-			$rowDiv = Html::el('div')
-				->class('row')
-				->addHtml($labelDiv . $inputDiv);
-
-			$outerDiv = Html::el('div')
-				->class($wrapClass)
-				->addHtml($rowDiv);
-		}
-
-		if($this->getOption('id'))
-		{
-			$outerDiv->id($this->getOption('id'));
-		}
-
-		return $outerDiv;
 	}
 }
