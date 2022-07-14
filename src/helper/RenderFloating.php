@@ -25,7 +25,7 @@ trait RenderFloating
 	}
 
 
-	protected function renderFloating(): Html
+	public function renderFloating(): Html
 	{
 		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
 		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;

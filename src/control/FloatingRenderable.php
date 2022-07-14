@@ -9,4 +9,9 @@ interface FloatingRenderable
 	public function setRenderFloating(): self;
 
 	public function getRenderFloating(): ?bool;
+	
+	/**
+	 * @hide
+	 */
+	public function renderFloating(): \Nette\Utils\Html;
 }
