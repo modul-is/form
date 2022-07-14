@@ -7,4 +7,8 @@ namespace ModulIS\Form\Control;
 interface Signalable
 {
 	public function hasSignal(): bool;
+
+	public function addSignalsToInput(\Nette\Forms\Controls\BaseControl &$input): void;
+
+	public function getSignalTooltip(): string;
 }
