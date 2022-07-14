@@ -8,11 +8,11 @@ use Nette\Utils\Html;
 
 trait CoreList
 {
-	public array $tooltips = [];
+	protected array $tooltips = [];
 
-	public int $itemsPerRow = 1;
+	protected int $itemsPerRow = 1;
 
-	public ?string $itemClass = null;
+	protected ?string $itemClass = null;
 
 
 	public function getCoreControl(): Html|string

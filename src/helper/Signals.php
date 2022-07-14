@@ -51,7 +51,7 @@ trait Signals
 	}
 
 
-	public function getSignalTooltip(): string
+	protected function getSignalTooltip(): string
 	{
 		$waiting = Html::el('span')
 			->class('input-group-text signal-waiting')
@@ -78,7 +78,7 @@ trait Signals
 	}
 
 
-	public function addSignalsToInput(&$input)
+	protected function addSignalsToInput(&$input)
 	{
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);

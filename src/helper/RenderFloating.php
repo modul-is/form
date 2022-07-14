@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 trait RenderFloating
 {
-	public ?bool $renderFloating = null;
+	protected ?bool $renderFloating = null;
 
 
 	public function setRenderFloating(bool $renderFloating = true): self
@@ -25,7 +25,7 @@ trait RenderFloating
 	}
 	
 	
-	public function renderFloating(): Html
+	protected function renderFloating(): Html
 	{
 		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
 		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
