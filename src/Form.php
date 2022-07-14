@@ -113,7 +113,7 @@ class Form extends \Nette\Application\UI\Form
 			}
 
 			$card = Html::el('div')
-				->class('card mt-2' . ($group->getClass() ? ' ' . $group->getClass() : null))
+				->class('card mt-2 ' . ($group->getClass() ?? 'col-12'))
 				->setHtml($content);
 
 			if($group->getOption('id'))
@@ -123,6 +123,10 @@ class Form extends \Nette\Application\UI\Form
 
 			$groups .= $card;
 		}
+		
+		$formRow = Html::el('div')
+			->class('row')
+			->setHtml($groups);
 
 		$errorHtml = null;
 
@@ -141,7 +145,7 @@ class Form extends \Nette\Application\UI\Form
 				->addHtml($errorString);
 		}
 
-		return $errorHtml . $groups;
+		return $errorHtml . $formRow;
 	}
 
 
