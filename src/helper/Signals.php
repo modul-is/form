@@ -97,6 +97,7 @@ trait Signals
 
 	public function hasSignal(): bool
 	{
-		return $this->onChange || $this->onFocusOut;
+		bdump(is_callable($this->onChange) || is_callable($this->onFocusOut));
+		return is_callable($this->onChange) || is_callable($this->onFocusOut);
 	}
 }

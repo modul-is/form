@@ -21,7 +21,7 @@ trait InputCoreControl
 
 		$signalTooltip = null;
 
-		if($this instanceof \ModulIS\Form\Control\Signalable & $this->hasSignal())
+		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
 		{
 			$this->addSignalsToInput($input);
 			$signalTooltip = $this->getSignalTooltip();
