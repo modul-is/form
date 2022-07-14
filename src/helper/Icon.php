@@ -6,7 +6,7 @@ namespace ModulIS\Form\Helper;
 
 trait Icon
 {
-	public ?string $icon = null;
+	protected ?string $icon = null;
 
 
 	public function setIcon(string $icon): self

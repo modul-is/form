@@ -6,11 +6,8 @@ namespace ModulIS\Form\Helper;
 
 use Nette\Utils\Html;
 
-trait InputRender
+trait InputCoreControl
 {
-	public string $controlClass = 'form-control';
-
-
 	public function getCoreControl()
 	{
 		$input = $this->getControl();
@@ -24,7 +21,7 @@ trait InputRender
 
 		$signalTooltip = null;
 
-		if(method_exists($this, 'hasSignal') && $this->hasSignal())
+		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
 		{
 			$this->addSignalsToInput($input);
 			$signalTooltip = $this->getSignalTooltip();

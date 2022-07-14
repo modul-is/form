@@ -7,14 +7,14 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
-class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, \Nette\Application\UI\SignalReceiver
+class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
-	use Helper\InputRender;
+	use Helper\InputCoreControl;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\RenderFloating;

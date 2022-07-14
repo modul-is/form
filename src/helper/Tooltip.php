@@ -6,7 +6,7 @@ namespace ModulIS\Form\Helper;
 
 trait Tooltip
 {
-	public ?string $tooltip = null;
+	protected ?string $tooltip = null;
 
 
 	public function setTooltip($text)

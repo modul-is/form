@@ -6,7 +6,7 @@ namespace ModulIS\Form\Helper;
 
 trait AutoRenderSkip
 {
-	public bool $autoRenderSkip = false;
+	protected bool $autoRenderSkip = false;
 
 
 	public function setAutoRenderSkip(bool $autoRenderSkip = true): self

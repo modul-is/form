@@ -51,7 +51,7 @@ trait Signals
 	}
 
 
-	public function getSignalTooltip(): string
+	protected function getSignalTooltip(): string
 	{
 		$waiting = Html::el('span')
 			->class('input-group-text signal-waiting')
@@ -78,7 +78,7 @@ trait Signals
 	}
 
 
-	public function addSignalsToInput(&$input)
+	protected function addSignalsToInput(&$input)
 	{
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
@@ -97,6 +97,7 @@ trait Signals
 
 	public function hasSignal(): bool
 	{
-		return $this->onChange || $this->onFocusOut;
+		bdump(is_callable($this->onChange) || is_callable($this->onFocusOut));
+		return is_callable($this->onChange) || is_callable($this->onFocusOut);
 	}
 }

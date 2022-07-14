@@ -25,7 +25,7 @@ trait Validation
 	}
 
 
-	public function getValidationClass(): ?string
+	protected function getValidationClass(): ?string
 	{
 		$validationClass = null;
 
@@ -45,7 +45,7 @@ trait Validation
 	}
 
 
-	public function getValidationFeedback(): ?Html
+	protected function getValidationFeedback(): ?Html
 	{
 		$validationFeedBack = null;
 
