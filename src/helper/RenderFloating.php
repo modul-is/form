@@ -23,8 +23,8 @@ trait RenderFloating
 	{
 		return $this->renderFloating;
 	}
-	
-	
+
+
 	protected function renderFloating(): Html
 	{
 		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
@@ -39,16 +39,16 @@ trait RenderFloating
 		$append = null;
 		$floatingClass = 'form-floating';
 		$inputClass = $this->controlClass . $currentClass . $validationClass;
-		
+
 		if($this->getPrepend() || $this->getAppend())
 		{
 			$wrapClass .= ' input-group';
 			$floatingClass .= ' flex-grow-1';
 			$inputClass .= ' rounded-0';
-			
+
 			$prepend = $this->getPrepend();
 			$append = $this->getAppend();
-			
+
 			if($prepend && !$append)
 			{
 				$inputClass .= ' rounded-end';
@@ -58,16 +58,16 @@ trait RenderFloating
 				$inputClass .= ' rounded-start';
 			}
 		}
-		
+
 		$input->class($inputClass);
 		$input->placeholder($this->getCaption());
 
 		$label = $this->getLabel();
-		
+
 		$floatingDiv = Html::el('div')
 			->class($floatingClass)
 			->addHtml($input . $label . $validationFeedBack);
-		
+
 		return Html::el('div')
 			->class($wrapClass)
 			->addHtml($prepend . $floatingDiv . $append);

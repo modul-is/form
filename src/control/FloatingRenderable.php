@@ -7,6 +7,6 @@ namespace ModulIS\Form\Control;
 interface FloatingRenderable
 {
 	public function setRenderFloating(): self;
-	
+
 	public function getRenderFloating(): ?bool;
 }

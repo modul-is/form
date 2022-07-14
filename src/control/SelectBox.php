@@ -25,12 +25,12 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, F
 	use Helper\RenderBasic;
 
 	private array $imageArray = [];
-	
-	
+
+
 	public function __construct($label = null, ?array $items = null)
 	{
 		parent::__construct($label, $items);
-		
+
 		$this->controlClass = 'form-select';
 	}
 

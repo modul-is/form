@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ModulIS\Form\Helper;
 
 use Nette\Utils\Html;
@@ -10,7 +12,7 @@ trait RenderBasic
 	{
 		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
-		
+
 		$label = $this->getCoreLabel();
 		$input = $this->getCoreControl();
 
@@ -46,7 +48,7 @@ trait RenderBasic
 			->addHtml($rowDiv);
 	}
 
-	
+
 	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)

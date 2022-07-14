@@ -7,8 +7,8 @@ namespace ModulIS\Form;
 class ControlGroup extends \Nette\Forms\ControlGroup
 {
 	protected ?string $class = null;
-	
-	
+
+
 	public function getInputArray(): array
 	{
 		$controlArray = [];
@@ -53,16 +53,16 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	{
 		return $this->setOption('color', $color);
 	}
-	
-	
+
+
 	public function setClass(string $class): self
 	{
 		$this->class = $class;
-		
+
 		return $this;
 	}
-	
-	
+
+
 	public function getClass(): ?string
 	{
 		return $this->class;
