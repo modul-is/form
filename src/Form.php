@@ -113,7 +113,7 @@ class Form extends \Nette\Application\UI\Form
 			}
 
 			$card = Html::el('div')
-				->class('card mt-2')
+				->class('card mt-2' . ($group->getClass() ? ' ' . $group->getClass() : null))
 				->setHtml($content);
 
 			if($group->getOption('id'))
