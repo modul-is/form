@@ -15,7 +15,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
-	use Helper\WrapClass;
+	use Helper\WrapControl;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 

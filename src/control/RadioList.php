@@ -16,7 +16,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
-	use Helper\WrapClass;
+	use Helper\WrapControl;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 }

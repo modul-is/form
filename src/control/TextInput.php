@@ -19,7 +19,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, F
 	use Helper\RenderFloating;
 	use Helper\Validation;
 	use Helper\Signals;
-	use Helper\WrapClass;
+	use Helper\WrapControl;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 	use Helper\RenderBasic;

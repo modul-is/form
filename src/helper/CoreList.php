@@ -104,7 +104,6 @@ trait CoreList
 
 		$labelClass = 'align-self-center ' . ($this->labelClass ?? 'col-sm-4');
 		$inputClass = 'align-self-center ' . ($this->inputClass ?? 'col-sm-8');
-		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
 
 		$labelDiv = Html::el('div')
 			->class($labelClass)
@@ -121,7 +120,7 @@ trait CoreList
 			->addHtml($labelDiv . $inputDiv);
 
 		$outerDiv = Html::el('div')
-			->class($wrapClass)
+			->class($this->getForm()->getDefaultInputWrapClass())
 			->addHtml($rowDiv);
 
 		if($this->getOption('id'))

@@ -18,7 +18,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, F
 	use Helper\Template;
 	use Helper\RenderFloating;
 	use Helper\Validation;
-	use Helper\WrapClass;
+	use Helper\WrapControl;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 	use Helper\Signals;

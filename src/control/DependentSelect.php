@@ -18,7 +18,7 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 	use Helper\Template;
 	use Helper\RenderFloating;
 	use Helper\Validation;
-	use Helper\WrapClass;
+	use Helper\WrapControl;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 	use Helper\RenderBasic;

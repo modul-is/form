@@ -17,7 +17,7 @@ class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBo
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
-	use Helper\WrapClass;
+	use Helper\WrapControl;
 	use Helper\RenderInline;
 	use Helper\RenderBasic;
 

@@ -37,6 +37,8 @@ class Form extends \Nette\Application\UI\Form
 
 	private array $formErrors = [];
 
+	private string $defaultInputWrapClass = 'mb-3 col-12';
+
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent = null, $name = null)
 	{
@@ -201,6 +203,20 @@ class Form extends \Nette\Application\UI\Form
 	public function getFormErrors(): array
 	{
 		return $this->formErrors;
+	}
+
+
+	public function setDefaultInputWrapClass(string $defaultInputWrapClass): self
+	{
+		$this->defaultInputWrapClass = $defaultInputWrapClass;
+
+		return $this;
+	}
+
+
+	public function getDefaultInputWrapClass(): string
+	{
+		return $this->defaultInputWrapClass;
 	}
 
 

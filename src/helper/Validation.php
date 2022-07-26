@@ -29,7 +29,7 @@ trait Validation
 	{
 		$validationClass = null;
 
-		if($this->getForm()->isSubmitted())
+		if($this->getForm()->isAnchored() && $this->getForm()->isSubmitted())
 		{
 			if($this->hasErrors())
 			{
@@ -49,7 +49,7 @@ trait Validation
 	{
 		$validationFeedBack = null;
 
-		if($this->getForm()->isSubmitted())
+		if($this->getForm()->isAnchored() && $this->getForm()->isSubmitted())
 		{
 			if($this->hasErrors())
 			{
