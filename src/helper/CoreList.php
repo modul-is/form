@@ -19,6 +19,9 @@ trait CoreList
 	{
 		$inputs = null;
 
+		/** @var \ModulIS\Form\Form $form */
+		$form = $this->getForm();
+
 		foreach($this->getItems() as $key => $input)
 		{
 			$input = $this->getControlPart($key);
@@ -58,7 +61,7 @@ trait CoreList
 		$validationFeedBack = null;
 		$validationClass = null;
 
-		if($this->getForm()->isSubmitted())
+		if($form->isAnchored() && $form->isSubmitted())
 		{
 			if($this->hasErrors())
 			{
@@ -85,50 +88,6 @@ trait CoreList
 			->addHtml($wrapRow);
 
 		return $wrapContainer . $validationFeedBack;
-	}
-
-
-	public function render(): Html|string
-	{
-		if($this->getOption('hide') || $this->autoRenderSkip)
-		{
-			return '';
-		}
-
-		if($this->getOption('template'))
-		{
-			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
-		}
-
-		$label = $this->getCoreLabel();
-
-		$labelClass = 'align-self-center ' . ($this->labelClass ?? 'col-sm-4');
-		$inputClass = 'align-self-center ' . ($this->inputClass ?? 'col-sm-8');
-
-		$labelDiv = Html::el('div')
-			->class($labelClass)
-			->addHtml($label);
-
-		$input = $this->getCoreControl();
-
-		$inputDiv = Html::el('div')
-			->class($inputClass)
-			->addHtml($input);
-
-		$rowDiv = Html::el('div')
-			->class('row')
-			->addHtml($labelDiv . $inputDiv);
-
-		$outerDiv = Html::el('div')
-			->class($this->getForm()->getDefaultInputWrapClass())
-			->addHtml($rowDiv);
-
-		if($this->getOption('id'))
-		{
-			$outerDiv->id($this->getOption('id'));
-		}
-
-		return $outerDiv;
 	}
 
 
