@@ -40,6 +40,15 @@ trait WrapControl
 	}
 
 
+	public function setWrapId(string $id): self
+	{
+		$this->getWrapControl()
+			->setAttribute('id', $id);
+
+		return $this;
+	}
+
+
 	public function getWrapControl(): Html
 	{
 		if(!$this->wrapControl)
