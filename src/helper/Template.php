@@ -6,9 +6,12 @@ namespace ModulIS\Form\Helper;
 
 trait Template
 {
+	protected ?string $templatePath = null;
+
+
 	public function setTemplate(string $path): static
 	{
-		$this->setOption('template', $path);
+		$this->templatePath = $path;
 
 		return $this;
 	}

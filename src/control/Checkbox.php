@@ -79,9 +79,9 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 			return '';
 		}
 
-		if($this->getOption('template'))
+		if($this->templatePath)
 		{
-			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
+			return (new \Latte\Engine)->renderToString($this->templatePath, $this);
 		}
 
 		$input = $this->getCoreControl();

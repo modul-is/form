@@ -80,9 +80,9 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	public function render(): Html|string
 	{
-		if($this->getOption('template'))
+		if($this->templatePath)
 		{
-			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
+			return (new \Latte\Engine)->renderToString($this->templatePath, $this);
 		}
 
 		if($this->autoRenderSkip === true)

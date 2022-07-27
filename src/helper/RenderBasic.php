@@ -15,9 +15,9 @@ trait RenderBasic
 			return '';
 		}
 
-		if($this->getOption('template'))
+		if($this->templatePath)
 		{
-			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
+			return (new \Latte\Engine)->renderToString($this->templatePath, $this);
 		}
 
 		/** @var \ModulIS\Form\Form $form */
