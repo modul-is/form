@@ -50,8 +50,37 @@
                         typingTimer = setTimeout(function()
                         {
                             var param = searchInput.val();
+							var parents = element.data('dependentselectbox-parents');
+							var parentArray = {};
 
-                            naja.makeRequest('POST', varUrlOnChange, {param: param}, {dataType: "json"}).then((response) =>
+							$.each(parents, function (name, id)
+							{
+								var parentElement = $('#' + id);
+								if (parentElement.length > 0)
+								{
+									var val;
+									if (parentElement.prop('type') === 'checkbox')
+									{
+										val = parentElement.prop('checked') ? 1 : 0;
+									}
+									else
+									{
+										val = $(parentElement).val();
+										if (!val)
+										{
+											return;
+										}
+									}
+									
+									parentArray[name] = val;
+								}
+								else if($("[id^='" +id + "']").length > 0)
+								{
+									parentArray[name] = $("[id^='" +id + "']:checked").val();
+								}
+							});
+
+                            naja.makeRequest('POST', varUrlOnChange, {param: param, parent: parentArray}, {dataType: "json"}).then((response) =>
                             {
                                 var empty = true;
                                 element.empty();

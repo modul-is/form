@@ -93,8 +93,20 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 				{
 					throw new \Nette\InvalidStateException('On change callback not set.');
 				}
+				
+				$parentArray = [];
+				
+				if($presenter->getParameter('parent'))
+				{
+					$parentValueArray = $presenter->getParameter('parent');
+					
+					foreach($this->parents as $parent)
+					{
+						$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)];
+					}
+				}
 
-				$data = ['' => ''] + call_user_func($this->onChangeCallback, $presenter->getParameter('param'));
+				$data = ['' => ''] + call_user_func_array($this->onChangeCallback, [$presenter->getParameter('param'), $parentArray]);
 
 				if(!is_array($data))
 				{
@@ -216,13 +228,9 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-
-		if($this->dependentCallback !== null)
+		
+		if($this->parents)
 		{
-			$this->tryLoadItems();
-
-			$attrs = [];
-
 			$parents = [];
 
 			foreach($this->parents as $parent)
@@ -230,10 +238,16 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 				$parents[$this->getNormalizeName($parent)] = $parent->getHtmlId();
 			}
 
-			$attrs['data-dependentselectbox-parents'] = \Nette\Utils\Json::encode($parents);
-			$attrs['data-dependentselectbox'] = $presenter->link($this->lookupPath('Nette\\Application\\UI\\Presenter') . \Nette\ComponentModel\IComponent::NAME_SEPARATOR . self::SIGNAL_NAME . '!');
+			$control->setAttribute('data-dependentselectbox-parents', \Nette\Utils\Json::encode($parents));
+		}
 
-			$control->addAttributes($attrs);
+		if($this->dependentCallback !== null)
+		{
+			$this->tryLoadItems();
+			
+			$link = $this->lookupPath('Nette\\Application\\UI\\Presenter') . \Nette\ComponentModel\IComponent::NAME_SEPARATOR . self::SIGNAL_NAME . '!';
+			
+			$control->setAttribute('data-dependentselectbox', $presenter->link($link));
 		}
 
 		if($this->onChangeCallback !== null)
