@@ -13,12 +13,20 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	{
 		$controlArray = [];
 
-		/**
-		 * Skip submitters
-		 */
 		foreach($this->getControls() as $control)
 		{
+			/**
+			 * Skip submitters
+			 */
 			if($control instanceof Control\Button || $control instanceof Control\SubmitButton || $control instanceof Control\Link)
+			{
+				continue;
+			}
+			
+			/**
+			 * Skip inputs which are part of container
+			 */
+			if($control->getParent() instanceof Container)
 			{
 				continue;
 			}

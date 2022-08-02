@@ -176,6 +176,12 @@ class Form extends \Nette\Application\UI\Form
 	{
 		return $this->groups;
 	}
+	
+	
+	public function getCurrentGroup(): ?ControlGroup
+	{
+		return $this->currentGroup;
+	}
 
 
 	public function getSubmitterArray(): array

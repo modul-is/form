@@ -15,11 +15,14 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
-	use Helper\WrapControl;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 
 	private bool $switch = false;
+	
+	private ?string $inputClass = null;
+	
+	private ?string $wrapClass = null;
 
 
 	public function setSwitch(bool $switch = true): self
@@ -33,6 +36,22 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	public function getCoreLabel()
 	{
 		return null;
+	}
+	
+	
+	public function setInputWrapClass(string $class): self
+	{
+		$this->inputClass = $class;
+
+		return $this;
+	}
+	
+	
+	public function setWrapClass(string $class): self
+	{
+		$this->wrapClass = $class;
+
+		return $this;
 	}
 
 
@@ -87,6 +106,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 		$input = $this->getCoreControl();
 
 		$inputClass = $this->inputClass ?? 'col-sm-8 offset-sm-4';
+
 		$wrapClass = 'mb-3 ' . ($this->wrapClass ?? 'col-12');
 
 		$inputDiv = Html::el('div')
