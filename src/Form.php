@@ -429,7 +429,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function setTitle(string $title): self
+	public function setTitle(string|Html $title): self
 	{
 		$this->title = $title;
 
