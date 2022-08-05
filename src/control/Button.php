@@ -39,8 +39,6 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable
 
 	public function render(): Html|string
 	{
-		return Html::el('div')
-			->class('col-12')
-			->addHtml($this->getCoreControl());
+		return $this->getCoreControl();
 	}
 }
