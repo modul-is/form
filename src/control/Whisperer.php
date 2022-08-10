@@ -131,8 +131,12 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 				{
 					throw new \Nette\InvalidStateException('OnSelect callback not set.');
 				}
+				
+				$currentValues = [];
+				
+				parse_str($presenter->getParameter('formdata'), $currentValues);
 
-				call_user_func($this->onSelectCallback, $presenter->getParameter('selected'));
+				call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), array_filter($currentValues)]);
 
 				/**
 				 * If there is no snippet to redraw -> send empty response

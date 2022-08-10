@@ -15,12 +15,14 @@
 
             if(typeof varUrlOnSelect !== 'undefined')
             {
+				var form = element.closest('form');
+
                 //Run onselect after pressing enter
                 searchInput.on('keyup', function(event)
                 {
                     if((event.keyCode || event.which) === 13)
                     {
-                        naja.makeRequest('GET', varUrlOnSelect, {selected: element.val()});
+                        naja.makeRequest('GET', varUrlOnSelect, {selected: element.val(), formdata: form.serialize()});
                     }
                 });
 
@@ -28,7 +30,7 @@
 
                 resultField.on('click touchend', function()
                 {
-                    naja.makeRequest('GET', varUrlOnSelect, {selected: element.val()});
+                    naja.makeRequest('GET', varUrlOnSelect, {selected: element.val(), formdata: form.serialize()});
                 });
             }
 
