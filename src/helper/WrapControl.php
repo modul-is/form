@@ -56,38 +56,8 @@ trait WrapControl
 			/** @var \ModulIS\Form\Form $form */
 			$form = $this->getForm();
 
-			$label = $this->getCoreLabel();
-			$input = $this->getCoreControl();
-
-			$inputClass = 'align-self-center';
-			$labelClass = 'align-self-center';
-
-			if($this->getRenderInline() ?? $form->getRenderInline())
-			{
-				$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-12';
-				$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-12';
-			}
-			else
-			{
-				$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-8';
-				$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-4';
-			}
-
-			$labelDiv = Html::el('div')
-				->class($labelClass)
-				->addHtml($label);
-
-			$inputDiv = Html::el('div')
-				->class($inputClass)
-				->addHtml($input);
-
-			$rowDiv = Html::el('div')
-				->class('row')
-				->addHtml($labelDiv . $inputDiv);
-
 			$this->wrapControl = Html::el('div')
-				->class($form->getDefaultInputWrapClass())
-				->addHtml($rowDiv);
+				->class($form->getDefaultInputWrapClass());
 		}
 
 		return $this->wrapControl;
@@ -96,6 +66,39 @@ trait WrapControl
 
 	public function renderWrap(): Html
 	{
-		return $this->getWrapControl();
+		/** @var \ModulIS\Form\Form $form */
+		$form = $this->getForm();
+
+		$label = $this->getCoreLabel();
+		$input = $this->getCoreControl();
+
+		$inputClass = 'align-self-center';
+		$labelClass = 'align-self-center';
+
+		if($this->getRenderInline() ?? $form->getRenderInline())
+		{
+			$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-12';
+			$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-12';
+		}
+		else
+		{
+			$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-8';
+			$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-4';
+		}
+
+		$labelDiv = Html::el('div')
+			->class($labelClass)
+			->addHtml($label);
+
+		$inputDiv = Html::el('div')
+			->class($inputClass)
+			->addHtml($input);
+
+		$rowDiv = Html::el('div')
+			->class('row')
+			->addHtml($labelDiv . $inputDiv);
+
+		return $this->getWrapControl()
+			->addHtml($rowDiv);
 	}
 }
