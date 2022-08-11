@@ -52,15 +52,19 @@ class Form extends \Nette\Application\UI\Form
 	{
 		$groups = null;
 		$submitters = null;
+		$cardFooter = null;
 
 		foreach($this->getSubmitterArray() as $submitter)
 		{
 			$submitters .= $submitter->render();
 		}
 
-		$cardFooter = Html::el('div')
-			->class('card-footer')
-			->setHtml($submitters);
+		if($submitters)
+		{
+			$cardFooter = Html::el('div')
+				->class('card-footer')
+				->setHtml($submitters);
+		}
 
 		$groupArray = $this->getGroups();
 
