@@ -19,6 +19,10 @@ class Form extends \Nette\Application\UI\Form
 
 	public const SAME_LENGTH = 'ModulIS\Form\FormValidator::sameLength';
 
+	public const VALIDATE_RC = 'ModulIS\Form\FormValidator::validateRC';
+
+	public const VALIDATE_IC = 'ModulIS\Form\FormValidator::validateIC';
+
 	public ?string $color = null;
 
 	public bool $ajax = false;
