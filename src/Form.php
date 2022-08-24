@@ -92,6 +92,11 @@ class Form extends \Nette\Application\UI\Form
 				 */
 				$inputs .= $input instanceof \Nette\Forms\Controls\HiddenField ? $input->getControl() : $input->render();
 			}
+			
+			if($inputs === null)
+			{
+				continue;
+			}
 
 			$row = Html::el('div')
 				->class('row')

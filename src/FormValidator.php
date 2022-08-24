@@ -4,38 +4,40 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
+use Nette\Forms\Controls\BaseControl;
+
 final class FormValidator
 {
-	public static function greater($control, $val): bool
+	public static function greater(BaseControl $control, $val): bool
 	{
 		return $control->getValue() > $val;
 	}
 
 
-	public static function less($control, $val): bool
+	public static function less(BaseControl $control, $val): bool
 	{
 		return $control->getValue() < $val;
 	}
 
 
-	public static function sameLength($control, $val): bool
+	public static function sameLength(BaseControl $control, $val): bool
 	{
 		return mb_strlen($control->getValue()) === mb_strlen($val);
 	}
 
 
-	public static function validateRC($control): bool
+	public static function validateRC(BaseControl $control): bool
 	{
-		$rc = $control->getValue();
+		$value = strval($control->getValue());
 
-		if(!preg_match('#^(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)$#', $rc, $matches))
+		if(!preg_match('#^(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)$#', $value, $matches))
 		{
 			return false;
 		}
 
-		list($rc, $year, $month, $day, $ext, $control) = $matches;
+		list($rc, $year, $month, $day, $ext, $lastDigit) = $matches;
 
-		if($control === '')
+		if($lastDigit === '')
 		{
 			$year += $year < 54 ? 1900 : 1800;
 		}
@@ -48,7 +50,7 @@ final class FormValidator
 				$mod = 0;
 			}
 
-			if($mod !== (int) $control)
+			if($mod !== (int) $lastDigit)
 			{
 				return false;
 			}
@@ -78,9 +80,9 @@ final class FormValidator
 	}
 
 
-	public static function validateIC($control): bool
+	public static function validateIC(BaseControl $control): bool
 	{
-		$ic = $control->getValue();
+		$ic = strval($control->getValue());
 
 		if(!preg_match('/^\d{8}$/', $ic))
 		{
@@ -93,8 +95,8 @@ final class FormValidator
 		{
 			$a += $ic[$i] * (8 - $i);
 		}
-
-		$a = $a % 11;
+		
+		$a %= 11;
 
 		if($a === 0)
 		{
