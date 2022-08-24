@@ -50,7 +50,7 @@ final class FormValidator
 				$mod = 0;
 			}
 
-			if($mod !== (int) $lastDigit)
+			if($mod !== intval($lastDigit))
 			{
 				return false;
 			}
@@ -93,7 +93,7 @@ final class FormValidator
 
 		for($i = 0; $i < 7; $i++)
 		{
-			$a += $ic[$i] * (8 - $i);
+			$a += intval($ic[$i]) * (8 - $i);
 		}
 
 		$a %= 11;
@@ -111,6 +111,6 @@ final class FormValidator
 			$c = 11 - $a;
 		}
 
-		return (int) $ic[7] === $c;
+		return intval($ic[7]) === $c;
 	}
 }

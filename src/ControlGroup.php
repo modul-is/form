@@ -13,6 +13,7 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	{
 		$controlArray = [];
 
+		/** @var \Nette\Forms\Controls\BaseControl $control */
 		foreach($this->getControls() as $control)
 		{
 			/**
