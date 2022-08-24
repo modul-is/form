@@ -92,7 +92,7 @@ class Form extends \Nette\Application\UI\Form
 				 */
 				$inputs .= $input instanceof \Nette\Forms\Controls\HiddenField ? $input->getControl() : $input->render();
 			}
-			
+
 			if($inputs === null)
 			{
 				continue;
@@ -189,8 +189,8 @@ class Form extends \Nette\Application\UI\Form
 	{
 		return $this->groups;
 	}
-	
-	
+
+
 	public function getCurrentGroup(): ?ControlGroup
 	{
 		return $this->currentGroup;

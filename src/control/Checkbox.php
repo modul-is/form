@@ -19,9 +19,9 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	use Helper\ControlClass;
 
 	private bool $switch = false;
-	
+
 	private ?string $inputClass = null;
-	
+
 	private ?string $wrapClass = null;
 
 
@@ -37,16 +37,16 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	{
 		return null;
 	}
-	
-	
+
+
 	public function setInputWrapClass(string $class): self
 	{
 		$this->inputClass = $class;
 
 		return $this;
 	}
-	
-	
+
+
 	public function setWrapClass(string $class): self
 	{
 		$this->wrapClass = $class;

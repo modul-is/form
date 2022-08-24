@@ -22,7 +22,7 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 			{
 				continue;
 			}
-			
+
 			/**
 			 * Skip inputs which are part of container
 			 */

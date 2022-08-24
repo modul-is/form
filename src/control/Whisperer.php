@@ -93,13 +93,13 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 				{
 					throw new \Nette\InvalidStateException('On change callback not set.');
 				}
-				
+
 				$parentArray = [];
-				
+
 				if($presenter->getParameter('parent'))
 				{
 					$parentValueArray = $presenter->getParameter('parent');
-					
+
 					foreach($this->parents as $parent)
 					{
 						$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)];
@@ -131,9 +131,9 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 				{
 					throw new \Nette\InvalidStateException('OnSelect callback not set.');
 				}
-				
+
 				$currentValues = [];
-				
+
 				parse_str($presenter->getParameter('formdata'), $currentValues);
 
 				call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), array_filter($currentValues)]);
@@ -232,7 +232,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-		
+
 		if($this->parents)
 		{
 			$parents = [];
@@ -248,9 +248,9 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 		if($this->dependentCallback !== null)
 		{
 			$this->tryLoadItems();
-			
+
 			$link = $this->lookupPath('Nette\\Application\\UI\\Presenter') . \Nette\ComponentModel\IComponent::NAME_SEPARATOR . self::SIGNAL_NAME . '!';
-			
+
 			$control->setAttribute('data-dependentselectbox', $presenter->link($link));
 		}
 

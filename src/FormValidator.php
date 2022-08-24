@@ -35,7 +35,7 @@ final class FormValidator
 			return false;
 		}
 
-		list($rc, $year, $month, $day, $ext, $lastDigit) = $matches;
+		[$rc, $year, $month, $day, $ext, $lastDigit] = $matches;
 
 		if($lastDigit === '')
 		{
@@ -95,7 +95,7 @@ final class FormValidator
 		{
 			$a += $ic[$i] * (8 - $i);
 		}
-		
+
 		$a %= 11;
 
 		if($a === 0)
