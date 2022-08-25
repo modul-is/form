@@ -48,6 +48,14 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 		 */
 		foreach($this->getControls() as $control)
 		{
+			/**
+			 * Skip submitters which are part of container
+			 */
+			if($control->getParent() instanceof Container)
+			{
+				continue;
+			}
+			
 			if(!$control instanceof Control\DuplicatorCreateSubmit && ($control instanceof Control\Button || $control instanceof Control\SubmitButton || $control instanceof Control\Link))
 			{
 				$controlArray[] = $control;

@@ -219,6 +219,8 @@ class Container extends \Nette\Forms\Container
 		if($this->showCard)
 		{
 			$cardHeaderDiv = null;
+			$cardBodyDiv = null;
+			$cardFooterDiv = null;
 
 			if($this->title)
 			{
@@ -226,25 +228,28 @@ class Container extends \Nette\Forms\Container
 					->class('card-header ' . ($this->color ? 'bg-' . $this->color : ''))
 					->addHtml($this->title);
 			}
+			
+			$inputArray = $this->getInputArray();
 
-			$inputs = null;
-
-			foreach($this->getInputArray() as $control)
+			if($inputArray)
 			{
-				$inputs .= $control->render();
-			}
+				$inputs = null;
+				
+				foreach($inputArray as $control)
+				{
+					$inputs .= $control->render();
+				}
 
-			$rowDiv = Html::el('div')
+				$rowDiv = Html::el('div')
 				->class('row')
 				->addHtml($inputs);
 
-			$cardBodyDiv = Html::el('div')
-				->class('card-body')
-				->addHtml($rowDiv);
+				$cardBodyDiv = Html::el('div')
+					->class('card-body')
+					->addHtml($rowDiv);
+			}
 
 			$submitterArray = $this->getSubmitterArray();
-
-			$cardFooterDiv = null;
 
 			if($submitterArray)
 			{
