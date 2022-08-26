@@ -27,7 +27,7 @@ class Form extends \Nette\Application\UI\Form
 
 	public bool $ajax = false;
 
-	public ?string $title = null;
+	public Html|string|null $title = null;
 
 	public ?string $icon = null;
 
@@ -444,7 +444,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function getTitle(): ?string
+	public function getTitle(): null|Html|string
 	{
 		return $this->title;
 	}
