@@ -247,6 +247,13 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
+	public function addAutocomplete(string $name, $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
+	{
+		return $this[$name] = (new Control\AutocompleteInput($label, $maxLength, items: isset($itemArray) ? $itemArray : []))
+			->setHtmlAttribute('autocomplete', 'off');
+	}
+
+
 	public function addDate(string $name, $label = null, string $min = null, string $max = null): Control\TextInput
 	{
 		$dateInput = new Control\DateInput($label);

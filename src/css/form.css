@@ -57,7 +57,7 @@
     background-size: 16px 12px,calc(.75em + .375rem) calc(.75em + .375rem);
     padding-right: 4.125rem;
 }
- 
+
 .select-image .dropdown-item img
 {
 	width: 25px;
@@ -405,4 +405,40 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
 {
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
+}
+
+.autocomplete
+{
+	background: #fff;
+	border-radius: 0.375rem;
+	border: solid 1px #dee2e6;
+	margin-top: 0.35em;
+	overflow-y: auto;
+}
+.autocomplete div:not(.group):hover
+{
+	background: #ebedef;
+}
+.autocomplete .selected
+{
+	background: #81ca91;
+	border-radius: 1px;
+}
+.autocomplete div
+{
+	padding: 0.1em 1em;
+}
+
+.autocomplete::-webkit-scrollbar
+{
+	width: 7px;
+}
+.autocomplete::-webkit-scrollbar-thumb
+{
+	background: #888;
+	border-radius: 5px;
+}
+.autocomplete::-webkit-scrollbar-thumb:hover
+{
+	background: #555;
 }
