@@ -34,7 +34,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 	private int $delay = 100;
 
-	private bool|string $autocompletePrompt = false;
+	private ?string $prompt = null;
 
 	private ?array $items;
 
@@ -50,9 +50,9 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	}
 
 
-	public function setAutocompletePrompt(bool|string $autocompletePrompt): self
+	public function setPrompt(string $prompt): self
 	{
-		$this->autocompletePrompt = $autocompletePrompt;
+		$this->prompt = $prompt;
 
 		return $this;
 	}
@@ -123,14 +123,6 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	}
 
 
-	public function setValue($value): self
-	{
-		parent::setValue($value);
-
-		return $this;
-	}
-
-
 	public function getControl(): Html
 	{
 		$control = parent::getControl();
@@ -153,7 +145,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 		}
 
 		$control->attrs['data-autocomplete-delay'] = $this->delay;
-		$control->attrs['data-autocomplete-label'] = is_string($this->autocompletePrompt) ? $this->autocompletePrompt : ($this->autocompletePrompt ? $this->getCaption() : null);
+		$control->attrs['data-autocomplete-label'] = $this->prompt;
 
 		return $control;
 	}
