@@ -55,8 +55,8 @@ function registerAutocomplete(element)
 	var allowedChars = new RegExp(/^[a-zA-Z\s]+$/);
 	var jqueryElement = $('#' + element.id);
 	var varUrlOnChange = jqueryElement.data('autocomplete');
+	var varUrlOnSelect = jqueryElement.data('autocomplete-onselect');
 	var delay = jqueryElement.data('autocomplete-delay');
-	var label = jqueryElement.data('autocomplete-label');
 	var items = jqueryElement.data('autocomplete-items');
 
 	if(items === undefined)
@@ -71,9 +71,9 @@ function registerAutocomplete(element)
 		disableAutoSelect: true,
 		preventSubmit: true,
 		debounceWaitMs: delay,
-		onSelect: function (item, inputfield)
+		onSelect: function(item, inputfield)
 		{
-			inputfield.value = item.label;
+			inputfield.value = item.value;
 
 			$('#' + inputfield.id).addClass('bg-success bg-opacity-10');
 			
@@ -81,6 +81,13 @@ function registerAutocomplete(element)
 			{
 				$('#' + inputfield.id).removeClass('bg-success bg-opacity-10');
 			}, 900);
+			
+			if(typeof varUrlOnSelect !== 'undefined')
+            {
+				var form = jqueryElement.closest('form');
+
+				naja.makeRequest('GET', varUrlOnSelect, {selected: item.data, formdata: form.serialize()});
+            }
 		},
 		fetch: function (text, callback)
 		{
@@ -89,40 +96,31 @@ function registerAutocomplete(element)
 			if(typeof varUrlOnChange !== 'undefined')
 			{
 				naja.makeRequest('POST', varUrlOnChange, {param: text}, {dataType: "json"}).then((response) => {
-
-					var itemArray = [];
-					
-					$.each(response.suggestions, function(index, el)
-					{
-						itemArray.push(el.value);
-					});
-					
-					var onChangeItems = itemArray.map(function(n) { return { label: n, group: label };});
-
-					callback(onChangeItems.filter(function(n) { return n.label.toLowerCase().indexOf(match) !== -1; }));
+					callback(response.suggestions);
 				});
 			}
 			else
 			{
-				var defaultItems = items.map(function(n) { return { label: n, group: label };});
-
-				callback(defaultItems.filter(function(n) { return n.label.toLowerCase().indexOf(match) !== -1; }));
+				callback(items.filter(function(n) { return n.value.toLowerCase().indexOf(match) !== -1; }));
 			}
 		},
 		render: function(item, value)
 		{
 			var itemElement = document.createElement("div");
 			
+			itemElement.setAttribute('data-key', item.data);
+			
 			if(allowedChars.test(value))
 			{
 				var regex = new RegExp(value, 'gi');
-				var inner = item.label.replace(regex, function(match) { return "<strong>" + match + "</strong>" });
+				var inner = item.value.replace(regex, function(match) { return "<strong>" + match + "</strong>";});
 				itemElement.innerHTML = inner;
 			}
 			else
 			{
-				itemElement.textContent = item.label;
+				itemElement.textContent = item.value;
 			}
+			
 			return itemElement;
 		},
 		emptyMsg: "Nic nenalezeno",

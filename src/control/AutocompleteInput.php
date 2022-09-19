@@ -25,13 +25,18 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
 
+
 	public const SIGNAL_ONCHANGE = 'onChange';
 
+	public const SIGNAL_ONSELECT = 'onSelect';
+
 	public array|\Closure|null $onChangeCallback = null;
+	
+	public array|\Closure|null $onSelectCallback = null;
 
 	private $parents;
 
-	private int $delay = 100;
+	private int $delay = 200;
 
 	private ?string $prompt = null;
 
@@ -60,6 +65,14 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	public function setOnChangeCallback(array|\Closure $callback): self
 	{
 		$this->onChangeCallback = $callback;
+
+		return $this;
+	}
+	
+	
+	public function setOnSelectCallback(array|\Closure $callback): self
+	{
+		$this->onSelectCallback = $callback;
 
 		return $this;
 	}
@@ -102,21 +115,37 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 					}
 				}
 
-				$data = ['' => ''] + call_user_func_array($this->onChangeCallback, [$presenter->getParameter('param'), $parentArray]);
+				$data = call_user_func_array($this->onChangeCallback, [$presenter->getParameter('param'), $parentArray]);
 
 				if(!is_array($data))
 				{
 					throw new \Nette\InvalidStateException('Callback for:"' . $this->getHtmlId() . '" must return array!');
 				}
 
-				$presenter->payload->suggestions = [];
-
-				foreach($data as $key => $value)
-				{
-					$presenter->payload->suggestions[] = ['value' => (string) $value, 'data' => $key];
-				}
+				$presenter->payload->suggestions = $this->prepareData($data);
 
 				$presenter->sendPayload();
+			}
+			elseif($signal == self::SIGNAL_ONSELECT)
+			{
+				if(!is_callable($this->onSelectCallback))
+				{
+					throw new \Nette\InvalidStateException('OnSelect callback not set.');
+				}
+
+				$currentValues = [];
+
+				parse_str($presenter->getParameter('formdata'), $currentValues);
+
+				call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), array_filter($currentValues)]);
+
+				/**
+				 * If there is no snippet to redraw -> send empty response
+				 */
+				if(!$presenter->isControlInvalid())
+				{
+					$presenter->sendResponse(new \Nette\Application\Responses\TextResponse(null));
+				}
 			}
 		}
 	}
@@ -126,21 +155,23 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	{
 		$control = parent::getControl();
 
-		$form = $this->getForm();
-
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
 
 		if($this->onChangeCallback !== null)
 		{
-			$form = $this->getForm();
-
 			$control->attrs['data-autocomplete'] = $presenter->link(
 				$this->lookupPath('Nette\Application\UI\Presenter') . self::NAME_SEPARATOR . self::SIGNAL_ONCHANGE . '!');
 		}
 		else
 		{
-			$control->attrs['data-autocomplete-items'] = $this->items;
+			$control->attrs['data-autocomplete-items'] = $this->prepareData($this->items);
+		}
+		
+		if($this->onSelectCallback !== null)
+		{
+			$control->attrs['data-autocomplete-onselect'] = $presenter->link(
+				$this->lookupPath('Nette\Application\UI\Presenter') . self::NAME_SEPARATOR . self::SIGNAL_ONSELECT . '!');
 		}
 
 		$control->attrs['data-autocomplete-delay'] = $this->delay;
@@ -148,28 +179,29 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 		return $control;
 	}
+	
+	
+	private function prepareData(array $data): array
+	{
+		$array = [];
+		
+		foreach($data as $key => $value)
+		{
+			$array[] = ['value' => (string) $value, 'data' => $key];
+		}
+		
+		return $array;
+	}
 
 
 	public function getCoreControl()
 	{
 		$input = $this->getControl();
 
-		$errorClass = '';
-		$errorMessage = null;
-
-		if($this->hasErrors())
-		{
-			$errorClass = ' is-invalid';
-
-			$errorMessage = Html::el('div')
-				->class('invalid-feedback')
-				->addHtml($this->getError());
-		}
-
-		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . $errorClass . ' autocomplete-input']);
+		$input->addAttributes(['class' => 'form-control autocomplete-input ' . $input->getAttribute('class') . $this->getValidationClass()]);
 
 		return Html::el('div')->class('input-group')
-			->addHtml($this->getPrepend() . $input . $this->getAppend() . $errorMessage);
+			->addHtml($this->getPrepend() . $input . $this->getAppend() . $this->getValidationFeedback());
 	}
 
 
