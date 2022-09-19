@@ -25,13 +25,12 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
 
-
 	public const SIGNAL_ONCHANGE = 'onChange';
 
 	public const SIGNAL_ONSELECT = 'onSelect';
 
 	public array|\Closure|null $onChangeCallback = null;
-	
+
 	public array|\Closure|null $onSelectCallback = null;
 
 	private $parents;
@@ -68,8 +67,8 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 		return $this;
 	}
-	
-	
+
+
 	public function setOnSelectCallback(array|\Closure $callback): self
 	{
 		$this->onSelectCallback = $callback;
@@ -167,7 +166,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 		{
 			$control->attrs['data-autocomplete-items'] = $this->prepareData($this->items);
 		}
-		
+
 		if($this->onSelectCallback !== null)
 		{
 			$control->attrs['data-autocomplete-onselect'] = $presenter->link(
@@ -179,17 +178,17 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 		return $control;
 	}
-	
-	
+
+
 	private function prepareData(array $data): array
 	{
 		$array = [];
-		
+
 		foreach($data as $key => $value)
 		{
 			$array[] = ['value' => (string) $value, 'data' => $key];
 		}
-		
+
 		return $array;
 	}
 
