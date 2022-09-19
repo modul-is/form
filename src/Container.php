@@ -228,13 +228,13 @@ class Container extends \Nette\Forms\Container
 					->class('card-header ' . ($this->color ? 'bg-' . $this->color : ''))
 					->addHtml($this->title);
 			}
-			
+
 			$inputArray = $this->getInputArray();
 
 			if($inputArray)
 			{
 				$inputs = null;
-				
+
 				foreach($inputArray as $control)
 				{
 					$inputs .= $control->render();

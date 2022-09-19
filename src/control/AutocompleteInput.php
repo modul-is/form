@@ -25,7 +25,6 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
 
-
 	public const SIGNAL_ONCHANGE = 'onChange';
 
 	public array|\Closure|null $onChangeCallback = null;

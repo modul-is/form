@@ -249,7 +249,7 @@ class Form extends \Nette\Application\UI\Form
 
 	public function addAutocomplete(string $name, $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
 	{
-		return $this[$name] = (new Control\AutocompleteInput($label, $maxLength, items: isset($itemArray) ? $itemArray : []))
+		return $this[$name] = (new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? []))
 			->setHtmlAttribute('autocomplete', 'off');
 	}
 

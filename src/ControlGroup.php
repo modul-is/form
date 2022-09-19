@@ -55,7 +55,7 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 			{
 				continue;
 			}
-			
+
 			if(!$control instanceof Control\DuplicatorCreateSubmit && ($control instanceof Control\Button || $control instanceof Control\SubmitButton || $control instanceof Control\Link))
 			{
 				$controlArray[] = $control;
