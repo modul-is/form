@@ -33,7 +33,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 	public array|\Closure|null $onSelectCallback = null;
 
-	private $parents;
+	private array $parents = [];
 
 	private int $delay = 200;
 
@@ -89,62 +89,60 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	{
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-
-		if($presenter->isAjax() && !$this->isDisabled())
+		
+		if(!$presenter->isAjax() || $this->isDisabled())
 		{
-			/**
-			 * OnChange
-			 */
-			if($signal == self::SIGNAL_ONCHANGE)
+			return;
+		}
+
+		if($signal == self::SIGNAL_ONCHANGE)
+		{
+			if(!is_callable($this->onChangeCallback))
 			{
-				if(!is_callable($this->onChangeCallback))
-				{
-					throw new \Nette\InvalidStateException('On change callback not set.');
-				}
-
-				$parentArray = [];
-
-				if($presenter->getParameter('parent'))
-				{
-					$parentValueArray = $presenter->getParameter('parent');
-
-					foreach($this->parents as $parent)
-					{
-						$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)];
-					}
-				}
-
-				$data = call_user_func_array($this->onChangeCallback, [$presenter->getParameter('param'), $parentArray]);
-
-				if(!is_array($data))
-				{
-					throw new \Nette\InvalidStateException('Callback for:"' . $this->getHtmlId() . '" must return array!');
-				}
-
-				$presenter->payload->suggestions = $this->prepareData($data);
-
-				$presenter->sendPayload();
+				throw new \Nette\InvalidStateException('On change callback not set.');
 			}
-			elseif($signal == self::SIGNAL_ONSELECT)
+
+			$parentArray = [];
+
+			if($presenter->getParameter('parent'))
 			{
-				if(!is_callable($this->onSelectCallback))
+				$parentValueArray = $presenter->getParameter('parent');
+
+				foreach($this->parents as $parent)
 				{
-					throw new \Nette\InvalidStateException('OnSelect callback not set.');
+					$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)];
 				}
+			}
+			$data = call_user_func_array($this->onChangeCallback, [$presenter->getParameter('param'), $parentArray]);
 
-				$currentValues = [];
+			if(!is_array($data))
+			{
+				throw new \Nette\InvalidStateException('Callback for:"' . $this->getHtmlId() . '" must return array!');
+			}
 
-				parse_str($presenter->getParameter('formdata'), $currentValues);
+			$presenter->payload->suggestions = $this->prepareData($data);
 
-				call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), array_filter($currentValues)]);
+			$presenter->sendPayload();
+		}
+		elseif($signal == self::SIGNAL_ONSELECT)
+		{
+			if(!is_callable($this->onSelectCallback))
+			{
+				throw new \Nette\InvalidStateException('OnSelect callback not set.');
+			}
 
-				/**
-				 * If there is no snippet to redraw -> send empty response
-				 */
-				if(!$presenter->isControlInvalid())
-				{
-					$presenter->sendResponse(new \Nette\Application\Responses\TextResponse(null));
-				}
+			$currentValues = [];
+
+			parse_str($presenter->getParameter('formdata'), $currentValues);
+
+			call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), array_filter($currentValues)]);
+
+			/**
+			 * If there is no snippet to redraw -> send empty response
+			 */
+			if(!$presenter->isControlInvalid())
+			{
+				$presenter->sendResponse(new \Nette\Application\Responses\TextResponse(null));
 			}
 		}
 	}
@@ -156,6 +154,18 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
+		
+		if($this->parents)
+		{
+			$parents = [];
+
+			foreach($this->parents as $parent)
+			{
+				$parents[$this->getNormalizeName($parent)] = $parent->getHtmlId();
+			}
+
+			$control->setAttribute('data-autocomplete-parents', \Nette\Utils\Json::encode($parents));
+		}
 
 		if($this->onChangeCallback !== null)
 		{
@@ -177,6 +187,12 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 		$control->attrs['data-autocomplete-label'] = $this->prompt;
 
 		return $control;
+	}
+	
+	
+	private function getNormalizeName(\Nette\Forms\Controls\BaseControl $parent)
+	{
+		return str_replace('-', '_', $parent->getHtmlId());
 	}
 
 

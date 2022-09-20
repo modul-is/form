@@ -52,16 +52,17 @@ async function inputSignal(input, url)
 
 function registerAutocomplete(element)
 {
-	var allowedChars = new RegExp(/^[a-zA-Z\s]+$/);
-	var jqueryElement = $('#' + element.id);
-	var varUrlOnChange = jqueryElement.data('autocomplete');
-	var varUrlOnSelect = jqueryElement.data('autocomplete-onselect');
-	var delay = jqueryElement.data('autocomplete-delay');
-	var items = jqueryElement.data('autocomplete-items');
+	let allowedChars = new RegExp(/^[a-zA-Z\s]+$/);
+	let jqueryElement = $('#' + element.id);
+	let parents = jqueryElement.data('autocomplete-parents');
+	let varUrlOnChange = jqueryElement.data('autocomplete');
+	let varUrlOnSelect = jqueryElement.data('autocomplete-onselect');
+	let delay = jqueryElement.data('autocomplete-delay');
+	let items = jqueryElement.data('autocomplete-items');
 
 	if(items === undefined)
 	{
-		var items = [];
+		let items = [];
 	}
 
 	autocomplete({
@@ -73,29 +74,60 @@ function registerAutocomplete(element)
 		debounceWaitMs: delay,
 		onSelect: function(item, inputfield)
 		{
-			inputfield.value = item.value;
+			let inputElement = $('#' + inputfield.id);
 
-			$('#' + inputfield.id).addClass('bg-success bg-opacity-10');
+			inputElement.addClass('bg-success bg-opacity-10');
 			
 			setTimeout(function()
 			{
-				$('#' + inputfield.id).removeClass('bg-success bg-opacity-10');
+				inputElement.removeClass('bg-success bg-opacity-10');
 			}, 900);
 			
 			if(typeof varUrlOnSelect !== 'undefined')
             {
-				var form = jqueryElement.closest('form');
+				let form = jqueryElement.closest('form');
 
 				naja.makeRequest('GET', varUrlOnSelect, {selected: item.data, formdata: form.serialize()});
             }
 		},
 		fetch: function (text, callback)
 		{
-			var match = text.toLowerCase();
+			let match = text.toLowerCase();
+			let parentArray = {};
+
+			$.each(parents, function(name, id)
+			{
+				let parentElement = $('#' + id);
+				
+				if (parentElement.length > 0)
+				{
+					let val;
+					
+					if (parentElement.prop('type') === 'checkbox')
+					{
+						val = parentElement.prop('checked') ? 1 : 0;
+					}
+					else
+					{
+						val = $(parentElement).val();
+						
+						if (!val)
+						{
+							return;
+						}
+					}
+
+					parentArray[name] = val;
+				}
+				else if($("[id^='" +id + "']").length > 0)
+				{
+					parentArray[name] = $("[id^='" +id + "']:checked").val();
+				}
+			});
 
 			if(typeof varUrlOnChange !== 'undefined')
 			{
-				naja.makeRequest('POST', varUrlOnChange, {param: text}, {dataType: "json"}).then((response) => {
+				naja.makeRequest('POST', varUrlOnChange, {param: text, parent: parentArray}, {dataType: "json"}).then((response) => {
 					callback(response.suggestions);
 				});
 			}
