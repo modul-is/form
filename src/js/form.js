@@ -74,6 +74,8 @@ function registerAutocomplete(element)
 		debounceWaitMs: delay,
 		onSelect: function(item, inputfield)
 		{
+			inputfield.value = item.value;
+
 			let inputElement = $('#' + inputfield.id);
 
 			inputElement.addClass('bg-success bg-opacity-10');
