@@ -62,7 +62,7 @@ trait RenderFloating
 		$input->class($inputClass);
 		$input->placeholder($this->getCaption());
 
-		$label = $this->getLabel();
+		$label = $this->getCoreLabel();
 
 		$floatingDiv = Html::el('div')
 			->class($floatingClass)
