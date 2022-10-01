@@ -101,8 +101,9 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			$header = null;
 		}
 
-		$inputs = null;
 
+
+		$bodyRow = null;
 		/** @var \ModulIS\Form\DuplicatorContainer|DuplicatorCreateSubmit $container */
 		foreach($this->getComponents() as $container)
 		{
@@ -110,6 +111,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			{
 				continue;
 			}
+			$inputs = null;
 
 			/** @var Renderable $duplicatorInput */
 			foreach($container->getComponents() as $duplicatorInput)
@@ -126,12 +128,12 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 				}
 			}
 
+			$bodyRow .= Html::el('div')
+				->class('row')
+				->addHtml($inputs);
+
 			$inputs .= '<hr />';
 		}
-
-		$bodyRow = Html::el('div')
-			->class('row')
-			->addHtml($inputs);
 
 		$body = Html::el('div')
 			->class('card-body')
