@@ -19,7 +19,7 @@ async function inputSignal(input, url)
 	input.siblings('.signal-success').hide();
 	input.siblings('.signal-waiting').hide();
 	input.siblings('.signal-loading').show();;
-	
+
 	let requestParams = {
 		method: 'POST',
 		headers: {
@@ -27,7 +27,7 @@ async function inputSignal(input, url)
 		},
 		body: JSON.stringify({value: input.val()})
 	};
-	
+
 	await fetch(url, requestParams)
 		.then(response => response.json())
 		.then(data => {
@@ -52,7 +52,7 @@ async function inputSignal(input, url)
 
 function registerAutocomplete(element)
 {
-	let allowedChars = new RegExp(/^[a-zA-Z\s]+$/);
+	let allowedChars = new RegExp(/^[a-zA-Zěščřžýáíéťďň\s]+$/);
 	let jqueryElement = $('#' + element.id);
 	let parents = jqueryElement.data('autocomplete-parents');
 	let varUrlOnChange = jqueryElement.data('autocomplete');
@@ -79,12 +79,12 @@ function registerAutocomplete(element)
 			let inputElement = $('#' + inputfield.id);
 
 			inputElement.addClass('bg-success bg-opacity-10');
-			
+
 			setTimeout(function()
 			{
 				inputElement.removeClass('bg-success bg-opacity-10');
 			}, 900);
-			
+
 			if(typeof varUrlOnSelect !== 'undefined')
             {
 				let form = jqueryElement.closest('form');
@@ -100,11 +100,11 @@ function registerAutocomplete(element)
 			$.each(parents, function(name, id)
 			{
 				let parentElement = $('#' + id);
-				
+
 				if (parentElement.length > 0)
 				{
 					let val;
-					
+
 					if (parentElement.prop('type') === 'checkbox')
 					{
 						val = parentElement.prop('checked') ? 1 : 0;
@@ -112,7 +112,7 @@ function registerAutocomplete(element)
 					else
 					{
 						val = $(parentElement).val();
-						
+
 						if (!val)
 						{
 							return;
@@ -141,9 +141,9 @@ function registerAutocomplete(element)
 		render: function(item, value)
 		{
 			var itemElement = document.createElement("div");
-			
+
 			itemElement.setAttribute('data-key', item.data);
-			
+
 			if(allowedChars.test(value))
 			{
 				var regex = new RegExp(value, 'gi');
@@ -154,11 +154,11 @@ function registerAutocomplete(element)
 			{
 				itemElement.textContent = item.value;
 			}
-			
+
 			return itemElement;
 		},
 		emptyMsg: "Nic nenalezeno",
-		customize: function(input, inputRect, container, maxHeight) 
+		customize: function(input, inputRect, container, maxHeight)
 		{
 			if (maxHeight < 100)
 			{
@@ -212,7 +212,7 @@ function initForm()
 	});
 
 	var inputs = document.getElementsByClassName("autocomplete-input");
-	
+
 	for(let input of inputs)
 	{
 		registerAutocomplete(input);
@@ -236,6 +236,6 @@ if(typeof naja !== "undefined")
 			});
 		}
 	};
-	
+
 	naja.registerExtension(formExtension);
 }
