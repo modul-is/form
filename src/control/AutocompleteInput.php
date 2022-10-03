@@ -186,11 +186,6 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 		$control->attrs['data-autocomplete-delay'] = $this->delay;
 		$control->attrs['data-autocomplete-label'] = $this->prompt;
 
-		if($this->getRenderFloating())
-		{
-			$control->attrs['class'] = 'autocomplete-input ';
-		}
-
 		return $control;
 	}
 
@@ -218,7 +213,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	{
 		$input = $this->getControl();
 
-		$input->addAttributes(['class' => 'form-control autocomplete-input ' . $input->getAttribute('class') . $this->getValidationClass()]);
+		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . $this->getValidationClass()]);
 
 		return Html::el('div')->class('input-group')
 			->addHtml($this->getPrepend() . $input . $this->getAppend() . $this->getValidationFeedback());
