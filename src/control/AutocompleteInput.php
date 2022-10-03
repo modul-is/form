@@ -89,7 +89,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	{
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-		
+
 		if(!$presenter->isAjax() || $this->isDisabled())
 		{
 			return;
@@ -154,7 +154,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-		
+
 		if($this->parents)
 		{
 			$parents = [];
@@ -186,10 +186,15 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 		$control->attrs['data-autocomplete-delay'] = $this->delay;
 		$control->attrs['data-autocomplete-label'] = $this->prompt;
 
+		if($this->getRenderFloating())
+		{
+			$control->attrs['class'] = 'autocomplete-input ';
+		}
+
 		return $control;
 	}
-	
-	
+
+
 	private function getNormalizeName(\Nette\Forms\Controls\BaseControl $parent)
 	{
 		return str_replace('-', '_', $parent->getHtmlId());

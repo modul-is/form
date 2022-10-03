@@ -73,6 +73,13 @@ class Container extends \Nette\Forms\Container
 	}
 
 
+	public function addAutocomplete(string $name, $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
+	{
+		return $this[$name] = (new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? []))
+			->setHtmlAttribute('autocomplete', 'off');
+	}
+
+
 	public function addPassword(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label, $maxLength))
