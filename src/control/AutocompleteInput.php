@@ -89,7 +89,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	{
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-		
+
 		if(!$presenter->isAjax() || $this->isDisabled())
 		{
 			return;
@@ -154,7 +154,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-		
+
 		if($this->parents)
 		{
 			$parents = [];
@@ -188,8 +188,8 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 		return $control;
 	}
-	
-	
+
+
 	private function getNormalizeName(\Nette\Forms\Controls\BaseControl $parent)
 	{
 		return str_replace('-', '_', $parent->getHtmlId());
@@ -213,7 +213,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	{
 		$input = $this->getControl();
 
-		$input->addAttributes(['class' => 'form-control autocomplete-input ' . $input->getAttribute('class') . $this->getValidationClass()]);
+		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . $this->getValidationClass()]);
 
 		return Html::el('div')->class('input-group')
 			->addHtml($this->getPrepend() . $input . $this->getAppend() . $this->getValidationFeedback());
