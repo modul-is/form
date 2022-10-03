@@ -52,7 +52,7 @@ async function inputSignal(input, url)
 
 function registerAutocomplete(element)
 {
-	let allowedChars = new RegExp(/^[a-zA-Zěščřžýáíéťďň\s]+$/);
+	let allowedChars = new RegExp(/^[a-zA-Zěščřžýáíéťďň0-9\s]+$/);
 	let jqueryElement = $('#' + element.id);
 	let parents = jqueryElement.data('autocomplete-parents');
 	let varUrlOnChange = jqueryElement.data('autocomplete');
