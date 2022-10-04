@@ -20,15 +20,7 @@ async function inputSignal(input, url)
 	input.siblings('.signal-waiting').hide();
 	input.siblings('.signal-loading').show();;
 
-	let requestParams = {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({value: input.val()})
-	};
-
-	await fetch(url, requestParams)
+	naja.makeRequest('POST', url, JSON.stringify({value: input.val()}))
 		.then(response => response.json())
 		.then(data => {
 			input.siblings('.signal-loading').hide();
@@ -172,6 +164,10 @@ function registerAutocomplete(element)
 
 function initForm()
 {
+	$('[data-on-focusout]').unbind();
+	$('[data-on-change]').unbind();
+	$('[data-whisperer], [data-whisperer-onselect], [data-whisperer-delay]').unbind();
+	
 	$('[data-on-focusout]').focusout(function()
 	{
 		inputSignal($(this), $(this).attr('data-on-focusout'));

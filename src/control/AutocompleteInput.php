@@ -90,11 +90,6 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
 
-		if(!$presenter->isAjax() || $this->isDisabled())
-		{
-			return;
-		}
-
 		if($signal == self::SIGNAL_ONCHANGE)
 		{
 			if(!is_callable($this->onChangeCallback))
@@ -144,6 +139,15 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 			{
 				$presenter->sendResponse(new \Nette\Application\Responses\TextResponse(null));
 			}
+		}
+		elseif($signal == $this->onFocusOutSignal)
+		{
+			$value = json_decode($presenter->getHttpRequest()->getRawBody())->value;
+
+			$presenter->payload->value = $value;
+			$presenter->payload->errorMessage = null;
+
+			call_user_func_array($this->onFocusOut, [&$presenter->payload]);
 		}
 	}
 
@@ -213,7 +217,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	{
 		$input = $this->getControl();
 
-		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . $this->getValidationClass()]);
+		$input->addAttributes(['class' => 'form-control autocomplete-input ' . $input->getAttribute('class') . $this->getValidationClass()]);
 
 		return Html::el('div')->class('input-group')
 			->addHtml($this->getPrepend() . $input . $this->getAppend() . $this->getValidationFeedback());

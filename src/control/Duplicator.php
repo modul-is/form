@@ -390,12 +390,12 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	}
 
 
-	public function addSubmit(string $name, $caption = null): SubmitButton
+	public function addSubmit(string $name, $caption = null, $callback = null): SubmitButton
 	{
 		$control = new DuplicatorCreateSubmit($caption);
 
 		$control->setValidationScope([])
-			->addCreateOnClick(true);
+			->addCreateOnClick(true, $callback);
 
 		return $this[$name] = $control;
 	}

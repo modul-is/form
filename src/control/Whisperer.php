@@ -54,6 +54,23 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup('Nette\\Application\\UI\\Presenter');
 
+		if($signal == $this->onFocusOutSignal || $signal === $this->onChangeSignal)
+		{
+			$value = json_decode($presenter->getHttpRequest()->getRawBody())->value;
+
+			$presenter->payload->value = $value;
+			$presenter->payload->errorMessage = null;
+
+			if($signal == $this->onFocusOutSignal)
+			{
+				call_user_func_array($this->onFocusOut, [&$presenter->payload]);
+			}
+			else
+			{
+				call_user_func_array($this->onChange, [&$presenter->payload]);
+			}
+		}
+		
 		if($presenter->isAjax() && !$this->isDisabled())
 		{
 			/**
@@ -266,6 +283,11 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 		{
 			$control->attrs['data-whisperer-onSelect'] = $presenter->link(
 				$this->lookupPath('Nette\Application\UI\Presenter') . self::NAME_SEPARATOR . self::SIGNAL_ONSELECT . '!');
+		}
+
+		if($this->hasSignal())
+		{
+			$this->addSignalsToInput($control);
 		}
 
 		$control->attrs['data-whisperer-delay'] = $this->delay;
