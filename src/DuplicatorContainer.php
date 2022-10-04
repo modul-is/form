@@ -6,12 +6,12 @@ namespace ModulIS\Form;
 
 class DuplicatorContainer extends Container
 {
-	public function addSubmit(string $name, $caption = null): Control\DuplicatorRemoveSubmit
+	public function addSubmit(string $name, $caption = null, $callable = null): Control\DuplicatorRemoveSubmit
 	{
 		$control = new Control\DuplicatorRemoveSubmit($caption);
 
 		$control->setValidationScope([])
-			->addRemoveOnClick();
+			->addRemoveOnClick($callable);
 
 		return $this[$name] = $control;
 	}
