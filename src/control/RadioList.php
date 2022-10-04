@@ -6,7 +6,7 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 
-class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
+class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\Color;
 	use Helper\Tooltip;
@@ -20,4 +20,5 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
+	use Helper\Signals;
 }

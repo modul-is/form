@@ -78,7 +78,7 @@ trait Signals
 	}
 
 
-	public function addSignalsToInput(\Nette\Forms\Controls\BaseControl &$input): void
+	public function addSignalsToInput(Html &$input): void
 	{
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);

@@ -24,6 +24,7 @@ trait CoreList
 
 		foreach($this->getItems() as $key => $input)
 		{
+			
 			$input = $this->getControlPart($key);
 
 			$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;
@@ -51,6 +52,11 @@ trait CoreList
 			if($this->itemClass)
 			{
 				$class .= ' ' . $this->itemClass;
+			}
+			
+			if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
+			{
+				$this->addSignalsToInput($input);
 			}
 
 			$inputs .= Html::el('div')
