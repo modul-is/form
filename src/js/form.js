@@ -21,7 +21,6 @@ async function inputSignal(input, url)
 	input.siblings('.signal-loading').show();;
 
 	naja.makeRequest('POST', url, JSON.stringify({value: input.val()}))
-		.then(response => response.json())
 		.then(data => {
 			input.siblings('.signal-loading').hide();
 			if(data.errorMessage)
