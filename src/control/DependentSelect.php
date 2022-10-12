@@ -6,7 +6,7 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 
-class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implements Renderable, FloatingRenderable
+class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implements Renderable, FloatingRenderable, Signalable
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -22,6 +22,8 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
+	use Helper\Signals;
+
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{
@@ -30,5 +32,27 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 		$this->setDependentCallback($dependentCallback);
 
 		$this->controlClass = 'form-select';
+	}
+	
+	public function signalReceived($signal): void
+	{
+		/** @var \Nette\Application\UI\Presenter $presenter */
+		$presenter = $this->lookup('Nette\\Application\\UI\\Presenter');
+
+		if($signal === $this->onChangeSignal)
+		{
+			$value = json_decode($presenter->getHttpRequest()->getRawBody())->value;
+
+			$presenter->payload->value = $value;
+			$presenter->payload->errorMessage = null;
+
+			call_user_func_array($this->onChange, [&$presenter->payload]);
+			
+			$presenter->sendPayload();
+		}
+		else
+		{
+			parent::signalReceived($signal);
+		}
 	}
 }
