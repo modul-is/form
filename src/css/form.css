@@ -18,6 +18,14 @@
     border: none;
 }
 
+.input-group>.select-image
+{
+    flex: 1 1 auto;
+    min-width: 0;
+    position: relative;
+    width: 1%;
+}
+
 .select-image a.dropdown-toggle
 {
 	-moz-padding-start: calc(.75rem - 3px);
