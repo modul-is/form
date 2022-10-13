@@ -46,6 +46,7 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 		/**
 		 * Only submitters
 		 */
+		/** @var \Nette\Forms\Controls\BaseControl $control */
 		foreach($this->getControls() as $control)
 		{
 			/**

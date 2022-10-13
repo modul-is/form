@@ -61,7 +61,7 @@ trait RenderFloating
 
 		$input->class($inputClass);
 		$input->placeholder($this->getCaption());
-		
+
 		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
 		{
 			$this->addSignalsToInput($input);

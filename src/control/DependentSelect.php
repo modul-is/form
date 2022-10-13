@@ -24,7 +24,6 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 	use Helper\RenderBasic;
 	use Helper\Signals;
 
-
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{
 		parent::__construct($label, $parents);
@@ -33,7 +32,8 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 
 		$this->controlClass = 'form-select';
 	}
-	
+
+
 	public function signalReceived($signal): void
 	{
 		/** @var \Nette\Application\UI\Presenter $presenter */
@@ -47,7 +47,7 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 			$presenter->payload->errorMessage = null;
 
 			call_user_func_array($this->onChange, [&$presenter->payload]);
-			
+
 			$presenter->sendPayload();
 		}
 		else
