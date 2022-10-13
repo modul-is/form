@@ -217,7 +217,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	{
 		$input = $this->getControl();
 
-		$input->addAttributes(['class' => 'form-control autocomplete-input ' . $input->getAttribute('class') . $this->getValidationClass()]);
+		$input->addAttributes(['class' => 'form-control autocomplete-input ' . $input->getAttribute('class') . ' ' . $this->getValidationClass()]);
 
 		return Html::el('div')->class('input-group')
 			->addHtml($this->getPrepend() . $input . $this->getAppend() . $this->getValidationFeedback());
