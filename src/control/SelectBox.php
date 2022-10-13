@@ -136,19 +136,16 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, F
 
 			$input->addAttributes(['class' => 'form-select' . $currentClass . $validationClass]);
 
-			$signalTooltip = null;
-
 			if($this->hasSignal())
 			{
 				$this->addSignalsToInput($input);
-				$signalTooltip = $this->getSignalTooltip();
 			}
 
 			$hasValidationClass = $this->getValidationClass() && $this->hasErrors() ? ' has-validation' : null;
 
 			return Html::el('div')
 				->class('input-group' . $hasValidationClass)
-				->addHtml($this->getPrepend() . $input . $this->getAppend() . $signalTooltip . $validationFeedBack);
+				->addHtml($this->getPrepend() . $input . $this->getAppend() . $validationFeedBack);
 		}
 	}
 }

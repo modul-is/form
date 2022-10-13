@@ -19,18 +19,15 @@ trait InputCoreControl
 
 		$input->addAttributes(['class' => $this->controlClass . $currentClass . $validationClass]);
 
-		$signalTooltip = null;
-
 		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
 		{
 			$this->addSignalsToInput($input);
-			$signalTooltip = $this->getSignalTooltip();
 		}
 
 		$hasValidationClass = $this->getValidationClass() && $this->hasErrors() ? ' has-validation' : null;
 
 		return Html::el('div')
 			->class('input-group' . $hasValidationClass)
-			->addHtml($this->getPrepend() . $input . $this->getAppend() . $signalTooltip . $validationFeedBack);
+			->addHtml($this->getPrepend() . $input . $this->getAppend() . $validationFeedBack);
 	}
 }

@@ -15,29 +15,41 @@ Nette.validators.CodeComponentFormValidator_sameLength = function(elem, args, va
 
 async function inputSignal(input, url)
 {
-	input.siblings('.signal-error').hide();
-	input.siblings('.signal-success').hide();
-	input.siblings('.signal-waiting').hide();
-	input.siblings('.signal-loading').show();;
+	let loading = 'fa-spinner fa-spin';
+	let error = 'fa-times color-red';
+	let success = 'fa-check color-green';
+	let progressId = input.attr('id') + '_ajax_progress';
+	let progressEl = $('#' + progressId);
+
+	if(progressEl.length === 0)
+	{
+		let inputProgress = '<span id="' + progressId + '" class="input-group-text"><span class="fal ' + loading + ' fa-fw"></span></span>';
+		
+		input.closest('div').append(inputProgress);
+	}
+	else
+	{
+		$('#' + progressId).find('span').removeClass(error + ' ' + success).addClass(loading);
+	}
+	
+	let iconSpan = $('#' + progressId).find('span');
 
 	naja.makeRequest('POST', url, JSON.stringify({value: input.val()}))
 		.then(data => {
-			input.siblings('.signal-loading').hide();
+			iconSpan.removeClass('fa-spinner fa-spin');
+	
 			if(data.errorMessage)
 			{
-				errorSpan = input.siblings('.signal-error');
-
-				errorSpan.attr('title', data.errorMessage);
-				errorSpan.show();
+				iconSpan.addClass(error);
+				iconSpan.attr('title', data.errorMessage);
 			}
 			else
 			{
-				input.siblings('.signal-success').show();
+				iconSpan.addClass(success);
 			}
 		})
 		.catch((error) => {
-			input.siblings('.signal-loading').hide();
-			input.siblings('.signal-error').show();
+			iconSpan.addClass(error);
 		});
 }
 

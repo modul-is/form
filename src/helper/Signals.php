@@ -51,33 +51,6 @@ trait Signals
 	}
 
 
-	public function getSignalTooltip(): string
-	{
-		$waiting = Html::el('span')
-			->class('input-group-text signal-waiting')
-			->addHtml(Extension::render('arrow-right-to-bracket'));
-
-		$loading = Html::el('span')
-			->class('input-group-text signal-loading')
-			->style('display', 'none')
-			->addHtml(Extension::render('spinner fa-spin'));
-
-		$success = Html::el('span')
-			->class('input-group-text signal-success')
-			->title('')
-			->style('display', 'none')
-			->addHtml(Extension::render('check', color: 'green'));
-
-		$error = Html::el('span')
-			->class('input-group-text signal-error')
-			->title('')
-			->style('display', 'none')
-			->addHtml(Extension::render('times', color: 'red'));
-
-		return $waiting . $loading . $success . $error;
-	}
-
-
 	public function addSignalsToInput(Html &$input): void
 	{
 		/** @var \Nette\Application\UI\Presenter $presenter */
