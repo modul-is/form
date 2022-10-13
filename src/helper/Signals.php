@@ -32,21 +32,24 @@ trait Signals
 			throw new \Exception("Unknown signal '$signal' for input '" . $this->getName() . "'");
 		}
 
-		$value = json_decode($presenter->getHttpRequest()->getRawBody())->value;
-
-		$presenter->payload->value = $value;
-		$presenter->payload->errorMessage = null;
+		$value = $presenter->getParameter('value');
 
 		if($signal === $this->onFocusOutSignal)
 		{
-			call_user_func_array($this->onFocusOut, [&$presenter->payload]);
+			call_user_func_array($this->onFocusOut, [$value]);
 		}
 		elseif($signal === $this->onChangeSignal)
 		{
-			call_user_func_array($this->onChange, [&$presenter->payload]);
+			call_user_func_array($this->onChange, [$value]);
 		}
 
-		$presenter->sendPayload();
+		/**
+		 * If there is no snippet to redraw -> send empty response
+		 */
+		if(!$presenter->isControlInvalid())
+		{
+			$presenter->sendPayload();
+		}
 	}
 
 

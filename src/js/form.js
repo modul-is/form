@@ -34,14 +34,15 @@ async function inputSignal(input, url)
 	
 	let iconSpan = $('#' + progressId).find('span');
 
-	naja.makeRequest('POST', url, JSON.stringify({value: input.val()}))
-		.then(data => {
+	naja.makeRequest('GET', url, {value: input.val()})
+		.then(response => {
+
 			iconSpan.removeClass('fa-spinner fa-spin');
 	
-			if(data.errorMessage)
+			if(response.errorMessage)
 			{
 				iconSpan.addClass(error);
-				iconSpan.attr('title', data.errorMessage);
+				iconSpan.attr('title', response.errorMessage);
 			}
 			else
 			{
