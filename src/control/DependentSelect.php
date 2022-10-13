@@ -41,12 +41,9 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 
 		if($signal === $this->onChangeSignal)
 		{
-			$value = json_decode($presenter->getHttpRequest()->getRawBody())->value;
+			$value = $presenter->getParameter('value');
 
-			$presenter->payload->value = $value;
-			$presenter->payload->errorMessage = null;
-
-			call_user_func_array($this->onChange, [&$presenter->payload]);
+			call_user_func_array($this->onChange, [$value]);
 
 			$presenter->sendPayload();
 		}

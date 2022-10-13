@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use Nette\Utils\Html;
 use ModulIS\Form\Helper;
 
-class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
+class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\Color;
 	use Helper\Tooltip;
@@ -17,6 +17,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 	use Helper\Validation;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
+	use Helper\Signals;
 
 	private bool $switch = false;
 
@@ -65,6 +66,11 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable
 		$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;
 
 		$input->class('form-check-input ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null) . $inputColorClass);
+		
+		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
+		{
+			$this->addSignalsToInput($input);
+		}
 
 		$label = Html::el('label')
 			->setAttribute('for', $this->getHtmlId())

@@ -43,13 +43,7 @@ trait Signals
 			call_user_func_array($this->onChange, [$value]);
 		}
 
-		/**
-		 * If there is no snippet to redraw -> send empty response
-		 */
-		if(!$presenter->isControlInvalid())
-		{
-			$presenter->sendPayload();
-		}
+		$presenter->sendPayload();
 	}
 
 

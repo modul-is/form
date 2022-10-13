@@ -20,37 +20,63 @@ async function inputSignal(input, url)
 	let success = 'fa-check color-green';
 	let progressId = input.attr('id') + '_ajax_progress';
 	let progressEl = $('#' + progressId);
+	
+	let inputTypeArray = ['radio', 'checkbox', 'checkboxlist'];
+	let showProgress = !inputTypeArray.includes(input.attr('type'));
+	let iconSpan = null;
 
-	if(progressEl.length === 0)
+	if(showProgress)
 	{
-		let inputProgress = '<span id="' + progressId + '" class="input-group-text"><span class="fal ' + loading + ' fa-fw"></span></span>';
-		
-		input.closest('div').append(inputProgress);
+		if(progressEl.length === 0)
+		{
+			let inputProgress = '<span id="' + progressId + '" class="input-group-text"><span class="fal ' + loading + ' fa-fw"></span></span>';
+
+			input.closest('div').append(inputProgress);
+		}
+		else
+		{
+			$('#' + progressId).find('span').removeClass(error + ' ' + success).addClass(loading);
+		}
+
+		iconSpan = $('#' + progressId).find('span');
+	}
+	
+	let value = null;
+	
+	if (input.attr('type') === 'checkbox')
+	{
+		value = input.is(':checked') === true ? 1 : 0;
 	}
 	else
 	{
-		$('#' + progressId).find('span').removeClass(error + ' ' + success).addClass(loading);
+		value = input.val();
 	}
-	
-	let iconSpan = $('#' + progressId).find('span');
 
-	naja.makeRequest('GET', url, {value: input.val()})
-		.then(response => {
+	naja.makeRequest('GET', url, {value: value})
+		.then(response =>
+		{
+			if(showProgress)
+			{
+				iconSpan.removeClass('fa-spinner fa-spin');
 
-			iconSpan.removeClass('fa-spinner fa-spin');
-	
-			if(response.errorMessage)
-			{
-				iconSpan.addClass(error);
-				iconSpan.attr('title', response.errorMessage);
-			}
-			else
-			{
-				iconSpan.addClass(success);
+				if(response.errorMessage)
+				{
+					iconSpan.addClass(error);
+					iconSpan.attr('title', response.errorMessage);
+				}
+				else
+				{
+					iconSpan.addClass(success);
+				}
 			}
 		})
-		.catch((error) => {
-			iconSpan.addClass(error);
+		.catch((error) =>
+		{
+			console.log(showProgress);
+			if(showProgress)
+			{
+				iconSpan.addClass(error);
+			}
 		});
 }
 
@@ -216,7 +242,7 @@ function initForm()
 		let selectedLabel = $(this).find('.label-text').text();
 
 		parentDiv.find('.prompt-text').text(selectedLabel);
-		$('#' + parentDiv.attr('data-parent-id')).val(value);
+		$('#' + parentDiv.attr('data-parent-id')).val(value).trigger("change");
 	});
 
 	var inputs = document.getElementsByClassName("autocomplete-input");
