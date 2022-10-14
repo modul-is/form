@@ -33,14 +33,15 @@ trait Signals
 		}
 
 		$value = $presenter->getParameter('value');
+		$inputName = $presenter->getParameter('input');
 
 		if($signal === $this->onFocusOutSignal)
 		{
-			call_user_func_array($this->onFocusOut, [$value]);
+			call_user_func_array($this->onFocusOut, [$value, $inputName]);
 		}
 		elseif($signal === $this->onChangeSignal)
 		{
-			call_user_func_array($this->onChange, [$value]);
+			call_user_func_array($this->onChange, [$value, $inputName]);
 		}
 
 		$presenter->sendPayload();

@@ -6,7 +6,7 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 
-class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Renderable
+class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\Color;
 	use Helper\Tooltip;
@@ -20,4 +20,5 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
+	use Helper\Signals;
 }

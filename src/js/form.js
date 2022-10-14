@@ -42,17 +42,28 @@ async function inputSignal(input, url)
 	}
 	
 	let value = null;
+	let inputName = null;
 	
 	if (input.attr('type') === 'checkbox')
 	{
+		if(input.attr('name').includes('['))
+		{
+			inputName = input.attr('name') + input.val();
+		}
+		else
+		{
+			inputName = input.attr('name');
+		}
+		
 		value = input.is(':checked') === true ? 1 : 0;
 	}
 	else
 	{
 		value = input.val();
+		inputName = input.attr('name');
 	}
 
-	naja.makeRequest('GET', url, {value: value})
+	naja.makeRequest('GET', url, {value: value, input: inputName})
 		.then(response =>
 		{
 			if(showProgress)
@@ -72,7 +83,6 @@ async function inputSignal(input, url)
 		})
 		.catch((error) =>
 		{
-			console.log(showProgress);
 			if(showProgress)
 			{
 				iconSpan.addClass(error);

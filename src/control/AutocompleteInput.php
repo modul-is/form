@@ -142,12 +142,12 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 		}
 		elseif($signal == $this->onFocusOutSignal)
 		{
-			$value = json_decode($presenter->getHttpRequest()->getRawBody())->value;
+			$value = $presenter->getParameter('value');
+			$inputName = $presenter->getParameter('input');
 
-			$presenter->payload->value = $value;
-			$presenter->payload->errorMessage = null;
+			call_user_func_array($this->onFocusOut, [$value, $inputName]);
 
-			call_user_func_array($this->onFocusOut, [&$presenter->payload]);
+			$presenter->sendPayload();
 		}
 	}
 
