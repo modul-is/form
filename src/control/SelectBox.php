@@ -53,7 +53,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, F
 		if($this->imageArray)
 		{
 			$input->addAttributes(['class' => 'form-select', 'style' => 'display: none;']);
-			
+
 			if($this->hasSignal())
 			{
 				$this->addSignalsToInput($input);
@@ -132,7 +132,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, F
 				->addAttributes(['data-parent-id' => $this->getHtmlId()])
 				->class('dropdown select-image d-block' . $validationClass)
 				->addHtml($button . $ul);
-			
+
 			return Html::el('div')
 				->class('input-group')
 				->addHtml($this->getPrepend() . $input . $div . $this->getAppend() . $validationFeedBack);

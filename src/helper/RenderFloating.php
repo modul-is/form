@@ -49,7 +49,7 @@ trait RenderFloating
 		$floatingDiv = Html::el('div')
 			->class('form-floating')
 			->addHtml($input . $label . $validationFeedBack);
-		
+
 		$inputGroup = Html::el('div')
 			->class('input-group')
 			->addHtml($this->getPrepend() . $floatingDiv . $this->getAppend());
