@@ -34,30 +34,7 @@ trait RenderFloating
 		$input = $this->getControl();
 
 		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
-
-		$prepend = null;
-		$append = null;
-		$floatingClass = 'form-floating';
 		$inputClass = $this->controlClass . $currentClass . $validationClass;
-
-		if($this->getPrepend() || $this->getAppend())
-		{
-			$wrapClass .= ' input-group';
-			$floatingClass .= ' flex-grow-1';
-			$inputClass .= ' rounded-0';
-
-			$prepend = $this->getPrepend();
-			$append = $this->getAppend();
-
-			if($prepend && !$append)
-			{
-				$inputClass .= ' rounded-end';
-			}
-			elseif($append && !$prepend)
-			{
-				$inputClass .= ' rounded-start';
-			}
-		}
 
 		$input->class($inputClass);
 		$input->placeholder($this->getCaption());
@@ -70,11 +47,15 @@ trait RenderFloating
 		$label = $this->getCoreLabel();
 
 		$floatingDiv = Html::el('div')
-			->class($floatingClass)
+			->class('form-floating')
 			->addHtml($input . $label . $validationFeedBack);
+		
+		$inputGroup = Html::el('div')
+			->class('input-group')
+			->addHtml($this->getPrepend() . $floatingDiv . $this->getAppend());
 
 		return Html::el('div')
 			->class($wrapClass)
-			->addHtml($prepend . $floatingDiv . $append);
+			->addHtml($inputGroup);
 	}
 }
