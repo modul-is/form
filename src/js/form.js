@@ -31,7 +31,7 @@ async function inputSignal(input, url)
 		{
 			let inputProgress = '<span id="' + progressId + '" class="input-group-text"><span class="fal ' + loading + ' fa-fw"></span></span>';
 
-			input.closest('div').append(inputProgress);
+			input.closest('div.input-group').append(inputProgress);
 		}
 		else
 		{

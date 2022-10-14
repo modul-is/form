@@ -56,18 +56,15 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 		if($signal == $this->onFocusOutSignal || $signal === $this->onChangeSignal)
 		{
-			$value = json_decode($presenter->getHttpRequest()->getRawBody())->value;
-
-			$presenter->payload->value = $value;
-			$presenter->payload->errorMessage = null;
+			$value = $presenter->getParameter('value');
 
 			if($signal == $this->onFocusOutSignal)
 			{
-				call_user_func_array($this->onFocusOut, [&$presenter->payload]);
+				call_user_func_array($this->onFocusOut, [$value]);
 			}
 			else
 			{
-				call_user_func_array($this->onChange, [&$presenter->payload]);
+				call_user_func_array($this->onChange, [$value]);
 			}
 
 			$presenter->sendPayload();
