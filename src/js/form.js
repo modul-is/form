@@ -226,14 +226,8 @@ function initForm()
 		inputSignal($(this), $(this).attr('data-on-change'));
 	});
 
-	$('.form-control-chosen').chosen({
+	$('.form-control-chosen, .form-control-chosen-required').chosen({
 		allow_single_deselect: true,
-		no_results_text: "Nebyla nalezena žádná položka - ",
-		width: '100%'
-	});
-
-	$('.form-control-chosen-required').chosen({
-		allow_single_deselect: false,
 		no_results_text: "Nebyla nalezena žádná položka - ",
 		width: '100%'
 	});
