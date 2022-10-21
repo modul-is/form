@@ -231,6 +231,11 @@ function initForm()
 		no_results_text: "Nebyla nalezena žádná položka - ",
 		width: '100%'
 	});
+	
+	$('.form-control-chosen, .form-control-chosen-required').on('change', function()
+	{
+		Nette.initOnLoad();
+	});
 
 	$('[data-whisperer], [data-whisperer-onselect], [data-whisperer-delay]').whisperer();
 	$('select[data-dependentselectbox]').dependentSelectBox();
