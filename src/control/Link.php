@@ -37,6 +37,17 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 		$el->href($this->link);
 		$el->setHtml(trim($btnIcon . ' ' . $this->caption));
 		$el->class('btn' . $btnColor . $currentClass);
+		
+		foreach($control->attrs as $name => $value)
+		{
+			if(in_array($name, ['name', 'required', 'data-nette-rules']))
+			{
+				continue;
+			}
+			
+			$el->$name = $value;
+		}
+		
 		return $el;
 	}
 
