@@ -89,8 +89,12 @@ trait CoreList
 
 		$wrapRow = Html::el('div')
 			->class('row')
-			->addAttributes($this->wrapRowAttributes)
 			->addHtml($inputs);
+
+		foreach($this->wrapRowAttributes as $attribute => $value)
+		{
+			$wrapRow->addAttributes([$attribute => $value]);
+		}
 
 		$wrapContainer = Html::el('div')
 			->class('container' . $validationClass)
@@ -121,9 +125,9 @@ trait CoreList
 	}
 
 
-	public function setWrapAttribute(string $name, string $value): self
+	public function setWrapAttributes(array $attributes): self
 	{
-		$this->wrapRowAttributes = [$name => $value];
+		$this->wrapRowAttributes = $attributes;
 
 		return $this;
 	}
