@@ -88,13 +88,9 @@ trait CoreList
 		}
 
 		$wrapRow = Html::el('div')
+			->addAttributes($this->wrapRowAttributes)
 			->class('row')
 			->addHtml($inputs);
-
-		foreach($this->wrapRowAttributes as $attribute => $value)
-		{
-			$wrapRow->addAttributes([$attribute => $value]);
-		}
 
 		$wrapContainer = Html::el('div')
 			->class('container' . $validationClass)
