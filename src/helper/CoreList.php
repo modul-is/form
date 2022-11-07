@@ -14,6 +14,8 @@ trait CoreList
 
 	protected ?string $itemClass = null;
 
+	protected array $wrapRowAttributes = [];
+
 
 	public function getCoreControl(): Html|string
 	{
@@ -86,6 +88,7 @@ trait CoreList
 		}
 
 		$wrapRow = Html::el('div')
+			->addAttributes($this->wrapRowAttributes)
 			->class('row')
 			->addHtml($inputs);
 
@@ -114,6 +117,14 @@ trait CoreList
 	public function setItemClass(string $itemClass): self
 	{
 		$this->itemClass = $itemClass;
+		return $this;
+	}
+
+
+	public function setWrapAttributes(array $attributes): self
+	{
+		$this->wrapRowAttributes = $attributes;
+
 		return $this;
 	}
 }
