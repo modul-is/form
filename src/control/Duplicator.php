@@ -101,8 +101,6 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			$header = null;
 		}
 
-
-
 		$bodyRow = null;
 		/** @var \ModulIS\Form\DuplicatorContainer|DuplicatorCreateSubmit $container */
 		foreach($this->getComponents() as $container)
@@ -111,22 +109,26 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			{
 				continue;
 			}
+
 			$inputs = null;
+			$buttons = null;
 
 			/** @var Renderable $duplicatorInput */
 			foreach($container->getComponents() as $duplicatorInput)
 			{
-				if($duplicatorInput instanceof DuplicatorRemoveSubmit)
+				if($duplicatorInput instanceof Button || $duplicatorInput instanceof DuplicatorRemoveSubmit|| $duplicatorInput instanceof Link)
 				{
-					$inputs .= Html::el('div')
-						->class('mb-3 col-12')
-						->addHtml($duplicatorInput->render());
+					$buttons .= $duplicatorInput->render();
 				}
 				else
 				{
 					$inputs .= $duplicatorInput->render();
 				}
 			}
+
+			$inputs .= Html::el('div')
+				->class('mb-3 col-12')
+				->addHtml($buttons);
 
 			$bodyRow .= Html::el('div')
 				->class('row')
