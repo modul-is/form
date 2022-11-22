@@ -34,7 +34,12 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 		$btnIcon = $this->icon ? Html::el('span')->class('fal fa-' . $this->icon) : null;
 
 		$el = Html::el('a');
-		$el->href($this->link);
+
+		if($this->link)
+		{
+			$el->href($this->link);
+		}
+
 		$el->setHtml(trim($btnIcon . ' ' . $this->caption));
 		$el->class('btn' . $btnColor . $currentClass);
 
