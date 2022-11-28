@@ -43,6 +43,12 @@ class Container extends \Nette\Forms\Container
 	}
 
 
+	public function getTitle(): ?string
+	{
+		return $this->title;
+	}
+
+
 	public function setWrapClass(string $wrapClass): self
 	{
 		$this->wrapClass = $wrapClass;
