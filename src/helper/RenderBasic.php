@@ -17,7 +17,20 @@ trait RenderBasic
 
 		if($this->templatePath)
 		{
-			return (new \Latte\Engine)->renderToString($this->templatePath, $this);
+			$path = $this->templatePath;
+
+			$this->setTemplate(null, $this->templateParams);
+
+			if($this->TemplateFactory)
+			{
+				$template = $this->TemplateFactory->createTemplate();
+			}
+			else
+			{
+				$template = new \Latte\Engine;
+			}
+
+			return $template->renderToString($path, array_merge(['input' => $this], $this->templateParams));
 		}
 
 		/** @var \ModulIS\Form\Form $form */
