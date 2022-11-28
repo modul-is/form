@@ -20,7 +20,7 @@ async function inputSignal(input, url)
 	let success = 'fa-check color-green';
 	let progressId = input.attr('id') + '_ajax_progress';
 	let progressEl = $('#' + progressId);
-	
+
 	let inputTypeArray = ['radio', 'checkbox', 'checkboxlist'];
 	let showProgress = !inputTypeArray.includes(input.attr('type'));
 	let iconSpan = null;
@@ -40,10 +40,10 @@ async function inputSignal(input, url)
 
 		iconSpan = $('#' + progressId).find('span');
 	}
-	
+
 	let value = null;
 	let inputName = null;
-	
+
 	if (input.attr('type') === 'checkbox')
 	{
 		if(input.attr('name').includes('['))
@@ -54,7 +54,7 @@ async function inputSignal(input, url)
 		{
 			inputName = input.attr('name');
 		}
-		
+
 		value = input.is(':checked') === true ? 1 : 0;
 	}
 	else
@@ -215,7 +215,7 @@ function initForm()
 	$('[data-on-focusout]').unbind();
 	$('[data-on-change]').unbind();
 	$('[data-whisperer], [data-whisperer-onselect], [data-whisperer-delay]').unbind();
-	
+
 	$('[data-on-focusout]').focusout(function()
 	{
 		inputSignal($(this), $(this).attr('data-on-focusout'));
@@ -231,7 +231,7 @@ function initForm()
 		no_results_text: "Nebyla nalezena žádná položka - ",
 		width: '100%'
 	});
-	
+
 	$('.form-control-chosen, .form-control-chosen-required').on('change', function()
 	{
 		Nette.initOnLoad();
@@ -252,6 +252,14 @@ function initForm()
 
 		parentDiv.find('.prompt-text').text(selectedLabel);
 		$('#' + parentDiv.attr('data-parent-id')).val(value).trigger("change");
+	});
+
+	$('.dropdown.select-image').on('keyup', function(e)
+	{
+		if(e.keyCode === 13)
+		{
+			$(this).find('.dropdown-toggle').dropdown('toggle');
+		}
 	});
 
 	var inputs = document.getElementsByClassName("autocomplete-input");

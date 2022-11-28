@@ -129,7 +129,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, F
 
 			$div = Html::el('div')
 				->id($this->getHtmlId() . '-wrapper')
-				->addAttributes(['data-parent-id' => $this->getHtmlId()])
+				->addAttributes(['data-parent-id' => $this->getHtmlId(), 'tabindex' => 0])
 				->class('dropdown select-image d-block' . $validationClass)
 				->addHtml($button . $ul);
 
