@@ -49,110 +49,41 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, F
 
 		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
 		$validationFeedBack = $this->getValidationFeedback();
+		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
+		$imageDiv = null;
 
 		if($this->imageArray)
 		{
-			$input->addAttributes(['class' => 'form-select', 'style' => 'display: none;']);
+			$currentClass .= ' select2-image';
 
-			if($this->hasSignal())
+			$imageDiv = Html::el('div')
+				->id($this->getHtmlId() . '-select2')
+				->style('display:none;');
+
+			foreach($this->getItems() as $key => $value)
 			{
-				$this->addSignalsToInput($input);
+				if(!array_key_exists($key, $this->imageArray))
+				{
+					continue;
+				}
+				$div = Html::el('div')
+					->addAttributes(['data-key' => $key, 'data-src' => $this->imageArray[$key]]);
+
+				$imageDiv->addHtml($div);
 			}
-
-			if($this->getPrompt())
-			{
-				$labelPrompt = Html::el('div')
-					->class('label-text mt-1')
-					->addHtml($this->getPrompt());
-
-				$optionPrompt = Html::el('a')
-					->class('dropdown-item')
-					->addHtml($labelPrompt);
-
-				$li = Html::el('li')
-					->value('')
-					->addHtml($optionPrompt);
-			}
-			else
-			{
-				$li = null;
-			}
-
-			$items = $this->getItems();
-
-			foreach($items as $key => $label)
-			{
-				$img = Html::el('img')
-					->src($this->imageArray[$key]);
-
-				$labelWrap = Html::el('div')
-					->class('label-text mt-1 ms-2')
-					->addHtml($label);
-
-				$imgWrap = Html::el('div')
-					->class('image-wrap')
-					->addHtml($img);
-
-				$optionLink = Html::el('a')
-					->class('row dropdown-item')
-					->addHtml($imgWrap . $labelWrap);
-
-				$li .= Html::el('li')
-					->value($key)
-					->addHtml($optionLink);
-			}
-
-			if($this->getValue())
-			{
-				$promptValue = $items[$this->getValue()];
-			}
-			else
-			{
-				$promptValue = $this->getPrompt() ?: reset($items);
-			}
-
-			$span = Html::el('span')
-				->class('prompt-text float-start')
-				->addHtml($promptValue);
-
-			$button = Html::el('a')
-				->class('btn dropdown-toggle d-block' . $validationClass)
-				->id($this->getHtmlId() . '-dropdown')
-				->addAttributes(['data-bs-toggle' => 'dropdown', 'aria-expanded' => 'false'])
-				->type('button')
-				->addHtml($span);
-
-			$ul = Html::el('ul')
-				->addAttributes(['aria-labelledby' => $this->getHtmlId() . '-dropdown'])
-				->class('dropdown-menu ps-2 pe-2 w-100')
-				->addHtml($li);
-
-			$div = Html::el('div')
-				->id($this->getHtmlId() . '-wrapper')
-				->addAttributes(['data-parent-id' => $this->getHtmlId(), 'tabindex' => 0])
-				->class('dropdown select-image d-block' . $validationClass)
-				->addHtml($button . $ul);
-
-			return Html::el('div')
-				->class('input-group')
-				->addHtml($this->getPrepend() . $input . $div . $this->getAppend() . $validationFeedBack);
 		}
-		else
+
+		$input->addAttributes(['class' => 'form-select' . $currentClass . $validationClass]);
+
+		if($this->hasSignal())
 		{
-			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
-
-			$input->addAttributes(['class' => 'form-select' . $currentClass . $validationClass]);
-
-			if($this->hasSignal())
-			{
-				$this->addSignalsToInput($input);
-			}
-
-			$hasValidationClass = $this->getValidationClass() && $this->hasErrors() ? ' has-validation' : null;
-
-			return Html::el('div')
-				->class('input-group' . $hasValidationClass)
-				->addHtml($this->getPrepend() . $input . $this->getAppend() . $validationFeedBack);
+			$this->addSignalsToInput($input);
 		}
+
+		$hasValidationClass = $this->getValidationClass() && $this->hasErrors() ? ' has-validation' : null;
+
+		return Html::el('div')
+			->class('input-group' . $hasValidationClass)
+			->addHtml($this->getPrepend() . $input . $this->getAppend() . $validationFeedBack . $imageDiv);
 	}
 }

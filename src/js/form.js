@@ -210,6 +210,27 @@ function registerAutocomplete(element)
 	});
 }
 
+function formatSelectData(data)
+{
+	if (!data.id)
+	{
+		return data.text;
+	}
+
+	let selectId = data.element.parentElement.getAttribute('id');
+
+	let image = $(
+		'<span><img class="' + selectId + ' img-flag" /> <span></span></span>'
+	);
+
+	let imageDiv = $('#' + selectId + '-select2').find("div[data-key='" + data.id + "']");;
+
+	image.find("span").text(data.text);
+	image.find("img").attr("src", imageDiv.attr('data-src'));
+
+	return image;
+};
+
 function initForm()
 {
 	$('[data-on-focusout]').unbind();
@@ -240,26 +261,10 @@ function initForm()
 	$('[data-whisperer], [data-whisperer-onselect], [data-whisperer-delay]').whisperer();
 	$('select[data-dependentselectbox]').dependentSelectBox();
 
-	$('div.select-image li').on('click', function()
-	{
-		let parentDiv = $(this).parents('.select-image');
-
-		parentDiv.find('.selected').removeClass('selected');
-		$(this).find('.dropdown-item').addClass('selected');
-
-		let value = $(this).attr('value');
-		let selectedLabel = $(this).find('.label-text').text();
-
-		parentDiv.find('.prompt-text').text(selectedLabel);
-		$('#' + parentDiv.attr('data-parent-id')).val(value).trigger("change");
-	});
-
-	$('.dropdown.select-image').on('keyup', function(e)
-	{
-		if(e.keyCode === 13)
-		{
-			$(this).find('.dropdown-toggle').dropdown('toggle');
-		}
+	$(".select2-image").select2({
+		theme: "bootstrap-5",
+		templateResult: formatSelectData,
+		templateSelection: formatSelectData
 	});
 
 	var inputs = document.getElementsByClassName("autocomplete-input");
