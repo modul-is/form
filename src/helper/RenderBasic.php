@@ -19,16 +19,10 @@ trait RenderBasic
 		{
 			$path = $this->templatePath;
 
-			$this->setTemplate(null, $this->templateParams);
+			$this->setTemplate(null, $this->templateParams, $this->templateEngine);
 
-			if($this->TemplateFactory)
-			{
-				$template = $this->TemplateFactory->createTemplate();
-			}
-			else
-			{
-				$template = new \Latte\Engine;
-			}
+
+			$template = $this->templateEngine ?: new \Latte\Engine;
 
 			return $template->renderToString($path, array_merge(['input' => $this], $this->templateParams));
 		}
