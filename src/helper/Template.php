@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Helper;
 
-use \Nette\Bridges\ApplicationLatte\Template;
+use \Nette\Bridges\ApplicationLatte\Template as TemplateEngine;
 
 trait Template
 {
@@ -12,10 +12,10 @@ trait Template
 
 	protected array $templateParams = [];
 
-	protected ?Template $templateEngine = null;
+	protected ?TemplateEngine $templateEngine = null;
 
 
-	public function setTemplate(?string $path, array $params = [], Template $templateEngine = null): static
+	public function setTemplate(?string $path, array $params = [], TemplateEngine $templateEngine = null): static
 	{
 		$this->templatePath = $path;
 		$this->templateParams = $params;
