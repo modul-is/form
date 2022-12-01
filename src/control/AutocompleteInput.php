@@ -145,7 +145,11 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 			$value = $presenter->getParameter('value');
 			$inputName = $presenter->getParameter('input');
 
-			call_user_func_array($this->onFocusOut, [$value, $inputName]);
+			$currentValues = [];
+
+			parse_str($presenter->getParameter('formdata'), $currentValues);
+
+			call_user_func_array($this->onFocusOut, [$value, $inputName, array_filter($currentValues)]);
 
 			$presenter->sendPayload();
 		}

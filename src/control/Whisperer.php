@@ -59,13 +59,17 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 			$value = $presenter->getParameter('value');
 			$inputName = $presenter->getParameter('input');
 
+			$currentValues = [];
+
+			parse_str($presenter->getParameter('formdata'), $currentValues);
+
 			if($signal === $this->onFocusOutSignal)
 			{
-				call_user_func_array($this->onFocusOut, [$value, $inputName]);
+				call_user_func_array($this->onFocusOut, [$value, $inputName, array_filter($currentValues)]);
 			}
 			elseif($signal === $this->onChangeSignal)
 			{
-				call_user_func_array($this->onChange, [$value, $inputName]);
+				call_user_func_array($this->onChange, [$value, $inputName, array_filter($currentValues)]);
 			}
 
 			$presenter->sendPayload();

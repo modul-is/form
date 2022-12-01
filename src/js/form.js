@@ -63,7 +63,9 @@ async function inputSignal(input, url)
 		inputName = input.attr('name');
 	}
 
-	naja.makeRequest('GET', url, {value: value, input: inputName})
+	let form = input.closest('form');
+
+	naja.makeRequest('GET', url, {value: value, input: inputName, formdata: form.serialize()})
 		.then(response =>
 		{
 			if(showProgress)
