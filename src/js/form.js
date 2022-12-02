@@ -16,7 +16,6 @@ Nette.validators.CodeComponentFormValidator_sameLength = function(elem, args, va
 async function inputSignal(input, url)
 {
 	let loading = 'fa-spinner fa-spin';
-	let error = 'fa-times color-red';
 	let success = 'fa-check color-green';
 	let progressId = input.attr('id') + '_ajax_progress';
 	let progressEl = $('#' + progressId);
@@ -35,7 +34,7 @@ async function inputSignal(input, url)
 		}
 		else
 		{
-			$('#' + progressId).find('span').removeClass(error + ' ' + success).addClass(loading);
+			$('#' + progressId).find('span').removeClass(success).addClass(loading);
 		}
 
 		iconSpan = $('#' + progressId).find('span');
@@ -72,22 +71,16 @@ async function inputSignal(input, url)
 			{
 				iconSpan.removeClass('fa-spinner fa-spin');
 
-				if(response.errorMessage)
-				{
-					iconSpan.addClass(error);
-					iconSpan.attr('title', response.errorMessage);
-				}
-				else
-				{
-					iconSpan.addClass(success);
-				}
+				iconSpan.addClass(success);
 			}
 		})
-		.catch((error) =>
+		.catch((errorMessage) =>
 		{
 			if(showProgress)
 			{
-				iconSpan.addClass(error);
+				iconSpan.removeClass('fa-spinner fa-spin');
+
+				iconSpan.addClass(success);
 			}
 		});
 }

@@ -71,8 +71,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 			{
 				call_user_func_array($this->onChange, [$value, $inputName, array_filter($currentValues)]);
 			}
-
-			$presenter->sendPayload();
 		}
 
 		if($presenter->isAjax() && !$this->isDisabled())

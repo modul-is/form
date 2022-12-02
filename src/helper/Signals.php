@@ -47,8 +47,6 @@ trait Signals
 		{
 			call_user_func_array($this->onChange, [$value, $inputName, array_filter($currentValues)]);
 		}
-
-		$presenter->sendPayload();
 	}
 
 
