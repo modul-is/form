@@ -10,6 +10,8 @@ trait Validation
 {
 	private ?string $validationSuccessMessage = null;
 
+	private bool $submitted = false;
+
 
 	public function setValidationSuccessMessage(string $validationSuccessMessage): self
 	{
@@ -29,7 +31,7 @@ trait Validation
 	{
 		$validationClass = null;
 
-		if($this->getForm()->isAnchored() && $this->getForm()->isSubmitted())
+		if($this->getForm()->isAnchored() && ($this->getForm()->isSubmitted() || $this->isSubmitted()))
 		{
 			if($this->hasErrors())
 			{
@@ -49,7 +51,7 @@ trait Validation
 	{
 		$validationFeedBack = null;
 
-		if($this->getForm()->isAnchored() && $this->getForm()->isSubmitted())
+		if($this->getForm()->isAnchored() && ($this->getForm()->isSubmitted() || $this->isSubmitted()))
 		{
 			if($this->hasErrors())
 			{
@@ -66,5 +68,17 @@ trait Validation
 		}
 
 		return $validationFeedBack;
+	}
+
+
+	public function isSubmitted(): bool
+	{
+		return $this->submitted;
+	}
+
+
+	public function setSubmitted(bool $submitted = true): void
+	{
+		$this->submitted = $submitted;
 	}
 }
