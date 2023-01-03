@@ -87,7 +87,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 		{
 			$tooltip = Html::el('span')
 				->title($this->tooltip)
-				->addAttributes(['data-placement' => 'top', 'data-toggle' => 'tooltip'])
+				->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip'])
 				->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
 
 			$wrapDiv->addHtml($tooltip);
