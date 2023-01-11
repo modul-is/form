@@ -274,6 +274,24 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
+	public function addTime(string $name, $label = null, string $min = null, string $max = null): Control\TextInput
+	{
+		$dateInput = new Control\TimeInput($label);
+
+		if($min)
+		{
+			$dateInput->setHtmlAttribute('min', (new DateTime($min))->format('Y-m-d'));
+		}
+
+		if($max)
+		{
+			$dateInput->setHtmlAttribute('max', (new DateTime($max))->format('Y-m-d'));
+		}
+
+		return $this[$name] = $dateInput->setRequired(false);
+	}
+
+
 	public function addPassword(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label, $maxLength))
