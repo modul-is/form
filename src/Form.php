@@ -185,6 +185,12 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
+	public function getGroup($name): ?ControlGroup
+	{
+		return $this->groups[$name] ?? null;
+	}
+
+
 	public function getGroups(): array
 	{
 		return $this->groups;
