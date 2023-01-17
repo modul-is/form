@@ -19,14 +19,27 @@ trait InputGroup
 
 	public function getPrepend(): ?Html
 	{
+		$prepend = Html::el('span')
+			->class('input-group-text' . ($this->prependClass ? ' ' . $this->prependClass : null))
+			->addHtml($this->prepend);
+
+		if(!empty($this->renderFloating) && $this->tooltip)
+		{
+			$tooltip = Html::el('span')
+				->title($this->tooltip)
+				->class('input-group-text')
+				->addAttributes(['data-bs-placement' => 'right', 'data-bs-toggle' => 'tooltip'])
+				->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
+
+			return Html::el()->addHtml($this->prepend ? $tooltip . $prepend : $tooltip);
+		}
+
 		if(!$this->prepend)
 		{
 			return null;
 		}
 
-		return Html::el('span')
-			->class('input-group-text' . ($this->prependClass ? ' ' . $this->prependClass : null))
-			->addHtml($this->prepend);
+		return $prepend;
 	}
 
 
