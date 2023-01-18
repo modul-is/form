@@ -22,36 +22,11 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
 	use Helper\Signals;
-
-	private const OUTLINE_COLOR_ARRAY = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];
-
-	private bool $toggleButton = false;
-
-	private string $outlineColor = 'primary';
-
-
-	public function setToggleButton(bool $toggleButton = true): self
-	{
-		$this->toggleButton = $toggleButton;
-
-		return $this;
-	}
-
-
-	public function setOutlineColor(string $color = 'primary'): self
-	{
-		if(in_array($color, self::OUTLINE_COLOR_ARRAY, true))
-		{
-			$this->outlineColor = $color;
-		}
-
-		return $this;
-	}
+	use Helper\ToggleButton;
 
 
 	public function getCoreControl(): string|Html
 	{
-
 		$validationClass = $this->getValidationClass();
 		$validationMessage = $this->getValidationFeedback();
 
