@@ -18,6 +18,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 	use Helper\Signals;
+	use Helper\ToggleButton;
 
 	private bool $switch = false;
 
