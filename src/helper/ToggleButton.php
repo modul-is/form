@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ModulIS\Form\Helper;
 
-trait ToggleButton {
+trait ToggleButton
+{
 	protected array $outlineColorArray = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];
 
 	protected bool $toggleButton = false;
 
-	protected string $outlineColor = 'primary';
+	protected string|array $outlineColor = 'primary';
 
 
 	public function setToggleButton(bool $toggleButton = true): self
@@ -18,11 +21,21 @@ trait ToggleButton {
 	}
 
 
-	public function setOutlineColor(string $color = 'primary'): self
+	public function setOutlineColor(string|array $color = 'primary'): self
 	{
-		if(in_array($color, $this->outlineColorArray, true))
+		if(is_array($color))
 		{
-			$this->outlineColor = $color;
+			if(!array_diff($color, $this->outlineColorArray))
+			{
+				$this->outlineColor = $color;
+			}
+		}
+		else
+		{
+			if(in_array($color, $this->outlineColorArray, true))
+			{
+				$this->outlineColor = $color;
+			}
 		}
 
 		return $this;

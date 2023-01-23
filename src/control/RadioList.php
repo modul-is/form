@@ -24,7 +24,6 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 	use Helper\Signals;
 	use Helper\ToggleButton;
 
-
 	public function getCoreControl(): string|Html
 	{
 		$validationClass = $this->getValidationClass();
@@ -73,7 +72,22 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 				$input->setChecked('true');
 			}
 
-			$labelClass = ($this->toggleButton) ? 'me-2 btn btn-outline-' . $this->outlineColor : null;
+			if(is_array($this->outlineColor))
+			{
+				while(count($this->outlineColor) < count($this->getItems()))
+				{
+					$this->outlineColor = array_merge($this->outlineColor, $this->outlineColor);
+				}
+
+				$outlineColor = reset($this->outlineColor);
+				$this->outlineColor = array_slice($this->outlineColor, 1);
+			}
+			else
+			{
+				$outlineColor = $this->outlineColor;
+			}
+
+			$labelClass = ($this->toggleButton) ? 'me-2 btn btn-outline-' . $outlineColor : null;
 			$labelAttribute = ($this->toggleButton) ? 'width: calc(100% - 7.5px)' : 'width: auto';
 
 			$label = Html::el('label')
