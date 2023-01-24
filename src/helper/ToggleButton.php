@@ -23,20 +23,7 @@ trait ToggleButton
 
 	public function setOutlineColor(string|array $color = 'primary'): self
 	{
-		if(is_array($color))
-		{
-			if(!array_diff($color, $this->outlineColorArray))
-			{
-				$this->outlineColor = $color;
-			}
-		}
-		else
-		{
-			if(in_array($color, $this->outlineColorArray, true))
-			{
-				$this->outlineColor = $color;
-			}
-		}
+		$this->outlineColor = $color;
 
 		return $this;
 	}

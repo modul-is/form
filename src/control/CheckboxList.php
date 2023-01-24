@@ -74,18 +74,14 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 
 			if(is_array($this->outlineColor))
 			{
-				while(count($this->outlineColor) < count($this->getItems()))
-				{
-					$this->outlineColor = array_merge($this->outlineColor, $this->outlineColor);
-				}
-
-				$outlineColor = reset($this->outlineColor);
-				$this->outlineColor = array_slice($this->outlineColor, 1);
+				$outlineColor = $this->outlineColor[$key] ?? 'primary';
 			}
 			else
 			{
 				$outlineColor = $this->outlineColor;
 			}
+
+			$outlineColor = in_array($outlineColor, $this->outlineColorArray, true) ? $outlineColor : 'primary';
 
 			$labelClass = ($this->toggleButton) ? 'me-2 btn btn-outline-' . $outlineColor : null;
 			$labelAttribute = ($this->toggleButton) ? 'width: calc(100% - 7.5px)' : 'width: auto';
