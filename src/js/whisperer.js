@@ -18,13 +18,30 @@
 				var form = element.closest('form');
 
                 //Run onselect after pressing enter
-                searchInput.on('keyup', function(event)
-                {
-                    if((event.keyCode || event.which) === 13)
+				let searchEvent = function(e){
+					if((e.keyCode || e.which) === 13)
                     {
-                        naja.makeRequest('GET', varUrlOnSelect, {selected: element.val(), formdata: form.serialize()});
+                        naja.makeRequest('GET', varUrlOnSelect, {selected: element.val(), formdata: form.serialize()}).then((response) =>
+						{
+							$(this).closest('.chosen-with-drop').removeClass('chosen-with-drop');
+						});
                     }
-                });
+				};
+
+				let events = $._data(searchInput[0], "events");
+
+				if (events && events.keyup)
+				{
+					let hasEvent = events.keyup.some(function(event)
+					{
+						return event.handler.name === "searchEvent";
+					});
+
+					if(!hasEvent)
+					{
+						searchInput.on('keyup', searchEvent);
+					}
+				}
 
                 var resultField = $('#' + chosenId).find('ul.chosen-results');
 
@@ -73,7 +90,7 @@
 											return;
 										}
 									}
-									
+
 									parentArray[name] = val;
 								}
 								else if($("[id^='" +id + "']").length > 0)
@@ -101,7 +118,8 @@
 
                                 if(empty === true)
                                 {
-                                    $('#' + chosenId).find('ul.chosen-results').append('<li class="no-results">Nebyla nalezena žádná položka - ' + param + '</li>');
+                                    message = $('.form-control-chosen').attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ';
+									$('#' + chosenId).find('ul.chosen-results').append('<li class="no-results">' + message + ' ' + param + '</li>');
                                 }
                                 searchInput.val(param);
                             });

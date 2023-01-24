@@ -24,6 +24,8 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 	private int $delay = 500;
 
+	private ?string $noResultMessage = null;
+
 
 	public function setOnSelectCallback(array|\Closure $callback): self
 	{
@@ -294,6 +296,11 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 		$control->attrs['data-whisperer-delay'] = $this->delay;
 
+		if($this->noResultMessage !== null)
+		{
+			$control->attrs['no-result-message'] = $this->noResultMessage;
+		}
+
 		return $control;
 	}
 
@@ -340,6 +347,14 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 	public function setDelay(int $delay): self
 	{
 		$this->delay = $delay;
+
+		return $this;
+	}
+
+
+	public function setNoResultMessage(string $noResultMessage = null): self
+	{
+		$this->noResultMessage = $noResultMessage;
 
 		return $this;
 	}
