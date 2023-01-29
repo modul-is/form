@@ -26,18 +26,40 @@ trait CoreList
 
 		foreach($this->getItems() as $key => $input)
 		{
-
 			$input = $this->getControlPart($key);
 
 			$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;
 
 			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : null;
 
-			$input->class('form-check-input' . $currentClass . $inputColorClass);
+			if($this->toggleButton)
+			{
+				if(is_array($this->buttonColor))
+				{
+					$buttonColor = $this->buttonColor[$key] ?? 'primary';
+				}
+				else
+				{
+					$buttonColor = $this->buttonColor;
+				}
+
+				$inputClass = 'btn-check';
+				$labelClass = 'me-2 btn btn-' . $buttonColor;
+				$labelAttribute = 'width: calc(100% - 7.5px)';
+			}
+			else
+			{
+				$inputClass = 'form-check-input';
+				$labelClass = 'form-check-label';
+				$labelAttribute = 'width: auto';
+			}
+
+			$input->class($inputClass . $currentClass . $inputColorClass);
 
 			$label = $this->getLabelPart($key);
 
-			$label->class('form-check-label');
+			$label->class($labelClass)
+				->setAttribute('style', $labelAttribute);
 
 			$tooltip = null;
 
@@ -62,7 +84,7 @@ trait CoreList
 			}
 
 			$inputs .= Html::el('div')
-				->class('form-check ' . $class)
+				->class(($this->toggleButton ? 'p-0 ' : 'form-check ') . $class)
 				->addHtml($input . $label . $tooltip);
 		}
 

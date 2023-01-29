@@ -45,7 +45,7 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 
 		foreach($control->attrs as $name => $value)
 		{
-			if(in_array($name, ['name', 'required', 'data-nette-rules', 'class']))
+			if(in_array($name, ['name', 'required', 'data-nette-rules', 'class'], true))
 			{
 				continue;
 			}

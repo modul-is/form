@@ -64,9 +64,20 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 		$validationClass = $this->getValidationClass();
 		$validationMessage = $this->getValidationFeedback();
 
-		$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;
+		if($this->toggleButton)
+		{
+			$inputClass = 'btn-check';
+			$labelClass = 'me-2 btn btn-' . $this->buttonColor;
+			$labelAttribute = 'width: calc(100% - 7.5px)';
+		}
+		else
+		{
+			$inputClass = 'form-check-input' . ($this->color ? ' checkbox-' . $this->color : null);
+			$labelClass = 'form-check-label';
+			$labelAttribute = 'width: auto';
+		}
 
-		$input->class('form-check-input ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null) . $inputColorClass);
+		$input->class($inputClass . ' ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null));
 
 		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
 		{
@@ -75,7 +86,8 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 
 		$label = Html::el('label')
 			->setAttribute('for', $this->getHtmlId())
-			->class('form-check-label')
+			->setAttribute('style', $labelAttribute)
+			->class($labelClass)
 			->addHtml($this->caption);
 
 		$switchClass = $this->switch ? ' form-switch' : null;

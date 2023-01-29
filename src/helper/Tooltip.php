@@ -14,8 +14,8 @@ trait Tooltip
 		$this->tooltip = $text;
 		return $this;
 	}
-	
-	
+
+
 	public function getTooltip(): ?string
 	{
 		return $this->tooltip;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Helper;
 
-use \Nette\Bridges\ApplicationLatte\Template as TemplateEngine;
+use Nette\Bridges\ApplicationLatte\Template as TemplateEngine;
 
 trait Template
 {
