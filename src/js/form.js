@@ -15,11 +15,14 @@ Nette.validators.CodeComponentFormValidator_sameLength = function(elem, args, va
 
 async function inputSignal(input, url, event)
 {
-	let originValue = event.originalEvent.srcElement.attributes.value ? event.originalEvent.srcElement.attributes.value.value : '';
-
-	if(input.val() === originValue)
+	if(event.type === 'focusout')
 	{
-		return;
+		let originValue = event.originalEvent.srcElement.attributes.value ? event.originalEvent.srcElement.attributes.value.value : '';
+
+		if(input.val() === originValue)
+		{
+			return;
+		}
 	}
 
 	let loading = 'fa-spinner fa-spin';
