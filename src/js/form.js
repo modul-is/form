@@ -13,8 +13,15 @@ Nette.validators.CodeComponentFormValidator_sameLength = function(elem, args, va
     return args.length === val.length;
 };
 
-async function inputSignal(input, url)
+async function inputSignal(input, url, event)
 {
+	let originValue = event.originalEvent.srcElement.attributes.value ? event.originalEvent.srcElement.attributes.value.value : '';
+
+	if(input.val() === originValue)
+	{
+		return;
+	}
+
 	let loading = 'fa-spinner fa-spin';
 	let success = 'fa-check color-green';
 	let progressId = input.attr('id') + '_ajax_progress';
@@ -63,6 +70,7 @@ async function inputSignal(input, url)
 	}
 
 	let form = input.closest('form');
+	let focusElement = event.relatedTarget ? event.relatedTarget.id : null;
 
 	naja.makeRequest('GET', url, {value: value, input: inputName, formdata: form.serialize()})
 		.then(response =>
@@ -72,6 +80,11 @@ async function inputSignal(input, url)
 				iconSpan.removeClass('fa-spinner fa-spin');
 
 				iconSpan.addClass(success);
+			}
+
+			if(focusElement)
+			{
+				$('#' + focusElement).focus();
 			}
 		})
 		.catch((errorMessage) =>
@@ -232,14 +245,14 @@ function initForm()
 	$('[data-on-change]').unbind();
 	$('[data-whisperer], [data-whisperer-onselect], [data-whisperer-delay]').unbind();
 
-	$('[data-on-focusout]').focusout(function()
+	$('[data-on-focusout]').focusout(function(e)
 	{
-		inputSignal($(this), $(this).attr('data-on-focusout'));
+		inputSignal($(this), $(this).attr('data-on-focusout'), e);
 	});
 
-	$('[data-on-change]').change(function()
+	$('[data-on-change]').change(function(e)
 	{
-		inputSignal($(this), $(this).attr('data-on-change'));
+		inputSignal($(this), $(this).attr('data-on-change'), e);
 	});
 
 	message = $('.form-control-chosen').attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ';
