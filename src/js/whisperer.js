@@ -116,11 +116,16 @@
 
                                 element.trigger("chosen:updated");
 
-                                if(empty === true)
-                                {
-                                    message = $('.form-control-chosen').attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ';
-									$('#' + chosenId).find('ul.chosen-results').append('<li class="no-results">' + message + ' ' + param + '</li>');
-                                }
+								if(empty === true)
+								{
+									editedId = chosenId.replaceAll('_', '-');
+									index = editedId.lastIndexOf('-');
+									result = editedId.substring(0, index);
+
+									message = $('#' + result).attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ' + param;
+
+									$('#' + chosenId).find('ul.chosen-results').append('<li class="no-results">' + message + '</li>');
+								}
                                 searchInput.val(param);
                             });
                         }, delay);
