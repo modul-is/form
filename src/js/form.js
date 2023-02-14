@@ -258,12 +258,15 @@ function initForm()
 		inputSignal($(this), $(this).attr('data-on-change'), e);
 	});
 
-	message = $('.form-control-chosen').attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ';
+	$('.form-control-chosen, .form-control-chosen-required').each(function()
+	{
+		message = $(this).attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ';
 
-	$('.form-control-chosen, .form-control-chosen-required').chosen({
-		allow_single_deselect: true,
-		no_results_text: message,
-		width: '100%'
+		$(this).chosen({
+			allow_single_deselect: true,
+			no_results_text: message,
+			width: '100%'
+		});
 	});
 
 	$('.form-control-chosen, .form-control-chosen-required').on('change', function()
