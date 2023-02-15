@@ -33,6 +33,16 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable
 			$button->id($this->getOption('id'));
 		}
 
+		foreach($input->attrs as $name => $value)
+		{
+			if(in_array($name, ['name', 'required', 'data-nette-rules', 'class'], true))
+			{
+				continue;
+			}
+
+			$button->$name = $value;
+		}
+
 		return $button;
 	}
 
