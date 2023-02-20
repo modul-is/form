@@ -100,6 +100,15 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 	}
 
 
+	public function getPresenter(): ?\Code\Presenter\Presenter
+	{
+		/** @var \Code\Presenter\Presenter $presenter */
+		$presenter = $this->lookup(\Code\Presenter\Presenter::class);
+
+		return $presenter;
+	}
+
+
 	abstract public function createComponentForm(): Form;
 
 
