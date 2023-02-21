@@ -53,7 +53,7 @@ async function inputSignal(input, url, event)
 	let value = null;
 	let inputName = null;
 
-	if (input.attr('type') === 'checkbox')
+	if(input.attr('type') === 'checkbox')
 	{
 		if(input.attr('name').includes('['))
 		{
@@ -73,7 +73,7 @@ async function inputSignal(input, url, event)
 	}
 
 	let form = input.closest('form');
-	let focusElement = event.relatedTarget ? event.relatedTarget.id : null;
+	let focusElement = event.relatedTarget ? event.relatedTarget.id : input.attr('id');
 
 	naja.makeRequest('POST', url, {value: value, input: inputName, formdata: form.serialize()})
 		.then(response =>
@@ -281,6 +281,26 @@ function initForm()
 		theme: "bootstrap-5",
 		templateResult: formatSelectData,
 		templateSelection: formatSelectData
+	});
+
+	$(document).keydown(function(e)
+	{
+		if($.inArray(e.code, ['ArrowUp', 'ArrowDown']) === -1)
+		{
+			return true;
+		}
+
+		let element = $(e.target);
+
+		if(element.hasClass('select2-selection'))
+		{
+			let select = element.closest('div.input-group').children('select.select2-image');
+
+			if(select.siblings('.select2-container--open').length === 0)
+			{
+				$('#' + select.attr('id')).select2('open');
+			}
+		}
 	});
 
 	var inputs = document.getElementsByClassName("autocomplete-input");
