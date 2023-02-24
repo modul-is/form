@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ModulIS\Form\Control;
 
 use Nette\Utils\Html;
+use Nette\Utils\Strings;
 
 class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiver
 {
@@ -25,6 +26,8 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 	private int $delay = 500;
 
 	private ?string $noResultMessage = null;
+
+	private int|string|null $dividerValue = null;
 
 
 	public function setOnSelectCallback(array|\Closure $callback): self
@@ -251,6 +254,11 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 		$form = $this->getForm();
 
+		if($this->dividerValue !== '' && $this->dividerValue !== null)
+		{
+			$control = $this->addDividerToOption($control);
+		}
+
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
 
@@ -355,6 +363,38 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 	public function setNoResultMessage(string $noResultMessage = null): self
 	{
 		$this->noResultMessage = $noResultMessage;
+
+		return $this;
+	}
+
+
+	private function addDividerToOption(Html $control): Html
+	{
+		$optionString = '';
+		$items = explode('</option>', $control->getChildren()[0]);
+
+		foreach($items as $item)
+		{
+			if(Strings::contains($item, 'value="' . $this->dividerValue . '"'))
+			{
+				$optionString .= '<option class="border-bottom"' . Strings::trim($item, '<option') . '</option>';
+			}
+			else
+			{
+				$optionString .= $item . '</option>';
+			}
+		}
+
+		$control->removeChildren();
+		$control->addHtml($optionString);
+
+		return $control;
+	}
+
+
+	public function setDividerValue(int|string|null $dividerValue): self
+	{
+		$this->dividerValue = $dividerValue;
 
 		return $this;
 	}
