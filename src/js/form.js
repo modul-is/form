@@ -260,11 +260,13 @@ function initForm()
 
 	$('.form-control-chosen, .form-control-chosen-required').each(function()
 	{
-		message = $(this).attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ';
+		let noResultMessage = $(this).attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ';
+
+		$(this).chosen('destroy');
 
 		$(this).chosen({
 			allow_single_deselect: true,
-			no_results_text: message,
+			no_results_text: noResultMessage,
 			width: '100%'
 		});
 	});
