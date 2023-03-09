@@ -22,11 +22,6 @@ trait Signals
 		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup('Nette\\Application\\UI\\Presenter');
 
-		if($this->isDisabled())
-		{
-			return;
-		}
-
 		if($signal !== $this->onFocusOutSignal && $signal !== $this->onChangeSignal)
 		{
 			throw new \Exception("Unknown signal '$signal' for input '" . $this->getName() . "'");
