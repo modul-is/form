@@ -12,6 +12,8 @@ trait WrapControl
 
 	protected ?string $inputClass = null;
 
+	protected ?string $rowClass = null;
+
 	protected ?\Nette\Utils\Html $wrapControl = null;
 
 
@@ -26,6 +28,14 @@ trait WrapControl
 	public function setInputWrapClass(string $class): self
 	{
 		$this->inputClass = $class;
+
+		return $this;
+	}
+
+
+	public function setRowClass(string $class): self
+	{
+		$this->rowClass = $class;
 
 		return $this;
 	}
@@ -94,8 +104,10 @@ trait WrapControl
 			->class($inputClass)
 			->addHtml($input);
 
+		$rowClass = isset($this->rowClass) ? $this->rowClass : 'row';
+
 		$rowDiv = Html::el('div')
-			->class('row')
+			->class($rowClass)
 			->addHtml($labelDiv . $inputDiv);
 
 		return $this->getWrapControl()

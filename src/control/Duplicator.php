@@ -30,6 +30,14 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	private array $options = [];
 
+	private ?string $buttonWrapClass = null;
+
+	private ?string $duplicatorBodyClass = null;
+
+	private ?string $duplicatorFooterClass = null;
+
+	private ?string $duplicatorContainerClass = null;
+
 
 	public function __construct($factory, int $createDefault = 0, bool $forceDefault = false)
 	{
@@ -126,8 +134,13 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 				}
 			}
 
+			$buttonWrapClass = isset($this->buttonWrapClass) ? $this->buttonWrapClass : 'mb-3 col-12';
+			$duplicatorBodyClass = isset($this->duplicatorBodyClass) ? $this->duplicatorBodyClass : 'card-body';
+			$duplicatorFooterClass = isset($this->duplicatorFooterClass) ? $this->duplicatorFooterClass : 'card-footer';
+			$duplicatorContainerClass = isset($this->duplicatorContainerClass) ? $this->duplicatorContainerClass : 'card card-accent-primary';
+
 			$inputs .= Html::el('div')
-				->class('mb-3 col-12')
+				->class($buttonWrapClass)
 				->addHtml($buttons);
 
 			$bodyRow .= Html::el('div')
@@ -138,7 +151,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 		}
 
 		$body = Html::el('div')
-			->class('card-body')
+			->class($duplicatorBodyClass)
 			->addHtml($bodyRow);
 
 		$createButton = null;
@@ -152,12 +165,12 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 		}
 
 		$footer = Html::el('div')
-			->class('card-footer')
+			->class($duplicatorFooterClass)
 			->addHtml($createButton);
 
 		$card = Html::el('div')
 			->id('container' . \Nette\Utils\Strings::capitalize($this->getName()))
-			->class('card card-accent-primary')
+			->class($duplicatorContainerClass)
 			->addHtml($header . $body . $footer);
 
 		return Html::el('div')
@@ -413,5 +426,37 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	public function getTitle(): ?string
 	{
 		return $this->title;
+	}
+
+
+	public function setDuplicatorButtonWrapClass(string $class): self
+	{
+		$this->buttonWrapClass = $class;
+
+		return $this;
+	}
+
+
+	public function setDuplicatorBodyClass(string $class): self
+	{
+		$this->duplicatorBodyClass = $class;
+
+		return $this;
+	}
+
+
+	public function setDuplicatorFooterClass(string $class): self
+	{
+		$this->duplicatorFooterClass = $class;
+
+		return $this;
+	}
+
+
+	public function setDuplicatorContainerClass(string $class): self
+	{
+		$this->duplicatorContainerClass = $class;
+
+		return $this;
 	}
 }
