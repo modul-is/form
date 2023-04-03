@@ -6,7 +6,7 @@ namespace ModulIS\Form\Helper;
 
 trait Tooltip
 {
-	protected ?string $tooltip = null;
+	protected string|\Nette\Utils\Html|null $tooltip = null;
 
 
 	public function setTooltip($text)
@@ -16,7 +16,7 @@ trait Tooltip
 	}
 
 
-	public function getTooltip(): ?string
+	public function getTooltip(): string|\Nette\Utils\Html|null
 	{
 		return $this->tooltip;
 	}
