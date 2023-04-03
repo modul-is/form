@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Helper;
 
+use \Nette\Utils\Html;
+
 trait Tooltip
 {
-	protected string|\Nette\Utils\Html|null $tooltip = null;
+	protected string|Html|null $tooltip = null;
 
 
 	public function setTooltip($text)
@@ -16,7 +18,7 @@ trait Tooltip
 	}
 
 
-	public function getTooltip(): string|\Nette\Utils\Html|null
+	public function getTooltip(): string|Html|null
 	{
 		return $this->tooltip;
 	}
