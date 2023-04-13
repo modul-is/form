@@ -42,7 +42,7 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 
 		foreach($input->attrs as $name => $value)
 		{
-			if(in_array($name, ['name', 'required', 'data-nette-rules', 'class'], true))
+			if(in_array($name, ['name', 'required', 'data-nette-rules', 'class', 'formnovalidate'], true))
 			{
 				continue;
 			}
