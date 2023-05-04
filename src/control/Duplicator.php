@@ -110,6 +110,11 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 		}
 
 		$bodyRow = null;
+		$buttonWrapClass = isset($this->buttonWrapClass) ? $this->buttonWrapClass : 'mb-3 col-12';
+		$duplicatorBodyClass = isset($this->duplicatorBodyClass) ? $this->duplicatorBodyClass : 'card-body';
+		$duplicatorFooterClass = isset($this->duplicatorFooterClass) ? $this->duplicatorFooterClass : 'card-footer';
+		$duplicatorContainerClass = isset($this->duplicatorContainerClass) ? $this->duplicatorContainerClass : 'card card-accent-primary';
+
 		/** @var \ModulIS\Form\DuplicatorContainer|DuplicatorCreateSubmit $container */
 		foreach($this->getComponents() as $container)
 		{
@@ -133,11 +138,6 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 					$inputs .= $duplicatorInput->render();
 				}
 			}
-
-			$buttonWrapClass = isset($this->buttonWrapClass) ? $this->buttonWrapClass : 'mb-3 col-12';
-			$duplicatorBodyClass = isset($this->duplicatorBodyClass) ? $this->duplicatorBodyClass : 'card-body';
-			$duplicatorFooterClass = isset($this->duplicatorFooterClass) ? $this->duplicatorFooterClass : 'card-footer';
-			$duplicatorContainerClass = isset($this->duplicatorContainerClass) ? $this->duplicatorContainerClass : 'card card-accent-primary';
 
 			$inputs .= Html::el('div')
 				->class($buttonWrapClass)
