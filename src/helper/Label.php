@@ -24,6 +24,6 @@ trait Label
 			->addAttributes(['data-bs-placement' => 'right', 'data-bs-toggle' => 'tooltip'])
 			->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
 
-		return $this->renderFloating ? $label : $label . $tooltip;
+		return !empty($this->renderFloating) ? $label : $label . $tooltip;
 	}
 }
