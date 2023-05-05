@@ -120,6 +120,25 @@ class Container extends \Nette\Forms\Container
 	}
 
 
+	public function addDate(string $name, $label = null, string $min = null, string $max = null): Control\TextInput
+	{
+		$dateInput = new Control\DateInput($label);
+
+		if($min)
+		{
+			$dateInput->setHtmlAttribute('min', (new DateTime($min))->format('Y-m-d'));
+		}
+
+		if($max)
+		{
+			$dateInput->setHtmlAttribute('max', (new DateTime($max))->format('Y-m-d'));
+		}
+
+		return $this[$name] = $dateInput->setRequired(false)
+			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
+	}
+
+
 	public function addUpload(string $name, $label = null, $multiple = false): Control\UploadControl
 	{
 		return $this[$name] = new Control\UploadControl($label, $multiple);
