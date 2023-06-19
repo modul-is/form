@@ -30,6 +30,14 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 	private int|string|null $dividerValue = null;
 
 
+	public function __construct($label = null, ?array $items = null)
+	{
+		parent::__construct($label, $items);
+
+		$this->controlClass = 'form-control-chosen';
+	}
+
+
 	public function setOnSelectCallback(array|\Closure $callback): self
 	{
 		$this->onSelectCallback = $callback;
