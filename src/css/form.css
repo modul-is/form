@@ -376,3 +376,26 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
 {
     color: #212529!important;
 }
+
+.form-floating .chosen-single
+{
+    min-width: 100%;
+	height: calc(3.5rem + 2px);
+    line-height: 1.25;
+}
+
+.form-floating .chosen-container
+{
+    min-width: 100%;
+}
+
+.form-floating >.chosen-container > .chosen-single span
+{
+	padding-bottom: 0.625rem;
+    padding-top: 1.9rem;
+}
+
+.form-floating > .chosen-container + label
+{
+	padding-top: 0.5rem;
+}
