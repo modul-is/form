@@ -214,9 +214,9 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addDuplicator($name, $factory, $copyNumber = 1, $maxCopies = null): Control\Duplicator
+	public function addDuplicator($name, $factory, $copyNumber = 1, $forceDefault = false): Control\Duplicator
 	{
-		$duplicator = new Control\Duplicator($factory, $copyNumber, $maxCopies);
+		$duplicator = new Control\Duplicator($factory, $copyNumber, $forceDefault);
 
 		$duplicator->setCurrentGroup($this->getCurrentGroup());
 
