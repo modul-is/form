@@ -63,8 +63,8 @@ trait WrapControl
 	{
 		if(!$this->wrapControl)
 		{
-			/** @var \ModulIS\Form\Form $form */
 			$form = $this->getForm();
+			\assert($form instanceof \ModulIS\Form\Form);
 
 			$this->wrapControl = Html::el('div')
 				->class($form->getDefaultInputWrapClass());
@@ -76,8 +76,8 @@ trait WrapControl
 
 	public function renderWrap(): Html
 	{
-		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
+		\assert($form instanceof \ModulIS\Form\Form);
 
 		$label = $this->getCoreLabel();
 		$input = $this->getCoreControl();
@@ -104,7 +104,7 @@ trait WrapControl
 			->class($inputClass)
 			->addHtml($input);
 
-		$rowClass = isset($this->rowClass) ? $this->rowClass : 'row';
+		$rowClass = $this->rowClass ?? 'row';
 
 		$rowDiv = Html::el('div')
 			->class($rowClass)

@@ -21,8 +21,8 @@ trait CoreList
 	{
 		$inputs = null;
 
-		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
+		\assert($form instanceof \ModulIS\Form\Form);
 
 		foreach($this->getItems() as $key => $input)
 		{

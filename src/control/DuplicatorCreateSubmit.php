@@ -12,11 +12,11 @@ class DuplicatorCreateSubmit extends SubmitButton
 	{
 		$this->onClick[] = function(\Nette\Forms\Controls\SubmitButton $button) use ($allowEmpty, $callback): void
 		{
-			/** @var \ModulIS\Form\Form $form */
 			$form = $button->getForm();
+			\assert($form instanceof \ModulIS\Form\Form);
 
-			/** @var Duplicator $duplicator */
 			$duplicator = $button->lookup(Duplicator::class);
+			\assert($duplicator instanceof Duplicator);
 
 			if($allowEmpty === true || $duplicator->isAllFilled() === true)
 			{
@@ -24,8 +24,8 @@ class DuplicatorCreateSubmit extends SubmitButton
 
 				if($form->getPresenter()->isAjax())
 				{
-					/** @var \ModulIS\Form\FormComponent $component */
 					$component = $button->lookup(\ModulIS\Form\FormComponent::class);
+					\assert($component instanceof \ModulIS\Form\FormComponent);
 
 					$component->redrawControl('form');
 				}
@@ -43,8 +43,8 @@ class DuplicatorCreateSubmit extends SubmitButton
 
 	public function render(): Html
 	{
-		/** @var Duplicator $duplicator */
 		$duplicator = $this->lookup(Duplicator::class);
+		\assert($duplicator instanceof Duplicator);
 
 		$attributes = [
 			'name' => $duplicator->getName() . '[add]',
@@ -59,8 +59,8 @@ class DuplicatorCreateSubmit extends SubmitButton
 
 		$icon = \Kravcik\LatteFontAwesomeIcon\Extension::render($this->isDisabled() ? 'info' : 'plus');
 
-		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
+		\assert($form instanceof \ModulIS\Form\Form);
 
 		return Html::el('button')
 			->class('btn btn-outline-primary float-left btn-xs ' . ($form->ajax ? 'ajax' : '') . ($currentClass ? ' ' . $currentClass : ''))

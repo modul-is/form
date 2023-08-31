@@ -36,8 +36,8 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 
 	public function signalReceived($signal): void
 	{
-		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup('Nette\\Application\\UI\\Presenter');
+		\assert($presenter instanceof \Nette\Application\UI\Presenter);
 
 		if($signal === $this->onChangeSignal)
 		{

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Control;
 
-use Nette\Utils\Html;
 use ModulIS\Form\Helper;
+use Nette\Utils\Html;
 
 class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
-use Nette\Utils\Html;
 use Nette\Utils\DateTime;
+use Nette\Utils\Html;
 
 class Form extends \Nette\Application\UI\Form
 {
@@ -72,9 +72,9 @@ class Form extends \Nette\Application\UI\Form
 
 		$groupArray = $this->getGroups();
 
-		/** @var ControlGroup $group */
 		foreach($groupArray as $groupTitle => $group)
 		{
+			\assert($group instanceof ControlGroup);
 			$inputs = null;
 
 			foreach($group->getInputArray() as $input)
@@ -201,9 +201,9 @@ class Form extends \Nette\Application\UI\Form
 	{
 		$submitterArray = [];
 
-		/** @var ControlGroup $group */
 		foreach($this->getGroups() as $group)
 		{
+			\assert($group instanceof ControlGroup);
 			$submitterArray = array_merge($submitterArray, $group->getSubmitterArray());
 		}
 

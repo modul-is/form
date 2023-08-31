@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Control;
 
-use Nette\Utils\Html;
 use ModulIS\Form\Helper;
+use Nette\Utils\Html;
 
 class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Renderable
 {

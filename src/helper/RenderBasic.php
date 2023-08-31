@@ -27,8 +27,8 @@ trait RenderBasic
 			return $template->renderToString($path, array_merge(['input' => $this], $this->templateParams));
 		}
 
-		/** @var \ModulIS\Form\Form $form */
 		$form = $this->getForm();
+		\assert($form instanceof \ModulIS\Form\Form);
 
 		if($this instanceof \ModulIS\Form\Control\FloatingRenderable && ($this->getRenderFloating() ?? $form->getRenderFloating()))
 		{

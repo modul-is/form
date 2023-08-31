@@ -64,8 +64,8 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 	public function signalReceived($signal): void
 	{
-		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup('Nette\\Application\\UI\\Presenter');
+		\assert($presenter instanceof \Nette\Application\UI\Presenter);
 
 		if($signal == $this->onFocusOutSignal || $signal === $this->onChangeSignal)
 		{
@@ -267,8 +267,8 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 			$control = $this->addDividerToOption($control);
 		}
 
-		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
+		\assert($presenter instanceof \Nette\Application\UI\Presenter);
 
 		if($this->parents)
 		{

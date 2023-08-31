@@ -13,9 +13,9 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	{
 		$controlArray = [];
 
-		/** @var \Nette\Forms\Controls\BaseControl $control */
 		foreach($this->getControls() as $control)
 		{
+			\assert($control instanceof \Nette\Forms\Controls\BaseControl);
 			/**
 			 * Skip submitters
 			 */
@@ -46,9 +46,9 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 		/**
 		 * Only submitters
 		 */
-		/** @var \Nette\Forms\Controls\BaseControl $control */
 		foreach($this->getControls() as $control)
 		{
+			\assert($control instanceof \Nette\Forms\Controls\BaseControl);
 			/**
 			 * Skip submitters which are part of container
 			 */

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
-use Nette\Utils\Html;
 use Nette\Utils\DateTime;
+use Nette\Utils\Html;
 
 class Container extends \Nette\Forms\Container
 {
@@ -315,9 +315,9 @@ class Container extends \Nette\Forms\Container
 		{
 			$inputs = null;
 
-			/** @var Control\Renderable $control */
 			foreach($components as $control)
 			{
+				\assert($control instanceof Control\Renderable);
 				$inputs .= $control->render();
 			}
 

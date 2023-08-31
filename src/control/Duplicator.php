@@ -110,14 +110,14 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 		}
 
 		$bodyRow = null;
-		$buttonWrapClass = isset($this->buttonWrapClass) ? $this->buttonWrapClass : 'mb-3 col-12';
-		$duplicatorBodyClass = isset($this->duplicatorBodyClass) ? $this->duplicatorBodyClass : 'card-body';
-		$duplicatorFooterClass = isset($this->duplicatorFooterClass) ? $this->duplicatorFooterClass : 'card-footer';
-		$duplicatorContainerClass = isset($this->duplicatorContainerClass) ? $this->duplicatorContainerClass : 'card card-accent-primary';
+		$buttonWrapClass = $this->buttonWrapClass ?? 'mb-3 col-12';
+		$duplicatorBodyClass = $this->duplicatorBodyClass ?? 'card-body';
+		$duplicatorFooterClass = $this->duplicatorFooterClass ?? 'card-footer';
+		$duplicatorContainerClass = $this->duplicatorContainerClass ?? 'card card-accent-primary';
 
-		/** @var \ModulIS\Form\DuplicatorContainer|DuplicatorCreateSubmit $container */
 		foreach($this->getComponents() as $container)
 		{
+			\assert($container instanceof \ModulIS\Form\DuplicatorContainer || $container instanceof DuplicatorCreateSubmit);
 			if($container instanceof DuplicatorCreateSubmit)
 			{
 				continue;
@@ -126,10 +126,10 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			$inputs = null;
 			$buttons = null;
 
-			/** @var Renderable $duplicatorInput */
 			foreach($container->getComponents() as $duplicatorInput)
 			{
-				if($duplicatorInput instanceof Button || $duplicatorInput instanceof DuplicatorRemoveSubmit|| $duplicatorInput instanceof Link)
+				\assert($duplicatorInput instanceof Renderable);
+				if($duplicatorInput instanceof Button || $duplicatorInput instanceof DuplicatorRemoveSubmit || $duplicatorInput instanceof Link)
 				{
 					$buttons .= $duplicatorInput->render();
 				}
@@ -324,7 +324,6 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			{
 				$this->createOne($key);
 			}
-
 		}
 		elseif($this->forceDefault)
 		{

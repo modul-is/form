@@ -87,8 +87,8 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 	public function signalReceived($signal): void
 	{
-		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
+		\assert($presenter instanceof \Nette\Application\UI\Presenter);
 
 		if($signal == self::SIGNAL_ONCHANGE)
 		{
@@ -160,8 +160,8 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	{
 		$control = parent::getControl();
 
-		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
+		\assert($presenter instanceof \Nette\Application\UI\Presenter);
 
 		if($this->parents)
 		{
