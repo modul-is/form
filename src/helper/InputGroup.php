@@ -8,13 +8,13 @@ use Nette\Utils\Html;
 
 trait InputGroup
 {
-	public ?string $append = null;
+	public string $append = '';
 
-	public ?string $prepend = null;
+	public string $prepend = '';
 
-	public ?string $appendClass = null;
+	public string $appendClass = '';
 
-	public ?string $prependClass = null;
+	public string $prependClass = '';
 
 
 	public function getPrepend(): ?Html
@@ -56,7 +56,7 @@ trait InputGroup
 	}
 
 
-	public function setAppend(string|\Stringable $text, string $class = null): self
+	public function setAppend(string|\Stringable $text, string $class = ''): self
 	{
 		$this->append = $text instanceof \Stringable ? (string) $text : $text;
 
@@ -66,7 +66,7 @@ trait InputGroup
 	}
 
 
-	public function setPrepend(string|\Stringable $text, string $class = null): self
+	public function setPrepend(string|\Stringable $text, string $class = ''): self
 	{
 		$this->prepend = $text instanceof \Stringable ? (string) $text : $text;
 

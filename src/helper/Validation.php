@@ -47,9 +47,9 @@ trait Validation
 	}
 
 
-	protected function getValidationFeedback(): ?Html
+	protected function getValidationFeedback(): string|Html
 	{
-		$validationFeedBack = null;
+		$validationFeedBack = '';
 
 		if($this->getForm()->isAnchored() && ($this->getForm()->isSubmitted() || $this->isSubmitted()))
 		{

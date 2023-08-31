@@ -1,0 +1,1 @@
+<div class="mb-3 col-12"><div class="input-group"><div class="form-floating"><input type="text" name="text" id="frm-form-text" class="form-control" placeholder="Text"><label for="frm-form-text" class="col-form-label">Text</label></div></div></div>
