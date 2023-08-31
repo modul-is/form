@@ -106,9 +106,12 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 				$data = $this->getDependentData([$parentsNames]);
 
+				/** @phpstan-ignore-next-line*/
+				$items = $data->getPreparedItems(!is_array($this->disabled) ?: $this->disabled);
+
 				$presenter->payload->dependentselectbox = [
 					'id' => $this->getHtmlId(),
-					'items' => $data->getPreparedItems(!is_array($this->disabled) ?: $this->disabled),
+					'items' => $items,
 					'value' => $data->getValue(),
 					'prompt' => $this->translate($data->getPrompt()),
 					'disabledWhenEmpty' => $this->disabledWhenEmpty

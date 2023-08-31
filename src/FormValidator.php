@@ -35,7 +35,10 @@ final class FormValidator
 			return false;
 		}
 
-		[$rc, $year, $month, $day, $ext, $lastDigit] = $matches;
+		[$rc, $yearString, $monthString, $day, $ext, $lastDigit] = $matches;
+
+		$year = intval($yearString);
+		$month = intval($monthString);
 
 		if($lastDigit === '')
 		{
