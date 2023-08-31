@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Control;
 
-use Nette\Utils\Html;
 use ModulIS\Form\Helper;
+use Nette\Utils\Html;
 
 class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 {
 	use Helper\Icon;
 	use Helper\Color;
 	use Helper\AutoRenderSkip;
+	use Helper\ControlClass;
 
 	protected string|null $link = null;
 
@@ -24,15 +25,34 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 
 	public function getControl(): Html
 	{
+		$control = parent::getControl();
+
+		$currentClass = $control->getAttribute('class') ? ' ' . $control->getAttribute('class') : '';
 		$this->setOption('rendered', true);
 
 		$btnColor = $this->color ? ' btn-' . $this->color : ' btn-default';
 		$btnIcon = $this->icon ? Html::el('span')->class('fal fa-' . $this->icon) : null;
 
 		$el = Html::el('a');
-		$el->href($this->link);
+
+		if($this->link)
+		{
+			$el->href($this->link);
+		}
+
 		$el->setHtml(trim($btnIcon . ' ' . $this->caption));
-		$el->class('btn' . $btnColor);
+		$el->class('btn' . $btnColor . $currentClass);
+
+		foreach($control->attrs as $name => $value)
+		{
+			if(in_array($name, ['name', 'required', 'data-nette-rules', 'class'], true))
+			{
+				continue;
+			}
+
+			$el->$name = $value;
+		}
+
 		return $el;
 	}
 

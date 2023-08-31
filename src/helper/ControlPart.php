@@ -6,6 +6,9 @@ namespace ModulIS\Form\Helper;
 
 trait ControlPart
 {
+	public string $controlClass = 'form-control';
+
+
 	public function getCoreControlPart()
 	{
 		return $this->getCoreControl();

@@ -1,31 +1,5 @@
 {snippet form}
 	{form form class => 'form-horizontal ' . ($form->color ? $form->color) . ($form->ajax ? ' ajax'),  style=> 'margin-bottom: 0;', novalidate => $form->noValidate}
-		{foreach $form->getBoxes() as $boxTitle => $box}
-			<div class="card" {if $box->getOption('id')}id="{$box->getOption('id')}"{/if}>
-				{if $boxTitle || $form->title}
-					<div class="card-header {if $box->getOption('color')}bg-{$box->getOption('color')}{/if}">
-						{if $boxTitle}{$boxTitle}{else}{$form->title}{/if}
-					</div>
-				{/if}
-				<div class="card-body">
-					{foreach $box->getInputArray() as $input}
-						{if $input instanceof \Nette\Forms\Controls\HiddenField}
-							{input $input}
-						{else}
-							{$input->render()}
-						{/if}
-					{/foreach}
-				</div>
-			{if !$iterator->isLast()}
-				</div>
-			{/if}
-		{/foreach}
-
-			<div class="card-footer">
-				{foreach $form->getSubmitterArray() as $submit}
-					{$submit->render()}
-				{/foreach}
-			</div>
-		{/form}
-	</div>
+		{$form->renderForm()|noescape}
+	{/form}
 {/snippet}

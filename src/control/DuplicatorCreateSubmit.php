@@ -10,16 +10,25 @@ class DuplicatorCreateSubmit extends SubmitButton
 {
 	public function addCreateOnClick(bool $allowEmpty = true, ?callable $callback = null)
 	{
-		$this->setValidationScope([]);
-
 		$this->onClick[] = function(\Nette\Forms\Controls\SubmitButton $button) use ($allowEmpty, $callback): void
 		{
-			/** @var Duplicator $duplicator */
+			$form = $button->getForm();
+			\assert($form instanceof \ModulIS\Form\Form);
+
 			$duplicator = $button->lookup(Duplicator::class);
+			\assert($duplicator instanceof Duplicator);
 
 			if($allowEmpty === true || $duplicator->isAllFilled() === true)
 			{
 				$newContainer = $duplicator->createOne();
+
+				if($form->getPresenter()->isAjax())
+				{
+					$component = $button->lookup(\ModulIS\Form\FormComponent::class);
+					\assert($component instanceof \ModulIS\Form\FormComponent);
+
+					$component->redrawControl('form');
+				}
 
 				if(is_callable($callback))
 				{
@@ -27,15 +36,15 @@ class DuplicatorCreateSubmit extends SubmitButton
 				}
 			}
 
-			$button->getForm()->onSuccess = [];
+			$form->onSuccess = [];
 		};
 	}
 
 
 	public function render(): Html
 	{
-		/** @var Duplicator $duplicator */
 		$duplicator = $this->lookup(Duplicator::class);
+		\assert($duplicator instanceof Duplicator);
 
 		$attributes = [
 			'name' => $duplicator->getName() . '[add]',
@@ -46,13 +55,15 @@ class DuplicatorCreateSubmit extends SubmitButton
 			'type' => 'submit'
 		];
 
-		$icon = \Kravcik\Macros\FontAwesomeMacro::renderIcon($this->isDisabled() ? 'info' : 'plus');
+		$currentClass = $this->getControl()->getAttribute('class');
 
-		/** @var \ModulIS\Form\Form $form */
+		$icon = \Kravcik\LatteFontAwesomeIcon\Extension::render($this->isDisabled() ? 'info' : 'plus');
+
 		$form = $this->getForm();
+		\assert($form instanceof \ModulIS\Form\Form);
 
 		return Html::el('button')
-			->class('btn btn-primary float-left btn-xs ' . ($form->ajax ? 'ajax' : ''))
+			->class('btn btn-outline-primary float-left btn-xs ' . ($form->ajax ? 'ajax' : '') . ($currentClass ? ' ' . $currentClass : ''))
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
 			->addHtml($icon . $this->getCaption());

@@ -10,9 +10,9 @@ trait Label
 {
 	public function getCoreLabel()
 	{
-		$required = $this->isRequired() ? 'required' : '';
+		$required = $this->isRequired() ? ' required' : '';
 
-		$label = $this->getLabel()->class('col-form-label ' . $required);
+		$label = $this->getLabel()->class('col-form-label' . $required);
 
 		if(!$this->tooltip)
 		{
@@ -21,9 +21,9 @@ trait Label
 
 		$tooltip = Html::el('span')
 			->title($this->tooltip)
-			->addAttributes(['data-placement' => 'right', 'data-toggle' => 'tooltip'])
-			->addHtml(\Kravcik\Macros\FontAwesomeMacro::renderIcon('question-circle', ['color' => 'blue']));
+			->addAttributes(['data-bs-placement' => 'right', 'data-bs-toggle' => 'tooltip'])
+			->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
 
-		return $label . $tooltip;
+		return !empty($this->renderFloating) ? $label : $label . $tooltip;
 	}
 }

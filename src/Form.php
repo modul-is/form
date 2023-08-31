@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
+use Nette\Utils\DateTime;
+use Nette\Utils\Html;
 
 class Form extends \Nette\Application\UI\Form
 {
@@ -17,28 +19,181 @@ class Form extends \Nette\Application\UI\Form
 
 	public const SAME_LENGTH = 'ModulIS\Form\FormValidator::sameLength';
 
+	public const VALIDATE_RC = 'ModulIS\Form\FormValidator::validateRC';
+
+	public const VALIDATE_IC = 'ModulIS\Form\FormValidator::validateIC';
+
 	public ?string $color = null;
 
 	public bool $ajax = false;
 
-	public ?string $title = null;
+	public Html|string|null $title = null;
 
 	public ?string $icon = null;
 
 	public bool $noValidate = true;
 
-	public bool $floatingLabel = false;
+	public bool $renderFloating = false;
 
-	protected array $boxes = [];
+	private bool $renderInline = false;
 
-	protected string|int $boxCurrent;
+	private array $groups = [];
+
+	private array $formErrors = [];
+
+	private string $defaultInputWrapClass = 'mb-3 col-12';
 
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent = null, $name = null)
 	{
 		parent::__construct($parent, $name);
 
-		$this->addBox();
+		$this->addGroup();
+	}
+
+
+	public function renderForm()
+	{
+		$groups = null;
+		$submitters = null;
+		$cardFooter = null;
+
+		foreach($this->getSubmitterArray() as $submitter)
+		{
+			$submitters .= $submitter->render();
+		}
+
+		if($submitters)
+		{
+			$cardFooter = Html::el('div')
+				->class('card-footer')
+				->setHtml($submitters);
+		}
+
+		$groupArray = $this->getGroups();
+
+		foreach($groupArray as $groupTitle => $group)
+		{
+			\assert($group instanceof ControlGroup);
+			$inputs = null;
+
+			foreach($group->getInputArray() as $input)
+			{
+				/**
+				 * Duplicator container render is handled within duplicator
+				 */
+				if($input instanceof DuplicatorContainer)
+				{
+					continue;
+				}
+
+				/**
+				 * Nette form hidden input
+				 */
+				$inputs .= $input instanceof \Nette\Forms\Controls\HiddenField ? $input->getControl() : $input->render();
+			}
+
+			if($inputs === null)
+			{
+				continue;
+			}
+
+			$row = Html::el('div')
+				->class('row')
+				->setHtml($inputs);
+
+			$cardBody = Html::el('div')
+				->class('card-body')
+				->setHtml($row);
+
+			$carHeader = null;
+
+			if($groupTitle || $this->getTitle())
+			{
+				$groupColor = $group->getOption('color') ? ' ' . $group->getOption('color') : null;
+
+				$carHeader = Html::el('div')
+					->class('card-header' . $groupColor)
+					->setHtml($groupTitle ?: $this->getTitle());
+			}
+
+			$content = $carHeader . $cardBody;
+
+			/**
+			 * Last iteration - add footer with submitters
+			 */
+			if($groupTitle === array_key_last($groupArray))
+			{
+				$content .= $cardFooter;
+			}
+
+			$card = Html::el('div')
+				->class('card mt-2')
+				->setHtml($content);
+
+			$wrapCard = Html::el('div')
+				->class($group->getClass() ?? 'col-12')
+				->setHtml($card);
+
+			if($group->getOption('id'))
+			{
+				$card->id($group->getOption('id'));
+			}
+
+			$groups .= $wrapCard;
+		}
+
+		$formRow = Html::el('div')
+			->class('row')
+			->setHtml($groups);
+
+		$errorHtml = null;
+
+		if($this->getFormErrors())
+		{
+			$errorString = null;
+
+			foreach($this->getFormErrors() as $error)
+			{
+				$errorString .= $error . '<br>';
+			}
+
+			$errorHtml = Html::el('div')
+				->class('alert alert-danger')
+				->setAttribute('role', 'alert')
+				->addHtml($errorString);
+		}
+
+		return $errorHtml . $formRow;
+	}
+
+
+	public function addGroup($caption = null, bool $setAsCurrent = true): ControlGroup
+	{
+		$group = new ControlGroup;
+		$group->setOption('label', $caption);
+		$group->setOption('visual', true);
+
+		if($setAsCurrent)
+		{
+			$this->setCurrentGroup($group);
+		}
+
+		return !is_scalar($caption) || isset($this->groups[$caption])
+			? $this->groups[] = $group
+			: $this->groups[$caption] = $group;
+	}
+
+
+	public function getGroup($name): ?ControlGroup
+	{
+		return $this->groups[$name] ?? null;
+	}
+
+
+	public function getGroups(): array
+	{
+		return $this->groups;
 	}
 
 
@@ -46,19 +201,41 @@ class Form extends \Nette\Application\UI\Form
 	{
 		$submitterArray = [];
 
-		foreach($this->getBoxes() as $box)
+		foreach($this->getGroups() as $group)
 		{
-			$submitterArray = array_merge($submitterArray, $box->getSubmitterArray());
+			\assert($group instanceof ControlGroup);
+			$submitterArray = array_merge($submitterArray, $group->getSubmitterArray());
 		}
 
 		return $submitterArray;
 	}
 
 
-	public function setColor(string $color): self
+	public function addError($message, bool $translate = true): void
 	{
-		$this->color = $color;
+		$this->formErrors[] = $message;
+
+		parent::addError($message, $translate);
+	}
+
+
+	public function getFormErrors(): array
+	{
+		return $this->formErrors;
+	}
+
+
+	public function setDefaultInputWrapClass(string $defaultInputWrapClass): self
+	{
+		$this->defaultInputWrapClass = $defaultInputWrapClass;
+
 		return $this;
+	}
+
+
+	public function getDefaultInputWrapClass(): string
+	{
+		return $this->defaultInputWrapClass;
 	}
 
 
@@ -73,6 +250,70 @@ class Form extends \Nette\Application\UI\Form
 	{
 		return $this[$name] = (new Control\TextInput($label, $maxLength))
 			->setHtmlAttribute('size', $cols);
+	}
+
+
+	public function addAutocomplete(string $name, $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
+	{
+		return $this[$name] = (new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? []))
+			->setHtmlAttribute('autocomplete', 'off')
+			->setClass('autocomplete-input');
+	}
+
+
+	public function addDate(string $name, $label = null, string $min = null, string $max = null): Control\TextInput
+	{
+		$dateInput = new Control\DateInput($label);
+
+		if($min)
+		{
+			$dateInput->setHtmlAttribute('min', (new DateTime($min))->format('Y-m-d'));
+		}
+
+		if($max)
+		{
+			$dateInput->setHtmlAttribute('max', (new DateTime($max))->format('Y-m-d'));
+		}
+
+		return $this[$name] = $dateInput->setRequired(false)
+			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
+	}
+
+
+	public function addDateTime(string $name, $label = null, string $min = null, string $max = null): Control\TextInput
+	{
+		$dateInput = new Control\DateTimeInput($label);
+
+		if($min)
+		{
+			$dateInput->setHtmlAttribute('min', (new DateTime($min))->format('Y-m-d H:i'));
+		}
+
+		if($max)
+		{
+			$dateInput->setHtmlAttribute('max', (new DateTime($max))->format('Y-m-d H:i'));
+		}
+
+		return $this[$name] = $dateInput->setRequired(false)
+			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d\TH:i', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy hh:mm');
+	}
+
+
+	public function addTime(string $name, $label = null, string $min = null, string $max = null): Control\TextInput
+	{
+		$dateInput = new Control\TimeInput($label);
+
+		if($min)
+		{
+			$dateInput->setHtmlAttribute('min', (new DateTime($min))->format('Y-m-d'));
+		}
+
+		if($max)
+		{
+			$dateInput->setHtmlAttribute('max', (new DateTime($max))->format('Y-m-d'));
+		}
+
+		return $this[$name] = $dateInput->setRequired(false);
 	}
 
 
@@ -224,65 +465,77 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function addBox(int|string $caption = 0): Box
+	public function setRenderInline(bool $renderInline = true): self
 	{
-		$this->boxes[$caption] ??= new Box;
-
-		$this->boxCurrent = $caption;
-
-		return $this->boxes[$caption];
-	}
-
-
-	public function getBoxes(): array
-	{
-		return $this->boxes;
-	}
-
-
-	public function addComponent(\Nette\ComponentModel\IComponent $component, $name, $insertBefore = null): self
-	{
-		$this->boxes[$this->boxCurrent ?? 0]->add($component);
-
-		parent::addComponent($component, $name, $insertBefore);
+		$this->renderInline = $renderInline;
 
 		return $this;
 	}
 
 
-	public function setAjax(): void
+	public function getRenderInline(): bool
 	{
-		$this->ajax = true;
+		return $this->renderInline;
 	}
 
 
-	public function setTitle(string $title): void
+	public function setAjax(bool $ajax = true): self
+	{
+		$this->ajax = $ajax;
+
+		return $this;
+	}
+
+
+	public function setTitle(string|Html $title): self
 	{
 		$this->title = $title;
+
+		return $this;
 	}
 
 
-	public function setIcon(string $icon): void
+	public function getTitle(): null|Html|string
+	{
+		return $this->title;
+	}
+
+
+	public function setColor(string $color): self
+	{
+		$this->color = $color;
+
+		return $this;
+	}
+
+
+	public function setIcon(string $icon): self
 	{
 		$this->icon = $icon;
+
+		return $this;
 	}
 
 
-	public function setNoValidate(bool $noValidate): void
+	public function setNoValidate(bool $noValidate = true): self
 	{
 		$this->noValidate = $noValidate;
+
+		return $this;
 	}
 
 
-	public function setFloatingLabel(bool $floatingLabel): void
+	public function setRenderFloating(bool $renderFloating = true): self
 	{
-		$this->floatingLabel = $floatingLabel;
+		$this->renderFloating = $renderFloating;
+
+		return $this;
 	}
 
 
-	public function getFloatingLabel(): bool
+	public function getRenderFloating(): bool
 	{
-		return $this->floatingLabel;
+		return $this->renderFloating;
 	}
 
 

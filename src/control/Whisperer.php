@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ModulIS\Form\Control;
 
 use Nette\Utils\Html;
+use Nette\Utils\Strings;
 
 class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiver
 {
@@ -24,41 +25,16 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 	private int $delay = 500;
 
+	private ?string $noResultMessage = null;
 
-	public function render(): Html|string
+	private int|string|null $dividerValue = null;
+
+
+	public function __construct($label = null, ?array $items = null)
 	{
-		if($this->getOption('hide') || $this->autoRenderSkip)
-		{
-			return '';
-		}
+		parent::__construct($label, $items);
 
-		if($this->getOption('template'))
-		{
-			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
-		}
-
-		$label = $this->getCoreLabel();
-
-		$labelDiv = Html::el('div')
-			->class('col-sm-4 control-label align-self-center')
-			->addHtml($label);
-
-		$input = $this->getCoreControl();
-
-		$inputDiv = Html::el('div')
-			->class('col-sm-8')
-			->addHtml($input);
-
-		$outerDiv = Html::el('div')
-			->class('form-group row')
-			->addHtml($labelDiv . $inputDiv);
-
-		if($this->getOption('id'))
-		{
-			$outerDiv->id($this->getOption('id'));
-		}
-
-		return $outerDiv;
+		$this->controlClass = 'form-control-chosen';
 	}
 
 
@@ -88,8 +64,27 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 	public function signalReceived($signal): void
 	{
-		/** @var \Nette\Application\UI\Presenter $presenter */
 		$presenter = $this->lookup('Nette\\Application\\UI\\Presenter');
+		\assert($presenter instanceof \Nette\Application\UI\Presenter);
+
+		if($signal == $this->onFocusOutSignal || $signal === $this->onChangeSignal)
+		{
+			$value = $presenter->getParameter('value');
+			$inputName = $presenter->getParameter('input');
+
+			$currentValues = [];
+
+			parse_str($presenter->getParameter('formdata'), $currentValues);
+
+			if($signal === $this->onFocusOutSignal)
+			{
+				call_user_func_array($this->onFocusOut, [$value, $inputName, array_filter($currentValues)]);
+			}
+			elseif($signal === $this->onChangeSignal)
+			{
+				call_user_func_array($this->onChange, [$value, $inputName, array_filter($currentValues)]);
+			}
+		}
 
 		if($presenter->isAjax() && !$this->isDisabled())
 		{
@@ -111,9 +106,12 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 				$data = $this->getDependentData([$parentsNames]);
 
+				/** @phpstan-ignore-next-line*/
+				$items = $data->getPreparedItems(!is_array($this->disabled) ?: $this->disabled);
+
 				$presenter->payload->dependentselectbox = [
 					'id' => $this->getHtmlId(),
-					'items' => $data->getPreparedItems(!is_array($this->disabled) ?: $this->disabled),
+					'items' => $items,
 					'value' => $data->getValue(),
 					'prompt' => $this->translate($data->getPrompt()),
 					'disabledWhenEmpty' => $this->disabledWhenEmpty
@@ -131,7 +129,19 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 					throw new \Nette\InvalidStateException('On change callback not set.');
 				}
 
-				$data = ['' => ''] + call_user_func($this->onChangeCallback, $presenter->getParameter('param'));
+				$parentArray = [];
+
+				if($presenter->getParameter('parent'))
+				{
+					$parentValueArray = $presenter->getParameter('parent');
+
+					foreach($this->parents as $parent)
+					{
+						$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)];
+					}
+				}
+
+				$data = ['' => ''] + call_user_func_array($this->onChangeCallback, [$presenter->getParameter('param'), $parentArray]);
 
 				if(!is_array($data))
 				{
@@ -157,7 +167,11 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 					throw new \Nette\InvalidStateException('OnSelect callback not set.');
 				}
 
-				call_user_func($this->onSelectCallback, $presenter->getParameter('selected'));
+				$currentValues = [];
+
+				parse_str($presenter->getParameter('formdata'), $currentValues);
+
+				call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), array_filter($currentValues)]);
 
 				/**
 				 * If there is no snippet to redraw -> send empty response
@@ -251,15 +265,16 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 		$form = $this->getForm();
 
-		/** @var \Nette\Application\UI\Presenter $presenter */
-		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-
-		if($this->dependentCallback !== null)
+		if($this->dividerValue !== '' && $this->dividerValue !== null)
 		{
-			$this->tryLoadItems();
+			$control = $this->addDividerToOption($control);
+		}
 
-			$attrs = [];
+		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
+		\assert($presenter instanceof \Nette\Application\UI\Presenter);
 
+		if($this->parents)
+		{
 			$parents = [];
 
 			foreach($this->parents as $parent)
@@ -267,10 +282,16 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 				$parents[$this->getNormalizeName($parent)] = $parent->getHtmlId();
 			}
 
-			$attrs['data-dependentselectbox-parents'] = \Nette\Utils\Json::encode($parents);
-			$attrs['data-dependentselectbox'] = $presenter->link($this->lookupPath('Nette\\Application\\UI\\Presenter') . \Nette\ComponentModel\IComponent::NAME_SEPARATOR . self::SIGNAL_NAME . '!');
+			$control->setAttribute('data-dependentselectbox-parents', \Nette\Utils\Json::encode($parents));
+		}
 
-			$control->addAttributes($attrs);
+		if($this->dependentCallback !== null)
+		{
+			$this->tryLoadItems();
+
+			$link = $this->lookupPath('Nette\\Application\\UI\\Presenter') . \Nette\ComponentModel\IComponent::NAME_SEPARATOR . self::SIGNAL_NAME . '!';
+
+			$control->setAttribute('data-dependentselectbox', $presenter->link($link));
 		}
 
 		if($this->onChangeCallback !== null)
@@ -287,7 +308,17 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 				$this->lookupPath('Nette\Application\UI\Presenter') . self::NAME_SEPARATOR . self::SIGNAL_ONSELECT . '!');
 		}
 
+		if($this->hasSignal())
+		{
+			$this->addSignalsToInput($control);
+		}
+
 		$control->attrs['data-whisperer-delay'] = $this->delay;
+
+		if($this->noResultMessage !== null)
+		{
+			$control->attrs['no-result-message'] = $this->noResultMessage;
+		}
 
 		return $control;
 	}
@@ -313,33 +344,8 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . $errorClass . $chosenClass]);
 
-		$prepend = null;
-		$append = null;
-
-		if(!empty($this->prepend))
-		{
-			$prependText = Html::el('span')
-				->class('input-group-text')
-				->addHtml($this->prepend);
-
-			$prepend = Html::el('div')
-				->class('input-group-prepend')
-				->addHtml($prependText);
-		}
-
-		if(!empty($this->append))
-		{
-			$appendText = Html::el('span')
-				->class('input-group-text')
-				->addHtml($this->append);
-
-			$append = Html::el('div')
-				->class('input-group-append')
-				->addHtml($appendText);
-		}
-
 		return Html::el('div')->class('input-group')
-			->addHtml($prepend . $input . $append . $errorMessage);
+			->addHtml($this->getPrepend() . $input . $this->getAppend() . $errorMessage);
 	}
 
 
@@ -360,6 +366,46 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 	public function setDelay(int $delay): self
 	{
 		$this->delay = $delay;
+
+		return $this;
+	}
+
+
+	public function setNoResultMessage(string $noResultMessage = null): self
+	{
+		$this->noResultMessage = $noResultMessage;
+
+		return $this;
+	}
+
+
+	private function addDividerToOption(Html $control): Html
+	{
+		$optionString = '';
+		$items = explode('</option>', $control->getChildren()[0]);
+
+		foreach($items as $item)
+		{
+			if(Strings::contains($item, 'value="' . $this->dividerValue . '"'))
+			{
+				$optionString .= '<option class="border-bottom"' . Strings::trim($item, '<option') . '</option>';
+			}
+			else
+			{
+				$optionString .= $item . '</option>';
+			}
+		}
+
+		$control->removeChildren();
+		$control->addHtml($optionString);
+
+		return $control;
+	}
+
+
+	public function setDividerValue(int|string|null $dividerValue): self
+	{
+		$this->dividerValue = $dividerValue;
 
 		return $this;
 	}

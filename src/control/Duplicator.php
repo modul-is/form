@@ -30,6 +30,14 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	private array $options = [];
 
+	private ?string $buttonWrapClass = null;
+
+	private ?string $duplicatorBodyClass = null;
+
+	private ?string $duplicatorFooterClass = null;
+
+	private ?string $duplicatorContainerClass = null;
+
 
 	public function __construct($factory, int $createDefault = 0, bool $forceDefault = false)
 	{
@@ -80,9 +88,9 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	public function render(): Html|string
 	{
-		if($this->getOption('template'))
+		if($this->templatePath)
 		{
-			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
+			return (new \Latte\Engine)->renderToString($this->templatePath, $this);
 		}
 
 		if($this->autoRenderSkip === true)
@@ -101,28 +109,50 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			$header = null;
 		}
 
-		$inputs = null;
+		$bodyRow = null;
+		$buttonWrapClass = $this->buttonWrapClass ?? 'mb-3 col-12';
+		$duplicatorBodyClass = $this->duplicatorBodyClass ?? 'card-body';
+		$duplicatorFooterClass = $this->duplicatorFooterClass ?? 'card-footer';
+		$duplicatorContainerClass = $this->duplicatorContainerClass ?? 'card card-accent-primary';
 
-		/** @var \ModulIS\Form\DuplicatorContainer|DuplicatorCreateSubmit $container */
 		foreach($this->getComponents() as $container)
 		{
+			\assert($container instanceof \ModulIS\Form\DuplicatorContainer || $container instanceof DuplicatorCreateSubmit);
 			if($container instanceof DuplicatorCreateSubmit)
 			{
 				continue;
 			}
 
-			/** @var Renderable $duplicatorInput */
+			$inputs = null;
+			$buttons = null;
+
 			foreach($container->getComponents() as $duplicatorInput)
 			{
-				$inputs .= $duplicatorInput->render();
+				\assert($duplicatorInput instanceof Renderable);
+				if($duplicatorInput instanceof Button || $duplicatorInput instanceof DuplicatorRemoveSubmit || $duplicatorInput instanceof Link)
+				{
+					$buttons .= $duplicatorInput->render();
+				}
+				else
+				{
+					$inputs .= $duplicatorInput->render();
+				}
 			}
 
-			$inputs . '<hr />';
+			$inputs .= Html::el('div')
+				->class($buttonWrapClass)
+				->addHtml($buttons);
+
+			$bodyRow .= Html::el('div')
+				->class('row')
+				->addHtml($inputs);
+
+			$inputs .= '<hr />';
 		}
 
 		$body = Html::el('div')
-			->class('card-body')
-			->addHtml($inputs . '<hr />');
+			->class($duplicatorBodyClass)
+			->addHtml($bodyRow);
 
 		$createButton = null;
 
@@ -135,13 +165,17 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 		}
 
 		$footer = Html::el('div')
-			->class('card-footer')
+			->class($duplicatorFooterClass)
 			->addHtml($createButton);
 
-		return Html::el('div')
+		$card = Html::el('div')
 			->id('container' . \Nette\Utils\Strings::capitalize($this->getName()))
-			->class('card card-accent-primary')
+			->class($duplicatorContainerClass)
 			->addHtml($header . $body . $footer);
+
+		return Html::el('div')
+			->class('mb-3 col-12')
+			->addHtml($card);
 	}
 
 
@@ -290,7 +324,6 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			{
 				$this->createOne($key);
 			}
-
 		}
 		elseif($this->forceDefault)
 		{
@@ -371,9 +404,14 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	}
 
 
-	public function addSubmit(string $name, $caption = null): SubmitButton
+	public function addSubmit(string $name, $caption = null, $callback = null): SubmitButton
 	{
-		return $this[$name] = new DuplicatorCreateSubmit($caption);
+		$control = new DuplicatorCreateSubmit($caption);
+
+		$control->setValidationScope([])
+			->addCreateOnClick(true, $callback);
+
+		return $this[$name] = $control;
 	}
 
 
@@ -387,5 +425,37 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	public function getTitle(): ?string
 	{
 		return $this->title;
+	}
+
+
+	public function setDuplicatorButtonWrapClass(string $class): self
+	{
+		$this->buttonWrapClass = $class;
+
+		return $this;
+	}
+
+
+	public function setDuplicatorBodyClass(string $class): self
+	{
+		$this->duplicatorBodyClass = $class;
+
+		return $this;
+	}
+
+
+	public function setDuplicatorFooterClass(string $class): self
+	{
+		$this->duplicatorFooterClass = $class;
+
+		return $this;
+	}
+
+
+	public function setDuplicatorContainerClass(string $class): self
+	{
+		$this->duplicatorContainerClass = $class;
+
+		return $this;
 	}
 }

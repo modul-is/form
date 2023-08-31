@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Control;
 
-use Nette\Utils\Html;
 use ModulIS\Form\Helper;
+use Nette\Utils\Html;
 
 class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Renderable
 {
 	use Helper\Icon;
 	use Helper\Color;
 	use Helper\AutoRenderSkip;
+	use Helper\ControlClass;
 
 	public function getCoreControl(): Html
 	{
@@ -24,7 +25,7 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 			->class('btn ' . $input->getAttribute('class') . ' btn-' . $color)
 			->type('submit')
 			->formnovalidate(true)
-			->addHtml($this->icon ? \Kravcik\Macros\FontAwesomeMacro::renderIcon($this->icon, []) . '&nbsp;' : '')
+			->addHtml($this->icon ? \Kravcik\LatteFontAwesomeIcon\Extension::render($this->icon) . '&nbsp;' : '')
 			->addHtml($this->getCaption());
 
 		$scopeString = 'data-nette-validation-scope';
@@ -37,6 +38,16 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 		if($this->getOption('id'))
 		{
 			$button->id($this->getOption('id'));
+		}
+
+		foreach($input->attrs as $name => $value)
+		{
+			if(in_array($name, ['name', 'required', 'data-nette-rules', 'class', 'formnovalidate'], true))
+			{
+				continue;
+			}
+
+			$button->$name = $value;
 		}
 
 		return $button;

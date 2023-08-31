@@ -6,62 +6,49 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 
-use Nette\Utils\Html;
-
-class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implements Renderable
+class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implements Renderable, FloatingRenderable, Signalable
 {
 	use Helper\InputGroup;
 	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
-	use Helper\InputRender;
+	use Helper\InputCoreControl;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
-	use Helper\ValidationSuccessMessage;
-
+	use Helper\RenderFloating;
+	use Helper\Validation;
+	use Helper\WrapControl;
+	use Helper\RenderInline;
+	use Helper\ControlClass;
+	use Helper\RenderBasic;
+	use Helper\Signals;
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{
 		parent::__construct($label, $parents);
 
 		$this->setDependentCallback($dependentCallback);
+
+		$this->controlClass = 'form-select';
 	}
 
 
-	public function render(): Html|string
+	public function signalReceived($signal): void
 	{
-		if($this->getOption('hide') || $this->autoRenderSkip)
+		$presenter = $this->lookup('Nette\\Application\\UI\\Presenter');
+		\assert($presenter instanceof \Nette\Application\UI\Presenter);
+
+		if($signal === $this->onChangeSignal)
 		{
-			return '';
-		}
+			$value = $presenter->getParameter('value');
+			$inputName = $presenter->getParameter('input');
 
-		if($this->getOption('template'))
+			call_user_func_array($this->onChange, [$value, $inputName]);
+		}
+		else
 		{
-			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
+			parent::signalReceived($signal);
 		}
-
-		$label = $this->getCoreLabel();
-
-		$labelDiv = Html::el('div')
-			->class('col-sm-4 control-label align-self-center')
-			->addHtml($label);
-
-		$input = $this->getCoreControl();
-
-		$inputDiv = Html::el('div')
-			->class('col-sm-8')
-			->addHtml($input);
-
-		$outerDiv = Html::el('div')
-			->class('form-group row')
-			->addHtml($labelDiv . $inputDiv);
-
-		if($this->getOption('id'))
-		{
-			$outerDiv->id($this->getOption('id'));
-		}
-
-		return $outerDiv;
 	}
 }

@@ -7,81 +7,83 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
-class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable
+class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
-	use Helper\InputRender;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
-	use Helper\FloatingLabel;
-	use Helper\ValidationSuccessMessage;
+	use Helper\RenderFloating;
+	use Helper\Validation;
+	use Helper\WrapControl;
+	use Helper\RenderInline;
+	use Helper\ControlClass;
+	use Helper\Signals;
+	use Helper\RenderBasic;
+
+	private array $imageArray = [];
 
 
-	public function render(): Html|string
+	public function __construct($label = null, ?array $items = null)
 	{
-		if($this->getOption('hide') || $this->autoRenderSkip)
+		parent::__construct($label, $items);
+
+		$this->controlClass = 'form-select';
+	}
+
+
+	public function setImageArray(array $imageArray): self
+	{
+		$this->imageArray = $imageArray;
+
+		return $this;
+	}
+
+
+	public function getCoreControl()
+	{
+		$input = $this->getControl();
+
+		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
+		$validationFeedBack = $this->getValidationFeedback();
+		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
+		$imageDiv = null;
+
+		if($this->imageArray)
 		{
-			return '';
+			$currentClass .= ' select2-image';
+
+			$imageDiv = Html::el('div')
+				->id($this->getHtmlId() . '-select2')
+				->style('display:none;');
+
+			foreach($this->getItems() as $key => $value)
+			{
+				if(!array_key_exists($key, $this->imageArray))
+				{
+					continue;
+				}
+				$div = Html::el('div')
+					->addAttributes(['data-key' => $key, 'data-src' => $this->imageArray[$key]]);
+
+				$imageDiv->addHtml($div);
+			}
 		}
 
-		if($this->getOption('template'))
+		$input->addAttributes(['class' => 'form-select' . $currentClass . $validationClass]);
+
+		if($this->hasSignal())
 		{
-			return (new \Latte\Engine)->renderToString($this->getOption('template'), $this);
+			$this->addSignalsToInput($input);
 		}
 
-		$floatingLabel = $this->getFloatingLabel();
+		$hasValidationClass = $this->getValidationClass() && $this->hasErrors() ? ' has-validation' : null;
 
-		/**
-		 * If floating label not set - take it from form
-		 */
-		if($floatingLabel === null)
-		{
-			/** @var \ModulIS\Form\Form $form */
-			$form = $this->getForm();
-			
-			$floatingLabel = $form->getFloatingLabel();
-		}
-
-		if($floatingLabel)
-		{
-			$input = $this->getControl();
-			$input->class($input->getAttribute('class') . ' form-control');
-			$input->placeholder($this->getCaption());
-
-			$label = $this->getLabel();
-
-			$outerDiv = Html::el('div')
-				->class('form-floating mb-3')
-				->addHtml($input . $label);
-		}
-		else
-		{
-			$label = $this->getCoreLabel();
-
-			$labelDiv = Html::el('div')
-				->class('col-sm-4 control-label align-self-center')
-				->addHtml($label);
-
-			$input = $this->getCoreControl();
-
-			$inputDiv = Html::el('div')
-				->class('col-sm-8')
-				->addHtml($input);
-
-			$outerDiv = Html::el('div')
-				->class('form-group row')
-				->addHtml($labelDiv . $inputDiv);
-		}
-
-		if($this->getOption('id'))
-		{
-			$outerDiv->id($this->getOption('id'));
-		}
-
-		return $outerDiv;
+		return Html::el('div')
+			->class('input-group' . $hasValidationClass)
+			->addHtml($this->getPrepend() . $input . $this->getAppend() . $validationFeedBack . $imageDiv);
 	}
 }

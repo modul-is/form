@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
+use Nette\Utils\DateTime;
 use Nette\Utils\Html;
 
 class Container extends \Nette\Forms\Container
@@ -14,9 +15,9 @@ class Container extends \Nette\Forms\Container
 
 	private ?string $id = null;
 
-	private int $inputsPerRow = 1;
-
 	private bool $showCard = false;
+
+	private ?string $wrapClass = null;
 
 
 	public function setId(string $id): self
@@ -35,24 +36,23 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function setInputsPerRow(int $inputsPerRow): self
+	public function setTitle(string $title): self
 	{
-		$allowedInputsPerRow = [1, 2, 3, 4, 6, 12];
-
-		if(!in_array($inputsPerRow, $allowedInputsPerRow, true))
-		{
-			throw new \Exception("Invalid number of 'inputsPerRow', allowed are [" . implode(',', $allowedInputsPerRow) . ']');
-		}
-
-		$this->inputsPerRow = $inputsPerRow;
+		$this->title = $title;
 
 		return $this;
 	}
 
 
-	public function setTitle(string $title): self
+	public function getTitle(): ?string
 	{
-		$this->title = $title;
+		return $this->title;
+	}
+
+
+	public function setWrapClass(string $wrapClass): self
+	{
+		$this->wrapClass = $wrapClass;
 
 		return $this;
 	}
@@ -66,10 +66,25 @@ class Container extends \Nette\Forms\Container
 	}
 
 
+	public function addHidden(string $name, $default = null): Control\Hidden
+	{
+		return $this[$name] = (new Control\Hidden)
+			->setDefaultValue($default);
+	}
+
+
 	public function addText(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label, $maxLength))
 			->setHtmlAttribute('size', $cols);
+	}
+
+
+	public function addAutocomplete(string $name, $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
+	{
+		return $this[$name] = (new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? []))
+			->setHtmlAttribute('autocomplete', 'off')
+			->setClass('autocomplete-input');
 	}
 
 
@@ -103,6 +118,25 @@ class Container extends \Nette\Forms\Container
 			->setNullable()
 			->setRequired(false)
 			->addRule(Form::INTEGER);
+	}
+
+
+	public function addDate(string $name, $label = null, string $min = null, string $max = null): Control\TextInput
+	{
+		$dateInput = new Control\DateInput($label);
+
+		if($min)
+		{
+			$dateInput->setHtmlAttribute('min', (new DateTime($min))->format('Y-m-d'));
+		}
+
+		if($max)
+		{
+			$dateInput->setHtmlAttribute('max', (new DateTime($max))->format('Y-m-d'));
+		}
+
+		return $this[$name] = $dateInput->setRequired(false)
+			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
 	}
 
 
@@ -180,9 +214,9 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addDuplicator($name, $factory, $copyNumber = 1, $maxCopies = null): Control\Duplicator
+	public function addDuplicator($name, $factory, $copyNumber = 1, $forceDefault = false): Control\Duplicator
 	{
-		$duplicator = new Control\Duplicator($factory, $copyNumber, $maxCopies);
+		$duplicator = new Control\Duplicator($factory, $copyNumber, $forceDefault);
 
 		$duplicator->setCurrentGroup($this->getCurrentGroup());
 
@@ -219,6 +253,8 @@ class Container extends \Nette\Forms\Container
 		if($this->showCard)
 		{
 			$cardHeaderDiv = null;
+			$cardBodyDiv = null;
+			$cardFooterDiv = null;
 
 			if($this->title)
 			{
@@ -227,28 +263,27 @@ class Container extends \Nette\Forms\Container
 					->addHtml($this->title);
 			}
 
-			$inputs = null;
+			$inputArray = $this->getInputArray();
 
-			foreach($this->getInputArray() as $control)
+			if($inputArray)
 			{
-				$colDiv = Html::el('div')
-					->class('col-' . strval(12 / $this->inputsPerRow))
-					->addHtml($control->render());
+				$inputs = null;
 
-				$inputs .= $colDiv;
-			}
+				foreach($inputArray as $control)
+				{
+					$inputs .= $control->render();
+				}
 
-			$rowDiv = Html::el('div')
+				$rowDiv = Html::el('div')
 				->class('row')
 				->addHtml($inputs);
 
-			$cardBodyDiv = Html::el('div')
-				->class('card-body')
-				->addHtml($rowDiv);
+				$cardBodyDiv = Html::el('div')
+					->class('card-body')
+					->addHtml($rowDiv);
+			}
 
 			$submitterArray = $this->getSubmitterArray();
-
-			$cardFooterDiv = null;
 
 			if($submitterArray)
 			{
@@ -259,32 +294,40 @@ class Container extends \Nette\Forms\Container
 					$submitterHtml .= $submitter->render();
 				}
 
+				$footerRowDiv = Html::el('div')
+					->class('row')
+					->addHtml($submitterHtml);
+
 				$cardFooterDiv = Html::el('div')
 					->class('card-footer')
-					->addHtml($submitterHtml);
+					->addHtml($footerRowDiv);
 			}
 
-			$outerDiv = Html::el('div')
+			$card = Html::el('div')
 				->class('card')
 				->addHtml($cardHeaderDiv . $cardBodyDiv . $cardFooterDiv);
+
+			$outerDiv = Html::el('div')
+				->class('mb-3 ' . ($this->wrapClass ?? 'col-12'))
+				->addHtml($card);
 		}
 		else
 		{
 			$inputs = null;
 
-			/** @var Control\Renderable $control */
 			foreach($components as $control)
 			{
-				$colDiv = Html::el('div')
-					->class('col-' . strval(12 / $this->inputsPerRow))
-					->addHtml($control->render());
-
-				$inputs .= $colDiv;
+				\assert($control instanceof Control\Renderable);
+				$inputs .= $control->render();
 			}
 
-			$outerDiv = Html::el('div')
+			$rowDiv = Html::el('div')
 				->class('row')
 				->addHtml($inputs);
+
+			$outerDiv = Html::el('div')
+				->class($this->wrapClass ?? 'col-12')
+				->addHtml($rowDiv);
 		}
 
 		if($this->id)
