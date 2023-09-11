@@ -152,7 +152,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addCheckbox(string $name, $caption = null): Control\Checkbox
+	public function addCheckbox(string $name, $caption = ''): Control\Checkbox
 	{
 		return $this[$name] = new Control\Checkbox($caption);
 	}
@@ -184,19 +184,19 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addSubmit(string $name, $caption = null): Control\SubmitButton
+	public function addSubmit(string $name, $caption = ''): Control\SubmitButton
 	{
 		return $this[$name] = new Control\SubmitButton($caption);
 	}
 
 
-	public function addButton(string $name, $caption = null): Control\Button
+	public function addButton(string $name, $caption = ''): Control\Button
 	{
 		return $this[$name] = new Control\Button($caption);
 	}
 
 
-	public function addLink(string $name, string $caption = null): Control\Link
+	public function addLink(string $name, string $caption = ''): Control\Link
 	{
 		return $this[$name] = new Control\Link($caption);
 	}

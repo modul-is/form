@@ -406,7 +406,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	}
 
 
-	public function addSubmit(string $name, $caption = null, $callback = null): SubmitButton
+	public function addSubmit(string $name, $caption = '', $callback = null): SubmitButton
 	{
 		$control = new DuplicatorCreateSubmit($caption);
 
