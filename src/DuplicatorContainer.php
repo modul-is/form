@@ -6,7 +6,7 @@ namespace ModulIS\Form;
 
 class DuplicatorContainer extends Container
 {
-	public function addSubmit(string $name, $caption = null, $callable = null): Control\DuplicatorRemoveSubmit
+	public function addSubmit(string $name, $caption = '', $callable = null): Control\DuplicatorRemoveSubmit
 	{
 		$control = new Control\DuplicatorRemoveSubmit($caption);
 

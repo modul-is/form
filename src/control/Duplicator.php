@@ -109,13 +109,14 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			$header = null;
 		}
 
+		$body = null;
 		$bodyRow = null;
 		$buttonWrapClass = $this->buttonWrapClass ?? 'mb-3 col-12';
 		$duplicatorBodyClass = $this->duplicatorBodyClass ?? 'card-body';
 		$duplicatorFooterClass = $this->duplicatorFooterClass ?? 'card-footer';
 		$duplicatorContainerClass = $this->duplicatorContainerClass ?? 'card card-accent-primary';
 
-		foreach($this->getComponents() as $container)
+		foreach($this->getComponents() as $key => $container)
 		{
 			\assert($container instanceof \ModulIS\Form\DuplicatorContainer || $container instanceof DuplicatorCreateSubmit);
 			if($container instanceof DuplicatorCreateSubmit)
@@ -123,7 +124,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 				continue;
 			}
 
-			$inputs = null;
+			$inputs = $key === 0 ? null : '<hr />';
 			$buttons = null;
 
 			foreach($container->getComponents() as $duplicatorInput)
@@ -146,13 +147,14 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			$bodyRow .= Html::el('div')
 				->class('row')
 				->addHtml($inputs);
-
-			$inputs .= '<hr />';
 		}
 
-		$body = Html::el('div')
-			->class($duplicatorBodyClass)
-			->addHtml($bodyRow);
+		if($bodyRow)
+		{
+			$body = Html::el('div')
+				->class($duplicatorBodyClass)
+				->addHtml($bodyRow);
+		}
 
 		$createButton = null;
 
@@ -207,7 +209,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	public function getButtons(?bool $recursive = false)
 	{
-		return $this->getComponents($recursive, 'Nette\Forms\ISubmitterControl');
+		return $this->getComponents($recursive, Nette\Forms\SubmitterControl::class);
 	}
 
 
@@ -404,7 +406,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	}
 
 
-	public function addSubmit(string $name, $caption = null, $callback = null): SubmitButton
+	public function addSubmit(string $name, $caption = '', $callback = null): SubmitButton
 	{
 		$control = new DuplicatorCreateSubmit($caption);
 

@@ -393,7 +393,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function addSubmit(string $name, $caption = null): Control\SubmitButton
+	public function addSubmit(string $name, $caption = ''): Control\SubmitButton
 	{
 		return $this[$name] = (new Control\SubmitButton($caption))
 			->setIcon('save')
@@ -401,13 +401,13 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function addButton(string $name, $caption = null): Control\Button
+	public function addButton(string $name, $caption = ''): Control\Button
 	{
 		return $this[$name] = new Control\Button($caption);
 	}
 
 
-	public function addLink(string $name, $caption = null): Control\Link
+	public function addLink(string $name, $caption = ''): Control\Link
 	{
 		return $this[$name] = new Control\Link($caption);
 	}
