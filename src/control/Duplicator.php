@@ -140,9 +140,12 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 				}
 			}
 
-			$inputs .= Html::el('div')
-				->class($buttonWrapClass)
-				->addHtml($buttons);
+			if($buttons)
+			{
+				$inputs .= Html::el('div')
+					->class($buttonWrapClass)
+					->addHtml($buttons);
+			}
 
 			$bodyRow .= Html::el('div')
 				->class('row')
@@ -156,6 +159,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 				->addHtml($bodyRow);
 		}
 
+		$footer = null;
 		$createButton = null;
 
 		foreach($this->getButtons() as $button)
@@ -166,9 +170,12 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			}
 		}
 
-		$footer = Html::el('div')
-			->class($duplicatorFooterClass)
-			->addHtml($createButton);
+		if($createButton)
+		{
+			$footer = Html::el('div')
+				->class($duplicatorFooterClass)
+				->addHtml($createButton);
+		}
 
 		$card = Html::el('div')
 			->id('container' . \Nette\Utils\Strings::capitalize($this->getName()))
