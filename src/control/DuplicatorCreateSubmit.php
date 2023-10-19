@@ -41,7 +41,7 @@ class DuplicatorCreateSubmit extends SubmitButton
 	}
 
 
-	public function render(): Html
+	public function getCoreControl(): Html
 	{
 		$duplicator = $this->lookup(Duplicator::class);
 		\assert($duplicator instanceof Duplicator);
