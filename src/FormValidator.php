@@ -46,7 +46,7 @@ final class FormValidator
 		}
 		else
 		{
-			$mod = ($year . $month . $day . $ext) % 11;
+			$mod = intval($yearString . $monthString . $day . $ext) % 11;
 
 			if($mod === 10)
 			{
