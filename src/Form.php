@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
+use Nette\Forms\Controls\DateTimeControl;
 use Nette\Utils\DateTime;
 use Nette\Utils\Html;
 
@@ -261,59 +262,27 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function addDate(string $name, $label = null, string $min = null, string $max = null): Control\TextInput
+	public function addDate(string $name, $label = null): Control\DateTimeInput
 	{
-		$dateInput = new Control\DateInput($label);
-
-		if($min)
-		{
-			$dateInput->setHtmlAttribute('min', (new DateTime($min))->format('Y-m-d'));
-		}
-
-		if($max)
-		{
-			$dateInput->setHtmlAttribute('max', (new DateTime($max))->format('Y-m-d'));
-		}
+		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDate);
 
 		return $this[$name] = $dateInput->setRequired(false)
 			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
 	}
 
 
-	public function addDateTime(string $name, $label = null, string $min = null, string $max = null): Control\TextInput
+	public function addDateTime(string $name, $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
-		$dateInput = new Control\DateTimeInput($label);
-
-		if($min)
-		{
-			$dateInput->setHtmlAttribute('min', (new DateTime($min))->format('Y-m-d H:i'));
-		}
-
-		if($max)
-		{
-			$dateInput->setHtmlAttribute('max', (new DateTime($max))->format('Y-m-d H:i'));
-		}
+		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDateTime, $withSeconds);
 
 		return $this[$name] = $dateInput->setRequired(false)
-			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d\TH:i', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy hh:mm');
+			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
 	}
 
 
-	public function addTime(string $name, $label = null, string $min = null, string $max = null): Control\TextInput
+	public function addTime(string $name, $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
-		$dateInput = new Control\TimeInput($label);
-
-		if($min)
-		{
-			$dateInput->setHtmlAttribute('min', (new DateTime($min))->format('Y-m-d'));
-		}
-
-		if($max)
-		{
-			$dateInput->setHtmlAttribute('max', (new DateTime($max))->format('Y-m-d'));
-		}
-
-		return $this[$name] = $dateInput->setRequired(false);
+		return $this[$name] = new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds);
 	}
 
 
