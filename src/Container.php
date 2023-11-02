@@ -127,6 +127,7 @@ class Container extends \Nette\Forms\Container
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDate);
 
 		return $this[$name] = $dateInput->setRequired(false)
+			->setFormat('Y-m-d')
 			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
 	}
 
@@ -136,13 +137,15 @@ class Container extends \Nette\Forms\Container
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDateTime, $withSeconds);
 
 		return $this[$name] = $dateInput->setRequired(false)
-			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
+			->setFormat('Y-m-d H:i:s')
+			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d H:i:00', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy H:i');
 	}
 
 
 	public function addTime(string $name, $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
-		return $this[$name] = new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds);
+		return $this[$name] = (new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds))
+			->setFormat('H:i:00');
 	}
 
 
