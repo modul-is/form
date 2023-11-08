@@ -267,6 +267,7 @@ function initForm()
 		$(this).chosen({
 			allow_single_deselect: true,
 			no_results_text: noResultMessage,
+			search_contains: true,
 			width: '100%'
 		});
 	});
