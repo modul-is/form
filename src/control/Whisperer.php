@@ -101,7 +101,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 					$parent->setValue($value);
 
-					$parentsNames[$parent->getName()] = $parent->getRawValue();
+					$parentsNames[$parent->getName()] = method_exists($parent, 'getRawValue') ? $parent->getRawValue() : $parent->getValue();
 				}
 
 				$data = $this->getDependentData([$parentsNames]);
