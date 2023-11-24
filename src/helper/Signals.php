@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace ModulIS\Form\Helper;
 
 use Nette\Utils\Html;
+use Nette\Application\UI\Presenter;
+use ModulIS\Form\Dial\SignalDial;
+use Nette\ComponentModel\IComponent;
 
 trait Signals
 {
@@ -12,17 +15,13 @@ trait Signals
 
 	public $onChange = [];
 
-	protected string $onFocusOutSignal = 'onfocusout';
-
-	protected string $onChangeSignal = 'onchange';
-
 
 	public function signalReceived($signal): void
 	{
-		$presenter = $this->lookup('Nette\\Application\\UI\\Presenter');
-		\assert($presenter instanceof \Nette\Application\UI\Presenter);
+		$presenter = $this->lookup(Presenter::class);
+		\assert($presenter instanceof Presenter);
 
-		if($signal !== $this->onFocusOutSignal && $signal !== $this->onChangeSignal)
+		if($signal !== SignalDial::OnFocusOut && $signal !== SignalDial::OnChange)
 		{
 			throw new \Exception("Unknown signal '$signal' for input '" . $this->getName() . "'");
 		}
@@ -34,11 +33,11 @@ trait Signals
 
 		parse_str($presenter->getParameter('formdata'), $currentValues);
 
-		if($signal === $this->onFocusOutSignal)
+		if($signal === SignalDial::OnFocusOut)
 		{
 			call_user_func_array($this->onFocusOut, [$value, $inputName, array_filter($currentValues)]);
 		}
-		elseif($signal === $this->onChangeSignal)
+		elseif($signal === SignalDial::OnChange)
 		{
 			call_user_func_array($this->onChange, [$value, $inputName, array_filter($currentValues)]);
 		}
@@ -47,17 +46,17 @@ trait Signals
 
 	public function addSignalsToInput(Html &$input): void
 	{
-		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-		\assert($presenter instanceof \Nette\Application\UI\Presenter);
+		$presenter = $this->lookup(Presenter::class);
+		\assert($presenter instanceof Presenter);
 
 		if(!empty($this->onFocusOut))
 		{
-			$input->setAttribute('data-on-focusout', $presenter->link($this->lookupPath('Nette\Application\UI\Presenter') . '-' . $this->onFocusOutSignal . '!'));
+			$input->setAttribute('data-on-focusout', $presenter->link($this->lookupPath(Presenter::class) . IComponent::NameSeparator . SignalDial::OnFocusOut . '!'));
 		}
 
 		if(!empty($this->onChange))
 		{
-			$input->setAttribute('data-on-change', $presenter->link($this->lookupPath('Nette\Application\UI\Presenter') . '-' . $this->onChangeSignal . '!'));
+			$input->setAttribute('data-on-change', $presenter->link($this->lookupPath(Presenter::class) . IComponent::NameSeparator . SignalDial::OnChange . '!'));
 		}
 	}
 

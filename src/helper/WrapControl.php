@@ -14,7 +14,7 @@ trait WrapControl
 
 	protected ?string $rowClass = null;
 
-	protected ?\Nette\Utils\Html $wrapControl = null;
+	protected ?Html $wrapControl = null;
 
 
 	public function setLabelWrapClass(string $class): self

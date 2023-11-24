@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
+use Nette\ComponentModel\Component;
+
 class ControlGroup extends \Nette\Forms\ControlGroup
 {
 	protected ?string $class = null;
@@ -15,7 +17,7 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 
 		foreach($this->getControls() as $control)
 		{
-			\assert($control instanceof \Nette\ComponentModel\Component);
+			\assert($control instanceof Component);
 			/**
 			 * Skip submitters
 			 */
@@ -48,7 +50,7 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 		 */
 		foreach($this->getControls() as $control)
 		{
-			\assert($control instanceof \Nette\ComponentModel\Component);
+			\assert($control instanceof Component);
 			/**
 			 * Skip submitters which are part of container
 			 */

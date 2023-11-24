@@ -6,6 +6,8 @@ namespace ModulIS\Form\Control;
 
 use Nette;
 use Nette\Utils\Html;
+use Nette\Application\UI\Presenter;
+use ModulIS\Form\DuplicatorContainer;
 
 class Duplicator extends \ModulIS\Form\Container implements Renderable
 {
@@ -16,7 +18,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	public int $createDefault = 0;
 
-	public static string|null $containerClass = null;
+	public static ?string $containerClass = null;
 
 	protected $factoryCallback;
 
@@ -26,7 +28,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	private array $created = [];
 
-	private array|null $httpPost = null;
+	private ?array $httpPost = null;
 
 	private array $options = [];
 
@@ -41,12 +43,12 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	public function __construct($factory, int $createDefault = 0, bool $forceDefault = false)
 	{
-		$this->monitor('Nette\Application\UI\Presenter');
-		$this->monitor('Nette\Forms\Form');
+		$this->monitor(Presenter::class);
+		$this->monitor(\Nette\Forms\Form::class);
 
 		if(!self::$containerClass)
 		{
-			self::$containerClass = \ModulIS\Form\DuplicatorContainer::class;
+			self::$containerClass = DuplicatorContainer::class;
 		}
 
 		try
@@ -118,7 +120,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 		foreach($this->getComponents() as $key => $container)
 		{
-			\assert($container instanceof \ModulIS\Form\DuplicatorContainer || $container instanceof DuplicatorCreateSubmit);
+			\assert($container instanceof DuplicatorContainer || $container instanceof DuplicatorCreateSubmit);
 			if($container instanceof DuplicatorCreateSubmit)
 			{
 				continue;
@@ -198,7 +200,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	{
 		parent::attached($obj);
 
-		if(!$obj instanceof Nette\Application\UI\Presenter && $this->form instanceof Nette\Application\UI\Form)
+		if(!$obj instanceof Presenter && $this->form instanceof Nette\Application\UI\Form)
 		{
 			return;
 		}
@@ -210,7 +212,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	public function getContainers(?bool $recursive = false)
 	{
-		return $this->getComponents($recursive, '\ModulIS\Form\Container');
+		return $this->getComponents($recursive, \ModulIS\Form\Container::class);
 	}
 
 
@@ -235,14 +237,14 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	private function getFirstControlName()
 	{
-		$controls = iterator_to_array($this->getComponents(false, 'Nette\Forms\IControl'));
+		$controls = iterator_to_array($this->getComponents(false, \Nette\Forms\Control::class));
 		$firstControl = reset($controls);
 		/* @phpstan-ignore-next-line */
 		return $firstControl ? $firstControl->name : null;
 	}
 
 
-	protected function createContainer(): ?\ModulIS\Form\DuplicatorContainer
+	protected function createContainer(): ?DuplicatorContainer
 	{
 		$class = self::$containerClass;
 		return new $class;
@@ -348,7 +350,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	{
 		if($this->httpPost === null)
 		{
-			$path = explode(self::NAME_SEPARATOR, $this->lookupPath('Nette\Forms\Form'));
+			$path = explode(self::NAME_SEPARATOR, $this->lookupPath(\Nette\Forms\Form::class));
 			$this->httpPost = Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, null);
 		}
 
@@ -394,14 +396,14 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	{
 		$components = [];
 
-		foreach($this->getComponents(false, 'Nette\Forms\IControl') as $control)
+		foreach($this->getComponents(false, \Nette\Forms\Control::class) as $control)
 		{
 			$components[] = $control->getName();
 		}
 
 		foreach($this->getContainers() as $container)
 		{
-			foreach($container->getComponents(true, 'Nette\Forms\ISubmitterControl') as $button)
+			foreach($container->getComponents(true, \Nette\Forms\SubmitterControl::class) as $button)
 			{
 				$exceptChildren[] = $button->getName();
 			}

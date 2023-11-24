@@ -6,6 +6,8 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
+use ModulIS\Form\Dial\SignalDial;
+use Nette\Application\UI\Presenter;
 
 class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
@@ -25,9 +27,6 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
 
-	public const SIGNAL_ONCHANGE = 'onChange';
-
-	public const SIGNAL_ONSELECT = 'onSelect';
 
 	public array|\Closure|null $onChangeCallback = null;
 
@@ -87,10 +86,10 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 	public function signalReceived($signal): void
 	{
-		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-		\assert($presenter instanceof \Nette\Application\UI\Presenter);
+		$presenter = $this->lookup(Presenter::class);
+		\assert($presenter instanceof Presenter);
 
-		if($signal == self::SIGNAL_ONCHANGE)
+		if($signal === SignalDial::OnChange)
 		{
 			if(!is_callable($this->onChangeCallback))
 			{
@@ -119,7 +118,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 			$presenter->sendPayload();
 		}
-		elseif($signal == self::SIGNAL_ONSELECT)
+		elseif($signal === SignalDial::OnSelect)
 		{
 			if(!is_callable($this->onSelectCallback))
 			{
@@ -140,7 +139,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 				$presenter->sendResponse(new \Nette\Application\Responses\TextResponse(null));
 			}
 		}
-		elseif($signal == $this->onFocusOutSignal)
+		elseif($signal === SignalDial::OnFocusOut)
 		{
 			$value = $presenter->getParameter('value');
 			$inputName = $presenter->getParameter('input');
@@ -160,8 +159,8 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	{
 		$control = parent::getControl();
 
-		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-		\assert($presenter instanceof \Nette\Application\UI\Presenter);
+		$presenter = $this->lookup(Presenter::class);
+		\assert($presenter instanceof Presenter);
 
 		if($this->parents)
 		{
@@ -177,8 +176,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 		if($this->onChangeCallback !== null)
 		{
-			$control->attrs['data-autocomplete'] = $presenter->link(
-				$this->lookupPath('Nette\Application\UI\Presenter') . self::NAME_SEPARATOR . self::SIGNAL_ONCHANGE . '!');
+			$control->attrs['data-autocomplete'] = $presenter->link($this->lookupPath(Presenter::class) . self::NAME_SEPARATOR . SignalDial::OnChange . '!');
 		}
 		else
 		{
@@ -187,8 +185,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 		if($this->onSelectCallback !== null)
 		{
-			$control->attrs['data-autocomplete-onselect'] = $presenter->link(
-				$this->lookupPath('Nette\Application\UI\Presenter') . self::NAME_SEPARATOR . self::SIGNAL_ONSELECT . '!');
+			$control->attrs['data-autocomplete-onselect'] = $presenter->link($this->lookupPath(Presenter::class) . self::NAME_SEPARATOR . SignalDial::OnSelect . '!');
 		}
 
 		$control->attrs['data-autocomplete-delay'] = $this->delay;

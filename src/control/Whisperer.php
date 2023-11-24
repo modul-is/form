@@ -6,24 +6,18 @@ namespace ModulIS\Form\Control;
 
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
+use Nette\Application\UI\Presenter;
+use ModulIS\Form\Dial\SignalDial;
 
-class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiver
+class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceiver
 {
-	use \NasExt\Forms\DependentTrait;
-
-	public const SIGNAL_NAME = 'load';
-
-	public const SIGNAL_ONCHANGE = 'onChange';
-
-	public const SIGNAL_ONSELECT = 'onSelect';
+	use \ModulIS\Form\Helper\Dependent;
 
 	public array|\Closure|null $onSelectCallback = null;
 
 	public array|\Closure|null $onChangeCallback = null;
 
-	private $parents;
-
-	private int $delay = 500;
+	private array $parents;
 
 	private ?string $noResultMessage = null;
 
@@ -64,8 +58,8 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 	public function signalReceived($signal): void
 	{
-		$presenter = $this->lookup('Nette\\Application\\UI\\Presenter');
-		\assert($presenter instanceof \Nette\Application\UI\Presenter);
+		$presenter = $this->lookup(Presenter::class);
+		\assert($presenter instanceof Presenter);
 
 		if($signal == $this->onFocusOutSignal || $signal === $this->onChangeSignal)
 		{
@@ -91,7 +85,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 			/**
 			 * Dependant signal
 			 */
-			if($signal == self::SIGNAL_NAME)
+			if($signal === SignalDial::Load)
 			{
 				$parentsNames = [];
 
@@ -119,10 +113,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 				$presenter->sendPayload();
 			}
-			/**
-			 * OnChange
-			 */
-			elseif($signal == self::SIGNAL_ONCHANGE)
+			elseif($signal == SignalDial::OnChange)
 			{
 				if(!is_callable($this->onChangeCallback))
 				{
@@ -157,10 +148,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 				$presenter->sendPayload();
 			}
-			/**
-			 * OnSelect
-			 */
-			elseif($signal == self::SIGNAL_ONSELECT)
+			elseif($signal == SignalDial::OnSelect)
 			{
 				if(!is_callable($this->onSelectCallback))
 				{
@@ -185,61 +173,17 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 	}
 
 
-	private function tryLoadItems(): void
-	{
-		if($this->parents === array_filter($this->parents, fn($p) => !$p->hasErrors()))
-		{
-			$parentsValues = [];
-
-			foreach($this->parents as $parent)
-			{
-				$parentsValues[$parent->getName()] = $parent->getValue();
-			}
-
-			$data = $this->getDependentData([$parentsValues]);
-			$items = $data->getItems();
-
-			if($this->getForm()->isSubmitted())
-			{
-				$this->setValue($this->value);
-			}
-			elseif($this->tempValue !== null)
-			{
-				$this->setValue($this->tempValue);
-			}
-			else
-			{
-				$this->setValue($data->getValue());
-			}
-
-			if(count($items) > 0)
-			{
-				$this->loadHttpData();
-
-				$this->setItems($items)
-					->setPrompt($data->getPrompt() === '' ? $this->getPrompt() : $data->getPrompt());
-			}
-			else
-			{
-				if($this->disabledWhenEmpty === true && !$this->isDisabled())
-				{
-					$this->setDisabled();
-				}
-			}
-		}
-	}
+	
 
 
-	public function setValue($value): self
+	public function setValue($value): static
 	{
 		if($this->dependentCallback !== null)
 		{
 			$this->tempValue = $value;
 		}
 
-		parent::setValue($value);
-
-		return $this;
+		return parent::setValue($value);
 	}
 
 
@@ -263,15 +207,13 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 	{
 		$control = parent::getControl();
 
-		$form = $this->getForm();
-
 		if($this->dividerValue !== '' && $this->dividerValue !== null)
 		{
 			$control = $this->addDividerToOption($control);
 		}
 
-		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-		\assert($presenter instanceof \Nette\Application\UI\Presenter);
+		$presenter = $this->lookup(Presenter::class);
+		\assert($presenter instanceof Presenter);
 
 		if($this->parents)
 		{
@@ -289,23 +231,17 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 		{
 			$this->tryLoadItems();
 
-			$link = $this->lookupPath('Nette\\Application\\UI\\Presenter') . \Nette\ComponentModel\IComponent::NAME_SEPARATOR . self::SIGNAL_NAME . '!';
-
-			$control->setAttribute('data-dependentselectbox', $presenter->link($link));
+			$control->setAttribute('data-dependentselectbox', $presenter->link($this->getLinkPath(SignalDial::Load)));
 		}
 
 		if($this->onChangeCallback !== null)
 		{
-			$form = $this->getForm();
-
-			$control->attrs['data-whisperer'] = $presenter->link(
-				$this->lookupPath('Nette\Application\UI\Presenter') . self::NAME_SEPARATOR . self::SIGNAL_ONCHANGE . '!');
+			$control->setAttribute('data-whisperer', $presenter->link($this->getLinkPath(SignalDial::OnChange)));
 		}
 
 		if($this->onSelectCallback !== null)
 		{
-			$control->attrs['data-whisperer-onSelect'] = $presenter->link(
-				$this->lookupPath('Nette\Application\UI\Presenter') . self::NAME_SEPARATOR . self::SIGNAL_ONSELECT . '!');
+			$control->setAttribute('data-whisperer-onSelect', $presenter->link($this->getLinkPath(SignalDial::OnSelect)));
 		}
 
 		if($this->hasSignal())
@@ -313,14 +249,18 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 			$this->addSignalsToInput($control);
 		}
 
-		$control->attrs['data-whisperer-delay'] = $this->delay;
-
 		if($this->noResultMessage !== null)
 		{
 			$control->attrs['no-result-message'] = $this->noResultMessage;
 		}
 
 		return $control;
+	}
+
+
+	private function getLinkPath(string $signal): string
+	{
+		return $this->lookupPath(Presenter::class) . self::NameSeparator . $signal . '!';
 	}
 
 
@@ -360,14 +300,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 				$this->addError(\Nette\Forms\Validator::formatMessage($rule, true), false);
 			}
 		}
-	}
-
-
-	public function setDelay(int $delay): self
-	{
-		$this->delay = $delay;
-
-		return $this;
 	}
 
 

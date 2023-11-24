@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace ModulIS\Extension;
 
-use Latte;
-
-
-final class FormExtension extends Latte\Extension
+final class FormExtension extends \Latte\Extension
 {
 	public function getTags(): array
 	{
