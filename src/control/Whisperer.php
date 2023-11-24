@@ -80,100 +80,96 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 			}
 		}
 
-		if($presenter->isAjax() && !$this->isDisabled())
+		if(!$presenter->isAjax() || $this->isDisabled())
 		{
-			/**
-			 * Dependant signal
-			 */
-			if($signal === SignalDial::Load)
+			return;
+		}
+
+		if($signal === SignalDial::Load)
+		{
+			$parentsNames = [];
+
+			foreach($this->parents as $parent)
 			{
-				$parentsNames = [];
+				$value = $presenter->getParameter($this->getNormalizeName($parent));
+
+				$parent->setValue($value);
+
+				$parentsNames[$parent->getName()] = method_exists($parent, 'getRawValue') ? $parent->getRawValue() : $parent->getValue();
+			}
+
+			$data = $this->getDependentData([$parentsNames]);
+
+			/** @phpstan-ignore-next-line*/
+			$items = $data->getPreparedItems(!is_array($this->disabled) ?: $this->disabled);
+
+			$presenter->payload->dependentselectbox = [
+				'id' => $this->getHtmlId(),
+				'items' => $items,
+				'value' => $data->getValue(),
+				'prompt' => $this->translate($data->getPrompt()),
+				'disabledWhenEmpty' => $this->disabledWhenEmpty
+			];
+
+			$presenter->sendPayload();
+		}
+		elseif($signal == SignalDial::OnChange)
+		{
+			if(!is_callable($this->onChangeCallback))
+			{
+				throw new \Nette\InvalidStateException('On change callback not set.');
+			}
+
+			$parentArray = [];
+
+			if($presenter->getParameter('parent'))
+			{
+				$parentValueArray = $presenter->getParameter('parent');
 
 				foreach($this->parents as $parent)
 				{
-					$value = $presenter->getParameter($this->getNormalizeName($parent));
-
-					$parent->setValue($value);
-
-					$parentsNames[$parent->getName()] = method_exists($parent, 'getRawValue') ? $parent->getRawValue() : $parent->getValue();
+					$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)];
 				}
-
-				$data = $this->getDependentData([$parentsNames]);
-
-				/** @phpstan-ignore-next-line*/
-				$items = $data->getPreparedItems(!is_array($this->disabled) ?: $this->disabled);
-
-				$presenter->payload->dependentselectbox = [
-					'id' => $this->getHtmlId(),
-					'items' => $items,
-					'value' => $data->getValue(),
-					'prompt' => $this->translate($data->getPrompt()),
-					'disabledWhenEmpty' => $this->disabledWhenEmpty
-				];
-
-				$presenter->sendPayload();
 			}
-			elseif($signal == SignalDial::OnChange)
+
+			$data = ['' => ''] + call_user_func_array($this->onChangeCallback, [$presenter->getParameter('param'), $parentArray]);
+
+			if(!is_array($data))
 			{
-				if(!is_callable($this->onChangeCallback))
-				{
-					throw new \Nette\InvalidStateException('On change callback not set.');
-				}
-
-				$parentArray = [];
-
-				if($presenter->getParameter('parent'))
-				{
-					$parentValueArray = $presenter->getParameter('parent');
-
-					foreach($this->parents as $parent)
-					{
-						$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)];
-					}
-				}
-
-				$data = ['' => ''] + call_user_func_array($this->onChangeCallback, [$presenter->getParameter('param'), $parentArray]);
-
-				if(!is_array($data))
-				{
-					throw new \Nette\InvalidStateException('Callback for:"' . $this->getHtmlId() . '" must return array!');
-				}
-
-				$presenter->payload->suggestions = [];
-
-				foreach($data as $key => $value)
-				{
-					$presenter->payload->suggestions[] = ['value' => (string) $value, 'data' => $key];
-				}
-
-				$presenter->sendPayload();
+				throw new \Nette\InvalidStateException('Callback for:"' . $this->getHtmlId() . '" must return array!');
 			}
-			elseif($signal == SignalDial::OnSelect)
+
+			$presenter->payload->suggestions = [];
+
+			foreach($data as $key => $value)
 			{
-				if(!is_callable($this->onSelectCallback))
-				{
-					throw new \Nette\InvalidStateException('OnSelect callback not set.');
-				}
+				$presenter->payload->suggestions[] = ['value' => (string) $value, 'data' => $key];
+			}
 
-				$currentValues = [];
+			$presenter->sendPayload();
+		}
+		elseif($signal == SignalDial::OnSelect)
+		{
+			if(!is_callable($this->onSelectCallback))
+			{
+				throw new \Nette\InvalidStateException('OnSelect callback not set.');
+			}
 
-				parse_str($presenter->getParameter('formdata'), $currentValues);
+			$currentValues = [];
 
-				call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), array_filter($currentValues)]);
+			parse_str($presenter->getParameter('formdata'), $currentValues);
 
-				/**
-				 * If there is no snippet to redraw -> send empty response
-				 */
-				if(!$presenter->isControlInvalid())
-				{
-					$presenter->sendResponse(new \Nette\Application\Responses\TextResponse(null));
-				}
+			call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), array_filter($currentValues)]);
+
+			/**
+			 * If there is no snippet to redraw -> send empty response
+			 */
+			if(!$presenter->isControlInvalid())
+			{
+				$presenter->sendResponse(new \Nette\Application\Responses\TextResponse(null));
 			}
 		}
 	}
-
-
-	
 
 
 	public function setValue($value): static

@@ -91,11 +91,11 @@ class DependentData
 	}
 
 
-	private function getPreparedElement(string $key, $item, ?array $disabledItems = []): \Nette\Utils\Html
+	private function getPreparedElement(string $key, $item, ?array $disabledItems = []): Html
 	{
-		if(!$item instanceof Nette\Utils\Html)
+		if(!$item instanceof Html)
 		{
-			$el = Nette\Utils\Html::el('option')
+			$el = Html::el('option')
 				->value($key)
 				->setText($item);
 		}

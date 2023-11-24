@@ -6,8 +6,9 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
+use ModulIS\Form\Dial\SignalDial;
 
-class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Renderable, FloatingRenderable, Signalable
+class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -30,7 +31,11 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 	{
 		$this->controlClass = 'form-select';
 		$this->parents = $parents;
-		$this->setDependentCallback($dependentCallback);
+
+		if($dependentCallback)
+		{
+			$this->setDependentCallback($dependentCallback);
+		}
 
 		parent::__construct($label);
 	}
@@ -41,7 +46,35 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 		$presenter = $this->lookup(Presenter::class);
 		\assert($presenter instanceof Presenter);
 
-		if($signal === \ModulIS\Form\Dial\SignalDial::OnChange)
+		if($signal === SignalDial::Load)
+		{
+			$parentsNames = [];
+
+			foreach($this->parents as $parent)
+			{
+				$value = $presenter->getParameter($this->getNormalizeName($parent));
+
+				$parent->setValue($value);
+
+				$parentsNames[$parent->getName()] = method_exists($parent, 'getRawValue') ? $parent->getRawValue() : $parent->getValue();
+			}
+
+			$data = $this->getDependentData([$parentsNames]);
+
+			/** @phpstan-ignore-next-line*/
+			$items = $data->getPreparedItems(is_array($this->disabled) ? $this->disabled : []);
+
+			$presenter->payload->dependentselectbox = [
+				'id' => $this->getHtmlId(),
+				'items' => $items,
+				'value' => $data->getValue(),
+				'prompt' => $this->translate($data->getPrompt()),
+				'disabledWhenEmpty' => $this->disabledWhenEmpty
+			];
+
+			$presenter->sendPayload();
+		}
+		elseif($signal === SignalDial::OnChange)
 		{
 			$value = $presenter->getParameter('value');
 			$inputName = $presenter->getParameter('input');

@@ -6,24 +6,25 @@
  */
 namespace ModulIS\Form\Helper;
 
+use Nette\Application\UI\Presenter;
+
 trait Dependent
 {
 	private array $parents;
 
 	private $dependentCallback = null;
 
-	private bool $disabledWhenEmpty;
+	private bool $disabledWhenEmpty = false;
 
-	private $tempValue;
+	private $tempValue = null;
 
 
-	public function getControl() : Nette\Utils\Html
+	public function getControl() : \Nette\Utils\Html
 	{
 		$this->tryLoadItems();
 
 		$attrs = [];
 		$control = parent::getControl();
-		$form = $this->getForm();
 
 		$parents = [];
 
@@ -32,8 +33,10 @@ trait Dependent
 			$parents[$this->getNormalizeName($parent)] = $parent->getHtmlId();
 		}
 
-		$attrs['data-dependentselectbox-parents'] = Nette\Utils\Json::encode($parents);
-		$attrs['data-dependentselectbox'] = $form->getPresenter()->link($this->lookupPath(Presenter::class) . \Nette\ComponentModel\Component::NameSeparator . \ModulIS\Form\Dial\SignalDial::Load . '!');
+		$presenter = $this->lookup(Presenter::class);
+
+		$attrs['data-dependentselectbox-parents'] = \Nette\Utils\Json::encode($parents);
+		$attrs['data-dependentselectbox'] = $presenter->link($this->lookupPath(Presenter::class) . \Nette\ComponentModel\Component::NameSeparator . \ModulIS\Form\Dial\SignalDial::Load . '!');
 
 		$control->addAttributes($attrs);
 		return $control;
@@ -159,7 +162,7 @@ trait Dependent
 	}
 
 
-	private function getNormalizeName(Nette\Forms\Controls\BaseControl $parent): string
+	private function getNormalizeName(\Nette\Forms\Controls\BaseControl $parent): string
 	{
 		return str_replace('-', '_', $parent->getHtmlId());
 	}
