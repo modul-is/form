@@ -23,8 +23,8 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	use Helper\Validation;
 	use Helper\Signals
 	{
-        setOnChangeCallback as public signalsSetOnChangeCallback;
-    }
+		setOnChangeCallback as public signalsSetOnChangeCallback;
+	}
 	use Helper\WrapControl;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
