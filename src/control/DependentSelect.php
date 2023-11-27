@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Control;
 
+use ModulIS\Form\Dial\SignalDial;
 use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
-use ModulIS\Form\Dial\SignalDial;
 
 class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
@@ -73,13 +73,6 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 			];
 
 			$presenter->sendPayload();
-		}
-		elseif($signal === SignalDial::OnChange)
-		{
-			$value = $presenter->getParameter('value');
-			$inputName = $presenter->getParameter('input');
-
-			call_user_func_array($this->onChange, [$value, $inputName]);
 		}
 		else
 		{

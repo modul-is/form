@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Control;
 
-use Nette;
-use Nette\Utils\Html;
-use Nette\Application\UI\Presenter;
 use ModulIS\Form\DuplicatorContainer;
+use Nette;
+use Nette\Application\UI\Presenter;
+use Nette\Utils\Html;
 
 class Duplicator extends \ModulIS\Form\Container implements Renderable
 {

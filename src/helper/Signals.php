@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Helper;
 
-use Nette\Utils\Html;
-use Nette\Application\UI\Presenter;
 use ModulIS\Form\Dial\SignalDial;
+use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
+use Nette\Utils\Html;
 
 trait Signals
 {
-	protected $onFocusOutCallback = null;
+	protected $onFocusOutCallback;
 
-	protected $onChangeCallback = null;
+	protected $onChangeCallback;
 
 
 	public function signalReceived($signal): void

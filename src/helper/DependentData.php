@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Based on NasExt extensions of Nette Framework
  * Copyright (c) 2013 Dusan Hudak (http://dusan-hudak.com)
  */
+
 namespace ModulIS\Form\Helper;
 
 use Nette\Utils\Html;
@@ -77,7 +80,7 @@ class DependentData
 
 				$items[$key] = [
 					'key' => $key,
-					'value' => $groupItems,
+					'value' => $groupItems
 				];
 			}
 			else
@@ -117,8 +120,8 @@ class DependentData
 	private function addElementToItemsList(array &$items, Html $el)
 	{
 		$items[$el->getAttribute('value')] = [
-			'key' => $el->getValue(),
-			'value' => $el->getText(),
+			'key' => $el->getAttribute('value'),
+			'value' => $el->getText()
 		];
 
 		end($items);

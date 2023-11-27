@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Based on NasExt extensions of Nette Framework
  * Copyright (c) 2013 Dusan Hudak (http://dusan-hudak.com)
  */
+
 namespace ModulIS\Form\Helper;
 
 use Nette\Application\UI\Presenter;
@@ -12,14 +15,14 @@ trait Dependent
 {
 	protected array $parents = [];
 
-	private $dependentCallback = null;
+	private $dependentCallback;
 
 	private bool $disabledWhenEmpty = false;
 
-	private $tempValue = null;
+	private $tempValue;
 
 
-	public function getControl() : \Nette\Utils\Html
+	public function getControl(): \Nette\Utils\Html
 	{
 		$this->tryLoadItems();
 
@@ -34,6 +37,7 @@ trait Dependent
 		}
 
 		$presenter = $this->lookup(Presenter::class);
+		\assert($presenter instanceof Presenter);
 
 		$attrs['data-dependentselectbox-parents'] = \Nette\Utils\Json::encode($parents);
 		$attrs['data-dependentselectbox'] = $presenter->link($this->lookupPath(Presenter::class) . \Nette\ComponentModel\Component::NameSeparator . \ModulIS\Form\Dial\SignalDial::Load . '!');
@@ -77,8 +81,14 @@ trait Dependent
 		{
 			$this->loadHttpData();
 
-			$this->setItems($items)
-				->setPrompt($data->getPrompt() ?: $this->getPrompt());
+			$this->setItems($items);
+
+			if(method_exists($this, 'setPrompt'))
+			{
+				$inputPrompt = method_exists($this, 'getPrompt') ? $this->getPrompt() : null;
+
+				$this->setPrompt($data->getPrompt() ?: $inputPrompt);
+			}
 		}
 		else
 		{

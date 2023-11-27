@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Control;
 
+use ModulIS\Form\Dial\SignalDial;
+use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
-use Nette\Application\UI\Presenter;
-use ModulIS\Form\Dial\SignalDial;
 
 class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceiver
 {
 	use \ModulIS\Form\Helper\Dependent;
 
-	private $onSelectCallback = null;
+	private $onSelectCallback;
 
-	private $onSearchChangeCallback = null;
+	private $onSearchChangeCallback;
 
 	private ?string $noResultMessage = null;
 
