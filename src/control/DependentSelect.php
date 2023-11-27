@@ -26,7 +26,7 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 	use Helper\RenderBasic;
 	use Helper\Signals
 	{
-		signalRecieved as public signalsSignalRecieved;
+		signalReceived as public signalsSignalReceived;
 	}
 	use Helper\Dependent;
 
@@ -79,7 +79,7 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 		}
 		else
 		{
-			$this->signalsSignalRecieved($signal);
+			$this->signalsSignalReceived($signal);
 		}
 	}
 }
