@@ -10,7 +10,7 @@ use Nette\Application\UI\Presenter;
 
 trait Dependent
 {
-	protected array $parents;
+	protected array $parents = [];
 
 	private $dependentCallback = null;
 
