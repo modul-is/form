@@ -21,7 +21,10 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	use Helper\Template;
 	use Helper\RenderFloating;
 	use Helper\Validation;
-	use Helper\Signals;
+	use Helper\Signals
+	{
+        setOnChangeCallback as public signalsSetOnChangeCallback;
+    }
 	use Helper\WrapControl;
 	use Helper\RenderInline;
 	use Helper\ControlClass;
@@ -35,7 +38,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 	private ?string $prompt = null;
 
-	private ?array $items;
+	private ?array $items = [];
 
 
 	public function __construct($label = null, ?int $maxLength = null, ?array $items = null)
@@ -77,7 +80,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 			throw new \Nette\InvalidStateException('Cannot use onChangeCallback and onSelectCallback together for input "' . $this->getName() . '"');
 		}
 
-		return parent::setOnChangeCallback($callback);
+		return $this->signalsSetOnChangeCallback($callback);
 	}
 
 

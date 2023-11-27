@@ -24,7 +24,10 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
-	use Helper\Signals;
+	use Helper\Signals
+	{
+		signalRecieved as public signalsSignalRecieved;
+	}
 	use Helper\Dependent;
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
@@ -76,7 +79,7 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 		}
 		else
 		{
-			parent::signalReceived($signal);
+			$this->signalsSignalRecieved($signal);
 		}
 	}
 }
