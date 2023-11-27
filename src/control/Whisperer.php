@@ -17,8 +17,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 	private $onSearchChangeCallback = null;
 
-	private array $parents;
-
 	private ?string $noResultMessage = null;
 
 	private int|string|null $dividerValue = null;
