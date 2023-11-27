@@ -11,9 +11,9 @@ use Nette\ComponentModel\IComponent;
 
 trait Signals
 {
-	private $onFocusOutCallback = null;
+	protected $onFocusOutCallback = null;
 
-	private $onChangeCallback = null;
+	protected $onChangeCallback = null;
 
 
 	public function signalReceived($signal): void

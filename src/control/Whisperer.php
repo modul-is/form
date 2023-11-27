@@ -34,9 +34,25 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 	public function setOnSelectCallback(callable $callback): self
 	{
+		if($this->onChangeCallback !== null)
+		{
+			throw new \Nette\InvalidStateException('Cannot use onSelectCallback and onChangeCallback together for input "' . $this->getName() . '"');
+		}
+
 		$this->onSelectCallback = $callback;
 
 		return $this;
+	}
+
+
+	public function setOnChangeCallback(callable $callback): static
+	{
+		if($this->onSelectCallback !== null)
+		{
+			throw new \Nette\InvalidStateException('Cannot use onChangeCallback and onSelectCallback together for input "' . $this->getName() . '"');
+		}
+
+		return parent::setOnChangeCallback($callback);
 	}
 
 
