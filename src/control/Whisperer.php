@@ -13,9 +13,9 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 {
 	use \ModulIS\Form\Helper\Dependent;
 
-	public array|\Closure|null $onSelectCallback = null;
+	private $onSelectCallback = null;
 
-	public array|\Closure|null $onChangeCallback = null;
+	private $onSearchChangeCallback = null;
 
 	private array $parents;
 
@@ -32,7 +32,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	}
 
 
-	public function setOnSelectCallback(array|\Closure $callback): self
+	public function setOnSelectCallback(callable $callback): self
 	{
 		$this->onSelectCallback = $callback;
 
@@ -40,9 +40,9 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	}
 
 
-	public function setOnChangeCallback(array|\Closure $callback): self
+	public function setOnSearchChangeCallback(callable $callback): self
 	{
-		$this->onChangeCallback = $callback;
+		$this->onSearchChangeCallback = $callback;
 
 		return $this;
 	}
@@ -60,25 +60,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	{
 		$presenter = $this->lookup(Presenter::class);
 		\assert($presenter instanceof Presenter);
-
-		if($signal == $this->onFocusOutSignal || $signal === $this->onChangeSignal)
-		{
-			$value = $presenter->getParameter('value');
-			$inputName = $presenter->getParameter('input');
-
-			$currentValues = [];
-
-			parse_str($presenter->getParameter('formdata'), $currentValues);
-
-			if($signal === $this->onFocusOutSignal)
-			{
-				call_user_func_array($this->onFocusOut, [$value, $inputName, array_filter($currentValues)]);
-			}
-			elseif($signal === $this->onChangeSignal)
-			{
-				call_user_func_array($this->onChange, [$value, $inputName, array_filter($currentValues)]);
-			}
-		}
 
 		if(!$presenter->isAjax() || $this->isDisabled())
 		{
@@ -113,11 +94,11 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 			$presenter->sendPayload();
 		}
-		elseif($signal == SignalDial::OnChange)
+		elseif($signal == SignalDial::OnSearchChange)
 		{
-			if(!is_callable($this->onChangeCallback))
+			if(!is_callable($this->onSearchChangeCallback))
 			{
-				throw new \Nette\InvalidStateException('On change callback not set.');
+				throw new \Nette\InvalidStateException('OnSearchChange callback not set for input "' . $this->getName() . '"');
 			}
 
 			$parentArray = [];
@@ -132,11 +113,11 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 				}
 			}
 
-			$data = ['' => ''] + call_user_func_array($this->onChangeCallback, [$presenter->getParameter('param'), $parentArray]);
+			$data = ['' => ''] + call_user_func_array($this->onSearchChangeCallback, [$presenter->getParameter('param'), $parentArray]);
 
 			if(!is_array($data))
 			{
-				throw new \Nette\InvalidStateException('Callback for:"' . $this->getHtmlId() . '" must return array!');
+				throw new \Nette\InvalidStateException('Callback for input "' . $this->getName() . '" must return array!');
 			}
 
 			$presenter->payload->suggestions = [];
@@ -152,7 +133,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 		{
 			if(!is_callable($this->onSelectCallback))
 			{
-				throw new \Nette\InvalidStateException('OnSelect callback not set.');
+				throw new \Nette\InvalidStateException('OnSelect callback not set for input "' . $this->getName() . '"');
 			}
 
 			$currentValues = [];
@@ -168,6 +149,10 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 			{
 				$presenter->sendResponse(new \Nette\Application\Responses\TextResponse(null));
 			}
+		}
+		else
+		{
+			parent::signalReceived($signal);
 		}
 	}
 
@@ -230,9 +215,9 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 			$control->setAttribute('data-dependentselectbox', $presenter->link($this->getLinkPath(SignalDial::Load)));
 		}
 
-		if($this->onChangeCallback !== null)
+		if($this->onSearchChangeCallback !== null)
 		{
-			$control->setAttribute('data-whisperer', $presenter->link($this->getLinkPath(SignalDial::OnChange)));
+			$control->setAttribute('data-whisperer', $presenter->link($this->getLinkPath(SignalDial::OnSearchChange)));
 		}
 
 		if($this->onSelectCallback !== null)

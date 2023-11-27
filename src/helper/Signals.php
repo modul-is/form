@@ -11,9 +11,9 @@ use Nette\ComponentModel\IComponent;
 
 trait Signals
 {
-	public $onFocusOut = [];
+	private $onFocusOutCallback = null;
 
-	public $onChange = [];
+	private $onChangeCallback = null;
 
 
 	public function signalReceived($signal): void
@@ -35,11 +35,11 @@ trait Signals
 
 		if($signal === SignalDial::OnFocusOut)
 		{
-			call_user_func_array($this->onFocusOut, [$value, $inputName, array_filter($currentValues)]);
+			call_user_func_array($this->onFocusOutCallback, [$value, $inputName, array_filter($currentValues)]);
 		}
 		elseif($signal === SignalDial::OnChange)
 		{
-			call_user_func_array($this->onChange, [$value, $inputName, array_filter($currentValues)]);
+			call_user_func_array($this->onChangeCallback, [$value, $inputName, array_filter($currentValues)]);
 		}
 	}
 
@@ -49,12 +49,12 @@ trait Signals
 		$presenter = $this->lookup(Presenter::class);
 		\assert($presenter instanceof Presenter);
 
-		if(!empty($this->onFocusOut))
+		if(!empty($this->onFocusOutCallback))
 		{
 			$input->setAttribute('data-on-focusout', $presenter->link($this->lookupPath(Presenter::class) . IComponent::NameSeparator . SignalDial::OnFocusOut . '!'));
 		}
 
-		if(!empty($this->onChange))
+		if(!empty($this->onChangeCallback))
 		{
 			$input->setAttribute('data-on-change', $presenter->link($this->lookupPath(Presenter::class) . IComponent::NameSeparator . SignalDial::OnChange . '!'));
 		}
@@ -63,6 +63,22 @@ trait Signals
 
 	public function hasSignal(): bool
 	{
-		return is_callable($this->onChange) || is_callable($this->onFocusOut);
+		return is_callable($this->onChangeCallback) || is_callable($this->onFocusOutCallback);
+	}
+
+
+	public function setOnFocusOutCallback(callable $callback): static
+	{
+		$this->onFocusOutCallback = $callback;
+
+		return $this;
+	}
+
+
+	public function setOnChangeCallback(callable $callback): static
+	{
+		$this->onChangeCallback = $callback;
+
+		return $this;
 	}
 }

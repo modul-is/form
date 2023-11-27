@@ -56,7 +56,7 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 
 				$parent->setValue($value);
 
-				$parentsNames[$parent->getName()] = method_exists($parent, 'getRawValue') ? $parent->getRawValue() : $parent->getValue();
+				$parentsNames[$parent->getName()] = $parent->getValue();
 			}
 
 			$data = $this->getDependentData([$parentsNames]);

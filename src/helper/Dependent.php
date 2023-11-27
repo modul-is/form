@@ -94,7 +94,7 @@ trait Dependent
 	{
 		$this->tryLoadItems();
 
-		if (!in_array($this->tempValue, [null, '', []], true))
+		if(!in_array($this->tempValue, [null, '', []], true))
 		{
 			return $this->tempValue;
 		}
@@ -144,13 +144,7 @@ trait Dependent
 	public function setDependentCallback(callable $callback): static
 	{
 		$this->dependentCallback = $callback;
-		return $this;
-	}
 
-
-	public function setDependentCallbackParams(array $params): static
-	{
-		$this->dependentCallbackParams = $params;
 		return $this;
 	}
 
@@ -158,6 +152,7 @@ trait Dependent
 	public function setDisabledWhenEmpty(bool $value = true): static
 	{
 		$this->disabledWhenEmpty = $value;
+
 		return $this;
 	}
 

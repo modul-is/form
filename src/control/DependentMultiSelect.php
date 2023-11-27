@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
+use Nette\Application\UI\Presenter;
 
 class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implements Renderable, \Nette\Application\UI\SignalReceiver
 {
@@ -20,6 +21,8 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	use Helper\WrapControl;
 	use Helper\RenderInline;
 	use Helper\RenderBasic;
+	use Helper\Dependent;
+
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{
@@ -31,6 +34,12 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 		}
 
 		parent::__construct($label);
+	}
+
+
+	public function getValue(): array
+	{
+		return $this->getValue();
 	}
 
 
@@ -49,7 +58,7 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 
 				$parent->setValue($value);
 
-				$parentsNames[$parent->getName()] = method_exists($parent, 'getRawValue') ? $parent->getRawValue() : $parent->getValue();
+				$parentsNames[$parent->getName()] = $parent->getValue();
 			}
 
 			$data = $this->getDependentData([$parentsNames]);
