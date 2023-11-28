@@ -74,12 +74,7 @@ final class FormValidator
 			$month -= 20;
 		}
 
-		if(!\Nette\Utils\DateTime::createFromFormat('Ymd', $year . $month . $day))
-		{
-			return false;
-		}
-
-		return true;
+		return \Nette\Utils\DateTime::createFromFormat('Ymd', $year . $month . $day) !== false;
 	}
 
 
