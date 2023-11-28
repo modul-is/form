@@ -81,4 +81,16 @@ trait Signals
 
 		return $this;
 	}
+
+
+	public function getOnChangeCallback()
+	{
+		return $this->onChangeCallback;
+	}
+
+
+	public function getOnFocusOutCallback()
+	{
+		return $this->onFocusOutCallback;
+	}
 }
