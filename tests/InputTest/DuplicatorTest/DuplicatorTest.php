@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace ModulIS\Form\Tests;
+
 require_once __DIR__ . '/../../bootstrap.php';
 
 use Tester\Assert;
@@ -12,7 +14,7 @@ class DuplicatorTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$duplicator = $form->addDuplicator('duplicator', function(ModulIS\Form\DuplicatorContainer $container)
+		$duplicator = $form->addDuplicator('duplicator', function(\ModulIS\Form\DuplicatorContainer $container)
 		{
 			$container->addText('text', 'text');
 
@@ -37,7 +39,7 @@ class DuplicatorTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$duplicator = $form->addDuplicator('duplicator', function(ModulIS\Form\DuplicatorContainer $container)
+		$duplicator = $form->addDuplicator('duplicator', function(\ModulIS\Form\DuplicatorContainer $container)
 		{
 			$container->addText('text', 'text');
 
@@ -62,7 +64,7 @@ class DuplicatorTest extends TestCase
 	{
 		$form = $this->getForm();
 
-		$duplicator = $form->addDuplicator('duplicator', function(ModulIS\Form\DuplicatorContainer $container)
+		$duplicator = $form->addDuplicator('duplicator', function(\ModulIS\Form\DuplicatorContainer $container)
 		{
 			$container->addText('text', 'text');
 

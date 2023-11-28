@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-abstract class TestCase extends Tester\TestCase
+namespace ModulIS\Form\Tests;
+
+abstract class TestCase extends \Tester\TestCase
 {
 	public function getForm()
 	{
-		$form = new ModulIS\Form\Form;
+		$form = new \ModulIS\Form\Form;
 
 		$submit = $form->addSubmit('save');
 
