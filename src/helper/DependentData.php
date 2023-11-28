@@ -94,7 +94,7 @@ class DependentData
 	}
 
 
-	private function getPreparedElement(string $key, $item, ?array $disabledItems = []): Html
+	private function getPreparedElement(string|int $key, $item, ?array $disabledItems = []): Html
 	{
 		if(!$item instanceof Html)
 		{
