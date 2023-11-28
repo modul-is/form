@@ -4,26 +4,18 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Control;
 
+use ModulIS\Form\Dial\SignalDial;
+use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 
-class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiver
+class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceiver
 {
-	use \NasExt\Forms\DependentTrait;
+	use \ModulIS\Form\Helper\Dependent;
 
-	public const SIGNAL_NAME = 'load';
+	private $onSelectCallback;
 
-	public const SIGNAL_ONCHANGE = 'onChange';
-
-	public const SIGNAL_ONSELECT = 'onSelect';
-
-	public array|\Closure|null $onSelectCallback = null;
-
-	public array|\Closure|null $onChangeCallback = null;
-
-	private $parents;
-
-	private int $delay = 500;
+	private $onSearchChangeCallback;
 
 	private ?string $noResultMessage = null;
 
@@ -38,17 +30,33 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 	}
 
 
-	public function setOnSelectCallback(array|\Closure $callback): self
+	public function setOnSelectCallback(callable $callback): self
 	{
+		if($this->onChangeCallback !== null)
+		{
+			throw new \Nette\InvalidStateException('Cannot use onSelectCallback and onChangeCallback together for input "' . $this->getName() . '"');
+		}
+
 		$this->onSelectCallback = $callback;
 
 		return $this;
 	}
 
 
-	public function setOnChangeCallback(array|\Closure $callback): self
+	public function setOnChangeCallback(callable $callback): static
 	{
-		$this->onChangeCallback = $callback;
+		if($this->onSelectCallback !== null)
+		{
+			throw new \Nette\InvalidStateException('Cannot use onChangeCallback and onSelectCallback together for input "' . $this->getName() . '"');
+		}
+
+		return parent::setOnChangeCallback($callback);
+	}
+
+
+	public function setOnSearchChangeCallback(callable $callback): self
+	{
+		$this->onSearchChangeCallback = $callback;
 
 		return $this;
 	}
@@ -64,182 +72,113 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 
 	public function signalReceived($signal): void
 	{
-		$presenter = $this->lookup('Nette\\Application\\UI\\Presenter');
-		\assert($presenter instanceof \Nette\Application\UI\Presenter);
+		$presenter = $this->lookup(Presenter::class);
+		\assert($presenter instanceof Presenter);
 
-		if($signal == $this->onFocusOutSignal || $signal === $this->onChangeSignal)
+		if(!$presenter->isAjax() || $this->isDisabled())
 		{
-			$value = $presenter->getParameter('value');
-			$inputName = $presenter->getParameter('input');
+			return;
+		}
+
+		if($signal === SignalDial::Load)
+		{
+			$parentsNames = [];
+
+			foreach($this->parents as $parent)
+			{
+				$value = $presenter->getParameter($this->getNormalizeName($parent));
+
+				$parent->setValue($value);
+
+				$parentsNames[$parent->getName()] = method_exists($parent, 'getRawValue') ? $parent->getRawValue() : $parent->getValue();
+			}
+
+			$data = $this->getDependentData([$parentsNames]);
+
+			/** @phpstan-ignore-next-line*/
+			$items = $data->getPreparedItems(is_array($this->disabled) ? $this->disabled : []);
+
+			$presenter->payload->dependentselectbox = [
+				'id' => $this->getHtmlId(),
+				'items' => $items,
+				'value' => $data->getValue(),
+				'prompt' => $this->translate($data->getPrompt()),
+				'disabledWhenEmpty' => $this->disabledWhenEmpty
+			];
+
+			$presenter->sendPayload();
+		}
+		elseif($signal == SignalDial::OnSearchChange)
+		{
+			if(!is_callable($this->onSearchChangeCallback))
+			{
+				throw new \Nette\InvalidStateException('OnSearchChange callback not set for input "' . $this->getName() . '"');
+			}
+
+			$parentArray = [];
+
+			if($presenter->getParameter('parent'))
+			{
+				$parentValueArray = $presenter->getParameter('parent');
+
+				foreach($this->parents as $parent)
+				{
+					$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)];
+				}
+			}
+
+			$data = ['' => ''] + call_user_func_array($this->onSearchChangeCallback, [$presenter->getParameter('param'), $parentArray]);
+
+			if(!is_array($data))
+			{
+				throw new \Nette\InvalidStateException('Callback for input "' . $this->getName() . '" must return array!');
+			}
+
+			$presenter->payload->suggestions = [];
+
+			foreach($data as $key => $value)
+			{
+				$presenter->payload->suggestions[] = ['value' => (string) $value, 'data' => $key];
+			}
+
+			$presenter->sendPayload();
+		}
+		elseif($signal == SignalDial::OnSelect)
+		{
+			if(!is_callable($this->onSelectCallback))
+			{
+				throw new \Nette\InvalidStateException('OnSelect callback not set for input "' . $this->getName() . '"');
+			}
 
 			$currentValues = [];
 
 			parse_str($presenter->getParameter('formdata'), $currentValues);
 
-			if($signal === $this->onFocusOutSignal)
+			call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), array_filter($currentValues)]);
+
+			/**
+			 * If there is no snippet to redraw -> send empty response
+			 */
+			if(!$presenter->isControlInvalid())
 			{
-				call_user_func_array($this->onFocusOut, [$value, $inputName, array_filter($currentValues)]);
-			}
-			elseif($signal === $this->onChangeSignal)
-			{
-				call_user_func_array($this->onChange, [$value, $inputName, array_filter($currentValues)]);
+				$presenter->sendResponse(new \Nette\Application\Responses\TextResponse(null));
 			}
 		}
-
-		if($presenter->isAjax() && !$this->isDisabled())
+		else
 		{
-			/**
-			 * Dependant signal
-			 */
-			if($signal == self::SIGNAL_NAME)
-			{
-				$parentsNames = [];
-
-				foreach($this->parents as $parent)
-				{
-					$value = $presenter->getParameter($this->getNormalizeName($parent));
-
-					$parent->setValue($value);
-
-					$parentsNames[$parent->getName()] = method_exists($parent, 'getRawValue') ? $parent->getRawValue() : $parent->getValue();
-				}
-
-				$data = $this->getDependentData([$parentsNames]);
-
-				/** @phpstan-ignore-next-line*/
-				$items = $data->getPreparedItems(!is_array($this->disabled) ?: $this->disabled);
-
-				$presenter->payload->dependentselectbox = [
-					'id' => $this->getHtmlId(),
-					'items' => $items,
-					'value' => $data->getValue(),
-					'prompt' => $this->translate($data->getPrompt()),
-					'disabledWhenEmpty' => $this->disabledWhenEmpty
-				];
-
-				$presenter->sendPayload();
-			}
-			/**
-			 * OnChange
-			 */
-			elseif($signal == self::SIGNAL_ONCHANGE)
-			{
-				if(!is_callable($this->onChangeCallback))
-				{
-					throw new \Nette\InvalidStateException('On change callback not set.');
-				}
-
-				$parentArray = [];
-
-				if($presenter->getParameter('parent'))
-				{
-					$parentValueArray = $presenter->getParameter('parent');
-
-					foreach($this->parents as $parent)
-					{
-						$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)];
-					}
-				}
-
-				$data = ['' => ''] + call_user_func_array($this->onChangeCallback, [$presenter->getParameter('param'), $parentArray]);
-
-				if(!is_array($data))
-				{
-					throw new \Nette\InvalidStateException('Callback for:"' . $this->getHtmlId() . '" must return array!');
-				}
-
-				$presenter->payload->suggestions = [];
-
-				foreach($data as $key => $value)
-				{
-					$presenter->payload->suggestions[] = ['value' => (string) $value, 'data' => $key];
-				}
-
-				$presenter->sendPayload();
-			}
-			/**
-			 * OnSelect
-			 */
-			elseif($signal == self::SIGNAL_ONSELECT)
-			{
-				if(!is_callable($this->onSelectCallback))
-				{
-					throw new \Nette\InvalidStateException('OnSelect callback not set.');
-				}
-
-				$currentValues = [];
-
-				parse_str($presenter->getParameter('formdata'), $currentValues);
-
-				call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), array_filter($currentValues)]);
-
-				/**
-				 * If there is no snippet to redraw -> send empty response
-				 */
-				if(!$presenter->isControlInvalid())
-				{
-					$presenter->sendResponse(new \Nette\Application\Responses\TextResponse(null));
-				}
-			}
+			parent::signalReceived($signal);
 		}
 	}
 
 
-	private function tryLoadItems(): void
-	{
-		if($this->parents === array_filter($this->parents, fn($p) => !$p->hasErrors()))
-		{
-			$parentsValues = [];
-
-			foreach($this->parents as $parent)
-			{
-				$parentsValues[$parent->getName()] = $parent->getValue();
-			}
-
-			$data = $this->getDependentData([$parentsValues]);
-			$items = $data->getItems();
-
-			if($this->getForm()->isSubmitted())
-			{
-				$this->setValue($this->value);
-			}
-			elseif($this->tempValue !== null)
-			{
-				$this->setValue($this->tempValue);
-			}
-			else
-			{
-				$this->setValue($data->getValue());
-			}
-
-			if(count($items) > 0)
-			{
-				$this->loadHttpData();
-
-				$this->setItems($items)
-					->setPrompt($data->getPrompt() === '' ? $this->getPrompt() : $data->getPrompt());
-			}
-			else
-			{
-				if($this->disabledWhenEmpty === true && !$this->isDisabled())
-				{
-					$this->setDisabled();
-				}
-			}
-		}
-	}
-
-
-	public function setValue($value): self
+	public function setValue($value): static
 	{
 		if($this->dependentCallback !== null)
 		{
 			$this->tempValue = $value;
 		}
 
-		parent::setValue($value);
-
-		return $this;
+		return parent::setValue($value);
 	}
 
 
@@ -263,15 +202,13 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 	{
 		$control = parent::getControl();
 
-		$form = $this->getForm();
-
 		if($this->dividerValue !== '' && $this->dividerValue !== null)
 		{
 			$control = $this->addDividerToOption($control);
 		}
 
-		$presenter = $this->lookup(\Nette\Application\UI\Presenter::class);
-		\assert($presenter instanceof \Nette\Application\UI\Presenter);
+		$presenter = $this->lookup(Presenter::class);
+		\assert($presenter instanceof Presenter);
 
 		if($this->parents)
 		{
@@ -289,23 +226,17 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 		{
 			$this->tryLoadItems();
 
-			$link = $this->lookupPath('Nette\\Application\\UI\\Presenter') . \Nette\ComponentModel\IComponent::NAME_SEPARATOR . self::SIGNAL_NAME . '!';
-
-			$control->setAttribute('data-dependentselectbox', $presenter->link($link));
+			$control->setAttribute('data-dependentselectbox', $presenter->link($this->getLinkPath(SignalDial::Load)));
 		}
 
-		if($this->onChangeCallback !== null)
+		if($this->onSearchChangeCallback !== null)
 		{
-			$form = $this->getForm();
-
-			$control->attrs['data-whisperer'] = $presenter->link(
-				$this->lookupPath('Nette\Application\UI\Presenter') . self::NAME_SEPARATOR . self::SIGNAL_ONCHANGE . '!');
+			$control->setAttribute('data-whisperer', $presenter->link($this->getLinkPath(SignalDial::OnSearchChange)));
 		}
 
 		if($this->onSelectCallback !== null)
 		{
-			$control->attrs['data-whisperer-onSelect'] = $presenter->link(
-				$this->lookupPath('Nette\Application\UI\Presenter') . self::NAME_SEPARATOR . self::SIGNAL_ONSELECT . '!');
+			$control->setAttribute('data-whisperer-onSelect', $presenter->link($this->getLinkPath(SignalDial::OnSelect)));
 		}
 
 		if($this->hasSignal())
@@ -313,14 +244,18 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 			$this->addSignalsToInput($control);
 		}
 
-		$control->attrs['data-whisperer-delay'] = $this->delay;
-
 		if($this->noResultMessage !== null)
 		{
 			$control->attrs['no-result-message'] = $this->noResultMessage;
 		}
 
 		return $control;
+	}
+
+
+	private function getLinkPath(string $signal): string
+	{
+		return $this->lookupPath(Presenter::class) . self::NameSeparator . $signal . '!';
 	}
 
 
@@ -360,14 +295,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\ISignalReceiv
 				$this->addError(\Nette\Forms\Validator::formatMessage($rule, true), false);
 			}
 		}
-	}
-
-
-	public function setDelay(int $delay): self
-	{
-		$this->delay = $delay;
-
-		return $this;
 	}
 
 

@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
+use Nette\Application\UI\Presenter;
 
-class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBox implements Renderable
+class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implements Renderable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -20,11 +21,59 @@ class DependentMultiSelect extends \NasExt\Forms\Controls\DependentMultiSelectBo
 	use Helper\WrapControl;
 	use Helper\RenderInline;
 	use Helper\RenderBasic;
+	use Helper\Dependent;
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{
-		parent::__construct($label, $parents);
+		$this->parents = $parents;
 
-		$this->setDependentCallback($dependentCallback);
+		if($dependentCallback)
+		{
+			$this->setDependentCallback($dependentCallback);
+		}
+
+		parent::__construct($label);
+	}
+
+
+	public function getValue(): array
+	{
+		return $this->getValue();
+	}
+
+
+	public function signalReceived($signal): void
+	{
+		$presenter = $this->lookup(Presenter::class);
+		\assert($presenter instanceof Presenter);
+
+		if($signal === \ModulIS\Form\Dial\SignalDial::Load)
+		{
+			$parentsNames = [];
+
+			foreach($this->parents as $parent)
+			{
+				$value = $presenter->getParameter($this->getNormalizeName($parent));
+
+				$parent->setValue($value);
+
+				$parentsNames[$parent->getName()] = $parent->getValue();
+			}
+
+			$data = $this->getDependentData([$parentsNames]);
+
+			/** @phpstan-ignore-next-line*/
+			$items = $data->getPreparedItems(is_array($this->disabled) ? $this->disabled : []);
+
+			$presenter->payload->dependentselectbox = [
+				'id' => $this->getHtmlId(),
+				'items' => $items,
+				'value' => $data->getValue(),
+				'prompt' => $this->translate($data->getPrompt()),
+				'disabledWhenEmpty' => $this->disabledWhenEmpty
+			];
+
+			$presenter->sendPayload();
+		}
 	}
 }

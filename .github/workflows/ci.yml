@@ -1,0 +1,49 @@
+name: Tests & CS ModulIS
+
+on: [pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: [8.2]
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: test
+        ports:
+          - '3306:3306'
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Prepare MySQL connection
+      run: |
+        sudo apt-get update
+        sudo mysql --host 127.0.0.1 --port 3306 -uroot -ptest -e 'CREATE DATABASE test;'
+
+    - name: Run Nette Tester
+      run: vendor/bin/tester -C tests/
+
+    - name: Run PHP Stan lvl 5
+      run: vendor/bin/phpstan analyse --level 5 src
+
+    - name: Run Coding Standard
+      run: vendor/modul-is/coding-standard/ecs check src --preset php82

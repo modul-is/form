@@ -45,7 +45,7 @@ class DuplicatorRemoveSubmit extends SubmitButton
 		$duplicatorContainer = $this->lookup(\ModulIS\Form\DuplicatorContainer::class);
 
 		$attributes = [
-			'name' => $duplicator->getName() . '[' . $duplicatorContainer->getName() . ']' . '[' . $this->getName() . ']',
+			'name' => $duplicator->getName() . '[' . $duplicatorContainer->getName() . '][' . $this->getName() . ']',
 			'formnovalidate' => '',
 			'type' => 'submit'
 		];

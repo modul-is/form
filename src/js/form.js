@@ -143,7 +143,7 @@ function registerAutocomplete(element)
 				naja.makeRequest('GET', varUrlOnSelect, {selected: item.data, formdata: form.serialize()});
             }
 		},
-		fetch: function (text, callback)
+		fetch: function(text, callback)
 		{
 			let match = text.toLowerCase();
 			let parentArray = {};
@@ -152,11 +152,11 @@ function registerAutocomplete(element)
 			{
 				let parentElement = $('#' + id);
 
-				if (parentElement.length > 0)
+				if(parentElement.length > 0)
 				{
 					let val;
 
-					if (parentElement.prop('type') === 'checkbox')
+					if(parentElement.prop('type') === 'checkbox')
 					{
 						val = parentElement.prop('checked') ? 1 : 0;
 					}
@@ -164,7 +164,7 @@ function registerAutocomplete(element)
 					{
 						val = $(parentElement).val();
 
-						if (!val)
+						if(!val)
 						{
 							return;
 						}
@@ -191,7 +191,7 @@ function registerAutocomplete(element)
 		},
 		render: function(item, value)
 		{
-			var itemElement = document.createElement("div");
+			let itemElement = document.createElement("div");
 
 			itemElement.setAttribute('data-key', item.data);
 
@@ -211,7 +211,7 @@ function registerAutocomplete(element)
 		emptyMsg: "Nic nenalezeno",
 		customize: function(input, inputRect, container, maxHeight)
 		{
-			if (maxHeight < 100)
+			if(maxHeight < 100)
 			{
 				container.style.top = "";
 				container.style.bottom = (window.innerHeight - inputRect.bottom + input.offsetHeight) + "px";
@@ -223,7 +223,7 @@ function registerAutocomplete(element)
 
 function formatSelectData(data)
 {
-	if (!data.id)
+	if(!data.id)
 	{
 		return data.text;
 	}

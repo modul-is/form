@@ -3,19 +3,24 @@
  * @author Dusan Hudak <admin@dusan-hudak.com>
  */
 
-(function ($) {
-    $.fn.dependentSelectBox = function (options, listener) {
+(function ($)
+{
+    $.fn.dependentSelectBox = function(options, listener)
+	{
+        let callback = function () {};
 
-        var callback = function () {};
-        if(typeof( options ) === 'function' ) {
+        if(typeof(options) === 'function')
+		{
             callback = options;
             options = null;
         }
-        if(typeof( listener ) === 'function' ) {
+
+        if(typeof(listener) === 'function')
+		{
             callback = listener;
         }
 
-        var dsb = this;
+        let dsb = this;
         dsb.timeout = [];
         dsb.settings = $.extend({
             suggestTimeout: 350,
@@ -29,27 +34,38 @@
          * @param element
          * @returns {*}
          */
-        this.getSignalLink = function (element) {
-            var signalLink = element.data(dsb.settings.dataLinkName);
-            var parents = element.data(dsb.settings.dataParentsName);
+        this.getSignalLink = function(element)
+		{
+            let signalLink = element.data(dsb.settings.dataLinkName);
+            let parents = element.data(dsb.settings.dataParentsName);
 
-            if (signalLink == undefined) {
+            if(signalLink === undefined)
+			{
                 return false;
             }
 
-            $.each(parents, function (name, id) {
-                var parentElement = $('#' + id);
-                if (parentElement.length > 0) {
-                    var val;
-                    if (parentElement.prop('type') === 'checkbox') {
+            $.each(parents, function(name, id)
+			{
+                let parentElement = $('#' + id);
+
+                if(parentElement.length > 0)
+				{
+                    let val;
+
+                    if(parentElement.prop('type') === 'checkbox')
+					{
                         val = parentElement.prop('checked') ? 1 : 0;
                     }
-                    else {
+                    else
+					{
                         val = $(parentElement).val();
-                        if (!val) {
+
+                        if(!val)
+						{
                             return;
                         }
                     }
+
                     signalLink = signalLink + '&' + name + '=' + val;
                 }
                 else if($("[id^='" +id + "']").length > 0)
@@ -67,74 +83,89 @@
          * @param e
          * @param parentElement
          */
-        this.process = function (e, parentElement, dependentSelect) {
-
+        this.process = function(e, parentElement, dependentSelect)
+		{
             // Validate if signalLink exist
             var signalLink = dsb.getSignalLink(dependentSelect);
-            if (signalLink == false) {
+
+            if(signalLink == false)
+			{
                 return false;
             }
 
             // Send ajax request
             $.ajax(signalLink, {
                 async: false,
-                success: function (payload) {
-                    var data = payload.dependentselectbox;
-                    if (data !== undefined) {
+                success: function(payload)
+				{
+                    let data = payload.dependentselectbox;
 
-                        var $select = $('#' + data.id);
+                    if(data !== undefined)
+					{
+                        let $select = $('#' + data.id);
                         $select.empty();
 
-                        if (data.prompt != false) {
+                        if(data.prompt != false)
+						{
                             $('<option>')
                                 .attr('value', '').text(data.prompt)
                                 .appendTo($select);
                         }
 
-                        if (Object.keys(data.items).length > 0) {
-
-                            if (data.disabledWhenEmpty) {
+                        if(Object.keys(data.items).length > 0)
+						{
+                            if(data.disabledWhenEmpty)
+							{
                                 $select.prop('disabled', false);
                             }
 
                             $.each(data.items, function (i, item) {
 
-                                if (typeof item.value === 'object') {
-                                    var otpGroup = $('<optgroup>')
+                                if(typeof item.value === 'object')
+								{
+                                    let otpGroup = $('<optgroup>')
                                         .attr('label', item.key);
 
-                                    $.each(item.value, function (objI, objItem) {
-                                        var option = $('<option>')
-                                            .attr('value', objI).text(objItem);
-                                        if (data.value !== null && objI == data.value) {
+                                    $.each(item.value, function(objI, objItem)
+									{
+                                        let option = $('<option>').attr('value', objI).text(objItem);
+
+                                        if(data.value !== null && objI == data.value)
+										{
                                             option.attr('selected', true);
                                         }
+
                                         otpGroup.append(option);
                                     });
+
                                     otpGroup.appendTo($select);
                                 }
-                                else {
-                                    var option = $('<option>')
+                                else
+								{
+                                    let option = $('<option>')
                                         .attr('value', item.key).text(item.value);
 
-                                    if ('attributes' in item) {
-                                        $.each(item.attributes, function (attr, attrValue) {
+                                    if('attributes' in item)
+									{
+                                        $.each(item.attributes, function(attr, attrValue)
+										{
                                             option.attr(attr, attrValue);
                                         });
                                     }
 
-                                    if (data.value !== null && item.key == data.value) {
+                                    if(data.value !== null && item.key == data.value)
+									{
                                         option.attr('selected', true);
                                     }
 
                                     option.appendTo($select);
                                 }
-
-
-
                             });
-                        } else {
-                            if (data.disabledWhenEmpty) {
+                        }
+						else
+						{
+                            if(data.disabledWhenEmpty)
+							{
                                 $select.prop('disabled', true);
                             }
                         }
@@ -153,7 +184,8 @@
          * @param parentElement
          * @returns {boolean}
          */
-        this.onChange = function (e, parentElement, dependentSelect) {
+        this.onChange = function(e, parentElement, dependentSelect)
+		{
             dsb.process(e, parentElement, dependentSelect);
         };
 
@@ -164,14 +196,18 @@
          * @param parentElement
          * @returns {boolean}
          */
-        this.onKeyup = function (e, parentElement, dependentSelect) {
+        this.onKeyup = function(e, parentElement, dependentSelect)
+		{
             // reset timeout
-            var timeoutKey = dependentSelect.attr('id');
-            if (dsb.timeout[timeoutKey] != undefined && dsb.timeout[timeoutKey] != false) {
+            let timeoutKey = dependentSelect.attr('id');
+
+            if(dsb.timeout[timeoutKey] != undefined && dsb.timeout[timeoutKey] != false)
+			{
                 clearTimeout(dsb.timeout[timeoutKey]);
             }
 
-            dsb.timeout[timeoutKey] = setTimeout(function () {
+            dsb.timeout[timeoutKey] = setTimeout(function()
+			{
                 dsb.process(e, parentElement, dependentSelect);
             }, dsb.settings.suggestTimeout);
         };
@@ -179,31 +215,40 @@
         /**
          * Process
          */
-        return this.each(function () {
-            var $dependentSelect = $(this);
+        return this.each(function()
+		{
+            let $dependentSelect = $(this);
+            let parents = $($dependentSelect).data(dsb.settings.dataParentsName);
 
-            var parents = $($dependentSelect).data(dsb.settings.dataParentsName);
-            $.each(parents, function (name, id) {
-                var parentElement = $('#' + id);
+            $.each(parents, function(name, id)
+			{
+                let parentElement = $('#' + id);
 
-                if (parentElement.length > 0) {
-                    if (parentElement.prop('type') === 'text' || parentElement.prop('nodeName').toLowerCase() === 'textarea') {
-                        $(parentElement).on("keyup", function (e) {
+                if(parentElement.length > 0)
+				{
+                    if(parentElement.prop('type') === 'text' || parentElement.prop('nodeName').toLowerCase() === 'textarea')
+					{
+                        $(parentElement).on("keyup", function(e)
+						{
                             dsb.onKeyup(e, $(this), $dependentSelect);
                         });
-                    } else {
-                        $(parentElement).on("change", function (e) {
+                    }
+					else
+					{
+                        $(parentElement).on("change", function (e)
+						{
                             dsb.onChange(e, $(this), $dependentSelect);
                         });
                     }
                 }
                 else
                 {
-                    $("[id^='" +id + "-']").on("change", function (e) {
+                    $("[id^='" +id + "-']").on("change", function(e)
+					{
                         dsb.onChange(e, $(this), $dependentSelect);
                     });
                 }
             });
         });
-    }
+    };
 })(jQuery);

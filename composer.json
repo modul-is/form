@@ -11,7 +11,6 @@
 		"nette/utils": "^4.0",
 		"nette/forms": "^3.1.13",
 		"nette/security": "^3.1",
-		"nasext/dependent-select-box": "master@dev",
 		"nette/application": "^3.1",
 		"kravcik/latte-font-awesome-icon": "^1"
     },

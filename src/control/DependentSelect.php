@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace ModulIS\Form\Control;
 
+use ModulIS\Form\Dial\SignalDial;
 use ModulIS\Form\Helper;
+use Nette\Application\UI\Presenter;
 
-class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implements Renderable, FloatingRenderable, Signalable
+class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -22,33 +24,62 @@ class DependentSelect extends \NasExt\Forms\Controls\DependentSelectBox implemen
 	use Helper\RenderInline;
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
-	use Helper\Signals;
+	use Helper\Signals
+	{
+		signalReceived as public signalsSignalReceived;
+	}
+	use Helper\Dependent;
 
 	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
 	{
-		parent::__construct($label, $parents);
-
-		$this->setDependentCallback($dependentCallback);
-
 		$this->controlClass = 'form-select';
+		$this->parents = $parents;
+
+		if($dependentCallback)
+		{
+			$this->setDependentCallback($dependentCallback);
+		}
+
+		parent::__construct($label);
 	}
 
 
 	public function signalReceived($signal): void
 	{
-		$presenter = $this->lookup('Nette\\Application\\UI\\Presenter');
-		\assert($presenter instanceof \Nette\Application\UI\Presenter);
+		$presenter = $this->lookup(Presenter::class);
+		\assert($presenter instanceof Presenter);
 
-		if($signal === $this->onChangeSignal)
+		if($signal === SignalDial::Load)
 		{
-			$value = $presenter->getParameter('value');
-			$inputName = $presenter->getParameter('input');
+			$parentsNames = [];
 
-			call_user_func_array($this->onChange, [$value, $inputName]);
+			foreach($this->parents as $parent)
+			{
+				$value = $presenter->getParameter($this->getNormalizeName($parent));
+
+				$parent->setValue($value);
+
+				$parentsNames[$parent->getName()] = $parent->getValue();
+			}
+
+			$data = $this->getDependentData([$parentsNames]);
+
+			/** @phpstan-ignore-next-line*/
+			$items = $data->getPreparedItems(is_array($this->disabled) ? $this->disabled : []);
+
+			$presenter->payload->dependentselectbox = [
+				'id' => $this->getHtmlId(),
+				'items' => $items,
+				'value' => $data->getValue(),
+				'prompt' => $this->translate($data->getPrompt()),
+				'disabledWhenEmpty' => $this->disabledWhenEmpty
+			];
+
+			$presenter->sendPayload();
 		}
 		else
 		{
-			parent::signalReceived($signal);
+			$this->signalsSignalReceived($signal);
 		}
 	}
 }
