@@ -40,7 +40,7 @@ jobs:
         sudo mysql --host 127.0.0.1 --port 3306 -uroot -ptest -e 'CREATE DATABASE test;'
 
     - name: Run Nette Tester
-      run: vendor/bin/tester -C tests/cases
+      run: vendor/bin/tester -C tests/
 
     - name: Run PHP Stan lvl 5
       run: vendor/bin/phpstan analyse --level 5 src
