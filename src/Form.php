@@ -278,7 +278,7 @@ class Form extends \Nette\Application\UI\Form
 
 		return $this[$name] = $dateInput->setRequired(false)
 			->setFormat('Y-m-d H:i:s')
-			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d H:i:00', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy H:i');
+			->addRule(fn($input) => DateTime::createFromFormat($withSeconds ? 'Y-m-d H:i:s' : 'Y-m-d H:i:00', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy ' . ($withSeconds ? 'hh:mm:ss' : 'hh:mm'));
 	}
 
 
