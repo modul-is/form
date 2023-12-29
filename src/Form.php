@@ -412,7 +412,7 @@ class Form extends \Nette\Application\UI\Form
 
 		if(is_callable($items))
 		{
-			$whisperer->setOnChangeCallback($items);
+			$whisperer->setOnSearchChangeCallback($items);
 		}
 
 		return $this[$name] = $whisperer;

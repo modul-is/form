@@ -243,7 +243,7 @@ class Container extends \Nette\Forms\Container
 
 		if(is_callable($items))
 		{
-			$whisperer->setOnChangeCallback($items);
+			$whisperer->setOnSearchChangeCallback($items);
 		}
 
 		return $this[$name] = $whisperer;
