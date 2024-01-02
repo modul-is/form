@@ -40,12 +40,8 @@ class DuplicatorRemoveSubmit extends SubmitButton
 
 	public function getCoreControl(): Html
 	{
-		$duplicator = $this->lookup(Duplicator::class);
-		\assert($duplicator instanceof Duplicator);
-		$duplicatorContainer = $this->lookup(\ModulIS\Form\DuplicatorContainer::class);
-
 		$attributes = [
-			'name' => $duplicator->getName() . '[' . $duplicatorContainer->getName() . '][' . $this->getName() . ']',
+			'name' => $this->getHtmlName(),
 			'formnovalidate' => '',
 			'type' => 'submit'
 		];
