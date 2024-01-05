@@ -233,20 +233,11 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addWhisperer(string $name, string $label = null, array $items = []): Control\Whisperer
+	public function addWhisperer(string $name, $label = null, array $items = []): Control\Whisperer
 	{
-		$itemArray = is_callable($items) ? [] : $items;
-
-		$whisperer = (new Control\Whisperer($label, isset($itemArray['']) ? $itemArray : ['' => ''] + $itemArray))
+		return $this[$name] = (new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
 			->setAttribute('data-placeholder', 'Vyberte')
 			->checkDefaultValue(false);
-
-		if(is_callable($items))
-		{
-			$whisperer->setOnChangeCallback($items);
-		}
-
-		return $this[$name] = $whisperer;
 	}
 
 

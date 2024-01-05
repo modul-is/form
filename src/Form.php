@@ -397,25 +397,11 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
-	public function addWhisperer(string $name, $label = null, $items = []): Control\Whisperer
+	public function addWhisperer(string $name, $label = null, array $items = []): Control\Whisperer
 	{
-		if(!(is_array($items) || is_callable($items)))
-		{
-			throw new \Exception("Parameter 'items' has to be array or callback");
-		}
-
-		$itemArray = is_callable($items) ? [] : $items;
-
-		$whisperer = (new Control\Whisperer($label, isset($itemArray['']) ? $itemArray : ['' => ''] + $itemArray))
+		return $this[$name] = (new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
 			->setAttribute('data-placeholder', 'Vyberte')
 			->checkDefaultValue(false);
-
-		if(is_callable($items))
-		{
-			$whisperer->setOnChangeCallback($items);
-		}
-
-		return $this[$name] = $whisperer;
 	}
 
 
