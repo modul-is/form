@@ -43,11 +43,8 @@ class DuplicatorCreateSubmit extends SubmitButton
 
 	public function getCoreControl(): Html
 	{
-		$duplicator = $this->lookup(Duplicator::class);
-		\assert($duplicator instanceof Duplicator);
-
 		$attributes = [
-			'name' => $duplicator->getName() . '[add]',
+			'name' => $this->getHtmlName(),
 			'value' => 'Přidat',
 			'formnovalidate' => '',
 			'data-nette-validation-scope' => '["multiplier"]',
