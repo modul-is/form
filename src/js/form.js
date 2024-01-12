@@ -17,7 +17,7 @@ async function inputSignal(input, url, event)
 {
 	if(event.type === 'focusout')
 	{
-		let originValue = event.originalEvent.srcElement.attributes.value ? event.originalEvent.srcElement.attributes.value.value : '';
+		let originValue = event.target.defaultValue ?? '';
 
 		if(input.val() === originValue)
 		{
