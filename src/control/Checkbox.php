@@ -119,7 +119,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 
 		if($this->templatePath)
 		{
-			return (new \Latte\Engine)->renderToString($this->templatePath, $this);
+			return (new \Latte\Engine)->renderToString($this->templatePath, $this->templateParams);
 		}
 
 		$input = $this->getCoreControl();
