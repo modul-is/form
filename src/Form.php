@@ -132,14 +132,14 @@ class Form extends \Nette\Application\UI\Form
 				->class('card mt-2')
 				->setHtml($content);
 
-			$wrapCard = Html::el('div')
-				->class($group->getClass() ?? 'col-12')
-				->setHtml($card);
-
 			if($group->getOption('id'))
 			{
 				$card->id($group->getOption('id'));
 			}
+
+			$wrapCard = Html::el('div')
+				->class($group->getClass() ?? 'col-12')
+				->setHtml($card);
 
 			$groups .= $wrapCard;
 		}
