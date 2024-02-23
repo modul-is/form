@@ -288,7 +288,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	}
 
 
-	public function setValues($values, $erase = false)
+	public function setValues($values, $erase = false): static
 	{
 		if(!$this->form->isAnchored() || !$this->form->isSubmitted())
 		{

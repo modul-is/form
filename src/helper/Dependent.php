@@ -100,7 +100,7 @@ trait Dependent
 	}
 
 
-	public function getValue()
+	public function getValue(): mixed
 	{
 		$this->tryLoadItems();
 
