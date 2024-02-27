@@ -90,7 +90,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 				$parent->setValue($value);
 
-				$parentsNames[$parent->getName()] = method_exists($parent, 'getRawValue') ? $parent->getRawValue() : $parent->getValue();
+				$parentsNames[$parent->getName()] = $parent->getValue();
 			}
 
 			$data = $this->getDependentData([$parentsNames]);
@@ -182,7 +182,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	}
 
 
-	public function getValue()
+	public function getValue(): mixed
 	{
 		if($this->dependentCallback !== null)
 		{
@@ -194,7 +194,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 			return $this->tempValue;
 		}
 
-		return $this->getRawValue();
+		return $this->value;
 	}
 
 
