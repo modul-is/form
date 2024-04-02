@@ -10,19 +10,40 @@ use Nette\Utils\Html;
 
 class Form extends \Nette\Application\UI\Form
 {
+	/** @deprecated use Form::GreaterEqual */
 	public const GREATER_EQUAL = \Nette\Application\UI\Form::MIN;
 
+	/** @deprecated use Form::LessEqual */
 	public const LESS_EQUAL = \Nette\Application\UI\Form::MAX;
 
+	/** @deprecated use Form::Greater */
 	public const GREATER = '\ModulIS\Form\FormValidator::greater';
 
+	/** @deprecated use Form::Less */
 	public const LESS = 'ModulIS\Form\FormValidator::less';
 
+	/** @deprecated use Form::SameLength */
 	public const SAME_LENGTH = 'ModulIS\Form\FormValidator::sameLength';
 
+	/** @deprecated use Form::validateRC */
 	public const VALIDATE_RC = 'ModulIS\Form\FormValidator::validateRC';
 
+	/** @deprecated use Form::validateIC */
 	public const VALIDATE_IC = 'ModulIS\Form\FormValidator::validateIC';
+
+	public const GreaterEqual = \Nette\Application\UI\Form::MIN;
+
+	public const LessEqual = \Nette\Application\UI\Form::MAX;
+
+	public const Greater = '\ModulIS\Form\FormValidator::greater';
+
+	public const Less = 'ModulIS\Form\FormValidator::less';
+
+	public const SameLength = 'ModulIS\Form\FormValidator::sameLength';
+
+	public const ValidateRC = 'ModulIS\Form\FormValidator::validateRC';
+
+	public const ValidateIC = 'ModulIS\Form\FormValidator::validateIC';
 
 	public ?string $color = null;
 
