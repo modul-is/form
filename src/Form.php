@@ -306,7 +306,7 @@ class Form extends \Nette\Application\UI\Form
 	public function addTime(string $name, $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
 		return $this[$name] = (new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds))
-			->setFormat('H:i:00');
+			->setFormat($withSeconds ? 'H:i:00' : 'H:i');
 	}
 
 
