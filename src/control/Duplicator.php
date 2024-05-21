@@ -288,7 +288,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	}
 
 
-	public function setValues($values, $erase = false): static
+	public function setValues(array|object $values, bool $erase = false, bool $onlyDisabled = false): static
 	{
 		if(!$this->form->isAnchored() || !$this->form->isSubmitted())
 		{
@@ -301,7 +301,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			}
 		}
 
-		return parent::setValues($values, $erase);
+		return parent::setValues($values, $erase, $onlyDisabled);
 	}
 
 
