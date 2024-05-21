@@ -12,6 +12,6 @@ class TestPresenter extends \Nette\Application\UI\Presenter
 
 		$this->changeAction('');
 		$this->setParent(null, '');
-		$this->injectPrimary(null, null, new \Nette\Routing\RouteList, new \Nette\Http\Request(new \Nette\Http\UrlScript()), new \Nette\Http\Response);
+		$this->injectPrimary(new \Nette\Http\Request(new \Nette\Http\UrlScript()), new \Nette\Http\Response, new \Nette\Application\PresenterFactory,  new \Nette\Routing\RouteList);
 	}
 }
