@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63f7c3858cc7cee83dcbcb4a218ca9f7",
+    "content-hash": "a372586d50e77f11a9fc2c67d41a01af",
     "packages": [
         {
             "name": "kravcik/latte-font-awesome-icon",
