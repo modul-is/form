@@ -7,14 +7,15 @@ namespace ModulIS\Form;
 use Nette\Forms\Controls\DateTimeControl;
 use Nette\Utils\DateTime;
 use Nette\Utils\Html;
+use Nette\Application\UI\Form;
 
-class Form extends \Nette\Application\UI\Form
+class Form extends Form
 {
 	/** @deprecated use Form::GreaterEqual */
-	public const GREATER_EQUAL = \Nette\Application\UI\Form::MIN;
+	public const GREATER_EQUAL = Form::MIN;
 
 	/** @deprecated use Form::LessEqual */
-	public const LESS_EQUAL = \Nette\Application\UI\Form::MAX;
+	public const LESS_EQUAL = Form::MAX;
 
 	/** @deprecated use Form::Greater */
 	public const GREATER = '\ModulIS\Form\FormValidator::greater';
@@ -31,9 +32,9 @@ class Form extends \Nette\Application\UI\Form
 	/** @deprecated use Form::validateIC */
 	public const VALIDATE_IC = 'ModulIS\Form\FormValidator::validateIC';
 
-	public const GreaterEqual = \Nette\Application\UI\Form::MIN;
+	public const GreaterEqual = Form::MIN;
 
-	public const LessEqual = \Nette\Application\UI\Form::MAX;
+	public const LessEqual = Form::MAX;
 
 	public const Greater = '\ModulIS\Form\FormValidator::greater';
 
@@ -275,6 +276,16 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 
+	public function addFloat(string $name, $label = null): Control\TextInput
+	{
+		return $this[$name] = (new Control\TextInput($label))
+			->setNullable()
+			->setHtmlType('number')
+			->setHtmlAttribute('step', 'any')
+			->addRule(self::Float);
+	}
+
+
 	public function addAutocomplete(string $name, $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
 	{
 		return $this[$name] = (new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? []))
@@ -329,7 +340,7 @@ class Form extends \Nette\Application\UI\Form
 	{
 		return $this[$name] = (new Control\TextInput($label))
 			->setRequired(false)
-			->addRule(self::EMAIL);
+			->addRule(self::Email);
 	}
 
 
@@ -338,7 +349,7 @@ class Form extends \Nette\Application\UI\Form
 		return $this[$name] = (new Control\TextInput($label))
 			->setNullable()
 			->setRequired(false)
-			->addRule(self::INTEGER);
+			->addRule(self::Integer);
 	}
 
 
