@@ -7,15 +7,15 @@ namespace ModulIS\Form;
 use Nette\Forms\Controls\DateTimeControl;
 use Nette\Utils\DateTime;
 use Nette\Utils\Html;
-use Nette\Application\UI\Form;
+use Nette\Application\UI\Form as UIForm;
 
-class Form extends Form
+class Form extends UIForm
 {
 	/** @deprecated use Form::GreaterEqual */
-	public const GREATER_EQUAL = Form::MIN;
+	public const GREATER_EQUAL = UIForm::MIN;
 
 	/** @deprecated use Form::LessEqual */
-	public const LESS_EQUAL = Form::MAX;
+	public const LESS_EQUAL = UIForm::MAX;
 
 	/** @deprecated use Form::Greater */
 	public const GREATER = '\ModulIS\Form\FormValidator::greater';
@@ -32,9 +32,9 @@ class Form extends Form
 	/** @deprecated use Form::validateIC */
 	public const VALIDATE_IC = 'ModulIS\Form\FormValidator::validateIC';
 
-	public const GreaterEqual = Form::MIN;
+	public const GreaterEqual = UIForm::MIN;
 
-	public const LessEqual = Form::MAX;
+	public const LessEqual = UIForm::MAX;
 
 	public const Greater = '\ModulIS\Form\FormValidator::greater';
 
