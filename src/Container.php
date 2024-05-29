@@ -81,6 +81,16 @@ class Container extends \Nette\Forms\Container
 	}
 
 
+	public function addFloat(string $name, $label = null): Control\TextInput
+	{
+		return $this[$name] = (new Control\TextInput($label))
+			->setNullable()
+			->setHtmlType('number')
+			->setHtmlAttribute('step', 'any')
+			->addRule(Form::Float);
+	}
+
+
 	public function addAutocomplete(string $name, $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
 	{
 		return $this[$name] = (new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? []))
