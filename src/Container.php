@@ -87,7 +87,7 @@ class Container extends \Nette\Forms\Container
 			->setNullable()
 			->setHtmlType('number')
 			->setHtmlAttribute('step', 'any')
-			->addRule(self::Float);
+			->addRule(Form::Float);
 	}
 
 
