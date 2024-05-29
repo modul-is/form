@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace ModulIS\Form;
 
+use Nette\Application\UI\Form as UIForm;
 use Nette\Forms\Controls\DateTimeControl;
 use Nette\Utils\DateTime;
 use Nette\Utils\Html;
-use Nette\Application\UI\Form as UIForm;
 
 class Form extends UIForm
 {
