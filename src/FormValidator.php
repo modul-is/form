@@ -28,7 +28,7 @@ final class FormValidator
 
 	public static function validateRC(BaseControl $control): bool
 	{
-		$value = strval($control->getValue());
+		$value = str_replace(' ', '', strval($control->getValue()));
 
 		if(!preg_match('#^(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)$#', $value, $matches))
 		{
@@ -80,7 +80,7 @@ final class FormValidator
 
 	public static function validateIC(BaseControl $control): bool
 	{
-		$ic = strval($control->getValue());
+		$ic = str_replace(' ', '', strval($control->getValue()));
 
 		if(!preg_match('/^\d{8}$/', $ic))
 		{
