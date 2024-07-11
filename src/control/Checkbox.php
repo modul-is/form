@@ -72,7 +72,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 		}
 		else
 		{
-			$inputClass = 'form-check-input' . ($this->color ? ' checkbox-' . $this->color : null);
+			$inputClass = 'form-check-input' . ($this->color ? ' ' . $this->color : null);
 			$labelClass = 'form-check-label';
 			$labelAttribute = 'width: auto';
 		}

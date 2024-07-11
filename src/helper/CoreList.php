@@ -28,7 +28,7 @@ trait CoreList
 		{
 			$input = $this->getControlPart($key);
 
-			$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;
+			$inputColorClass = $this->color ? ' ' . $this->color : null;
 
 			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : null;
 
