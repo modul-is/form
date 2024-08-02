@@ -76,7 +76,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 			}
 			else
 			{
-				$tooltip = null;
+				$tooltip = '';
 			}
 
 			$input = $this->getControlPart($case);
