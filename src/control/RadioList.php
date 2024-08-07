@@ -26,6 +26,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 	}
 	use Helper\Signals;
 	use Helper\ToggleButton;
+	use Helper\WrapControl;
 
 	private bool $big = false;
 
@@ -137,7 +138,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 		}
 
 		$mainLabel = Html::el('h6')
-			->class('mb-3 fw-semibold fs-4' . $validationClass)
+			->class('mb-3 fw-semibold fs-4' . $validationClass . ' ' . $this->labelClass)
 			->addHtml($this->getLabel());
 
 		$cardBody = Html::el('div')
