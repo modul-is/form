@@ -39,6 +39,14 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 	}
 
 
+	public function setItemsColor(string $color): self
+	{
+		$this->color = $color;
+		
+		return $this;
+	}
+
+
 	/**
 	 * @param class-string<BackedEnum&\ModulIS\Form\Enum\RadioEnum> $enumClass
 	 */
