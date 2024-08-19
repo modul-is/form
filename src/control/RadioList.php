@@ -48,7 +48,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 
 
 	/**
-	 * @param class-string<BackedEnum&\ModulIS\Form\Enum\RadioEnum> $enumClass
+	 * @param class-string<\BackedEnum&\ModulIS\Form\Enum\RadioEnum> $enumClass
 	 */
 	public function setValuesFromEnum(string $enumClass): self
 	{

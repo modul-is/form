@@ -304,10 +304,10 @@ class Form extends UIForm
 	}
 
 
-	public function addDateWeek(string $name, $label = null): Control\DateTimeInput
+	public function addDateWeek(string $name, $label = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label))
-			->setHtmlAttribute('type', week);
+			->setHtmlAttribute('type', 'week');
 	}
 
 
