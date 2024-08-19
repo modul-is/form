@@ -152,6 +152,13 @@ class Container extends \Nette\Forms\Container
 	}
 
 
+	public function addDateWeek(string $name, $label = null): Control\TextInput
+	{
+		return $this[$name] = (new Control\TextInput($label))
+			->setHtmlAttribute('type', 'week');
+	}
+
+
 	public function addTime(string $name, $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
 		return $this[$name] = (new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds))
