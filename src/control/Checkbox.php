@@ -60,6 +60,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 		return $this;
 	}
 
+
 	public function setCheckboxWrapClass(string $class): self
 	{
 		$this->checkboxClass = $class;
