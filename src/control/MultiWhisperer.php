@@ -30,7 +30,7 @@ class MultiWhisperer extends MultiSelectBox
 
 		foreach($this->getRules() as $rule)
 		{
-			if($rule->validator == \ModulIS\Form\Form::FILLED && !$this->getValue())
+			if($rule->validator == \ModulIS\Form\Form::Filled && !$this->getValue())
 			{
 				$this->addError(\Nette\Forms\Validator::formatMessage($rule, true), false);
 			}

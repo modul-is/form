@@ -63,7 +63,7 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 	 */
 	public function __call($name, $arguments)
 	{
-		if(\Nette\Utils\Strings::startsWith($name, 'render'))
+		if(str_starts_with($name, 'render'))
 		{
 			$array = explode(DIRECTORY_SEPARATOR, $this->getReflection()->getFileName());
 
