@@ -313,7 +313,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 		foreach($items as $item)
 		{
-			if(Strings::contains($item, 'value="' . $this->dividerValue . '"'))
+			if(str_contains($item, 'value="' . $this->dividerValue . '"'))
 			{
 				$optionString .= '<option class="border-bottom"' . Strings::trim($item, '<option') . '</option>';
 			}

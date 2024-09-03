@@ -227,7 +227,8 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	private function getFirstControlName()
 	{
-		$controls = iterator_to_array($this->getComponents(false, \Nette\Forms\Control::class));
+		$components = $this->getComponents(false, \Nette\Forms\Control::class);
+		$controls = is_array($components) ? $components : iterator_to_array($components);
 		$firstControl = reset($controls);
 		/* @phpstan-ignore-next-line */
 		return $firstControl ? $firstControl->name : null;
