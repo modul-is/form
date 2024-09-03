@@ -28,10 +28,16 @@ trait Signals
 
 		$value = $presenter->getParameter('value');
 		$inputName = $presenter->getParameter('input');
+		$formData = $presenter->getParameter('formdata');
+
+		if(!$formData)
+		{
+			return;
+		}
 
 		$currentValues = [];
 
-		parse_str($presenter->getParameter('formdata'), $currentValues);
+		parse_str($formData, $currentValues);
 
 		if($signal === SignalDial::OnFocusOut)
 		{
