@@ -66,6 +66,8 @@ class Form extends UIForm
 
 	private string $defaultInputWrapClass = 'mb-3 col-12';
 
+	private array $dividerArray = [];
+
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent = null, $name = null)
 	{
@@ -114,6 +116,14 @@ class Form extends UIForm
 				 * Nette form hidden input
 				 */
 				$inputs .= $input instanceof \Nette\Forms\Controls\HiddenField ? $input->getControl() : $input->render();
+
+				foreach($this->dividerArray as $previousControl => $divider)
+				{
+					if($previousControl === $input->getName())
+					{
+						$inputs .= $divider;
+					}
+				}
 			}
 
 			if($inputs === null)
@@ -135,12 +145,12 @@ class Form extends UIForm
 			{
 				$groupColor = $group->getOption('color') ? ' ' . $group->getOption('color') : null;
 
-				$carHeader = Html::el('div')
+				$cardHeader = Html::el('div')
 					->class('card-header' . $groupColor)
 					->setHtml($groupTitle ?: $this->getTitle());
 			}
 
-			$content = $carHeader . $cardBody;
+			$content = $cardHeader . $cardBody;
 
 			/**
 			 * Last iteration - add footer with submitters
@@ -459,6 +469,12 @@ class Form extends UIForm
 		return $this[$name] = (new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
 			->setAttribute('class', 'form-control-chosen')
 			->setAttribute('data-placeholder', 'Vyberte');
+	}
+
+
+	public function addDivider(string $previousControl, Html|string $content): void
+	{
+		$this->dividerArray[$previousControl] = $content;
 	}
 
 
