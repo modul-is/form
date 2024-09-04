@@ -150,12 +150,18 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 			->addHtml($this->getLabel());
 
 		$cardBody = Html::el('div')
-			->class('card-body p-4')
-			->addHtml($mainLabel)
-			->addHtml($wrap)
+			->class('card-body p-4');
+
+		if($this->getLabel()->getText())
+		{
+			$cardBody->addHtml($mainLabel);
+		}
+
+		$cardBody->addHtml($wrap)
 			->addHtml($validationFeedBack);
 
 		return Html::el('div')
+			->id($this->options['id'] ?? null)
 			->class('btn-group-active card shadow-none border' . $cardClass . $this->inputClass)
 			->addHtml($cardBody);
 	}
