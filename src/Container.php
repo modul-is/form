@@ -352,6 +352,14 @@ class Container extends \Nette\Forms\Container
 			{
 				\assert($control instanceof Control\Renderable);
 				$inputs .= $control->render();
+
+				foreach($this->dividerArray as $previousControl => $divider)
+				{
+					if($previousControl === $control->getName())
+					{
+						$inputs .= $divider;
+					}
+				}
 			}
 
 			$rowDiv = Html::el('div')
