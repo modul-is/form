@@ -139,7 +139,7 @@ class Form extends UIForm
 				->class('card-body')
 				->setHtml($row);
 
-			$carHeader = null;
+			$cardHeader = null;
 
 			if($groupTitle || $this->getTitle())
 			{
