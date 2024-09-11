@@ -290,7 +290,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 		foreach($this->getRules() as $rule)
 		{
-			if($rule->control == $this && $rule->validator == \ModulIS\Form\Form::FILLED && in_array($this->getValue(), [null, false, ''], true))
+			if($rule->control == $this && $rule->validator == \ModulIS\Form\Form::Filled && in_array($this->getValue(), [null, false, ''], true))
 			{
 				$this->addError(\Nette\Forms\Validator::formatMessage($rule, true), false);
 			}
@@ -313,7 +313,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 		foreach($items as $item)
 		{
-			if(Strings::contains($item, 'value="' . $this->dividerValue . '"'))
+			if(str_contains($item, 'value="' . $this->dividerValue . '"'))
 			{
 				$optionString .= '<option class="border-bottom"' . Strings::trim($item, '<option') . '</option>';
 			}
