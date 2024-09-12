@@ -121,7 +121,7 @@ class Container extends \Nette\Forms\Container
 	{
 		return $this[$name] = (new Control\TextInput($label))
 			->setRequired(false)
-			->addRule(Form::EMAIL);
+			->addRule(Form::Email);
 	}
 
 
@@ -130,7 +130,7 @@ class Container extends \Nette\Forms\Container
 		return $this[$name] = (new Control\TextInput($label))
 			->setNullable()
 			->setRequired(false)
-			->addRule(Form::INTEGER);
+			->addRule(Form::Integer);
 	}
 
 
@@ -255,7 +255,7 @@ class Container extends \Nette\Forms\Container
 	public function addWhisperer(string $name, $label = null, array $items = []): Control\Whisperer
 	{
 		return $this[$name] = (new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
-			->setAttribute('data-placeholder', 'Vyberte')
+			->setHtmlAttribute('data-placeholder', 'Vyberte')
 			->checkDefaultValue(false);
 	}
 

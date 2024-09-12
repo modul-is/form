@@ -11,30 +11,9 @@ use Nette\Utils\Html;
 
 class Form extends UIForm
 {
-	/** @deprecated use Form::GreaterEqual */
-	public const GREATER_EQUAL = UIForm::MIN;
+	public const GreaterEqual = UIForm::Min;
 
-	/** @deprecated use Form::LessEqual */
-	public const LESS_EQUAL = UIForm::MAX;
-
-	/** @deprecated use Form::Greater */
-	public const GREATER = '\ModulIS\Form\FormValidator::greater';
-
-	/** @deprecated use Form::Less */
-	public const LESS = 'ModulIS\Form\FormValidator::less';
-
-	/** @deprecated use Form::SameLength */
-	public const SAME_LENGTH = 'ModulIS\Form\FormValidator::sameLength';
-
-	/** @deprecated use Form::validateRC */
-	public const VALIDATE_RC = 'ModulIS\Form\FormValidator::validateRC';
-
-	/** @deprecated use Form::validateIC */
-	public const VALIDATE_IC = 'ModulIS\Form\FormValidator::validateIC';
-
-	public const GreaterEqual = UIForm::MIN;
-
-	public const LessEqual = UIForm::MAX;
+	public const LessEqual = UIForm::Max;
 
 	public const Greater = '\ModulIS\Form\FormValidator::greater';
 
@@ -446,7 +425,7 @@ class Form extends UIForm
 	public function addWhisperer(string $name, $label = null, array $items = []): Control\Whisperer
 	{
 		return $this[$name] = (new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
-			->setAttribute('data-placeholder', 'Vyberte')
+			->setHtmlAttribute('data-placeholder', 'Vyberte')
 			->checkDefaultValue(false);
 	}
 
@@ -464,8 +443,8 @@ class Form extends UIForm
 	public function addMultiWhisperer(string $name, $label = null, array $items = null): Control\MultiWhisperer
 	{
 		return $this[$name] = (new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
-			->setAttribute('class', 'form-control-chosen')
-			->setAttribute('data-placeholder', 'Vyberte');
+			->setHtmlAttribute('class', 'form-control-chosen')
+			->setHtmlAttribute('data-placeholder', 'Vyberte');
 	}
 
 

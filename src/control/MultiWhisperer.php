@@ -19,6 +19,11 @@ class MultiWhisperer extends MultiSelectBox
 
 		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null) . $chosenClass]);
 
+		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
+		{
+			$this->addSignalsToInput($input);
+		}
+
 		return Html::el('div')->class('input-group')
 			->addHtml($this->getPrepend() . $input . $this->getAppend() . $validationFeedBack);
 	}
@@ -30,7 +35,7 @@ class MultiWhisperer extends MultiSelectBox
 
 		foreach($this->getRules() as $rule)
 		{
-			if($rule->validator == \ModulIS\Form\Form::FILLED && !$this->getValue())
+			if($rule->validator == \ModulIS\Form\Form::Filled && !$this->getValue())
 			{
 				$this->addError(\Nette\Forms\Validator::formatMessage($rule, true), false);
 			}
