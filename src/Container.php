@@ -20,6 +20,8 @@ class Container extends \Nette\Forms\Container
 
 	private ?string $wrapClass = null;
 
+	private array $dividerArray = [];
+
 
 	public function setId(string $id): self
 	{
@@ -258,6 +260,20 @@ class Container extends \Nette\Forms\Container
 	}
 
 
+	public function addDivider(Html|string $content, ?string $previousControl = null): void
+	{
+		if(!$previousControl)
+		{
+			$controlArray = iterator_to_array($this->getControls());
+			$lastControl = end($controlArray);
+
+			$previousControl = $lastControl->getName();
+		}
+
+		$this->dividerArray[$previousControl] = $content;
+	}
+
+
 	public function render(): string|Html
 	{
 		$components = $this->getComponents();
@@ -289,6 +305,11 @@ class Container extends \Nette\Forms\Container
 				foreach($inputArray as $control)
 				{
 					$inputs .= $control->render();
+
+					if(array_key_exists($control->getName(), $this->dividerArray))
+					{
+						$inputs .= $this->dividerArray[$control->getName()];
+					}
 				}
 
 				$rowDiv = Html::el('div')
@@ -336,6 +357,11 @@ class Container extends \Nette\Forms\Container
 			{
 				\assert($control instanceof Control\Renderable);
 				$inputs .= $control->render();
+
+				if(array_key_exists($control->getName(), $this->dividerArray))
+				{
+					$inputs .= $this->dividerArray[$control->getName()];
+				}
 			}
 
 			$rowDiv = Html::el('div')

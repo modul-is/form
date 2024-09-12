@@ -45,6 +45,8 @@ class Form extends UIForm
 
 	private string $defaultInputWrapClass = 'mb-3 col-12';
 
+	private array $dividerArray = [];
+
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent = null, $name = null)
 	{
@@ -93,6 +95,11 @@ class Form extends UIForm
 				 * Nette form hidden input
 				 */
 				$inputs .= $input instanceof \Nette\Forms\Controls\HiddenField ? $input->getControl() : $input->render();
+
+				if(array_key_exists($input->getName(), $this->dividerArray))
+				{
+					$inputs .= $this->dividerArray[$input->getName()];
+				}
 			}
 
 			if($inputs === null)
@@ -108,18 +115,18 @@ class Form extends UIForm
 				->class('card-body')
 				->setHtml($row);
 
-			$carHeader = null;
+			$cardHeader = null;
 
 			if($groupTitle || $this->getTitle())
 			{
 				$groupColor = $group->getOption('color') ? ' ' . $group->getOption('color') : null;
 
-				$carHeader = Html::el('div')
+				$cardHeader = Html::el('div')
 					->class('card-header' . $groupColor)
 					->setHtml($groupTitle ?: $this->getTitle());
 			}
 
-			$content = $carHeader . $cardBody;
+			$content = $cardHeader . $cardBody;
 
 			/**
 			 * Last iteration - add footer with submitters
@@ -438,6 +445,20 @@ class Form extends UIForm
 		return $this[$name] = (new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
 			->setHtmlAttribute('class', 'form-control-chosen')
 			->setHtmlAttribute('data-placeholder', 'Vyberte');
+	}
+
+
+	public function addDivider(Html|string $content, ?string $previousControl = null): void
+	{
+		if(!$previousControl)
+		{
+			$controlArray = iterator_to_array($this->getControls());
+			$lastControl = end($controlArray);
+
+			$previousControl = $lastControl->getName();
+		}
+
+		$this->dividerArray[$previousControl] = $content;
 	}
 
 
