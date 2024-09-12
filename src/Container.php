@@ -260,8 +260,16 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addDivider(string $previousControl, Html|string $content): void
+	public function addDivider(Html|string $content, ?string $previousControl = null): void
 	{
+		if(!$previousControl)
+		{
+			$controlArray = iterator_to_array($this->getControls());
+			$lastControl = end($controlArray);
+
+			$previousControl = $lastControl->getName();
+		}
+
 		$this->dividerArray[$previousControl] = $content;
 	}
 
@@ -298,12 +306,9 @@ class Container extends \Nette\Forms\Container
 				{
 					$inputs .= $control->render();
 
-					foreach($this->dividerArray as $previousControl => $divider)
+					if(array_key_exists($control->getName(), $this->dividerArray))
 					{
-						if($previousControl === $control->getName())
-						{
-							$inputs .= $divider;
-						}
+						$inputs .= $this->dividerArray[$control->getName()];
 					}
 				}
 
@@ -353,12 +358,9 @@ class Container extends \Nette\Forms\Container
 				\assert($control instanceof Control\Renderable);
 				$inputs .= $control->render();
 
-				foreach($this->dividerArray as $previousControl => $divider)
+				if(array_key_exists($control->getName(), $this->dividerArray))
 				{
-					if($previousControl === $control->getName())
-					{
-						$inputs .= $divider;
-					}
+					$inputs .= $this->dividerArray[$control->getName()];
 				}
 			}
 

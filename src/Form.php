@@ -117,12 +117,9 @@ class Form extends UIForm
 				 */
 				$inputs .= $input instanceof \Nette\Forms\Controls\HiddenField ? $input->getControl() : $input->render();
 
-				foreach($this->dividerArray as $previousControl => $divider)
+				if(array_key_exists($input->getName(), $this->dividerArray))
 				{
-					if($previousControl === $input->getName())
-					{
-						$inputs .= $divider;
-					}
+					$inputs .= $this->dividerArray[$input->getName()];
 				}
 			}
 
@@ -472,8 +469,16 @@ class Form extends UIForm
 	}
 
 
-	public function addDivider(string $previousControl, Html|string $content): void
+	public function addDivider(Html|string $content, ?string $previousControl = null): void
 	{
+		if(!$previousControl)
+		{
+			$controlArray = iterator_to_array($this->getControls());
+			$lastControl = end($controlArray);
+
+			$previousControl = $lastControl->getName();
+		}
+
 		$this->dividerArray[$previousControl] = $content;
 	}
 
