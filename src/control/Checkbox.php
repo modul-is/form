@@ -24,6 +24,10 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 
 	private ?string $inputClass = null;
 
+	private ?string $labelClass = null;
+
+	private ?string $checkboxClass = null;
+
 	private ?string $wrapClass = null;
 
 
@@ -44,6 +48,22 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 	public function setInputWrapClass(string $class): self
 	{
 		$this->inputClass = $class;
+
+		return $this;
+	}
+
+
+	public function setLabelWrapClass(string $class): self
+	{
+		$this->labelClass = $class;
+
+		return $this;
+	}
+
+
+	public function setCheckboxWrapClass(string $class): self
+	{
+		$this->checkboxClass = $class;
 
 		return $this;
 	}
@@ -72,10 +92,12 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 		}
 		else
 		{
-			$inputClass = 'form-check-input' . ($this->color ? ' checkbox-' . $this->color : null);
+			$inputClass = 'form-check-input' . ($this->color ? ' ' . $this->color : null);
 			$labelClass = 'form-check-label';
 			$labelAttribute = 'width: auto';
 		}
+
+		$labelClass = $this->labelClass ? $labelClass . ' ' . $this->labelClass : $labelClass;
 
 		$input->class($inputClass . ' ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null));
 
@@ -91,9 +113,10 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 			->addHtml($this->caption);
 
 		$switchClass = $this->switch ? ' form-switch' : null;
+		$checkboxClass = $this->checkboxClass ? ' ' . $this->checkboxClass : null;
 
 		$wrapDiv = Html::el('div')
-			->class('form-check' . $switchClass)
+			->class('form-check' . $switchClass . $checkboxClass)
 			->addHtml($input . $label);
 
 		if($this->tooltip)

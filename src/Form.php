@@ -11,30 +11,9 @@ use Nette\Utils\Html;
 
 class Form extends UIForm
 {
-	/** @deprecated use Form::GreaterEqual */
-	public const GREATER_EQUAL = UIForm::MIN;
+	public const GreaterEqual = UIForm::Min;
 
-	/** @deprecated use Form::LessEqual */
-	public const LESS_EQUAL = UIForm::MAX;
-
-	/** @deprecated use Form::Greater */
-	public const GREATER = '\ModulIS\Form\FormValidator::greater';
-
-	/** @deprecated use Form::Less */
-	public const LESS = 'ModulIS\Form\FormValidator::less';
-
-	/** @deprecated use Form::SameLength */
-	public const SAME_LENGTH = 'ModulIS\Form\FormValidator::sameLength';
-
-	/** @deprecated use Form::validateRC */
-	public const VALIDATE_RC = 'ModulIS\Form\FormValidator::validateRC';
-
-	/** @deprecated use Form::validateIC */
-	public const VALIDATE_IC = 'ModulIS\Form\FormValidator::validateIC';
-
-	public const GreaterEqual = UIForm::MIN;
-
-	public const LessEqual = UIForm::MAX;
+	public const LessEqual = UIForm::Max;
 
 	public const Greater = '\ModulIS\Form\FormValidator::greater';
 
@@ -65,6 +44,8 @@ class Form extends UIForm
 	private array $formErrors = [];
 
 	private string $defaultInputWrapClass = 'mb-3 col-12';
+
+	private array $dividerArray = [];
 
 
 	public function __construct(\Nette\ComponentModel\IContainer $parent = null, $name = null)
@@ -114,6 +95,11 @@ class Form extends UIForm
 				 * Nette form hidden input
 				 */
 				$inputs .= $input instanceof \Nette\Forms\Controls\HiddenField ? $input->getControl() : $input->render();
+
+				if(array_key_exists($input->getName(), $this->dividerArray))
+				{
+					$inputs .= $this->dividerArray[$input->getName()];
+				}
 			}
 
 			if($inputs === null)
@@ -129,18 +115,18 @@ class Form extends UIForm
 				->class('card-body')
 				->setHtml($row);
 
-			$carHeader = null;
+			$cardHeader = null;
 
 			if($groupTitle || $this->getTitle())
 			{
 				$groupColor = $group->getOption('color') ? ' ' . $group->getOption('color') : null;
 
-				$carHeader = Html::el('div')
+				$cardHeader = Html::el('div')
 					->class('card-header' . $groupColor)
 					->setHtml($groupTitle ?: $this->getTitle());
 			}
 
-			$content = $carHeader . $cardBody;
+			$content = $cardHeader . $cardBody;
 
 			/**
 			 * Last iteration - add footer with submitters
@@ -304,6 +290,13 @@ class Form extends UIForm
 	}
 
 
+	public function addDateWeek(string $name, $label = null): Control\TextInput
+	{
+		return $this[$name] = (new Control\TextInput($label))
+			->setHtmlAttribute('type', 'week');
+	}
+
+
 	public function addDateTime(string $name, $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDateTime, $withSeconds);
@@ -432,7 +425,7 @@ class Form extends UIForm
 	public function addWhisperer(string $name, $label = null, array $items = []): Control\Whisperer
 	{
 		return $this[$name] = (new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
-			->setAttribute('data-placeholder', 'Vyberte')
+			->setHtmlAttribute('data-placeholder', 'Vyberte')
 			->checkDefaultValue(false);
 	}
 
@@ -450,8 +443,22 @@ class Form extends UIForm
 	public function addMultiWhisperer(string $name, $label = null, array $items = null): Control\MultiWhisperer
 	{
 		return $this[$name] = (new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
-			->setAttribute('class', 'form-control-chosen')
-			->setAttribute('data-placeholder', 'Vyberte');
+			->setHtmlAttribute('class', 'form-control-chosen')
+			->setHtmlAttribute('data-placeholder', 'Vyberte');
+	}
+
+
+	public function addDivider(Html|string $content, ?string $previousControl = null): void
+	{
+		if(!$previousControl)
+		{
+			$controlArray = iterator_to_array($this->getControls());
+			$lastControl = end($controlArray);
+
+			$previousControl = $lastControl->getName();
+		}
+
+		$this->dividerArray[$previousControl] = $content;
 	}
 
 

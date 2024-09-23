@@ -20,6 +20,8 @@ class Container extends \Nette\Forms\Container
 
 	private ?string $wrapClass = null;
 
+	private array $dividerArray = [];
+
 
 	public function setId(string $id): self
 	{
@@ -119,7 +121,7 @@ class Container extends \Nette\Forms\Container
 	{
 		return $this[$name] = (new Control\TextInput($label))
 			->setRequired(false)
-			->addRule(Form::EMAIL);
+			->addRule(Form::Email);
 	}
 
 
@@ -128,7 +130,7 @@ class Container extends \Nette\Forms\Container
 		return $this[$name] = (new Control\TextInput($label))
 			->setNullable()
 			->setRequired(false)
-			->addRule(Form::INTEGER);
+			->addRule(Form::Integer);
 	}
 
 
@@ -149,6 +151,13 @@ class Container extends \Nette\Forms\Container
 		return $this[$name] = $dateInput->setRequired(false)
 			->setFormat('Y-m-d H:i:s')
 			->addRule(fn($input) => DateTime::createFromFormat($withSeconds ? 'Y-m-d H:i:s' : 'Y-m-d H:i:00', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy ' . ($withSeconds ? 'hh:mm:ss' : 'hh:mm'));
+	}
+
+
+	public function addDateWeek(string $name, $label = null): Control\TextInput
+	{
+		return $this[$name] = (new Control\TextInput($label))
+			->setHtmlAttribute('type', 'week');
 	}
 
 
@@ -246,8 +255,22 @@ class Container extends \Nette\Forms\Container
 	public function addWhisperer(string $name, $label = null, array $items = []): Control\Whisperer
 	{
 		return $this[$name] = (new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
-			->setAttribute('data-placeholder', 'Vyberte')
+			->setHtmlAttribute('data-placeholder', 'Vyberte')
 			->checkDefaultValue(false);
+	}
+
+
+	public function addDivider(Html|string $content, ?string $previousControl = null): void
+	{
+		if(!$previousControl)
+		{
+			$controlArray = iterator_to_array($this->getControls());
+			$lastControl = end($controlArray);
+
+			$previousControl = $lastControl->getName();
+		}
+
+		$this->dividerArray[$previousControl] = $content;
 	}
 
 
@@ -282,11 +305,16 @@ class Container extends \Nette\Forms\Container
 				foreach($inputArray as $control)
 				{
 					$inputs .= $control->render();
+
+					if(array_key_exists($control->getName(), $this->dividerArray))
+					{
+						$inputs .= $this->dividerArray[$control->getName()];
+					}
 				}
 
 				$rowDiv = Html::el('div')
-				->class('row')
-				->addHtml($inputs);
+					->class('row')
+					->addHtml($inputs);
 
 				$cardBodyDiv = Html::el('div')
 					->class('card-body')
@@ -329,6 +357,11 @@ class Container extends \Nette\Forms\Container
 			{
 				\assert($control instanceof Control\Renderable);
 				$inputs .= $control->render();
+
+				if(array_key_exists($control->getName(), $this->dividerArray))
+				{
+					$inputs .= $this->dividerArray[$control->getName()];
+				}
 			}
 
 			$rowDiv = Html::el('div')

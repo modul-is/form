@@ -393,3 +393,9 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
 {
 	padding-top: 0.5rem;
 }
+
+label.required::after
+{
+	color: #cc1d24;
+	content: " ★";
+}

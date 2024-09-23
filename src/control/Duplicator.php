@@ -43,7 +43,11 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	public function __construct($factory, int $createDefault = 0, bool $forceDefault = false)
 	{
-		$this->monitor(Presenter::class);
+		$this->monitor(Presenter::class, function()
+		{
+			$this->loadHttpData();
+			$this->createDefault();
+		});
 		$this->monitor(\Nette\Forms\Form::class);
 
 		if(!self::$containerClass)
@@ -69,7 +73,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	public function setOption(string $key, $value): self
 	{
-		if ($value === null)
+		if($value === null)
 		{
 			unset($this->options[$key]);
 		}
@@ -196,20 +200,6 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	}
 
 
-	protected function attached($obj): void
-	{
-		parent::attached($obj);
-
-		if(!$obj instanceof Presenter && $this->form instanceof Nette\Application\UI\Form)
-		{
-			return;
-		}
-
-		$this->loadHttpData();
-		$this->createDefault();
-	}
-
-
 	public function getContainers(?bool $recursive = false)
 	{
 		return $this->getComponents($recursive, \ModulIS\Form\Container::class);
@@ -237,7 +227,8 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	private function getFirstControlName()
 	{
-		$controls = iterator_to_array($this->getComponents(false, \Nette\Forms\Control::class));
+		$components = $this->getComponents(false, \Nette\Forms\Control::class);
+		$controls = is_array($components) ? $components : iterator_to_array($components);
 		$firstControl = reset($controls);
 		/* @phpstan-ignore-next-line */
 		return $firstControl ? $firstControl->name : null;
@@ -350,7 +341,7 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 	{
 		if($this->httpPost === null)
 		{
-			$path = explode(self::NAME_SEPARATOR, $this->lookupPath(\Nette\Forms\Form::class));
+			$path = explode(self::NameSeparator, $this->lookupPath(\Nette\Forms\Form::class));
 			$this->httpPost = Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, null);
 		}
 

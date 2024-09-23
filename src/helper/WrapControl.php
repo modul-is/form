@@ -25,11 +25,23 @@ trait WrapControl
 	}
 
 
+	public function getLabelWrapClass(): ?string
+	{
+		return $this->labelClass;
+	}
+
+
 	public function setInputWrapClass(string $class): self
 	{
 		$this->inputClass = $class;
 
 		return $this;
+	}
+
+
+	public function getInputWrapClass(): ?string
+	{
+		return $this->inputClass;
 	}
 
 
