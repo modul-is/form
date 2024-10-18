@@ -263,9 +263,16 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 
 	public function createOne($name = null)
 	{
+		$containers = $this->getContainers();
+
+		if(!is_array($containers))
+		{
+			$containers = iterator_to_array($containers);
+		}
+
 		if($name === null)
 		{
-			$names = array_keys(iterator_to_array($this->getContainers()));
+			$names = array_keys($containers);
 			$name = $names ? max($names) + 1 : 0;
 		}
 
