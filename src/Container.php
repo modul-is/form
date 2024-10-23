@@ -7,6 +7,7 @@ namespace ModulIS\Form;
 use Nette\Forms\Controls\DateTimeControl;
 use Nette\Utils\DateTime;
 use Nette\Utils\Html;
+use Stringable;
 
 class Container extends \Nette\Forms\Container
 {
@@ -117,7 +118,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addEmail(string $name, $label = null): Control\TextInput
+	public function addEmail(string $name, string|Stringable|null $label = null, int $maxLength = 255): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label))
 			->setRequired(false)
