@@ -9,7 +9,7 @@
     {
 		"php": "^8.2",
 		"nette/utils": "^4.0",
-		"nette/forms": "^3.2.3",
+		"nette/forms": "^3.2.5",
 		"nette/application": "^3.0 || ^4.0",
 		"kravcik/latte-font-awesome-icon": "^1"
     },
