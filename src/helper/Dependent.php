@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Based on NasExt extensions of Nette Framework
@@ -124,7 +124,7 @@ trait Dependent
 	{
 		parent::setItems($items, $useKeys);
 
-		if (!in_array($this->tempValue, [null, '', []], true))
+		if(!in_array($this->tempValue, [null, '', []], true))
 		{
 			parent::setValue($this->tempValue);
 		}
