@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace ModulIS\Form;
 
@@ -77,14 +77,14 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addText(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
+	public function addText(string $name, null|string|Stringable $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label, $maxLength))
 			->setHtmlAttribute('size', $cols);
 	}
 
 
-	public function addFloat(string $name, $label = null): Control\TextInput
+	public function addFloat(string $name, null|string|Stringable $label = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label))
 			->setNullable()
@@ -94,7 +94,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addAutocomplete(string $name, $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
+	public function addAutocomplete(string $name, null|string|Stringable $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
 	{
 		return $this[$name] = (new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? []))
 			->setHtmlAttribute('autocomplete', 'off')
@@ -102,7 +102,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addPassword(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
+	public function addPassword(string $name, null|string|Stringable $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label, $maxLength))
 			->setHtmlAttribute('size', $cols)
@@ -110,7 +110,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addTextArea(string $name, $label = null, ?int $cols = null, ?int $rows = null): Control\TextArea
+	public function addTextArea(string $name, null|string|Stringable $label = null, ?int $cols = null, ?int $rows = null): Control\TextArea
 	{
 		return $this[$name] = (new Control\TextArea($label))
 			->setHtmlAttribute('cols', $cols)
@@ -126,7 +126,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addInteger(string $name, $label = null): Control\TextInput
+	public function addInteger(string $name, null|string|Stringable $label = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label))
 			->setNullable()
@@ -135,7 +135,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addDate(string $name, $label = null): Control\DateTimeInput
+	public function addDate(string $name, object|string|null $label = null): Control\DateTimeInput
 	{
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDate);
 
@@ -145,7 +145,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addDateTime(string $name, $label = null, bool $withSeconds = false): Control\DateTimeInput
+	public function addDateTime(string $name, object|string|null $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDateTime, $withSeconds);
 
@@ -155,27 +155,27 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addDateWeek(string $name, $label = null): Control\TextInput
+	public function addDateWeek(string $name, null|string|Stringable $label = null): Control\TextInput
 	{
 		return $this[$name] = (new Control\TextInput($label))
 			->setHtmlAttribute('type', 'week');
 	}
 
 
-	public function addTime(string $name, $label = null, bool $withSeconds = false): Control\DateTimeInput
+	public function addTime(string $name, object|string|null $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
 		return $this[$name] = (new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds))
 			->setFormat($withSeconds ? 'H:i:00' : 'H:i');
 	}
 
 
-	public function addUpload(string $name, $label = null, $multiple = false): Control\UploadControl
+	public function addUpload(string $name, null|string|Stringable $label = null, $multiple = false): Control\UploadControl
 	{
 		return $this[$name] = new Control\UploadControl($label, $multiple);
 	}
 
 
-	public function addMultiUpload(string $name, $label = null): Control\UploadControl
+	public function addMultiUpload(string $name, null|string|Stringable $label = null): Control\UploadControl
 	{
 		return $this[$name] = new Control\UploadControl($label, true);
 	}
@@ -187,26 +187,26 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addRadioList(string $name, $label = null, array $items = null): Control\RadioList
+	public function addRadioList(string $name, null|string|Stringable $label = null, ?array $items = null): Control\RadioList
 	{
 		return $this[$name] = new Control\RadioList($label, $items);
 	}
 
 
-	public function addCheckboxList(string $name, $label = null, array $items = null): Control\CheckboxList
+	public function addCheckboxList(string $name, null|string|Stringable $label = null, ?array $items = null): Control\CheckboxList
 	{
 		return $this[$name] = new Control\CheckboxList($label, $items);
 	}
 
 
-	public function addSelect(string $name, $label = null, array $items = null, $size = null): Control\SelectBox
+	public function addSelect(string $name, null|string|Stringable $label = null, ?array $items = null, $size = null): Control\SelectBox
 	{
 		return $this[$name] = (new Control\SelectBox($label, $items))
 			->setHtmlAttribute('size', $size > 1 ? (int) $size : null);
 	}
 
 
-	public function addMultiSelect(string $name, $label = null, array $items = null, $size = null): Control\MultiSelectBox
+	public function addMultiSelect(string $name, null|string|Stringable $label = null, ?array $items = null, $size = null): Control\MultiSelectBox
 	{
 		return $this[$name] = (new Control\MultiSelectBox($label, $items))
 			->setHtmlAttribute('size', $size > 1 ? (int) $size : null);
@@ -231,13 +231,13 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addDependentSelect(string $name, string $label = null, array $parents = [], callable $dependentCallback = null): Control\DependentSelect
+	public function addDependentSelect(string $name, ?string $label = null, array $parents = [], ?callable $dependentCallback = null): Control\DependentSelect
 	{
 		return $this[$name] = new Control\DependentSelect($label, $parents, $dependentCallback);
 	}
 
 
-	public function addDependentMultiSelect(string $name, string $label = null, array $parents = [], callable $dependentCallback = null): Control\DependentMultiSelect
+	public function addDependentMultiSelect(string $name, ?string $label = null, array $parents = [], ?callable $dependentCallback = null): Control\DependentMultiSelect
 	{
 		return $this[$name] = new Control\DependentMultiSelect($label, $parents, $dependentCallback);
 	}

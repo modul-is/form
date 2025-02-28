@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace ModulIS\Form;
 
@@ -49,7 +49,7 @@ class Form extends UIForm
 	private array $dividerArray = [];
 
 
-	public function __construct(\Nette\ComponentModel\IContainer $parent = null, $name = null)
+	public function __construct(?\Nette\ComponentModel\IContainer $parent = null, $name = null)
 	{
 		parent::__construct($parent, $name);
 
@@ -365,26 +365,26 @@ class Form extends UIForm
 	}
 
 
-	public function addRadioList(string $name, $label = null, array $items = null): Control\RadioList
+	public function addRadioList(string $name, null|string|Stringable $label = null, ?array $items = null): Control\RadioList
 	{
 		return $this[$name] = new Control\RadioList($label, $items);
 	}
 
 
-	public function addCheckboxList(string $name, $label = null, array $items = null): Control\CheckboxList
+	public function addCheckboxList(string $name, null|string|Stringable $label = null, ?array $items = null): Control\CheckboxList
 	{
 		return $this[$name] = new Control\CheckboxList($label, $items);
 	}
 
 
-	public function addSelect(string $name, $label = null, array $items = null, $size = null): Control\SelectBox
+	public function addSelect(string $name, null|string|Stringable $label = null, ?array $items = null, $size = null): Control\SelectBox
 	{
 		return $this[$name] = (new Control\SelectBox($label, $items))
 			->setHtmlAttribute('size', $size > 1 ? (int) $size : null);
 	}
 
 
-	public function addMultiSelect(string $name, $label = null, array $items = null, $size = null): Control\MultiSelectBox
+	public function addMultiSelect(string $name, null|string|Stringable $label = null, ?array $items = null, $size = null): Control\MultiSelectBox
 	{
 		return $this[$name] = (new Control\MultiSelectBox($label, $items))
 			->setHtmlAttribute('size', $size > 1 ? (int) $size : null);
@@ -411,13 +411,13 @@ class Form extends UIForm
 	}
 
 
-	public function addDependentSelect(string $name, $label = null, array $parents = [], callable $dependentCallback = null): Control\DependentSelect
+	public function addDependentSelect(string $name, $label = null, ?array $parents = [], ?callable $dependentCallback = null): Control\DependentSelect
 	{
 		return $this[$name] = new Control\DependentSelect($label, $parents, $dependentCallback);
 	}
 
 
-	public function addDependentMultiSelect(string $name, $label = null, array $parents = [], callable $dependentCallback = null): Control\DependentMultiSelect
+	public function addDependentMultiSelect(string $name, $label = null, ?array $parents = [], ?callable $dependentCallback = null): Control\DependentMultiSelect
 	{
 		return $this[$name] = new Control\DependentMultiSelect($label, $parents, $dependentCallback);
 	}
@@ -441,7 +441,7 @@ class Form extends UIForm
 	}
 
 
-	public function addMultiWhisperer(string $name, $label = null, array $items = null): Control\MultiWhisperer
+	public function addMultiWhisperer(string $name, $label = null, ?array $items = null): Control\MultiWhisperer
 	{
 		return $this[$name] = (new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
 			->setHtmlAttribute('class', 'form-control-chosen')
