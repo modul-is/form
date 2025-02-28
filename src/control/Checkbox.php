@@ -110,7 +110,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 			->setAttribute('for', $this->getHtmlId())
 			->setAttribute('style', $labelAttribute)
 			->class($labelClass)
-			->addHtml($this->caption);
+			->addHtml($this->translate($this->caption));
 
 		$switchClass = $this->switch ? ' form-switch' : null;
 		$checkboxClass = $this->checkboxClass ? ' ' . $this->checkboxClass : null;

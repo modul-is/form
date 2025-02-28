@@ -26,7 +26,7 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 			->type('submit')
 			->formnovalidate(true)
 			->addHtml($this->icon ? \Kravcik\LatteFontAwesomeIcon\Extension::render($this->icon) . '&nbsp;' : '')
-			->addHtml($this->getCaption());
+			->addHtml($this->translate($this->getCaption()));
 
 		$scopeString = 'data-nette-validation-scope';
 

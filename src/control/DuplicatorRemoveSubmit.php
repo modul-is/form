@@ -55,7 +55,7 @@ class DuplicatorRemoveSubmit extends SubmitButton
 			->class('btn btn-xs btn-outline-danger float-end' . ($form->ajax ? ' ajax' : '') . ($currentClass ? ' ' . $currentClass : ''))
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
-			->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('times') . $this->getCaption());
+			->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('times') . $this->translate($this->getCaption()));
 
 		return $button;
 	}
