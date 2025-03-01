@@ -63,6 +63,6 @@ class DuplicatorCreateSubmit extends SubmitButton
 			->class('btn btn-outline-primary float-left btn-xs ' . ($form->ajax ? 'ajax' : '') . ($currentClass ? ' ' . $currentClass : ''))
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
-			->addHtml($icon . $this->getCaption());
+			->addHtml($icon . $this->translate($this->getCaption()));
 	}
 }
