@@ -30,7 +30,7 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 	}
 	use Helper\Dependent;
 
-	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
+	public function __construct($label = null, array $parents = [], ?callable $dependentCallback = null)
 	{
 		$this->controlClass = 'form-select';
 		$this->parents = $parents;

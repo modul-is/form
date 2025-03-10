@@ -298,7 +298,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	}
 
 
-	public function setNoResultMessage(string $noResultMessage = null): self
+	public function setNoResultMessage(?string $noResultMessage = null): self
 	{
 		$this->noResultMessage = $noResultMessage;
 
