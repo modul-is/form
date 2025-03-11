@@ -19,7 +19,7 @@ class MultiWhisperer extends MultiSelectBox
 
 		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null) . $chosenClass]);
 
-		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
+		if($this->hasSignal())
 		{
 			$this->addSignalsToInput($input);
 		}

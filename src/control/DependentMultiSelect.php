@@ -23,7 +23,10 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	use Helper\RenderBasic;
 	use Helper\Dependent;
 
-	public function __construct($label = null, array $parents = [], callable $dependentCallback = null)
+	private ?string $prompt = null;
+
+
+	public function __construct($label = null, array $parents = [], ?callable $dependentCallback = null)
 	{
 		$this->parents = $parents;
 
@@ -75,5 +78,16 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 
 			$presenter->sendPayload();
 		}
+	}
+
+	public function setPrompt(string $prompt)
+	{
+		$this->prompt = $prompt;
+	}
+
+
+	public function getPrompt(): ?string
+	{
+		return $this->prompt;
 	}
 }

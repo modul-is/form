@@ -38,7 +38,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 	private ?string $prompt = null;
 
-	private ?array $items = [];
+	private array $items = [];
 
 
 	public function __construct($label = null, ?int $maxLength = null, ?array $items = null)

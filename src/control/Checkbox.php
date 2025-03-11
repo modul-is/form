@@ -101,7 +101,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 
 		$input->class($inputClass . ' ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null));
 
-		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
+		if($this->hasSignal())
 		{
 			$this->addSignalsToInput($input);
 		}
