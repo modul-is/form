@@ -80,6 +80,7 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 		}
 	}
 
+
 	public function setPrompt(string $prompt)
 	{
 		$this->prompt = $prompt;
