@@ -7,7 +7,7 @@
 	"license": "MIT",
     "require":
     {
-		"php": "^8.2",
+		"php": "^8.4",
 		"nette/utils": "^4.0",
 		"nette/forms": "^3.2.5",
 		"nette/application": "^3.0 || ^4.0",
@@ -15,7 +15,7 @@
     },
     "require-dev":
     {
-		"phpstan/phpstan-nette": "^1",
+		"phpstan/phpstan-nette": "^2",
 		"modul-is/coding-standard": "^4",
 		"nette/tester": "^2.1"
     },

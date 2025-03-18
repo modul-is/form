@@ -83,12 +83,7 @@ trait Dependent
 
 			$this->setItems($items);
 
-			if(method_exists($this, 'setPrompt'))
-			{
-				$inputPrompt = method_exists($this, 'getPrompt') ? $this->getPrompt() : null;
-
-				$this->setPrompt($data->getPrompt() ?: $inputPrompt);
-			}
+			$this->setPrompt($data->getPrompt() ?: $this->getPrompt());
 		}
 		else
 		{

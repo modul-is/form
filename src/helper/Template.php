@@ -15,7 +15,7 @@ trait Template
 	protected ?TemplateEngine $templateEngine = null;
 
 
-	public function setTemplate(?string $path, array $params = [], TemplateEngine $templateEngine = null): static
+	public function setTemplate(?string $path, array $params = [], ?TemplateEngine $templateEngine = null): static
 	{
 		$this->templatePath = $path;
 		$this->templateParams = $params;

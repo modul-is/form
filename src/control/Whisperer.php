@@ -129,11 +129,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 			$data = ['' => ''] + call_user_func_array($this->onSearchChangeCallback, [$presenter->getParameter('param'), $parentArray]);
 
-			if(!is_array($data))
-			{
-				throw new \Nette\InvalidStateException('Callback for input "' . $this->getName() . '" must return array!');
-			}
-
 			$presenter->payload->suggestions = [];
 
 			foreach($data as $key => $value)
@@ -298,7 +293,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	}
 
 
-	public function setNoResultMessage(string $noResultMessage = null): self
+	public function setNoResultMessage(?string $noResultMessage = null): self
 	{
 		$this->noResultMessage = $noResultMessage;
 
