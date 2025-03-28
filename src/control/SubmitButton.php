@@ -32,7 +32,7 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 
 		if($input->getAttribute($scopeString))
 		{
-			$button->$scopeString($input->getAttribute($scopeString));
+			$button->setAttribute($scopeString, $input->getAttribute($scopeString));
 		}
 
 		if($this->getOption('id'))
