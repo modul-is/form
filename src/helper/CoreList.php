@@ -26,66 +26,9 @@ trait CoreList
 
 		foreach($this->getItems() as $key => $input)
 		{
-			$input = $this->getControlPart($key);
+			$htmlInput = $this->renderItem($key);
 
-			$inputColorClass = $this->color ? ' ' . $this->color : null;
-
-			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : null;
-
-			if($this->toggleButton)
-			{
-				if(is_array($this->buttonColor))
-				{
-					$buttonColor = $this->buttonColor[$key] ?? 'primary';
-				}
-				else
-				{
-					$buttonColor = $this->buttonColor;
-				}
-
-				$inputClass = 'btn-check';
-				$labelClass = 'me-2 btn btn-' . $buttonColor;
-				$labelAttribute = 'width: calc(100% - 7.5px)';
-			}
-			else
-			{
-				$inputClass = 'form-check-input';
-				$labelClass = 'form-check-label';
-				$labelAttribute = 'width: auto';
-			}
-
-			$input->class($inputClass . $currentClass . $inputColorClass);
-
-			$label = $this->getLabelPart($key);
-
-			$label->class($labelClass)
-				->setAttribute('style', $labelAttribute);
-
-			$tooltip = null;
-
-			if(isset($this->tooltips[$key]))
-			{
-				$tooltip = Html::el('span')
-					->title($this->tooltips[$key])
-					->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip'])
-					->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
-			}
-
-			$class = 'form-check-inline mr-0 col-' . 12 / $this->itemsPerRow;
-
-			if($this->itemClass)
-			{
-				$class .= ' ' . $this->itemClass;
-			}
-
-			if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
-			{
-				$this->addSignalsToInput($input);
-			}
-
-			$inputs .= Html::el('div')
-				->class(($this->toggleButton ? 'p-0 ' : 'form-check ') . $class)
-				->addHtml($input . $label . $tooltip);
+			$inputs .= $htmlInput;
 		}
 
 		$validationFeedBack = null;
@@ -123,6 +66,71 @@ trait CoreList
 			->addHtml($wrapRow);
 
 		return $wrapContainer . $validationFeedBack;
+	}
+
+
+	public function renderItem(string|int $itemName)
+	{
+		$input = $this->getControlPart($itemName);
+
+		$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;
+
+		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : null;
+
+		if($this->toggleButton)
+		{
+			if(is_array($this->buttonColor))
+			{
+				$buttonColor = $this->buttonColor[$itemName] ?? 'primary';
+			}
+			else
+			{
+				$buttonColor = $this->buttonColor;
+			}
+
+			$inputClass = 'btn-check';
+			$labelClass = 'me-2 btn btn-' . $buttonColor;
+			$labelAttribute = 'width: calc(100% - 7.5px)';
+		}
+		else
+		{
+			$inputClass = 'form-check-input';
+			$labelClass = 'form-check-label';
+			$labelAttribute = 'width: auto';
+		}
+
+		$input->class($inputClass . $currentClass . $inputColorClass);
+
+		$label = $this->getLabelPart($itemName);
+
+		$label->class($labelClass)
+			->setAttribute('style', $labelAttribute);
+
+		$tooltip = null;
+
+		if(isset($this->tooltips[$itemName]))
+		{
+			$tooltip = Html::el('span')
+				->title($this->tooltips[$itemName])
+				->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip'])
+				->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
+		}
+
+		$class = 'form-check-inline mr-0 col-' . 12 / $this->itemsPerRow;
+
+		if($this->itemClass)
+		{
+			$class .= ' ' . $this->itemClass;
+		}
+
+		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
+		{
+			$this->addSignalsToInput($input);
+		}
+
+		return Html::el('div')
+			->class(($this->toggleButton ? 'p-0 ' : 'form-check ') . $class)
+			->addHtml($input . $label . $tooltip);
 	}
 
 
