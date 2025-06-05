@@ -404,3 +404,8 @@ label.required::after
 	color: #cc1d24;
 	content: " ★";
 }
+
+.form-check-inline
+{
+	margin-right: 0 !important;
+}
