@@ -145,9 +145,15 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 			}
 		}
 
+		$label = $this->getLabel()->addAttributes(['class' => $this->isRequired() ? 'required' : '']);
+		$tooltip = $this->getTooltip() === null ?: Html::el('span')
+			->title($this->getTooltip())
+			->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip'])
+			->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
+
 		$mainLabel = Html::el('h6')
 			->class('mb-3 fw-semibold fs-4' . $validationClass . ' ' . $this->labelClass)
-			->addHtml($this->getLabel());
+			->addHtml($label . $tooltip);
 
 		$cardBody = Html::el('div')
 			->class('card-body p-4');
