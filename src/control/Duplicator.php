@@ -133,6 +133,13 @@ class Duplicator extends \ModulIS\Form\Container implements Renderable
 			$inputs = $key === 0 ? null : '<hr />';
 			$buttons = null;
 
+			if($container->getTitle())
+			{
+				$bodyRow .= Html::el('div')
+					->class('card-header bg-transparent px-0 fw-bolder border-bottom mb-2')
+					->addHtml($container->getTitle());
+			}
+
 			foreach($container->getComponents() as $duplicatorInput)
 			{
 				\assert($duplicatorInput instanceof Renderable);
