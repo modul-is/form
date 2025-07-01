@@ -90,6 +90,8 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 
 			$input = $this->getControlPart($case);
 
+			$this->addSignalsToInput($input);
+
 			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : null;
 
 			$input->class('btn-check z-1 top-50 start-0 ms-4 round-16 position-relative' . $currentClass);
