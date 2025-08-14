@@ -112,7 +112,7 @@ trait CoreList
 		{
 			$tooltip = Html::el('span')
 				->title($this->tooltips[$itemName])
-				->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip'])
+				->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
 				->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
 		}
 

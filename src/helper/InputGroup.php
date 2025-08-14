@@ -28,7 +28,7 @@ trait InputGroup
 			$tooltip = Html::el('span')
 				->title($this->tooltip)
 				->class('input-group-text')
-				->addAttributes(['data-bs-placement' => 'right', 'data-bs-toggle' => 'tooltip'])
+				->addAttributes(['data-bs-placement' => 'right', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
 				->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
 
 			return Html::el()->addHtml($this->prepend ? $tooltip . $prepend : $tooltip);

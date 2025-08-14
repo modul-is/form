@@ -21,7 +21,7 @@ trait Label
 
 		$tooltip = Html::el('span')
 			->title($this->tooltip)
-			->addAttributes(['data-bs-placement' => 'right', 'data-bs-toggle' => 'tooltip'])
+			->addAttributes(['data-bs-placement' => 'right', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
 			->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
 
 		return !empty($this->renderFloating) ? $label : $label . $tooltip;

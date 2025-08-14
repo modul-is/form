@@ -150,7 +150,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 		$label = $this->getLabel()->addAttributes(['class' => $this->isRequired() ? 'required' : '']);
 		$tooltip = $this->getTooltip() === null ? '' : Html::el('span')
 			->title($this->getTooltip())
-			->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip'])
+			->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
 			->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
 
 		$mainLabel = Html::el('h6')
