@@ -169,8 +169,6 @@
                                 $select.prop('disabled', true);
                             }
                         }
-
-                        $select.trigger("chosen:updated");
                     }
                 },
                 complete: callback

@@ -234,8 +234,6 @@ function formatSelectData(data)
 		'<span><img class="' + selectId + ' img-flag" /> <span></span></span>'
 	);
 
-	let imageDiv = $('#' + selectId + '-select2').find("div[data-key='" + data.id + "']");;
-
 	image.find("span").text(data.text);
 	image.find("img").attr("src", imageDiv.attr('data-src'));
 
@@ -258,53 +256,7 @@ function initForm()
 		inputSignal($(this), $(this).attr('data-on-change'), e);
 	});
 
-	$('.form-control-chosen, .form-control-chosen-required').each(function()
-	{
-		let noResultMessage = $(this).attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ';
-
-		$(this).chosen('destroy');
-
-		$(this).chosen({
-			allow_single_deselect: true,
-			no_results_text: noResultMessage,
-			search_contains: true,
-			width: '100%'
-		});
-	});
-
-	$('.form-control-chosen, .form-control-chosen-required').on('change', function()
-	{
-		Nette.initOnLoad();
-	});
-
-	$('[data-whisperer], [data-whisperer-onselect], [data-whisperer-delay]').whisperer();
 	$('select[data-dependentselectbox]').dependentSelectBox();
-
-	$(".select2-image").select2({
-		theme: "bootstrap-5",
-		templateResult: formatSelectData,
-		templateSelection: formatSelectData
-	});
-
-	$(document).keydown(function(e)
-	{
-		if($.inArray(e.code, ['ArrowUp', 'ArrowDown']) === -1)
-		{
-			return true;
-		}
-
-		let element = $(e.target);
-
-		if(element.hasClass('select2-selection'))
-		{
-			let select = element.closest('div.input-group').children('select.select2-image');
-
-			if(select.siblings('.select2-container--open').length === 0)
-			{
-				$('#' + select.attr('id')).select2('open');
-			}
-		}
-	});
 
 	var inputs = document.getElementsByClassName("autocomplete-input");
 

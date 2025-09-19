@@ -25,8 +25,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	public function __construct($label = null, ?array $items = null)
 	{
 		parent::__construct($label, $items);
-
-		$this->controlClass = 'form-control-chosen';
 	}
 
 
@@ -270,9 +268,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 				->addHtml($this->getError());
 		}
 
-		$chosenClass = $this->isRequired() ? ' form-control-chosen-required' : ' form-control-chosen';
-
-		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . $errorClass . $chosenClass]);
+		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . $errorClass]);
 
 		return Html::el('div')->class('input-group')
 			->addHtml($this->getPrepend() . $input . $this->getAppend() . $errorMessage);

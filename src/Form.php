@@ -444,7 +444,6 @@ class Form extends UIForm
 	public function addMultiWhisperer(string $name, $label = null, ?array $items = null): Control\MultiWhisperer
 	{
 		return $this[$name] = (new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
-			->setHtmlAttribute('class', 'form-control-chosen')
 			->setHtmlAttribute('data-placeholder', 'Vyberte');
 	}
 

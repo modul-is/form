@@ -15,9 +15,7 @@ class MultiWhisperer extends MultiSelectBox
 		$validationClass = $this->getValidationClass();
 		$validationFeedBack = $this->getValidationFeedback();
 
-		$chosenClass = $this->isRequired() ? ' form-control-chosen-required' : ' form-control-chosen';
-
-		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null) . $chosenClass]);
+		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null)]);
 
 		if($this->hasSignal())
 		{
