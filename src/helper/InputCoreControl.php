@@ -26,8 +26,13 @@ trait InputCoreControl
 
 		$hasValidationClass = $this->getValidationClass() && $this->hasErrors() ? ' has-validation' : null;
 
+		$quickCopyHtml = method_exists($this, 'getQuickCopy') && method_exists($this, 'getQuickCopyButton')
+			&& $this->getQuickCopy()
+			? $this->getQuickCopyButton()
+			: null;
+
 		return Html::el('div')
 			->class('input-group' . $hasValidationClass)
-			->addHtml($this->getPrepend() . $input . $this->getAppend() . $validationFeedBack);
+			->addHtml($this->getPrepend() . $input . $this->getAppend() . $quickCopyHtml . $validationFeedBack);
 	}
 }

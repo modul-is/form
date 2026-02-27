@@ -13,6 +13,7 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 	use Helper\Color;
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
+	use Helper\ButtonRounded;
 
 	protected string|null $link = null;
 
@@ -41,7 +42,7 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 		}
 
 		$el->setHtml(trim($btnIcon . ' ' . $this->caption));
-		$el->class('btn' . $btnColor . $currentClass);
+		$el->class('btn' . $this->getFormButtonClass() . $btnColor . $currentClass);
 
 		foreach($control->attrs as $name => $value)
 		{

@@ -9,6 +9,7 @@ use ModulIS\Form\Helper;
 class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
+	use Helper\QuickCopy;
 	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;

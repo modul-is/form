@@ -13,6 +13,7 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 	use Helper\Color;
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
+	use Helper\ButtonRounded;
 
 	public function getCoreControl(): Html
 	{
@@ -22,7 +23,7 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 
 		$button = Html::el('button')
 			->name($this->getName())
-			->class('btn rounded-pill px-4 ' . $input->getAttribute('class') . ' btn-' . $color)
+			->class('btn' . $this->getFormButtonClass() . ' px-4' . (trim((string) $input->getAttribute('class')) !== '' ? ' ' . $input->getAttribute('class') : '') . ' btn-' . $color)
 			->type('submit')
 			->formnovalidate(true)
 			->addHtml($this->icon ? \Kravcik\LatteFontAwesomeIcon\Extension::render($this->icon) . '&nbsp;' : '')

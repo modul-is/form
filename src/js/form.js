@@ -242,6 +242,104 @@ function formatSelectData(data)
 	return image;
 };
 
+function summernoteIsEmpty(noteEditable)
+{
+	if(!noteEditable)
+	{
+		return true;
+	}
+
+	let html = (noteEditable.innerHTML || '').trim().toLowerCase();
+
+	if(html === '' || html === '<br>' || html === '<p><br></p>')
+	{
+		return true;
+	}
+
+	let text = (noteEditable.textContent || '').replace(/\u200B/g, '').trim();
+
+	if(text.length > 0)
+	{
+		return false;
+	}
+
+	return noteEditable.querySelector('img,video,audio,iframe,table,hr,ul,ol,li,blockquote') === null;
+}
+
+function syncSummernoteRequiredLabels()
+{
+	$('.form-floating textarea.form-control').each(function()
+	{
+		let $textarea = $(this);
+		let $wrapper = $textarea.closest('.form-floating');
+		let $noteEditor = $wrapper.find('> .note-editor');
+
+		if($noteEditor.length === 0)
+		{
+			return;
+		}
+
+		let $label = $wrapper.find('> label.required');
+
+		if($label.length === 0)
+		{
+			return;
+		}
+
+		if($label.find('.summernote-required-star').length === 0)
+		{
+			$label.append('<span class="summernote-required-star" aria-hidden="true">★</span>');
+		}
+
+		let update = function()
+		{
+			let editable = $noteEditor.find('.note-editable').get(0);
+			let hasContent = !summernoteIsEmpty(editable);
+			let isFocused = !!(editable && editable === document.activeElement);
+
+			$label.toggleClass('summernote-has-content', hasContent);
+			$label.toggleClass('summernote-focused', isFocused);
+		};
+
+		$textarea.off('.summernoteRequired');
+		$textarea.on('summernote.change.summernoteRequired summernote.blur.summernoteRequired', update);
+
+		update();
+	});
+
+	$(document).off('.summernoteRequiredEditable');
+	$(document).on('input.summernoteRequiredEditable keyup.summernoteRequiredEditable paste.summernoteRequiredEditable blur.summernoteRequiredEditable', '.form-floating .note-editor .note-editable', function()
+	{
+		let $editable = $(this);
+		let $wrapper = $editable.closest('.form-floating');
+		let $label = $wrapper.find('> label.required');
+
+		if($label.length === 0)
+		{
+			return;
+		}
+
+		let hasContent = !summernoteIsEmpty(this);
+		$label.toggleClass('summernote-has-content', hasContent);
+		$label.toggleClass('summernote-focused', this === document.activeElement);
+	});
+
+	$(document).on('focusin.summernoteRequiredEditable focusout.summernoteRequiredEditable', '.form-floating .note-editor .note-editable', function(e)
+	{
+		let $editable = $(this);
+		let $wrapper = $editable.closest('.form-floating');
+		let $label = $wrapper.find('> label.required');
+
+		if($label.length === 0)
+		{
+			return;
+		}
+
+		let focused = e.type === 'focusin';
+		$label.toggleClass('summernote-focused', focused);
+	});
+}
+
 function initForm()
 {
 	$('[data-on-focusout]').unbind();
@@ -260,16 +358,32 @@ function initForm()
 
 	$('.form-control-chosen, .form-control-chosen-required').each(function()
 	{
-		let noResultMessage = $(this).attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ';
-
-		$(this).chosen('destroy');
-
-		$(this).chosen({
-			allow_single_deselect: true,
-			no_results_text: noResultMessage,
-			search_contains: true,
-			width: '100%'
-		});
+		let $el = $(this);
+		if(!$el.length || $el[0].tagName !== 'SELECT')
+		{
+			return;
+		}
+		if($el.hasClass('selectpicker'))
+		{
+			return;
+		}
+		try
+		{
+			if($el.data('chosen'))
+			{
+				$el.chosen('destroy');
+			}
+			$el.chosen({
+				allow_single_deselect: true,
+				no_results_text: $el.attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ',
+				search_contains: true,
+				width: '100%'
+			});
+		}
+		catch(e)
+		{
+			console.warn('Chosen init failed for', $el[0], e);
+		}
 	});
 
 	$('.form-control-chosen, .form-control-chosen-required').on('change', function()
@@ -312,25 +426,75 @@ function initForm()
 	{
 		registerAutocomplete(input);
 	};
+
+	$('.datepicker-input').each(function()
+	{
+		let $input = $(this);
+		let placeholder = ($input.attr('placeholder') || '').trim();
+
+		if(placeholder === '')
+		{
+			$input.attr('placeholder', 'dd.mm.rrrr');
+		}
+	});
+
+	/* Datagrid date filter: default placeholder when empty */
+	$('.datagrid table thead .input-group .form-control').each(function()
+	{
+		let $input = $(this);
+		if(($input.attr('placeholder') || '').trim() === '')
+		{
+			$input.attr('placeholder', 'dd.mm.rrrr');
+		}
+	});
+
+	syncSummernoteRequiredLabels();
+}
+
+function initQuickCopy()
+{
+	$(document).off('click.quickCopy', '.quick-copy-btn');
+	$(document).on('click.quickCopy', '.quick-copy-btn', function()
+	{
+		let $btn = $(this);
+		let $group = $btn.closest('.input-group');
+		let $input = $group.find('input:not([type="hidden"]), textarea').first();
+		let value = $input.length ? ($input.val() || '').trim() : '';
+		if (value && navigator.clipboard && navigator.clipboard.writeText)
+		{
+			navigator.clipboard.writeText(value).then(function()
+			{
+				let $wrap = $btn.closest('.quick-copy-wrap');
+				let $popup = $('<div class="quick-copy-popup">Zkopírováno</div>');
+				$wrap.append($popup);
+				setTimeout(function()
+				{
+					$popup.addClass('quick-copy-popup-out');
+					setTimeout(function() { $popup.remove(); }, 300);
+				}, 1200);
+			});
+		}
+	});
 }
 
 $(document).ready(function()
 {
-    initForm();
-});
+	initQuickCopy();
+	initForm();
 
-if(typeof naja !== "undefined")
-{
-	const formExtension =
+	if(typeof naja !== "undefined")
 	{
-		initialize(naja)
+		const formExtension =
 		{
-			naja.snippetHandler.addEventListener('afterUpdate', (event) =>
+			initialize(naja)
 			{
-				initForm();
-			});
-		}
-	};
+				naja.snippetHandler.addEventListener('afterUpdate', () =>
+				{
+					initForm();
+				});
+			}
+		};
 
-	naja.registerExtension(formExtension);
-}
+		naja.registerExtension(formExtension);
+	}
+});

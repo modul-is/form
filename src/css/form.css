@@ -7,6 +7,14 @@ label{
     cursor: pointer;
 }
 
+/* In non-floating layout keep label at top for tall controls (textarea/summernote). */
+.row > .align-self-center:has(> .col-form-label),
+.row > .align-self-center:has(> .form-label)
+{
+	align-self: flex-start !important;
+	padding-top: 0.4rem;
+}
+
 /*Check box*/
 input[type="checkbox"] + .label-text:before,
 /* summernote checkboxes */
@@ -376,6 +384,128 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
     color: #212529!important;
 }
 
+/* Input-group append: same border as form-control so it aligns visually */
+.input-group .input-group-text:not(.quick-copy-wrap)
+{
+	border: var(--bs-border-width, 1px) solid var(--bs-border-color, #dee2e6);
+}
+
+/* Quick copy button: match input height, no border, no extra space */
+.input-group:has(.quick-copy-wrap)
+{
+	overflow: visible;
+}
+.input-group .input-group-text.quick-copy-wrap
+{
+	padding: 0;
+	border: 0;
+	display: flex;
+	align-items: center;
+	flex: 0 0 auto;
+	position: relative;
+	overflow: visible;
+}
+.input-group .input-group-text.quick-copy-wrap .quick-copy-btn
+{
+	min-height: 0;
+	height: 100%;
+	width: 2.5rem;
+	min-width: 2.5rem;
+	flex: 0 0 auto;
+	overflow: hidden;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0;
+	border: 0;
+	background: #e7f1ff;
+	border-radius: 0 var(--bs-border-radius, 0.375rem) var(--bs-border-radius, 0.375rem) 0;
+	color: #0d6efd;
+}
+.input-group .input-group-text.quick-copy-wrap .quick-copy-btn:hover
+{
+	background: #cfe2ff;
+	color: #0a58ca;
+}
+.input-group .input-group-text.quick-copy-wrap .quick-copy-btn .fa,
+.input-group .input-group-text.quick-copy-wrap .quick-copy-btn i
+{
+	font-size: 1rem;
+	flex-shrink: 0;
+	color: inherit;
+}
+
+/* Quick copy popup – floating in the gap left of the button */
+.quick-copy-popup
+{
+	position: absolute;
+	right: 100%;
+	top: 50%;
+	transform: translateY(-50%);
+	margin-right: 0.35rem;
+	z-index: 1060;
+	padding: 0.35rem 0.6rem;
+	font-size: 0.8125rem;
+	color: #fff;
+	background: var(--bs-success, #198754);
+	border-radius: var(--bs-border-radius, 0.375rem);
+	box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.12);
+	white-space: nowrap;
+	pointer-events: none;
+	animation: quickCopyFadeIn 0.2s ease-out;
+}
+.quick-copy-popup.quick-copy-popup-out
+{
+	animation: quickCopyFadeOut 0.3s ease-in forwards;
+}
+@keyframes quickCopyFadeIn
+{
+	from { opacity: 0; transform: translateY(-50%) scale(0.95); }
+	to { opacity: 1; transform: translateY(-50%) scale(1); }
+}
+@keyframes quickCopyFadeOut
+{
+	from { opacity: 1; transform: translateY(-50%) scale(1); }
+	to { opacity: 0; transform: translateY(-50%) scale(0.95); }
+}
+
+/* Align whisperer (chosen) visuals with Bootstrap 5 select in non-floating mode */
+.input-group > .chosen-container
+{
+	width: 100% !important;
+}
+
+.input-group > .chosen-container .chosen-single
+{
+	display: flex;
+	align-items: center;
+	height: calc(1.5em + 0.75rem + 2px);
+	padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+	border: var(--bs-border-width) solid var(--bs-border-color);
+	border-radius: var(--bs-border-radius);
+	background-color: var(--bs-form-control-bg, #fff) !important;
+	background-image: none !important;
+	box-shadow: none;
+}
+
+.input-group > .chosen-container .chosen-single.chosen-default
+{
+	background-color: var(--bs-form-control-bg, #fff) !important;
+	background-image: none !important;
+}
+
+.input-group > .chosen-container .chosen-single span
+{
+	line-height: 1.5;
+	margin-right: 0;
+	color: var(--bs-body-color);
+}
+
+.input-group > .chosen-container .chosen-single.chosen-default span
+{
+	color: #6c757d;
+}
+
 .form-floating .chosen-single
 {
     min-width: 100%;
@@ -399,13 +529,345 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
 	padding-top: 0.5rem;
 }
 
-label.required::after
+/* Keep floating input and prepend/tooltip in one row inside input-group */
+.input-group > .form-floating
+{
+	flex: 1 1 auto;
+	width: 1%;
+	min-width: 0;
+}
+
+.form-floating > label [data-bs-toggle="tooltip"]
+{
+	pointer-events: auto;
+	margin-left: 0.03rem;
+	display: inline-flex;
+	align-items: center;
+	vertical-align: middle;
+}
+
+.col-form-label.required::after,
+.form-label.required::after
 {
 	color: #cc1d24;
 	content: " ★";
 }
 
+.btn-group-active .card-body > h6 > label.required::after
+{
+	color: #cc1d24;
+	content: " ★";
+}
+
+.col-form-label.required.has-inline-required-star::after,
+.form-label.required.has-inline-required-star::after
+{
+	content: "";
+}
+
+.col-form-label .required-inline-star,
+.form-label .required-inline-star
+{
+	color: #cc1d24;
+	margin-left: 0.06rem;
+	margin-right: 0.02rem;
+}
+
+/* Hide inline required star when floating field is focused or has value */
+.form-floating > .form-control:focus ~ label .required-inline-star,
+.form-floating > .form-control:not(:placeholder-shown) ~ label .required-inline-star,
+.form-floating > .form-select ~ label .required-inline-star
+{
+	display: none;
+}
+
 .form-check-inline
 {
 	margin-right: 0 !important;
+}
+
+/* Compact spacing for checkbox/radio lists rendered in row columns */
+.container > .row > .form-check
+{
+	margin-bottom: 0.15rem;
+	padding-top: 0;
+	padding-bottom: 0;
+	min-height: 0;
+}
+
+.container > .row > .form-check .form-check-label
+{
+	line-height: 1.25;
+}
+
+.container > .row
+{
+	row-gap: 0.1rem;
+}
+
+.container > .row > .form-check
+{
+	margin-bottom: 0;
+	min-height: 0;
+}
+
+/* Strong override for checkbox/radio list layout rendered by CoreList */
+.mb-3.col-12 > .row > .align-self-center.col-sm-12 > .container > .row > .form-check
+{
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	min-height: 0 !important;
+	line-height: 1.2 !important;
+}
+
+.mb-3.col-12 > .row > .align-self-center.col-sm-12 > .container > .row
+{
+	--bs-gutter-x: 0.5rem !important;
+	row-gap: 0 !important;
+}
+
+/* Filter row: variables – input height, select height */
+.datagrid table thead,
+table thead
+{
+	--dg-filter-height: 2.5em;
+	/* Only text/date inputs use this; increase to match select visual height (selects keep natural size) */
+	--dg-filter-input-height: 3em;
+}
+
+/* Text and date inputs only: raised height (selects unchanged) */
+.datagrid table thead .form-control,
+.datagrid table thead .form-control.form-control-sm,
+.datagrid table thead th .form-control,
+table thead .form-control,
+table thead th .form-control,
+table thead .form-control.form-control-sm
+{
+	height: var(--dg-filter-input-height) !important;
+	min-height: var(--dg-filter-input-height) !important;
+	padding-top: 0.28rem !important;
+	padding-bottom: 0.28rem !important;
+	box-sizing: border-box !important;
+}
+
+/* Native select (when Tom Select not used) – uses baseline height */
+.datagrid table thead .form-select:not(.ts-hidden-accessible)
+{
+	height: var(--dg-filter-height);
+	min-height: var(--dg-filter-height);
+	padding-top: 0.28rem;
+	padding-bottom: 0.28rem;
+}
+
+/* Native multiselect when Tom Select didn't run: allow one full line so text isn't cut off */
+.datagrid table thead select.form-select[multiple]:not(.ts-hidden-accessible)
+{
+	min-height: 2.5em;
+}
+
+/* Tom Select: hide original select so only .ts-control is visible */
+.datagrid table thead select.form-select.ts-hidden-accessible,
+.datagrid table thead .ts-wrapper .ts-hidden-accessible
+{
+	display: none !important;
+	position: absolute !important;
+	width: 0 !important;
+	height: 0 !important;
+	min-height: 0 !important;
+	opacity: 0 !important;
+	pointer-events: none !important;
+	clip: rect(0,0,0,0) !important;
+}
+
+/* Datagrid filter: use only Tom Select, hide Chosen if both were applied */
+.datagrid table thead .chosen-container
+{
+	display: none !important;
+}
+
+.datagrid table thead .ts-wrapper.form-select-sm
+{
+	min-height: var(--dg-filter-height) !important;
+	height: auto !important;
+}
+.datagrid table thead .ts-wrapper.form-select-sm .ts-control
+{
+	min-height: var(--dg-filter-height) !important;
+	height: auto !important;
+	padding-top: 0.28rem !important;
+	padding-bottom: 0.28rem !important;
+	box-sizing: border-box !important;
+}
+
+/* Multi only: no Bootstrap dropdown arrow, wrap tags */
+.datagrid table thead .ts-wrapper.form-select-sm.multi
+{
+	background-image: none !important;
+	--bs-form-select-bg-img: none !important;
+}
+.datagrid table thead .ts-wrapper.form-select-sm.multi .ts-control
+{
+	flex-wrap: wrap !important;
+	background-image: none !important;
+}
+.datagrid table thead .ts-wrapper.form-select-sm.multi .ts-control::after
+{
+	display: none !important;
+}
+
+/* Single select: no remove (×) button – keep only dropdown arrow */
+.datagrid table thead .ts-wrapper.form-select-sm:not(.multi) .ts-control .remove
+{
+	display: none !important;
+}
+
+.datagrid table thead .ts-wrapper.form-select-sm .ts-control > input
+{
+	line-height: 1.5 !important;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	min-height: 0 !important;
+	height: 1.5em !important;
+	margin: 0 !important;
+}
+
+/* Multi only: when items are selected, hide placeholder "Vyberte" below the tags */
+.datagrid table thead .ts-wrapper.form-select-sm.multi.has-items .ts-control > input::placeholder
+{
+	color: transparent !important;
+	opacity: 0 !important;
+}
+
+/* Multi only: .item (tags) – no pseudo-element ×, subtle active state, remove button on top */
+.datagrid table thead .ts-wrapper.form-select-sm.multi .ts-control .item::before,
+.datagrid table thead .ts-wrapper.form-select-sm.multi .ts-control .item::after
+{
+	content: none !important;
+	display: none !important;
+}
+.datagrid table thead .ts-wrapper.form-select-sm.multi .ts-control .item.active
+{
+	background: rgba(0, 0, 0, 0.06) none !important;
+	border-color: rgba(0, 0, 0, 0.1) !important;
+	box-shadow: none !important;
+}
+.datagrid table thead .ts-wrapper.form-select-sm.multi .ts-control .item .remove
+{
+	position: relative !important;
+	z-index: 1 !important;
+}
+
+/* Datagrid date filter: open by click into input, hide calendar addon */
+.datagrid table thead .input-group.input-group-sm .form-control,
+.datagrid table thead th .input-group .form-control,
+table thead .input-group.input-group-sm .form-control,
+table thead th .input-group .form-control
+{
+	height: var(--dg-filter-input-height) !important;
+	min-height: var(--dg-filter-input-height) !important;
+}
+
+.datagrid table thead .input-group.input-group-sm
+{
+	flex-wrap: nowrap;
+}
+
+/* Same rounding on all corners so left and right match (Bootstrap often uses -sm on right only) */
+.datagrid table thead .input-group.input-group-sm > .form-control.datepicker-input,
+.datagrid table thead .input-group.input-group-sm > .form-control,
+.datagrid table thead .input-group .form-control
+{
+	flex: 1 1 auto;
+	min-width: 0;
+	border-radius: var(--bs-border-radius) !important;
+}
+
+.datagrid table thead .input-group.input-group-sm > .input-group-text
+{
+	display: none !important;
+}
+
+/* Vanilla datepicker in datagrid: keep full calendar visible and above table */
+.datepicker-dropdown
+{
+	z-index: 1080;
+}
+
+.datepicker-dropdown .datepicker-picker
+{
+	min-width: 17.5rem;
+	width: max-content;
+	border: 1px solid var(--bs-border-color);
+	border-radius: var(--bs-border-radius);
+	background-color: var(--bs-body-bg, #fff);
+}
+
+.datepicker-dropdown .datepicker-header .datepicker-controls .btn,
+.datepicker-dropdown .datepicker-picker .datepicker-header .datepicker-controls .btn
+{
+	background: transparent none !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	min-width: auto !important;
+	padding: 0.2rem 0.45rem !important;
+}
+
+.datepicker-dropdown .datepicker-header .datepicker-controls .btn:hover,
+.datepicker-dropdown .datepicker-header .datepicker-controls .btn:focus,
+.datepicker-dropdown .datepicker-picker .datepicker-header .datepicker-controls .btn:hover,
+.datepicker-dropdown .datepicker-picker .datepicker-header .datepicker-controls .btn:focus
+{
+	background: rgba(0, 0, 0, 0.04) !important;
+	border-radius: var(--bs-border-radius-sm) !important;
+}
+
+/* Summernote rendered inside bootstrap floating wrapper */
+.form-floating > textarea.form-control[style*="display: none"] + .note-editor
+{
+	margin-top: 1.25rem;
+}
+
+.form-floating > textarea.form-control[style*="display: none"] + .note-editor + label.col-form-label,
+.form-floating > textarea.form-control[style*="display: none"] + .note-editor + label.form-label
+{
+	position: absolute !important;
+	top: 0 !important;
+	height: auto !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	transform: translateY(-30%) !important;
+	transform-origin: left center !important;
+	pointer-events: none;
+	z-index: 3;
+	overflow: visible !important;
+	white-space: nowrap !important;
+	background: none !important;
+	border: 0 !important;
+	box-shadow: none !important;
+	font-size: 0.95rem !important;
+	font-weight: 500;
+}
+
+.form-floating > textarea.form-control[style*="display: none"] + .note-editor + label.required::after
+{
+	content: "" !important;
+}
+
+.form-floating > textarea.form-control[style*="display: none"] + .note-editor + label .summernote-required-star
+{
+	display: inline-block;
+	margin-left: 0.2rem;
+	color: #cc1d24;
+	opacity: 1;
+	visibility: visible;
+}
+
+.form-floating > textarea.form-control[style*="display: none"] + .note-editor + label.required.summernote-has-content .summernote-required-star,
+.form-floating > textarea.form-control[style*="display: none"] + .note-editor + label.required.summernote-focused .summernote-required-star
+{
+	opacity: 0;
+	visibility: hidden;
 }
