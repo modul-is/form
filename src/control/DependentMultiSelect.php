@@ -4,10 +4,13 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Control;
 
+use ModulIS\Form\Dial\SignalDial;
 use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
+use Nette\Application\UI\SignalReceiver;
+use function assert;
 
-class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implements Renderable, \Nette\Application\UI\SignalReceiver
+class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implements Renderable, SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -28,6 +31,7 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 
 	public function __construct($label = null, array $parents = [], ?callable $dependentCallback = null)
 	{
+		$this->controlClass = 'form-select';
 		$this->parents = $parents;
 
 		if($dependentCallback)
@@ -41,16 +45,23 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 
 	public function getValue(): array
 	{
-		return $this->getValue();
+		$this->tryLoadItems();
+
+		if(!in_array($this->tempValue, [null, '', []], true))
+		{
+			return is_array($this->tempValue) ? $this->tempValue : [];
+		}
+
+		return parent::getValue();
 	}
 
 
 	public function signalReceived($signal): void
 	{
 		$presenter = $this->lookup(Presenter::class);
-		\assert($presenter instanceof Presenter);
+		assert($presenter instanceof Presenter);
 
-		if($signal === \ModulIS\Form\Dial\SignalDial::Load)
+		if($signal === SignalDial::Load)
 		{
 			$parentsNames = [];
 
@@ -71,7 +82,7 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 			$presenter->payload->dependentselectbox = [
 				'id' => $this->getHtmlId(),
 				'items' => $items,
-				'value' => $data->getValue(),
+				'value' => $this->getValue(),
 				'prompt' => $this->translate($data->getPrompt()),
 				'disabledWhenEmpty' => $this->disabledWhenEmpty
 			];
@@ -81,7 +92,7 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	}
 
 
-	public function setPrompt(string $prompt)
+	public function setPrompt(?string $prompt)
 	{
 		$this->prompt = $prompt;
 	}
