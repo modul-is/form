@@ -4,13 +4,10 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Control;
 
-use ModulIS\Form\Dial\SignalDial;
 use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
-use Nette\Application\UI\SignalReceiver;
-use function assert;
 
-class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implements Renderable, SignalReceiver
+class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implements Renderable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -31,7 +28,6 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 
 	public function __construct($label = null, array $parents = [], ?callable $dependentCallback = null)
 	{
-		$this->controlClass = 'form-select';
 		$this->parents = $parents;
 
 		if($dependentCallback)
@@ -43,15 +39,24 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	}
 
 
-	public function getValue(): array
+	public function loadHttpData(): void
 	{
-		$this->tryLoadItems();
+		parent::loadHttpData();
 
-		if(!in_array($this->tempValue, [null, '', []], true))
+		$parentsValues = [];
+
+		foreach($this->parents as $parent)
 		{
-			return is_array($this->tempValue) ? $this->tempValue : [];
+			$parentsValues[$parent->getName()] = $parent->getValue();
 		}
 
+		$data = $this->getDependentData([$parentsValues]);
+		$this->setItems($data->getItems());
+	}
+
+
+	public function getValue(): array
+	{
 		return parent::getValue();
 	}
 
@@ -59,9 +64,9 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	public function signalReceived($signal): void
 	{
 		$presenter = $this->lookup(Presenter::class);
-		assert($presenter instanceof Presenter);
+		\assert($presenter instanceof Presenter);
 
-		if($signal === SignalDial::Load)
+		if($signal === \ModulIS\Form\Dial\SignalDial::Load)
 		{
 			$parentsNames = [];
 
@@ -82,7 +87,7 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 			$presenter->payload->dependentselectbox = [
 				'id' => $this->getHtmlId(),
 				'items' => $items,
-				'value' => $this->getValue(),
+				'value' => $data->getValue(),
 				'prompt' => $this->translate($data->getPrompt()),
 				'disabledWhenEmpty' => $this->disabledWhenEmpty
 			];
@@ -92,7 +97,7 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	}
 
 
-	public function setPrompt(?string $prompt)
+	public function setPrompt(string $prompt)
 	{
 		$this->prompt = $prompt;
 	}
