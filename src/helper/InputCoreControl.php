@@ -26,8 +26,7 @@ trait InputCoreControl
 
 		$hasValidationClass = $this->getValidationClass() && $this->hasErrors() ? ' has-validation' : null;
 
-		$quickCopyHtml = method_exists($this, 'getQuickCopy') && method_exists($this, 'getQuickCopyButton')
-			&& $this->getQuickCopy()
+		$quickCopyHtml = $this instanceof QuickCopyable && $this->getQuickCopy()
 			? $this->getQuickCopyButton()
 			: null;
 

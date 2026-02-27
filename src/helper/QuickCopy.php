@@ -6,6 +6,14 @@ namespace ModulIS\Form\Helper;
 
 use Nette\Utils\Html;
 
+interface QuickCopyable
+{
+	public function getQuickCopy(): bool;
+
+
+	public function getQuickCopyButton(): Html;
+}
+
 trait QuickCopy
 {
 	protected bool $quickCopy = false;
