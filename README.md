@@ -41,6 +41,7 @@ Form supports all of the default Nette inputs and adds new ones
 + `addBox()` - all inputs added after this call will render in new card
 + `setFloatingLabel()` - inputs will be rendered with [floating labels](https://getbootstrap.com/docs/5.0/forms/floating-labels/)
 + `setRenderInline()` - label and input are rendered each in separate row
++ `setButtonClass()` - default CSS class for all form buttons (e.g. `rounded rounded-4`); can be overridden by `setClass()` on individual buttons
 + `setRenderManually()` - set manual render, template with same name as form is used (eg. file `MyForm.php` -> `myForm.latte`)
 
 ### Groups
