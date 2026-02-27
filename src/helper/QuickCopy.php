@@ -21,11 +21,6 @@ trait QuickCopy
 
 	public function setQuickCopy(bool $value = true): self
 	{
-		if ($value && method_exists($this, 'isSummernote') && $this->isSummernote())
-		{
-			throw new \LogicException('QuickCopy cannot be used with Summernote.');
-		}
-
 		$this->quickCopy = $value;
 
 		return $this;
