@@ -111,7 +111,10 @@
                                         empty = false;
                                     }
 
-                                    element.append("<option value=" + el.data + ">" + el.value + "</option>");
+                                    $('<option/>')
+                                        .val(el.data == null ? '' : String(el.data))
+                                        .text(el.value == null ? '' : String(el.value))
+                                        .appendTo(element);
                                 });
 
                                 element.trigger("chosen:updated");
