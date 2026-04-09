@@ -28,10 +28,10 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable
 			->name($this->getName())
 			->type('button');
 
-		$button->addClass('btn px-4')
-			->addClass('btn-' . $color)
-			->addClass($this->getFormButtonClass())
-			->addClass($input->getAttribute('class'));
+		$button->appendAttribute('class', 'btn px-4')
+			->appendAttribute('class', 'btn-' . $color)
+			->appendAttribute('class', $this->getFormButtonClass())
+			->appendAttribute('class', (string) $input->getAttribute('class'));
 
 		$button->addHtml($this->icon ? Extension::render($this->icon) : '')
 			->addHtml($this->translate($label));

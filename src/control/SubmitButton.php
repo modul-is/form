@@ -24,10 +24,10 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 		$button = Html::el('button');
 
 		$button->name($this->getName())
-			->addClass('btn px-4')
-			->addClass('btn-' . $color)
-			->addClass($this->getFormButtonClass())
-			->addClass($input->getAttribute('class'))
+			->appendAttribute('class', 'btn px-4')
+			->appendAttribute('class', 'btn-' . $color)
+			->appendAttribute('class', $this->getFormButtonClass())
+			->appendAttribute('class', (string) $input->getAttribute('class'))
 			->type('submit')
 			->formnovalidate(true);
 
