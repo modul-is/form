@@ -1,16 +1,18 @@
+import naja from 'naja';
+
 Nette.validators.CodeComponentFormValidator_greater = function(elem, args, val)
 {
-    return parseInt(val) > parseInt(args);
+	return parseInt(val) > parseInt(args);
 };
 
 Nette.validators.CodeComponentFormValidator_less = function(elem, args, val)
 {
-    return parseInt(val) < parseInt(args);
+	return parseInt(val) < parseInt(args);
 };
 
 Nette.validators.CodeComponentFormValidator_sameLength = function(elem, args, val)
 {
-    return args.length === val.length;
+	return args.length === val.length;
 };
 
 async function inputSignal(input, url, event)
@@ -137,11 +139,11 @@ function registerAutocomplete(element)
 			}, 900);
 
 			if(typeof varUrlOnSelect !== 'undefined')
-            {
+			{
 				let form = jqueryElement.closest('form');
 
 				naja.makeRequest('GET', varUrlOnSelect, {selected: item.data, formdata: form.serialize()});
-            }
+			}
 		},
 		fetch: function(text, callback)
 		{
@@ -481,20 +483,12 @@ $(document).ready(function()
 {
 	initQuickCopy();
 	initForm();
+});
 
-	if(typeof naja !== "undefined")
-	{
-		const formExtension =
-		{
-			initialize(naja)
-			{
-				naja.snippetHandler.addEventListener('afterUpdate', () =>
-				{
-					initForm();
-				});
-			}
-		};
-
-		naja.registerExtension(formExtension);
+naja.registerExtension({
+	initialize(naja) {
+		naja.snippetHandler.addEventListener('afterUpdate', () => {
+			initForm();
+		});
 	}
 });
