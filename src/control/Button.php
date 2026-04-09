@@ -25,15 +25,16 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable
 		$color = !empty($this->color) ? $this->color : 'gray';
 
 		$button = Html::el('button')
-			->name($this->getName());
+			->name($this->getName())
+			->type('button');
 
-		$button->addClass('btn px-4');
-		$button->addClass('btn-' . $color);
-		$button->addClass($this->getFormButtonClass());
-		$button->addClass($input->getAttribute('class'));
+		$button->addClass('btn px-4')
+			->addClass('btn-' . $color)
+			->addClass($this->getFormButtonClass())
+			->addClass($input->getAttribute('class'));
 
 		$button->addHtml($this->icon ? Extension::render($this->icon) : '')
-			->addHtml($label);
+			->addHtml($this->translate($label));
 
 		if($this->getOption('id'))
 		{
