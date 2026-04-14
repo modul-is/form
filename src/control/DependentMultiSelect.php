@@ -39,9 +39,25 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	}
 
 
+	public function loadHttpData(): void
+	{
+		parent::loadHttpData();
+
+		$parentsValues = [];
+
+		foreach($this->parents as $parent)
+		{
+			$parentsValues[$parent->getName()] = $parent->getValue();
+		}
+
+		$data = $this->getDependentData([$parentsValues]);
+		$this->setItems($data->getItems());
+	}
+
+
 	public function getValue(): array
 	{
-		return $this->getValue();
+		return parent::getValue();
 	}
 
 

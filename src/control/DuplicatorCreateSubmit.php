@@ -4,19 +4,23 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Control;
 
+use Kravcik\LatteFontAwesomeIcon\Extension;
+use ModulIS\Form\Form;
+use ModulIS\Form\FormComponent;
 use Nette\Utils\Html;
+use function assert;
 
 class DuplicatorCreateSubmit extends SubmitButton
 {
-	public function addCreateOnClick(bool $allowEmpty = true, ?callable $callback = null)
+	public function addCreateOnClick(bool $allowEmpty = true, ?callable $callback = null): void
 	{
 		$this->onClick[] = function(\Nette\Forms\Controls\SubmitButton $button) use ($allowEmpty, $callback): void
 		{
 			$form = $button->getForm();
-			\assert($form instanceof \ModulIS\Form\Form);
+			assert($form instanceof Form);
 
 			$duplicator = $button->lookup(Duplicator::class);
-			\assert($duplicator instanceof Duplicator);
+			assert($duplicator instanceof Duplicator);
 
 			if($allowEmpty === true || $duplicator->isAllFilled() === true)
 			{
@@ -24,8 +28,8 @@ class DuplicatorCreateSubmit extends SubmitButton
 
 				if($form->getPresenter()->isAjax())
 				{
-					$component = $button->lookup(\ModulIS\Form\FormComponent::class);
-					\assert($component instanceof \ModulIS\Form\FormComponent);
+					$component = $button->lookup(FormComponent::class);
+					assert($component instanceof FormComponent);
 
 					$component->redrawControl('form');
 				}
@@ -54,13 +58,18 @@ class DuplicatorCreateSubmit extends SubmitButton
 
 		$currentClass = $this->getControl()->getAttribute('class');
 
-		$icon = \Kravcik\LatteFontAwesomeIcon\Extension::render($this->isDisabled() ? 'info' : 'plus');
+		$icon = Extension::render($this->isDisabled() ? 'info' : 'plus');
 
 		$form = $this->getForm();
-		\assert($form instanceof \ModulIS\Form\Form);
+		assert($form instanceof Form);
+
+		$class = 'btn' . $this->getFormButtonClass()
+			. ' btn-outline-primary btn-sm float-start'
+			. ($form->ajax ? ' ajax' : '')
+			. ($currentClass ? ' ' . $currentClass : '');
 
 		return Html::el('button')
-			->class('btn btn-outline-primary float-left btn-xs ' . ($form->ajax ? 'ajax' : '') . ($currentClass ? ' ' . $currentClass : ''))
+			->class($class)
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
 			->addHtml($icon . $this->translate($this->getCaption()));

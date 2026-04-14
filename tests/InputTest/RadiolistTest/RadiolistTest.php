@@ -35,6 +35,19 @@ class RadiolistTest extends TestCase
 	}
 
 
+	public function testRenderItemsPerRow()
+	{
+		$form = $this->getForm();
+
+		$form->addRadioList('radiolist', 'Radio', ['first' => 'First', 'second' => 'Second'])
+			->setItemsPerRow(2);
+
+		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/itemsPerRow.latte'));
+
+		Assert::same($html, $form->getComponent('radiolist')->render()->__toString());
+	}
+
+
 	public function testRenderCustomTemplate()
 	{
 		$form = $this->getForm();

@@ -1,137 +1,171 @@
 (function ($) {
-    $.fn.whisperer = function()
-    {
-        var disallowedKeyArray = [13, 37, 38, 39, 40];
-        this.each(function()
-        {
-            var element = $(this);
+	$.fn.whisperer = function()
+	{
+		var disallowedKeyArray = [13, 37, 38, 39, 40];
 
-            var chosenId = (element.attr('id') + '_chosen').replace(/-/g, "_");
-            var searchInput = $('#' + chosenId).find('input.chosen-search-input');
-            var varUrlOnChange = element.data('whisperer');
-            var varUrlOnSelect = element.data('whisperer-onselect');
-            var delay = element.data('whisperer-delay');
-            var typingTimer;
+		this.each(function()
+		{
+			var element = $(this);
+			var chosenId = (element.attr('id') + '_chosen').replace(/-/g, "_");
+			var varUrlOnChange = element.data('whisperer');
+			var varUrlOnSelect = element.data('whisperer-onselect');
+			var delay = element.data('whisperer-delay') || 400;
 
-            if(typeof varUrlOnSelect !== 'undefined')
-            {
+			var typingTimer;
+			var currentAbortController = null;
+
+			var getSearchInput = function()
+			{
+				return $('#' + chosenId).find('input.chosen-search-input');
+			};
+
+			if(typeof varUrlOnSelect !== 'undefined')
+			{
 				var form = element.closest('form');
 
-                //Run onselect after pressing enter
-				let searchEvent = function(e){
+				var searchEvent = function(e)
+				{
 					if((e.keyCode || e.which) === 13)
-                    {
-                        naja.makeRequest('GET', varUrlOnSelect, {selected: element.val(), formdata: form.serialize()}).then((response) =>
+					{
+						naja.makeRequest('GET', varUrlOnSelect, {
+							selected: element.val(),
+							formdata: form.serialize()
+						}).then(function()
 						{
 							$(this).closest('.chosen-with-drop').removeClass('chosen-with-drop');
 						});
-                    }
+					}
 				};
 
-				let events = $._data(searchInput[0], "events");
+				var searchInput = getSearchInput();
+				var events = $._data(searchInput[0], "events");
 
-				if (events && events.keyup)
+				if(!(events && events.keyup && events.keyup.some(function(ev){ return ev.handler.name === "searchEvent"; })))
 				{
-					let hasEvent = events.keyup.some(function(event)
-					{
-						return event.handler.name === "searchEvent";
-					});
-
-					if(!hasEvent)
-					{
-						searchInput.on('keyup', searchEvent);
-					}
+					searchInput.on('keyup', searchEvent);
 				}
 
-                var resultField = $('#' + chosenId).find('ul.chosen-results');
+				$('#' + chosenId).find('ul.chosen-results').on('click touchend', function()
+				{
+					naja.makeRequest('GET', varUrlOnSelect, {
+						selected: element.val(),
+						formdata: form.serialize()
+					});
+				});
+			}
 
-                resultField.on('click touchend', function()
-                {
-                    naja.makeRequest('GET', varUrlOnSelect, {selected: element.val(), formdata: form.serialize()});
-                });
-            }
+			if(typeof varUrlOnChange !== 'undefined')
+			{
+				element.on('chosen:no_results', function()
+				{
+					$('#' + chosenId).find('li.no-results').html('<span class="color-black"><i class="fal fa-spinner fa-spin"></i>&nbsp;&nbsp;Načítají se položky</span>');
+				});
 
-            if(typeof varUrlOnChange !== 'undefined')
-            {
-                //loading
-                element.on('chosen:no_results', function()
-                {
-                    $('#' + chosenId).find('li.no-results').html('<span class="color-black"><i class="fal fa-spinner fa-spin"></i>&nbsp;&nbsp;Načítají se položky</span>');
-                });
+				$(document).on('keydown', '#' + chosenId + ' input.chosen-search-input', function(event)
+				{
+					var searchInput = $(this);
+					var code = (event.keyCode || event.which);
 
-                searchInput.keydown(function(event)
-                {
-                    var code = (event.keyCode || event.which);
+					if(jQuery.inArray(code, disallowedKeyArray) === -1)
+					{
+						clearTimeout(typingTimer);
 
-                    if(jQuery.inArray(code, disallowedKeyArray) === -1)
-                    {
-                        clearTimeout(typingTimer);
-                        typingTimer = setTimeout(function()
-                        {
-                            var param = searchInput.val();
+						typingTimer = setTimeout(function()
+						{
+							var param = searchInput.val();
+							if(param.length < 1)
+							{
+								return;
+							}
+
+							if(currentAbortController)
+							{
+								currentAbortController.abort();
+							}
+							currentAbortController = new AbortController();
+
 							var parents = element.data('dependentselectbox-parents');
 							var parentArray = {};
 
-							$.each(parents, function (name, id)
+							$.each(parents || {}, function(name, id)
 							{
 								var parentElement = $('#' + id);
-								if (parentElement.length > 0)
+								if(parentElement.length > 0)
 								{
 									var val;
-									if (parentElement.prop('type') === 'checkbox')
+									if(parentElement.prop('type') === 'checkbox')
 									{
 										val = parentElement.prop('checked') ? 1 : 0;
 									}
 									else
 									{
-										val = $(parentElement).val();
-										if (!val)
-										{
-											return;
-										}
+										val = parentElement.val();
 									}
-
 									parentArray[name] = val;
 								}
-								else if($("[id^='" +id + "']").length > 0)
+								else if($("[id^='" + id + "']").length > 0)
 								{
-									parentArray[name] = $("[id^='" +id + "']:checked").val();
+									parentArray[name] = $("[id^='" + id + "']:checked").val();
 								}
 							});
 
-                            naja.makeRequest('POST', varUrlOnChange, {param: param, parent: parentArray}, {dataType: "json"}).then((response) =>
-                            {
-                                var empty = true;
-                                element.empty();
+							naja.makeRequest('POST', varUrlOnChange,
+								{param: param, parent: parentArray},
+								{
+									dataType: "json",
+									signal: currentAbortController.signal
+								}
+							).then(function(response)
+							{
+								if(searchInput.val() !== param)
+								{
+									return;
+								}
 
-                                $.each(response.suggestions,function(index, el)
-                                {
-                                    if(el.data !== "")
-                                    {
-                                        empty = false;
-                                    }
+								var empty = true;
+								element.empty();
 
-                                    element.append("<option value=" + el.data + ">" + el.value + "</option>");
-                                });
+								$.each(response.suggestions || [], function(index, el)
+								{
+									if(el.data !== "")
+									{
+										empty = false;
+									}
+									element.append($('<option>', {value: el.data, text: el.value}));
+								});
 
-                                element.trigger("chosen:updated");
+								element.trigger("chosen:updated");
+
+								var refreshedContainer = $('#' + chosenId);
+								refreshedContainer.addClass('chosen-with-drop chosen-container-active');
+
+								var refreshedInput = refreshedContainer.find('input.chosen-search-input');
+								refreshedInput.val(param);
+								refreshedInput.focus();
 
 								if(empty === true)
 								{
-									editedId = chosenId.replaceAll('_', '-');
-									index = editedId.lastIndexOf('-');
-									result = editedId.substring(0, index);
+									var editedId = chosenId.replaceAll('_', '-');
+									var lastDashIndex = editedId.lastIndexOf('-');
+									var resultId = editedId.substring(0, lastDashIndex);
 
-									message = $('#' + result).attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ' + param;
+									var message = $('#' + resultId).attr('no-result-message')
+										?? 'Nebyla nalezena žádná položka - ' + param;
 
-									$('#' + chosenId).find('ul.chosen-results').append('<li class="no-results">' + message + '</li>');
+									refreshedContainer.find('ul.chosen-results').append($('<li class="no-results">').text(message));
 								}
-                                searchInput.val(param);
-                            });
-                        }, delay);
-                    }
-                });
-            }
-        });
-    };
+							}).catch(function(err)
+							{
+								if(err.name !== 'AbortError')
+								{
+									console.error(err);
+								}
+							});
+						}, delay);
+					}
+				});
+			}
+		});
+		return this;
+	};
 })(jQuery);

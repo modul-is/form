@@ -28,7 +28,7 @@ Form supports all of the default Nette inputs and adds new ones
 + `addMultiWhisperer()` - same as whisperer, more options can be selected
 + `addDuplicator()` - container which can be duplicated many times
 + `addDependentSelect()` - select box that can change options via ajax based on change of another input(s) 
-+ `addDependentMultiSelect()` - same as DependantSelect, but more options can be selected 
++ `addDependentMultiSelect()` - same as DependentSelect, but more options can be selected 
 + `addDate()` - date input, can limit min and max date
 
 ## Custom settings
@@ -41,6 +41,7 @@ Form supports all of the default Nette inputs and adds new ones
 + `addBox()` - all inputs added after this call will render in new card
 + `setFloatingLabel()` - inputs will be rendered with [floating labels](https://getbootstrap.com/docs/5.0/forms/floating-labels/)
 + `setRenderInline()` - label and input are rendered each in separate row
++ `setButtonClass()` - default CSS class for all form buttons (e.g. `rounded rounded-4`); can be overridden by `setClass()` on individual buttons
 + `setRenderManually()` - set manual render, template with same name as form is used (eg. file `MyForm.php` -> `myForm.latte`)
 
 ### Groups
@@ -51,28 +52,29 @@ Inputs are rendered in `card-body` div
 Submitters, links and buttons in `card-footer`
 
 ### Container
-Container works as standard Nette Continer and has these new features
+Container works as standard Nette Container and has these new features
 
 + `setId()` - add html id to outer div of container
 + `showCard()` - show container as BS5 [card](https://getbootstrap.com/docs/5.0/components/card/)
 + `setTitle()` - show title of container (only works when container is rendered as card)
-+ `setColor()` - set color of conatiner (only works when container is rendered as card)
++ `setColor()` - set color of container (only works when container is rendered as card)
 
 ### Inputs
 Some inputs provide new features
 
 + `setIcon()` - add icon to input or button (Buttons, Links, Text inputs)
 + `setColor()` - add color to input or button (Buttons, Links, Checkbox, Lists)
-+ `setTemplate()` - add custom latte template insted of basic render (All inputs)
++ `setTemplate()` - add custom latte template instead of basic render (All inputs)
 + `setPrepend()` - adds prepend part to [input group](https://getbootstrap.com/docs/5.0/forms/input-group/) (Text inputs, Select boxes)
 + `setAppend()` - adds append part to [input group](https://getbootstrap.com/docs/5.0/forms/input-group/) (Text inputs, Select boxes)
 + `setRenderInline()` - render label and input each in separate row, overwrites `renderInline` setting from Form (All non-button inputs)
 + `setFloatingLabel()` - input will be rendered with [floating labels](https://getbootstrap.com/docs/5.0/forms/floating-labels/) (Text inputs, Select box)
 + `setAutorenderSkip()` - skips rendering of input, eg. if input is rendered as part of another input with custom template (All inputs)
-+ `setTooltip()` - add icon with tooltip to input (Text inputs, Checkbox, Lists, Selec boxes)
-+ `setWrapClass()` - set class to outer div around label and input - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Selec boxes)
-+ `setLabelWrapClass()` - set class to wrap div around label - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Selec boxes)
-+ `setInputWrapClass()` - set class to wrap div around input - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Selec boxes)
++ `setTooltip()` - add icon with tooltip to input (Text inputs, Checkbox, Lists, Select boxes)
++ `setQuickCopy()` - add button to copy input value to clipboard (Text inputs, TextArea)
++ `setWrapClass()` - set class to outer div around label and input - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Select boxes)
++ `setLabelWrapClass()` - set class to wrap div around label - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Select boxes)
++ `setInputWrapClass()` - set class to wrap div around input - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Select boxes)
 
 ### Duplicator example
 ```

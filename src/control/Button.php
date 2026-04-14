@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Control;
 
+use Kravcik\LatteFontAwesomeIcon\Extension;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
@@ -13,6 +14,7 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable
 	use Helper\Color;
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
+	use Helper\ButtonRounded;
 
 	public function getCoreControl(): Html|string
 	{
@@ -24,9 +26,15 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable
 
 		$button = Html::el('button')
 			->name($this->getName())
-			->class('btn btn-' . $color . ($input->getAttribute('class') ? ' ' . $input->getAttribute('class') : ''))
-			->addHtml($this->icon ? \Kravcik\LatteFontAwesomeIcon\Extension::render($this->icon) : '')
-			->addHtml($label);
+			->type('button');
+
+		$button->appendAttribute('class', 'btn px-4')
+			->appendAttribute('class', 'btn-' . $color)
+			->appendAttribute('class', $this->getFormButtonClass())
+			->appendAttribute('class', (string) $input->getAttribute('class'));
+
+		$button->addHtml($this->icon ? Extension::render($this->icon) : '')
+			->addHtml($this->translate($label));
 
 		if($this->getOption('id'))
 		{

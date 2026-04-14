@@ -5,10 +5,13 @@ declare(strict_types = 1);
 namespace ModulIS\Form;
 
 use Nette\Application\UI\Form as UIForm;
+use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\DateTimeControl;
+use Nette\Forms\Controls\HiddenField;
 use Nette\Utils\DateTime;
 use Nette\Utils\Html;
 use Stringable;
+use function assert;
 
 class Form extends UIForm
 {
@@ -30,6 +33,8 @@ class Form extends UIForm
 
 	public bool $ajax = false;
 
+	private ?string $buttonClass = null;
+
 	public Html|string|null $title = null;
 
 	public ?string $icon = null;
@@ -49,7 +54,7 @@ class Form extends UIForm
 	private array $dividerArray = [];
 
 
-	public function __construct(?\Nette\ComponentModel\IContainer $parent = null, $name = null)
+	public function __construct(?IContainer $parent = null, $name = null)
 	{
 		parent::__construct($parent, $name);
 
@@ -79,7 +84,7 @@ class Form extends UIForm
 
 		foreach($groupArray as $groupTitle => $group)
 		{
-			\assert($group instanceof ControlGroup);
+			assert($group instanceof ControlGroup);
 			$inputs = null;
 
 			foreach($group->getInputArray() as $input)
@@ -95,7 +100,7 @@ class Form extends UIForm
 				/**
 				 * Nette form hidden input
 				 */
-				$inputs .= $input instanceof \Nette\Forms\Controls\HiddenField ? $input->getControl() : $input->render();
+				$inputs .= $input instanceof HiddenField ? $input->getControl() : $input->render();
 
 				if(array_key_exists($input->getName(), $this->dividerArray))
 				{
@@ -213,7 +218,7 @@ class Form extends UIForm
 
 		foreach($this->getGroups() as $group)
 		{
-			\assert($group instanceof ControlGroup);
+			assert($group instanceof ControlGroup);
 			$submitterArray = array_merge($submitterArray, $group->getSubmitterArray());
 		}
 
@@ -512,6 +517,24 @@ class Form extends UIForm
 		$this->icon = $icon;
 
 		return $this;
+	}
+
+
+	/**
+	 * Default class(es) for all form buttons (e.g. "rounded rounded-4").
+	 * Priority: setClass() on the button overrides this.
+	 */
+	public function setButtonClass(string $class): self
+	{
+		$this->buttonClass = $class;
+
+		return $this;
+	}
+
+
+	public function getButtonClass(): ?string
+	{
+		return $this->buttonClass;
 	}
 
 

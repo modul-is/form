@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Helper;
 
+use ModulIS\Form\Form;
 use Nette\Utils\Html;
+use function assert;
 
 trait WrapControl
 {
@@ -76,7 +78,7 @@ trait WrapControl
 		if(!$this->wrapControl)
 		{
 			$form = $this->getForm();
-			\assert($form instanceof \ModulIS\Form\Form);
+			assert($form instanceof Form);
 
 			$this->wrapControl = Html::el('div')
 				->class($form->getDefaultInputWrapClass());
@@ -89,7 +91,7 @@ trait WrapControl
 	public function renderWrap(): Html
 	{
 		$form = $this->getForm();
-		\assert($form instanceof \ModulIS\Form\Form);
+		assert($form instanceof Form);
 
 		$label = $this->getCoreLabel();
 		$input = $this->getCoreControl();
@@ -97,7 +99,7 @@ trait WrapControl
 		$inputClass = 'align-self-center';
 		$labelClass = 'align-self-center';
 
-		if($this->getRenderInline() ?? $form->getRenderInline())
+		if(($this->getRenderInline() ?? $form->getRenderInline()) === true)
 		{
 			$inputClass .= $this->inputClass ? ' ' . $this->inputClass : ' col-sm-12';
 			$labelClass .= $this->labelClass ? ' ' . $this->labelClass : ' col-sm-12';

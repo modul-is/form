@@ -4,7 +4,11 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Helper;
 
+use Kravcik\LatteFontAwesomeIcon\Extension;
+use ModulIS\Form\Control\Signalable;
+use ModulIS\Form\Form;
 use Nette\Utils\Html;
+use function assert;
 
 trait CoreList
 {
@@ -22,7 +26,7 @@ trait CoreList
 		$inputs = null;
 
 		$form = $this->getForm();
-		\assert($form instanceof \ModulIS\Form\Form);
+		assert($form instanceof Form);
 
 		foreach($this->getItems() as $key => $input)
 		{
@@ -113,23 +117,23 @@ trait CoreList
 			$tooltip = Html::el('span')
 				->title($this->tooltips[$itemName])
 				->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
-				->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
+				->addHtml(Extension::render('question-circle', color: 'blue'));
 		}
 
-		$class = 'form-check-inline mr-0 col-' . 12 / $this->itemsPerRow;
+		$class = 'form-check col-' . (12 / $this->itemsPerRow);
 
 		if($this->itemClass)
 		{
 			$class .= ' ' . $this->itemClass;
 		}
 
-		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
+		if($this instanceof Signalable && $this->hasSignal())
 		{
 			$this->addSignalsToInput($input);
 		}
 
 		return Html::el('div')
-			->class(($this->toggleButton ? 'p-0 ' : 'form-check ') . $class)
+			->class(($this->toggleButton ? 'p-0 ' : '') . $class)
 			->addHtml($input . $label . $tooltip);
 	}
 

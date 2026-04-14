@@ -50,9 +50,13 @@ trait RenderFloating
 			->class('form-floating')
 			->addHtml($input . $label . $validationFeedBack);
 
+		$quickCopyHtml = $this instanceof QuickCopyable && $this->getQuickCopy()
+			? $this->getQuickCopyButton()
+			: null;
+
 		$inputGroup = Html::el('div')
 			->class('input-group')
-			->addHtml($this->getPrepend() . $floatingDiv . $this->getAppend());
+			->addHtml($this->getPrepend() . $floatingDiv . $this->getAppend() . $quickCopyHtml);
 
 		return Html::el('div')
 			->class($wrapClass)

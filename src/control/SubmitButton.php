@@ -13,6 +13,7 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 	use Helper\Color;
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
+	use Helper\ButtonRounded;
 
 	public function getCoreControl(): Html
 	{
@@ -20,13 +21,23 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 
 		$color = !empty($this->color) ? $this->color : 'gray';
 
-		$button = Html::el('button')
-			->name($this->getName())
-			->class('btn rounded-pill px-4 ' . $input->getAttribute('class') . ' btn-' . $color)
+		$button = Html::el('button');
+
+		$button->name($this->getName())
+			->appendAttribute('class', 'btn px-4')
+			->appendAttribute('class', 'btn-' . $color)
+			->appendAttribute('class', $this->getFormButtonClass())
+			->appendAttribute('class', (string) $input->getAttribute('class'))
 			->type('submit')
-			->formnovalidate(true)
-			->addHtml($this->icon ? \Kravcik\LatteFontAwesomeIcon\Extension::render($this->icon) . '&nbsp;' : '')
-			->addHtml($this->translate($this->getCaption()));
+			->formnovalidate(true);
+
+		if($this->icon)
+		{
+			$iconHtml = \Kravcik\LatteFontAwesomeIcon\Extension::render($this->icon);
+			$button->addHtml($iconHtml . '&nbsp;');
+		}
+
+		$button->addHtml($this->translate($this->getCaption()));
 
 		$scopeString = 'data-nette-validation-scope';
 
