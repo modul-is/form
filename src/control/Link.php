@@ -20,13 +20,19 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 
 	public function getLabel($caption = null)
 	{
-		return $this->translate($caption ?? $this->caption);
+		return $this->translate($caption ?? $this->getCaption());
 	}
 
 
-	public function getControl(): Html
+	public function render(): Html
 	{
-		$control = parent::getControl();
+		return $this->getCoreControl();
+	}
+
+
+	public function getCoreControl(): Html
+	{
+		$control = $this->getControl();
 
 		$currentClass = $control->getAttribute('class') ? ' ' . $control->getAttribute('class') : '';
 		$this->setOption('rendered', true);
@@ -41,7 +47,7 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 			$el->href($this->link);
 		}
 
-		$el->setHtml(trim($btnIcon . ' ' . $this->caption));
+		$el->setHtml(trim($btnIcon . ' ' . $this->getCaption()));
 		$el->class('btn' . $this->getFormButtonClass() . $btnColor . $currentClass);
 
 		foreach($control->attrs as $name => $value)
@@ -55,18 +61,6 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 		}
 
 		return $el;
-	}
-
-
-	public function render(): Html
-	{
-		return $this->getCoreControl();
-	}
-
-
-	public function getCoreControl(): Html
-	{
-		return $this->getControl();
 	}
 
 
