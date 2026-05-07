@@ -68,7 +68,7 @@ Pokud požadavek neupřesní režim odesílání:
 use ModulIS\Form\Form;
 use ModulIS\Form\FormComponent;
 
-final class MojeForm extends FormComponent
+final class MujForm extends FormComponent
 {
 	public function prepare(): void
 	{
@@ -86,15 +86,15 @@ final class MojeForm extends FormComponent
 }
 ```
 
-- **`prepare()` je povinná metoda** a volá ji presenter nebo rodičovská komponenta (`$this->getComponent('mojeForm')->prepare()`).
-- Šablona: `MojeForm.php` → `mojeForm.latte`; volitelně `setRenderManually(true)` podle README balíčku.
+- **`prepare()` je povinná metoda** a volá ji presenter nebo rodičovská komponenta (`$this->getComponent('mujForm')->prepare()`).
+- Šablona: `MujForm.php` → `mujForm.latte`; volitelně `setRenderManually(true)` podle README balíčku.
 
 ---
 
 ## 2. Latte a JavaScript
 
-- `{control mojeForm}` — vykreslení komponenty.
-- `{control mojeForm:js}` — `renderJs()` → soubor **`mojeFormJs.latte`** ve stejné složce jako třída.
+- `{control mujForm}` — vykreslení komponenty.
+- `{control mujForm:js}` — `renderJs()` → soubor **`mujFormJs.latte`** ve stejné složce jako třída.
 - V `*Js.latte`: `<script n:nonce>`, Latte může vložit `{$form->getComponent('pole')->getHtmlId()}`; u chosen často `|replace:'-','_'`.
 
 ---
@@ -602,7 +602,7 @@ $form->addText('ico', 'IČO')
 ```php
 public function actionDetail(int $id): void
 {
-	$this->getComponent('mojeForm')->prepare();
+	$this->getComponent('mujForm')->prepare();
 }
 ```
 
@@ -717,7 +717,7 @@ public function createComponentForm(): Form
 }
 ```
 
-`$this->renderManually = true;` a v `mojeForm.latte` vlastní layout + `{control form}`.
+`$this->renderManually = true;` a v `mujForm.latte` vlastní layout + `{control form}`.
 
 ### 7.8.1 Klasický submit bez AJAX
 
@@ -746,7 +746,7 @@ Stejný formulář s `setAjax()` zůstane na stránce a redrawne snippet `form` 
 
 ```latte
 {control hlavicka:js}
-{control mojeForm:js}
+{control mujForm:js}
 ```
 
 ```latte
