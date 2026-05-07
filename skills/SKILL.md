@@ -23,6 +23,7 @@ Pokud uživatel napíše požadavek typu **"chci nový form"**, **"vytvoř nový
 3. **Až potom** navrhuj/implementuj formulář v projektu.
 4. Když se cílový projekt odchyluje, drž se lokálních konvencí projektu, ale API a postupy `modul-is/form` validuj podle tohoto dokumentu.
 5. **`prepare()` je povinná metoda každého nového FormComponentu.** Nevynechávej ji ani u jednoduchých formulářů.
+6. Pokud je projekt nový a bez konvencí, použij výchozí baseline z tohoto skillu (sekce **1.1 Greenfield baseline**).
 
 Rozšíření Nette Forms o BS5 renderer, vlastní controly a `FormComponent`. Obecné vzory (validace, `createComponent*`, factory) jsou v [dokumentaci Nette Forms](https://doc.nette.org/cs/forms) a ve skillu [nette-forms](https://github.com/nette/claude-code/blob/master/plugins/nette/skills/nette-forms/SKILL.md).
 
@@ -45,6 +46,23 @@ V ukázkách drž stejný styl závorek jako v projektu: otevírací `{` na nov�
 
 **Povinné minimum pro nový formulář:** `prepare()` + `createComponentForm()`.  
 `prepare()` je závazná součást lifecycle (defaulty, editace, AJAX redraw).
+
+### 1.1 Greenfield baseline (když projekt nemá konvence)
+
+Použij tyto výchozí konvence, dokud uživatel neurčí jiné:
+
+- Název komponenty: `XxxForm` (např. `OrderForm`), volání v Latte `{control xxxForm}`.
+- Soubory: `XxxForm.php`, `xxxForm.latte`, volitelně `xxxFormJs.latte`.
+- Povinné metody: `prepare(): void` a `createComponentForm(): Form`.
+- Factory formuláře: vždy přes `$this->getForm()` (ne přes `new Form`).
+- ID pravidla: `setOption('id')` pro obal/toggle target, `setHtmlId()` jen pro input element.
+- Styl kódu: `declare(strict_types = 1);` + `use` importy nahoře (bez FQCN v signaturách).
+- DI styl: constructor injection, preferovaně `private readonly` pro služby/repozitáře.
+
+Pokud požadavek neupřesní režim odesílání:
+
+- výchozí je klasický submit (bez `setAjax()`),
+- `setAjax()` používej u formulářů s redrawi, signály, dependent poli nebo v modálu.
 
 ```php
 use ModulIS\Form\Form;
