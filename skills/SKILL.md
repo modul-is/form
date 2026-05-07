@@ -102,6 +102,24 @@ Tato část popisuje **co kde hledat**; konkrétní PHP úryvky jsou v [sekci 6]
 
 **`setAjax`**, **`setRenderFloating`**, **`setRenderInline`**, **`setTitle`**, **`setIcon`**, **`setColor`**, **`setNoValidate`**, **`setButtonClass`**, **`setDefaultInputWrapClass`**, **`addGroup`** s **`setClass` / `setColor` / `setOption('id')` na kartu**, **`addError`** + **`getFormErrors`**, **`renderForm()`** (HTML bez Latte `{form}`).
 
+#### `setAjax()` vs. klasický submit
+
+`Form::$ajax` je **default `false`** (`src/Form.php:34`). `setAjax()` ho jen flipne; `formComponent.latte` pak přidá CSS třídu `ajax` na `<form>` a duplikátorová tlačítka (viz `DuplicatorRemoveSubmit::getCoreControl()`, `DuplicatorCreateSubmit::getCoreControl()`).
+
+| Režim | Volání | Co se stane při submitu |
+|-------|--------|------------------------|
+| **AJAX** | `$form->setAjax();` | `naja` zachytí submit přes class `ajax`, redraw snippetů (`redrawControl('form')`), žádný reload. |
+| **Klasický** | bez `setAjax()` | Klasický POST + redirect z `onSuccess` (`$presenter->redirect(...)`), full page reload. |
+
+Volba režimu je **nezávislá** na `prepare()`, `getForm()` i renderu — můžeš mít obě varianty se stejným zbytkem kódu. Vol klasický submit u jednoduchých uložení s následným redirectem (CRUD, jednorázové akce) a AJAX u formulářů s duplikátory, dependent selecty, signály, nebo tam, kde je formulář v modálu.
+
+**Smíšený režim** je možný:
+
+- AJAX form + nějaké tlačítko bez AJAXu (nepoužívá `class="ajax"`) → individuální submit jde klasicky.
+- Klasický form + tlačítko/odkaz s `setClass('btn-back-validate ajax')` → individuální tlačítko jde AJAXem.
+
+Šablona se po nastavení `setAjax` chová automaticky (auto-render přidá `class ajax`); u manuálních šablon (`{form ..., class => '... ajax'}`) si třídu spravuješ sám.
+
 ### 4.2 Tovární metody `Form` / `Container`
 
 `ModulIS\Form\Form` i `ModulIS\Form\Container` sdílí stejné **`add*`**. Přehled: text (`addText`, `addEmail`, `addInteger`, `addFloat`, `addPassword`, `addTextArea`, `addAutocomplete`), výběr (`addCheckbox`, `addRadioList`, `addCheckboxList`, `addSelect`, `addMultiSelect`, `addWhisperer`, `addMultiWhisperer`, `addDependentSelect`, `addDependentMultiSelect`), datum/čas (`addDate`, `addDateTime`, `addTime`, `addDateWeek`), soubory (`addUpload`, `addMultiUpload`), skryté (`addHidden`), akce (`addSubmit`, `addButton`, `addLink`), struktura (`addContainer`, `addDuplicator`, `addDivider`). Signatury: **`src/Form.php`**, **`src/Container.php`**.
@@ -683,6 +701,29 @@ public function createComponentForm(): Form
 
 `$this->renderManually = true;` a v `mojeForm.latte` vlastní layout + `{control form}`.
 
+### 7.8.1 Klasický submit bez AJAX
+
+```php
+public function createComponentForm(): Form
+{
+	$form = $this->getForm(); // bez setAjax() => klasický POST + redirect
+
+	$form->addText('name', 'Název')->setRequired();
+	$form->addSubmit('save', 'Uložit');
+
+	$form->onSuccess[] = function(Form $form, ArrayHash $values): void
+	{
+		$this->repository->save(/* ... */);
+		$this->getPresenter()->flashMessage('Uloženo', 'success');
+		$this->getPresenter()->redirect('default'); // full reload
+	};
+
+	return $form;
+}
+```
+
+Stejný formulář s `setAjax()` zůstane na stránce a redrawne snippet `form` (typicky bez `redirect()` v `onSuccess`, místo toho `redrawControl('form')` nebo `redirect('this')` — záleží na UX).
+
 ### 7.9 Více `{control :js}` a vnoření
 
 ```latte
@@ -830,6 +871,7 @@ public function prepare(): void
 
 **Data a AJAX**
 
+- **`setAjax()` je opt-in** (default je klasický POST + `redirect()` z `onSuccess`). AJAX volíš jen tam, kde potřebuješ redraw snippetu / setrvání na stránce (duplikátory, dependent selecty, modaly, signály).
 - **`prepare()`** podle ID záznamu; **`redrawControl('form')`** i další snippety podle potřeby.
 - **`onValidate`** (křížová pravidla, flash) vs **`onSuccess`** (uložení).
 - Více **`{control …:js}`**; po update snippetu **naja** `afterUpdate`.
