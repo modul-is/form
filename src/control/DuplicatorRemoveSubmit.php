@@ -21,7 +21,7 @@ class DuplicatorRemoveSubmit extends SubmitButton
 
 			if(is_callable($callback))
 			{
-				$callback($duplicator, $button->parent);
+				$callback($duplicator, $button->getParent());
 			}
 
 			$form = $button->getForm(false);
@@ -37,7 +37,7 @@ class DuplicatorRemoveSubmit extends SubmitButton
 
 			$form->onSuccess = [];
 
-			$duplicator->removeComponent($button->parent);
+			$duplicator->removeComponent($button->getParent());
 		};
 	}
 

@@ -59,7 +59,6 @@ class Duplicator extends Container implements Renderable
 			$this->loadHttpData();
 			$this->createDefault();
 		});
-		$this->monitor(Form::class);
 
 		if(!self::$containerClass)
 		{
@@ -239,7 +238,7 @@ class Duplicator extends Container implements Renderable
 
 		call_user_func($this->factoryCallback, $container);
 
-		return $this->created[$container->name] = $container;
+		return $this->created[$container->getName()] = $container;
 	}
 
 
@@ -248,7 +247,7 @@ class Duplicator extends Container implements Renderable
 		$controls = $this->getComponents(false, Control::class);
 		$firstControl = reset($controls);
 		/* @phpstan-ignore-next-line */
-		return $firstControl ? $firstControl->name : null;
+		return $firstControl ? $firstControl->getName() : null;
 	}
 
 
