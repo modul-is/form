@@ -37,7 +37,6 @@ trait Dependent
 		}
 
 		$presenter = $this->lookup(Presenter::class);
-		\assert($presenter instanceof Presenter);
 
 		$attrs['data-dependentselectbox-parents'] = \Nette\Utils\Json::encode($parents);
 		$attrs['data-dependentselectbox'] = $presenter->link($this->lookupPath(Presenter::class) . \Nette\ComponentModel\Component::NameSeparator . \ModulIS\Form\Dial\SignalDial::Load . '!');

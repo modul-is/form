@@ -103,8 +103,7 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 			}
 			else
 			{
-				$type = is_object($item) ? $item::class : gettype($item);
-				throw new \Nette\InvalidArgumentException("Control or Container items expected, $type given.");
+				throw new \Nette\InvalidArgumentException('Control or Container items expected, ' . $item::class . ' given.');
 			}
 		}
 

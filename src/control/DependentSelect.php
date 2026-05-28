@@ -47,7 +47,6 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 	public function signalReceived($signal): void
 	{
 		$presenter = $this->lookup(Presenter::class);
-		\assert($presenter instanceof Presenter);
 
 		if($signal === SignalDial::Load)
 		{
@@ -64,7 +63,6 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 
 			$data = $this->getDependentData([$parentsNames]);
 
-			/** @phpstan-ignore-next-line*/
 			$items = $data->getPreparedItems(is_array($this->disabled) ? $this->disabled : []);
 
 			$presenter->payload->dependentselectbox = [

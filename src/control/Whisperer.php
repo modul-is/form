@@ -73,7 +73,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	public function signalReceived($signal): void
 	{
 		$presenter = $this->lookup(Presenter::class);
-		\assert($presenter instanceof Presenter);
 
 		if(!$presenter->isAjax() || $this->isDisabled())
 		{
@@ -95,7 +94,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 			$data = $this->getDependentData([$parentsNames]);
 
-			/** @phpstan-ignore-next-line*/
 			$items = $data->getPreparedItems(is_array($this->disabled) ? $this->disabled : []);
 
 			$presenter->payload->dependentselectbox = [
@@ -203,7 +201,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 		}
 
 		$presenter = $this->lookup(Presenter::class);
-		\assert($presenter instanceof Presenter);
 
 		if($this->parents)
 		{
