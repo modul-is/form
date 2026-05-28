@@ -365,7 +365,11 @@ class Duplicator extends Container implements Renderable
 		if($this->httpPost === null)
 		{
 			$path = explode(self::NameSeparator, $this->lookupPath(Form::class));
-			$this->httpPost = Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, null);
+			$post = Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, null);
+
+			assert(is_array($post) || $post === null);
+
+			$this->httpPost = $post;
 		}
 
 		return $this->httpPost;
