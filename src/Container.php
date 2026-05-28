@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form;
 
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\DateTimeControl;
 use Nette\Utils\DateTime;
 use Nette\Utils\Html;
@@ -268,7 +269,9 @@ class Container extends \Nette\Forms\Container
 			$controlArray = iterator_to_array($this->getControls());
 			$lastControl = end($controlArray);
 
-			$previousControl = $lastControl->getName();
+			assert($lastControl instanceof BaseControl || $lastControl === false);
+
+			$previousControl = $lastControl ? $lastControl->getName() : null;
 		}
 
 		$this->dividerArray[$previousControl] = $content;

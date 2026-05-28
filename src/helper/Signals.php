@@ -19,7 +19,6 @@ trait Signals
 	public function signalReceived($signal): void
 	{
 		$presenter = $this->lookup(Presenter::class);
-		\assert($presenter instanceof Presenter);
 
 		if($signal !== SignalDial::OnFocusOut && $signal !== SignalDial::OnChange)
 		{
@@ -53,7 +52,6 @@ trait Signals
 	public function addSignalsToInput(Html &$input): void
 	{
 		$presenter = $this->lookup(Presenter::class);
-		\assert($presenter instanceof Presenter);
 
 		if(!empty($this->onFocusOutCallback))
 		{

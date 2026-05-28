@@ -20,7 +20,6 @@ class DuplicatorCreateSubmit extends SubmitButton
 			assert($form instanceof Form);
 
 			$duplicator = $button->lookup(Duplicator::class);
-			assert($duplicator instanceof Duplicator);
 
 			if($allowEmpty === true || $duplicator->isAllFilled() === true)
 			{
@@ -29,7 +28,6 @@ class DuplicatorCreateSubmit extends SubmitButton
 				if($form->getPresenter()->isAjax())
 				{
 					$component = $button->lookup(FormComponent::class);
-					assert($component instanceof FormComponent);
 
 					$component->redrawControl('form');
 				}

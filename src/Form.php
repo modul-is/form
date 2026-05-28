@@ -6,6 +6,7 @@ namespace ModulIS\Form;
 
 use Nette\Application\UI\Form as UIForm;
 use Nette\ComponentModel\IContainer;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\DateTimeControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Utils\DateTime;
@@ -461,7 +462,9 @@ class Form extends UIForm
 			$controlArray = iterator_to_array($this->getControls());
 			$lastControl = end($controlArray);
 
-			$previousControl = $lastControl->getName();
+			assert($lastControl instanceof BaseControl || $lastControl === false);
+
+			$previousControl = $lastControl ? $lastControl->getName() : null;
 		}
 
 		$this->dividerArray[$previousControl] = $content;

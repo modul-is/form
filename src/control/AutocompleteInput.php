@@ -103,7 +103,6 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	public function signalReceived($signal): void
 	{
 		$presenter = $this->lookup(Presenter::class);
-		\assert($presenter instanceof Presenter);
 
 		if($signal === SignalDial::OnSearchChange)
 		{
@@ -176,7 +175,6 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 		$control = parent::getControl();
 
 		$presenter = $this->lookup(Presenter::class);
-		\assert($presenter instanceof Presenter);
 
 		if($this->parents)
 		{

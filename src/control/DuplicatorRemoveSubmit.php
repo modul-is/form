@@ -17,11 +17,10 @@ class DuplicatorRemoveSubmit extends SubmitButton
 		$this->onClick[] = function(\Nette\Forms\Controls\SubmitButton $button) use ($callback): void
 		{
 			$duplicator = $button->lookup(Duplicator::class);
-			assert($duplicator instanceof Duplicator);
 
 			if(is_callable($callback))
 			{
-				$callback($duplicator, $button->parent);
+				$callback($duplicator, $button->getParent());
 			}
 
 			$form = $button->getForm(false);
@@ -30,14 +29,13 @@ class DuplicatorRemoveSubmit extends SubmitButton
 			if($form->getPresenter()->isAjax())
 			{
 				$component = $button->lookup(FormComponent::class);
-				assert($component instanceof FormComponent);
 
 				$component->redrawControl('form');
 			}
 
 			$form->onSuccess = [];
 
-			$duplicator->removeComponent($button->parent);
+			$duplicator->removeComponent($button->getParent());
 		};
 	}
 
