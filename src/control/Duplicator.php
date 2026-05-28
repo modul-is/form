@@ -13,6 +13,7 @@ use ModulIS\Form\Helper\Template;
 use Nette;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Control;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\SubmitterControl;
 use Nette\Utils\Html;
@@ -242,12 +243,14 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	private function getFirstControlName()
+	private function getFirstControlName(): ?string
 	{
 		$controls = $this->getComponents(false, Control::class);
 		$firstControl = reset($controls);
 
-		return $firstControl->getName();
+		assert($firstControl instanceof BaseControl || $firstControl === false);
+
+		return $firstControl ? $firstControl->getName() : null;
 	}
 
 
@@ -365,10 +368,10 @@ class Duplicator extends Container implements Renderable
 		if($this->httpPost === null)
 		{
 			$path = explode(self::NameSeparator, $this->lookupPath(Form::class));
+
 			$post = Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, null);
 
-			assert(is_array($post) || $post === null);
-
+			/** @phpstan-ignore-next-line */
 			$this->httpPost = $post;
 		}
 
