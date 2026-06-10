@@ -59,7 +59,12 @@ class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderabl
 
 	public function getControl(): Html
 	{
-		$this->setAppend($this->getCurrency());
+		$currency = $this->getCurrency();
+
+		if($currency)
+		{
+			$this->setAppend($currency);
+		}
 
 		$input = parent::getControl();
 
