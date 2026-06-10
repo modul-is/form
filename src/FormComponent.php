@@ -24,6 +24,7 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 
 		if($this->renderManually)
 		{
+			/* @phpstan-ignore-next-line */
 			$this->template->formTemplatePath = $template;
 			$this->template->setFile($this->getLatteName($this->getReflection()->getFileName()));
 		}
@@ -32,6 +33,7 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 			$this->template->setFile($template);
 		}
 
+		/* @phpstan-ignore-next-line */
 		$this->template->form = $this->getComponent('form');
 		$this->template->render();
 	}
