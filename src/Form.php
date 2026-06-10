@@ -353,6 +353,19 @@ class Form extends UIForm
 	}
 
 
+	public function addCurrency(string $name, $label = null, ?string $currency = null): Control\CurrencyInput
+	{
+		$input = new Control\CurrencyInput($label);
+
+		if($currency !== null)
+		{
+			$input->setCurrency($currency);
+		}
+
+		return $this[$name] = $input;
+	}
+
+
 	public function addUpload(string $name, $label = null, $multiple = false): Control\UploadControl
 	{
 		return $this[$name] = new Control\UploadControl($label, $multiple);
