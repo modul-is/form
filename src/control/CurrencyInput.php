@@ -65,10 +65,11 @@ class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderabl
 
 		if($value !== null)
 		{
-			$input->value(number_format((int) $value, 0, '.', ' '));
+			$input->value(number_format((int) $value, 0, '.', "\u{00A0}"));
 		}
 
 		$input->setAttribute('inputmode', 'numeric');
+		$input->setAttribute('data-currency-input', 'true');
 
 		return $input;
 	}
