@@ -59,6 +59,8 @@ class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderabl
 
 	public function getControl(): Html
 	{
+		$this->setAppend($this->getCurrency());
+
 		$input = parent::getControl();
 
 		$value = $this->getValue();
@@ -87,22 +89,5 @@ class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderabl
 		$cleaned = str_replace([' ', "\xc2\xa0", "\xe2\x80\x8f"], '', (string) $value);
 
 		return $cleaned === '' ? null : (int) $cleaned;
-	}
-
-
-	public function getAppend(): ?Html
-	{
-		$currency = $this->getCurrency();
-
-		if($this->append || $currency)
-		{
-			$text = $this->append ?: $currency;
-
-			return Html::el('span')
-				->class('input-group-text' . ($this->appendClass ? ' ' . $this->appendClass : ''))
-				->addHtml($text);
-		}
-
-		return null;
 	}
 }
