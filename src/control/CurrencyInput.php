@@ -26,7 +26,7 @@ class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderabl
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
 
-	private static ?string $defaultCurrency = null;
+	private static string $defaultCurrency = 'Kč';
 
 	private ?string $currency = null;
 
@@ -37,7 +37,7 @@ class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderabl
 	}
 
 
-	public static function getDefaultCurrency(): ?string
+	public static function getDefaultCurrency(): string
 	{
 		return self::$defaultCurrency;
 	}
