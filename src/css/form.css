@@ -547,7 +547,8 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
 }
 
 .col-form-label.required::after,
-.form-label.required::after
+.form-label.required::after,
+.form-check-label.required::after
 {
 	color: #cc1d24;
 	content: " ★";

@@ -59,6 +59,24 @@ Container works as standard Nette Container and has these new features
 + `setTitle()` - show title of container (only works when container is rendered as card)
 + `setColor()` - set color of container (only works when container is rendered as card)
 
+### Currency input
+
+`addCurrency()` - numeric input that visually formats values with thousands separators (e.g. `1 000 000`) but returns a plain integer on submit. Currency label is appended to the input.
+
+Default currency can be set globally for the whole project (e.g. in bootstrap or DI extension):
+
+```php
+\ModulIS\Form\Control\CurrencyInput::setDefaultCurrency('CZK');
+```
+
+Per-input currency can be set via:
+
+```php
+$form->addCurrency('price', 'Price', 'EUR');
+// or
+$form->addCurrency('price', 'Price')->setCurrency('EUR');
+```
+
 ### Inputs
 Some inputs provide new features
 

@@ -136,6 +136,19 @@ class Container extends \Nette\Forms\Container
 	}
 
 
+	public function addCurrency(string $name, null|string|Stringable $label = null, ?string $currency = null): Control\CurrencyInput
+	{
+		$input = new Control\CurrencyInput($label);
+
+		if($currency !== null)
+		{
+			$input->setCurrency($currency);
+		}
+
+		return $this[$name] = $input;
+	}
+
+
 	public function addDate(string $name, object|string|null $label = null): Control\DateTimeInput
 	{
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDate);

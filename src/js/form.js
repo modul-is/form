@@ -342,6 +342,25 @@ function syncSummernoteRequiredLabels()
 	});
 }
 
+function formatCurrencyInput(input)
+{
+	let raw = input.val().replace(/[^0-9]/g, '');
+
+	if(raw === '')
+	{
+		input.val('');
+		return;
+	}
+
+	let formatted = parseInt(raw, 10).toLocaleString('cs-CZ').replace(/\u202f/g, '\u00a0');
+	let cursorFromEnd = input[0].selectionEnd !== undefined ? input[0].value.length - input[0].selectionEnd : 0;
+
+	input.val(formatted);
+
+	let newPos = input[0].value.length - cursorFromEnd;
+	input[0].setSelectionRange(newPos, newPos);
+}
+
 function initForm()
 {
 	$('[data-on-focusout]').unbind();
@@ -451,6 +470,12 @@ function initForm()
 	});
 
 	syncSummernoteRequiredLabels();
+
+	$(document).off('input.currencyInput', '[data-currency-input]');
+	$(document).on('input.currencyInput', '[data-currency-input]', function()
+	{
+		formatCurrencyInput($(this));
+	});
 }
 
 function initQuickCopy()
