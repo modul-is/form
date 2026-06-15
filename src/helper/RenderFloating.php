@@ -8,58 +8,48 @@ use Nette\Utils\Html;
 
 trait RenderFloating
 {
-	protected ?bool $renderFloating = null;
-
-
-	public function setRenderFloating(bool $renderFloating = true): self
-	{
-		$this->renderFloating = $renderFloating;
-
-		return $this;
-	}
-
-
-	public function getRenderFloating(): ?bool
-	{
-		return $this->renderFloating;
-	}
+	use RenderFloatingState;
 
 
 	public function renderFloating(): Html
 	{
-		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'mb-3 col-12';
-		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
+		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'field';
+
 		$validationFeedBack = $this->getValidationFeedback();
 
 		$input = $this->getControl();
 
+		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
 		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
-		$inputClass = $this->controlClass . $currentClass . $validationClass;
+		$inputClass = $currentClass . $validationClass;
 
-		$input->class($inputClass);
-		$input->placeholder($this->getCaption());
+		if($inputClass)
+		{
+			$input->class(ltrim($inputClass));
+		}
 
 		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
 		{
 			$this->addSignalsToInput($input);
 		}
 
-		$label = $this->getCoreLabel();
+		$required = $this->isRequired()
+			? ' ' . Html::el('span')->style('color:var(--red)')->setText('*')
+			: '';
 
-		$floatingDiv = Html::el('div')
-			->class('form-floating')
-			->addHtml($input . $label . $validationFeedBack);
+		$labelEl = Html::el('label')
+			->style('font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--gray-600)')
+			->addHtml($this->getCaption() . $required);
 
 		$quickCopyHtml = $this instanceof QuickCopyable && $this->getQuickCopy()
 			? $this->getQuickCopyButton()
 			: null;
 
-		$inputGroup = Html::el('div')
-			->class('input-group')
-			->addHtml($this->getPrepend() . $floatingDiv . $this->getAppend() . $quickCopyHtml);
-
-		return Html::el('div')
+		$fieldDiv = Html::el('div')
+			->style('display:flex;flex-direction:column;gap:5px;min-width:0')
 			->class($wrapClass)
-			->addHtml($inputGroup);
+			->addHtml($labelEl . $input . $validationFeedBack . $quickCopyHtml);
+
+		return $fieldDiv;
 	}
 }

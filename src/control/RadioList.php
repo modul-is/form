@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
-class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
+class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\Color;
 	use Helper\Tooltip;
@@ -26,7 +26,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 	}
 	use Helper\Signals;
 	use Helper\ToggleButton;
-	use Helper\WrapControl;
+	use Helper\RenderFloatingList;
 
 	private bool $big = false;
 
@@ -64,6 +64,19 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 	{
 		if(!$this->big)
 		{
+			$form = $this->getForm();
+			\assert($form instanceof \ModulIS\Form\Form);
+
+			if($this instanceof FloatingRenderable && ($this->getRenderFloating() ?? $form->getRenderFloating()))
+			{
+				if($this->getOption('hide') || $this->autoRenderSkip)
+				{
+					return '';
+				}
+
+				return $this->renderFloating();
+			}
+
 			return $this->baseRender();
 		}
 
