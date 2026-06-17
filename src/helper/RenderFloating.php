@@ -21,7 +21,8 @@ trait RenderFloating
 
 		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
 		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
-		$inputClass = $currentClass . $validationClass;
+
+		$inputClass = $currentClass . $validationClass . ' new-design-input';
 
 		if($inputClass)
 		{
@@ -38,7 +39,7 @@ trait RenderFloating
 			: '';
 
 		$labelEl = Html::el('label')
-			->style('font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--gray-600)')
+			->for($this->getHtmlId())
 			->addHtml($this->getCaption() . $required);
 
 		$quickCopyHtml = $this instanceof QuickCopyable && $this->getQuickCopy()
@@ -46,8 +47,7 @@ trait RenderFloating
 			: null;
 
 		$fieldDiv = Html::el('div')
-			->style('display:flex;flex-direction:column;gap:5px;min-width:0')
-			->class($wrapClass)
+			->class($wrapClass . ' new-design-label')
 			->addHtml($labelEl . $input . $validationFeedBack . $quickCopyHtml);
 
 		return $fieldDiv;

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Control;
 
+use Kravcik\LatteFontAwesomeIcon\Extension;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
@@ -84,40 +85,31 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 		$validationClass = $this->getValidationClass();
 		$validationMessage = $this->getValidationFeedback();
 
-		if($this->toggleButton)
-		{
-			$inputClass = 'btn-check';
-			$labelClass = 'me-2 btn btn-' . $this->buttonColor;
-			$labelAttribute = 'width: calc(100% - 7.5px)';
-		}
-		else
-		{
-			$inputClass = 'form-check-input' . ($this->color ? ' ' . $this->color : null);
-			$labelClass = 'form-check-label' . ($this->isRequired() ? ' required' : null);
-			$labelAttribute = 'width: auto';
-		}
-
-		$labelClass = $this->labelClass ? $labelClass . ' ' . $this->labelClass : $labelClass;
-
-		$input->class($inputClass . ' ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null));
+		$input->class($input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null));
 
 		if($this->hasSignal())
 		{
 			$this->addSignalsToInput($input);
 		}
 
+		$boxSpan = Html::el('span')
+			->class('box')
+			->addHtml(Extension::render('check', 'white'));
+
+		$labelClass = 'checkbox' . ($this->isRequired() ? ' required' : null);
+		$labelClass = $this->labelClass ? $labelClass . ' ' . $this->labelClass : $labelClass;
+
 		$label = Html::el('label')
-			->setAttribute('for', $this->getHtmlId())
-			->setAttribute('style', $labelAttribute)
 			->class($labelClass)
+			->addHtml($input)
+			->addHtml($boxSpan)
 			->addHtml($this->translate($this->caption));
 
-		$switchClass = $this->switch ? ' form-switch' : null;
 		$checkboxClass = $this->checkboxClass ? ' ' . $this->checkboxClass : null;
 
 		$wrapDiv = Html::el('div')
-			->class('form-check' . $switchClass . $checkboxClass)
-			->addHtml($input . $label);
+			->class('new-design-checkbox-row' . $checkboxClass)
+			->addHtml($label);
 
 		if($this->tooltip)
 		{

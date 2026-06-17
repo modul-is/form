@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form;
 
+use Kravcik\LatteFontAwesomeIcon\Extension;
 use Nette\Application\UI\Form as UIForm;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\BaseControl;
@@ -124,13 +125,30 @@ class Form extends UIForm
 
 			$cardHeader = null;
 
-			if($groupTitle || $this->getTitle())
+			if($groupTitle || $this->getTitle() || $group->getIcon())
 			{
+				$iconSpan = Html::el('span')
+					->class('ico')
+					->addHtml(Extension::render($group->getIcon()));
+
+				$titleDiv = Html::el('div')
+					->class('section-title');
+
+				if($group->getIcon())
+				{
+					$titleDiv->addHtml($iconSpan);
+				};
+
+				if($groupTitle || $this->getTitle())
+				{
+					$titleDiv->addHtml($groupTitle ?: $this->getTitle());
+				}
+
 				$groupColor = $group->getOption('color') ? ' ' . $group->getOption('color') : null;
 
 				$cardHeader = Html::el('div')
-					->class('card-header' . $groupColor)
-					->setHtml($groupTitle ?: $this->getTitle());
+					->class('card-header section-header' . $groupColor)
+					->addHtml($titleDiv);
 			}
 
 			$content = $cardHeader . $cardBody;

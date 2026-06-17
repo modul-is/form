@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
+use ModulIS\Form\Helper\RenderFloatingState;
 use Nette\Utils\Html;
 
 class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
@@ -26,9 +27,19 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, F
 	}
 	use Helper\Signals;
 	use Helper\ToggleButton;
-	use Helper\RenderFloatingList;
+	use Helper\RenderFloatingState;
+
+	private array $iconArray = [];
 
 	private bool $big = false;
+
+
+	public function setIconArray(array $iconArray): self
+	{
+		$this->iconArray = $iconArray;
+
+		return $this;
+	}
 
 
 	public function setBig(bool $big = true): self
@@ -80,71 +91,21 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, F
 			return $this->baseRender();
 		}
 
-		if($this->getOption('hide') || $this->autoRenderSkip)
+ 		if($this->getOption('hide') || $this->autoRenderSkip)
 		{
 			return '';
 		}
 
-		$wrap = Html::el('div')
-			->class('btn-group row w-100');
-
-		foreach($this->getItems() as $case => $caseString)
-		{
-			if(isset($this->tooltips[$case]))
-			{
-				$tooltip = Html::el('p')
-					->class('mb-0 text-muted')
-					->addText($this->tooltips[$case]);
-			}
-			else
-			{
-				$tooltip = '';
-			}
-
-			$input = $this->getControlPart($case);
-
-			$this->addSignalsToInput($input);
-
-			$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : null;
-
-			$input->class('btn-check z-1 top-50 start-0 ms-4 round-16 position-relative' . $currentClass);
-
-			$labelString = Html::el('h6')
-				->class('fs-4 fw-semibold mb-0')
-				->addText($caseString);
-
-			$labelStringWrap = Html::el('div')
-				->class('text-start ps-2')
-				->addHtml($labelString)
-				->addHtml($tooltip);
-
-			$color = $this->color ?: 'primary';
-
-			$label = Html::el('label')
-				->class("btn btn-outline-$color mb-0 p-3 rounded ps-5 w-100")
-				->for($input->id)
-				->addHtml($labelStringWrap);
-
-			$inputLabelWrap = Html::el('div')
-				->class('position-relative col-lg-' . 12 / $this->itemsPerRow . ' ' . $this->itemClass)
-				->addHtml($input)
-				->addHtml($label);
-
-			$wrap->addHtml($inputLabelWrap);
-		}
+		$form = $this->getForm();
+		\assert($form instanceof \ModulIS\Form\Form);
 
 		$validationFeedBack = '';
 		$validationClass = '';
-		$cardClass = '';
-
-		$form = $this->getForm();
-		\assert($form instanceof \ModulIS\Form\Form);
 
 		if($form->isAnchored() && $form->isSubmitted())
 		{
 			if($this->hasErrors())
 			{
-				$cardClass = ' border-danger';
 				$validationClass = ' is-invalid';
 				$validationFeedBack = Html::el('div')
 					->class('invalid-feedback')
@@ -152,12 +113,67 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, F
 			}
 			elseif($this->getValidationSuccessMessage())
 			{
-				$cardClass = ' border-success';
 				$validationClass = ' is-valid';
 				$validationFeedBack = Html::el('div')
 					->class('valid-feedback')
 					->addHtml($this->getValidationSuccessMessage());
 			}
+		}
+
+		$checkHtml = \Kravcik\LatteFontAwesomeIcon\Extension::render('circle');
+
+		$tilesWrap = Html::el('div')
+			->class('new-design-checkbox-big-tiles');
+
+		foreach($this->getItems() as $key => $itemLabel)
+		{
+			$input = $this->getControlPart($key);
+
+			if($this instanceof Signalable && $this->hasSignal())
+			{
+				$this->addSignalsToInput($input);
+			}
+
+			if(isset($this->iconArray[$key]))
+			{
+				$icoHtml = Html::el('span')
+					->class('new-design-checkbox-big-ico')
+					->addText(\Kravcik\LatteFontAwesomeIcon\Extension::render($this->iconArray[$key]));
+			}
+			else
+			{
+				$icoHtml = '';
+			}
+
+			if(isset($this->tooltips[$key]))
+			{
+				$desc = Html::el('span')
+					->class('new-design-checkbox-big-desc')
+					->addText($this->tooltips[$key]);
+			}
+			else
+			{
+				$desc = '';
+			}
+
+			$lbl = Html::el('span')
+				->class('new-design-checkbox-big-lbl')
+				->addText($itemLabel);
+
+			$chk = Html::el('span')
+				->class('new-design-checkbox-big-chk')
+				->addHtml($checkHtml);
+
+			$tileLabel = Html::el('label')
+				->class('new-design-checkbox-big-tile radio');
+
+			$tileLabel->addHtml($input)
+				->addHtml($icoHtml)
+				->addHtml($lbl)
+				->addHtml($desc)
+				->addHtml($chk);
+
+			$tilesWrap->addHtml($tileLabel);
 		}
 
 		$label = $this->getLabel()->addAttributes(['class' => $this->isRequired() ? 'required' : '']);
@@ -166,24 +182,66 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, F
 			->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
 			->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
 
-		$mainLabel = Html::el('h6')
-			->class('mb-3 fw-semibold fs-4' . $validationClass . ' ' . $this->labelClass)
+		$blockTitle = Html::el('div')
+			->class('new-design-checkbox-big-block-title' . $validationClass)
 			->addHtml($label . $tooltip);
 
-		$cardBody = Html::el('div')
-			->class('card-body p-4');
+		$blockHead = Html::el('div')
+			->class('new-design-checkbox-big-block-head')
+			->addHtml($blockTitle);
 
-		if($this->getLabel()->getText())
-		{
-			$cardBody->addHtml($mainLabel);
-		}
-
-		$cardBody->addHtml($wrap)
+		$block = Html::el('div')
+			->id($this->getOption('id') ?: null)
+			->class('new-design-checkbox-big-block' . $this->inputClass)
+			->addHtml($blockHead)
+			->addHtml($tilesWrap)
 			->addHtml($validationFeedBack);
 
+		return $block;
+	}
+
+
+	public function renderFloating(): Html
+	{
+		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'field';
+
+		$form = $this->getForm();
+		\assert($form instanceof \ModulIS\Form\Form);
+
+		$required = $this->isRequired()
+			? ' ' . Html::el('span')->style('color:var(--red)')->setText('*')
+			: '';
+
+		$labelEl = Html::el('label')
+			->addHtml($this->getCaption() . $required);
+
+		$itemsWrap = Html::el('div')
+			->class('new-design-radio-input-wrap');
+
+		foreach($this->getItems() as $key => $itemLabel)
+		{
+			$inputEl = $this->getControlPart($key);
+
+			if($this instanceof Signalable && $this->hasSignal())
+			{
+				$this->addSignalsToInput($inputEl);
+			}
+
+			$inputEl->style('position:absolute;opacity:0;pointer-events:none');
+
+			$itemLabelEl = Html::el('label')
+				->for($inputEl->getAttribute('id'))
+				->class('new-design-radio-label')
+				->addHtml($inputEl . $itemLabel);
+
+			$itemsWrap->addHtml($itemLabelEl);
+		}
+
+		$validationFeedBack = $this->getValidationFeedback();
+
 		return Html::el('div')
-			->id($this->options['id'] ?? null)
-			->class('btn-group-active card shadow-none border' . $cardClass . $this->inputClass)
-			->addHtml($cardBody);
+			->id($this->getOption('id') ?: null)
+			->class('new-design-radio-wrap ' . $wrapClass)
+			->addHtml($labelEl . $itemsWrap . $validationFeedBack);
 	}
 }

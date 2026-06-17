@@ -10,6 +10,8 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 {
 	protected ?string $class = null;
 
+	protected ?string $icon = null;
+
 
 	public function getInputArray(): array
 	{
@@ -72,6 +74,20 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	public function setColor(string $color): self
 	{
 		return $this->setOption('color', $color);
+	}
+
+
+	public function setIcon(string $icon): self
+	{
+		$this->icon = $icon;
+
+		return $this;
+	}
+
+
+	public function getIcon(): ?string
+	{
+		return $this->icon;
 	}
 
 

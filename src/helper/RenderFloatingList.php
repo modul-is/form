@@ -30,7 +30,7 @@ trait RenderFloatingList
 		$checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
 		$itemsWrap = Html::el('div')
-			->style('display:flex;gap:14px;margin-top:4px;flex-wrap:wrap');
+			->class('new-design-checkbox-wrap');
 
 		foreach($this->getItems() as $key => $itemLabel)
 		{
@@ -41,16 +41,18 @@ trait RenderFloatingList
 				$this->addSignalsToInput($inputEl);
 			}
 
-			$inputEl->style('position:absolute;opacity:0;pointer-events:none');
-
 			$boxSpan = Html::el('span')
-				->style('width:18px;height:18px;border:1.5px solid var(--gray-200);border-radius:4px;background:var(--white);display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0')
+				->class('check')
 				->addHtml($checkSvg);
+
+			$spanLabel = Html::el('span')
+				->class('new-design-checkbox-item-label')
+				->addHtml($itemLabel);
 
 			$itemLabelEl = Html::el('label')
 				->for($inputEl->getAttribute('id'))
-				->style('display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;color:var(--gray-600)')
-				->addHtml($inputEl . $boxSpan . $itemLabel);
+				->class('new-design-checkbox-item')
+				->addHtml($inputEl . $boxSpan . $spanLabel);
 
 			$itemsWrap->addHtml($itemLabelEl);
 		}
