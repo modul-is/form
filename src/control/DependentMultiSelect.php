@@ -19,8 +19,7 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	use Helper\Template;
 	use Helper\Validation;
 	use Helper\WrapControl;
-	use Helper\RenderTypeState;
-	use Helper\RenderBasic;
+	use Helper\Render;
 	use Helper\Dependent;
 
 	private ?string $prompt = null;

@@ -9,9 +9,6 @@ use Nette\Utils\Html;
 
 trait RenderFloatingList
 {
-	use RenderTypeState;
-
-
 	public function renderFloating(): Html
 	{
 		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'field';
