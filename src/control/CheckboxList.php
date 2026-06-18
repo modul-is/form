@@ -5,10 +5,11 @@ declare(strict_types = 1);
 namespace ModulIS\Form\Control;
 
 use Kravcik\LatteFontAwesomeIcon\Extension;
+use ModulIS\Form\Enum\RenderType;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
-class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
+class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\Color;
 	use Helper\Tooltip;
@@ -18,20 +19,69 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
-	use Helper\WrapControl;
-	use Helper\RenderInline;
 	use Helper\ControlClass;
-	use Helper\RenderBasic
-	{
-		render as public baseRender;
-	}
 	use Helper\Signals;
 	use Helper\ToggleButton;
 	use Helper\RenderFloatingList;
+	use Helper\Render
+	{
+		render as public baseRender;
+	}
+	use Helper\RenderInline;
 
 	private array $iconArray = [];
 
 	private bool $big = false;
+
+
+	public function renderDefault(): Html
+	{
+		if($this->getOption('hide') || $this->autoRenderSkip)
+		{
+			return Html::el();
+		}
+
+		$required = $this->isRequired()
+			? ' ' . Html::el('span')->class('required')->setText('*')
+			: '';
+
+		$labelEl = Html::el('label')
+			->addHtml($this->getCaption() . $required);
+
+		$itemsWrap = Html::el('div')
+			->class('checkbox-new-row-item-wrap');
+
+		foreach($this->getItems() as $key => $itemLabel)
+		{
+			$inputEl = $this->getControlPart($key);
+
+			if($this instanceof Signalable && $this->hasSignal())
+			{
+				$this->addSignalsToInput($inputEl);
+			}
+
+			$boxSpan = Html::el('span')
+				->class('box')
+				->addHtml(Extension::render('check', 'white'));
+
+			$itemLabelEl = Html::el('label')
+				->class('checkbox')
+				->addHtml($inputEl)
+				->addHtml($boxSpan)
+				->addHtml($itemLabel);
+
+			$itemsWrap->addHtml($itemLabelEl);
+		}
+
+		$validationFeedBack = $this->getValidationFeedback();
+
+		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'col-12 mb-2';
+
+		return Html::el('div')
+			->id($this->getOption('id') ?: null)
+			->class($wrapClass . ' checkbox-new-row')
+			->addHtml($labelEl . $itemsWrap . $validationFeedBack);
+	}
 
 
 	public function setIconArray(array $iconArray): self
@@ -57,17 +107,13 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 			$form = $this->getForm();
 			\assert($form instanceof \ModulIS\Form\Form);
 
-			if($this instanceof FloatingRenderable && ($this->getRenderFloating() ?? $form->getRenderFloating()))
+			$effectiveRenderType = $this->getRenderType() ?: $form->getRenderType();
+
+			return match($effectiveRenderType)
 			{
-				if($this->getOption('hide') || $this->autoRenderSkip)
-				{
-					return '';
-				}
-
-				return $this->renderFloating();
-			}
-
-			return $this->baseRender();
+				RenderType::Inline, RenderType::Floating => $this->renderInline(),
+				RenderType::Default => $this->renderDefault()
+			};
 		}
 
 		if($this->getOption('hide') || $this->autoRenderSkip)
@@ -156,18 +202,18 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 		}
 
 		$label = $this->getLabel()->addAttributes(['class' => $this->isRequired() ? 'required' : '']);
-		$tooltip = $this->getTooltip() === null ? '' : Html::el('span')
-			->title($this->getTooltip())
-			->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
-			->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
 
 		$blockTitle = Html::el('div')
 			->class('new-design-checkbox-big-block-title' . $validationClass)
-			->addHtml($label . $tooltip);
+			->addHtml($label);
+
+		$tooltip = $this->getTooltip() === null ? '' : Html::el('div')
+			->class('new-design-checkbox-big-block-sub')
+			->addHtml($this->getTooltip());
 
 		$blockHead = Html::el('div')
 			->class('new-design-checkbox-big-block-head')
-			->addHtml($blockTitle);
+			->addHtml($blockTitle . $tooltip);
 
 		$block = Html::el('div')
 			->id($this->getOption('id') ?: null)

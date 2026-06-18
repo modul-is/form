@@ -9,7 +9,7 @@ use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 
-class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
+class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -26,7 +26,6 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 		setOnChangeCallback as public signalsSetOnChangeCallback;
 	}
 	use Helper\WrapControl;
-	use Helper\RenderInline;
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
 

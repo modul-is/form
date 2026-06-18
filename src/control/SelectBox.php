@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
-class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
+class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -16,13 +16,13 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, F
 	use Helper\Label;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
-	use Helper\RenderFloating;
 	use Helper\Validation;
-	use Helper\WrapControl;
-	use Helper\RenderInline;
 	use Helper\ControlClass;
 	use Helper\Signals;
-	use Helper\RenderBasic;
+	use Helper\Render;
+	use Helper\RenderDefault;
+	use Helper\RenderFloating;
+	use Helper\RenderInline;
 
 	private array $imageArray = [];
 

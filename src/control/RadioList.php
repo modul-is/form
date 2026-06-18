@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Control;
 
+use ModulIS\Form\Enum\RenderType;
 use ModulIS\Form\Helper;
-use ModulIS\Form\Helper\RenderFloatingState;
 use Nette\Utils\Html;
 
-class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
+class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\Color;
 	use Helper\Tooltip;
@@ -18,16 +18,15 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, F
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
-	use Helper\WrapControl;
-	use Helper\RenderInline;
 	use Helper\ControlClass;
-	use Helper\RenderBasic
+	use Helper\Signals;
+	use Helper\ToggleButton;
+	use Helper\RenderFloatingList;
+	use Helper\RenderInline;
+	use Helper\Render
 	{
 		render as public baseRender;
 	}
-	use Helper\Signals;
-	use Helper\ToggleButton;
-	use Helper\RenderFloatingState;
 
 	private array $iconArray = [];
 
@@ -78,17 +77,13 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, F
 			$form = $this->getForm();
 			\assert($form instanceof \ModulIS\Form\Form);
 
-			if($this instanceof FloatingRenderable && ($this->getRenderFloating() ?? $form->getRenderFloating()))
+			$effectiveRenderType = $this->getRenderType() ?: $form->getRenderType();
+
+			return match($effectiveRenderType)
 			{
-				if($this->getOption('hide') || $this->autoRenderSkip)
-				{
-					return '';
-				}
-
-				return $this->renderFloating();
-			}
-
-			return $this->baseRender();
+				RenderType::Inline, RenderType::Floating => $this->renderInline(),
+				RenderType::Default => $this->renderDefault()
+			};
 		}
 
  		if($this->getOption('hide') || $this->autoRenderSkip)
@@ -177,18 +172,19 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, F
 		}
 
 		$label = $this->getLabel()->addAttributes(['class' => $this->isRequired() ? 'required' : '']);
-		$tooltip = $this->getTooltip() === null ? '' : Html::el('span')
-			->title($this->getTooltip())
-			->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
-			->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
 
 		$blockTitle = Html::el('div')
 			->class('new-design-checkbox-big-block-title' . $validationClass)
-			->addHtml($label . $tooltip);
+			->addHtml($label);
+
+		$tooltip = $this->getTooltip() === null ? '' : Html::el('div')
+			->class('new-design-checkbox-big-block-sub')
+			->addHtml($this->getTooltip());
 
 		$blockHead = Html::el('div')
 			->class('new-design-checkbox-big-block-head')
-			->addHtml($blockTitle);
+			->addHtml($blockTitle)
+			->addHtml($tooltip);
 
 		$block = Html::el('div')
 			->id($this->getOption('id') ?: null)
@@ -201,7 +197,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, F
 	}
 
 
-	public function renderFloating(): Html
+	public function renderDefault(): Html
 	{
 		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'field';
 
@@ -209,7 +205,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, F
 		\assert($form instanceof \ModulIS\Form\Form);
 
 		$required = $this->isRequired()
-			? ' ' . Html::el('span')->style('color:var(--red)')->setText('*')
+			? ' ' . Html::el('span')->style('required')->setText('*')
 			: '';
 
 		$labelEl = Html::el('label')

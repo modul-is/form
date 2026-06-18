@@ -8,7 +8,7 @@ use ModulIS\Form\Dial\SignalDial;
 use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
 
-class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Renderable, FloatingRenderable, Signalable, \Nette\Application\UI\SignalReceiver
+class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;
@@ -20,10 +20,11 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 	use Helper\Template;
 	use Helper\RenderFloating;
 	use Helper\Validation;
-	use Helper\WrapControl;
-	use Helper\RenderInline;
 	use Helper\ControlClass;
-	use Helper\RenderBasic;
+	use Helper\Render;
+	use Helper\RenderDefault;
+	use Helper\RenderFloating;
+	use Helper\RenderInline;
 	use Helper\Signals
 	{
 		signalReceived as public signalsSignalReceived;

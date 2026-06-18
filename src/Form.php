@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace ModulIS\Form;
 
 use Kravcik\LatteFontAwesomeIcon\Extension;
+use ModulIS\Form\Enum\RenderType;
 use Nette\Application\UI\Form as UIForm;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\BaseControl;
@@ -43,15 +44,13 @@ class Form extends UIForm
 
 	public bool $noValidate = true;
 
-	public bool $renderFloating = false;
-
-	private bool $renderInline = false;
+	private RenderType $renderType = RenderType::Default;
 
 	private array $groups = [];
 
 	private array $formErrors = [];
 
-	private string $defaultInputWrapClass = 'mb-3 col-12';
+	private string $defaultInputWrapClass = 'mb-2 col-12';
 
 	private array $dividerArray = [];
 
@@ -125,30 +124,9 @@ class Form extends UIForm
 
 			$cardHeader = null;
 
-			if($groupTitle || $this->getTitle() || $group->getIcon())
+			if($groupTitle || $group->getIcon())
 			{
-				$iconSpan = Html::el('span')
-					->class('ico')
-					->addHtml(Extension::render($group->getIcon()));
-
-				$titleDiv = Html::el('div')
-					->class('section-title');
-
-				if($group->getIcon())
-				{
-					$titleDiv->addHtml($iconSpan);
-				};
-
-				if($groupTitle || $this->getTitle())
-				{
-					$titleDiv->addHtml($groupTitle ?: $this->getTitle());
-				}
-
-				$groupColor = $group->getOption('color') ? ' ' . $group->getOption('color') : null;
-
-				$cardHeader = Html::el('div')
-					->class('card-header section-header' . $groupColor)
-					->addHtml($titleDiv);
+				$cardHeader = $group->getHeader();
 			}
 
 			$content = $cardHeader . $cardBody;
@@ -502,17 +480,41 @@ class Form extends UIForm
 	}
 
 
-	public function setRenderInline(bool $renderInline = true): self
+	public function setRenderType(RenderType $renderType): self
 	{
-		$this->renderInline = $renderInline;
+		$this->renderType = $renderType;
 
 		return $this;
 	}
 
 
-	public function getRenderInline(): bool
+	public function setRenderDefault(): self
 	{
-		return $this->renderInline;
+		$this->renderType = RenderType::Default;
+
+		return $this;
+	}
+
+
+	public function setRenderFloating(): self
+	{
+		$this->renderType = RenderType::Floating;
+
+		return $this;
+	}
+
+
+	public function setRenderInline(): self
+	{
+		$this->renderType = RenderType::Inline;
+
+		return $this;
+	}
+
+
+	public function getRenderType(): RenderType
+	{
+		return $this->renderType;
 	}
 
 
@@ -577,20 +579,6 @@ class Form extends UIForm
 		$this->noValidate = $noValidate;
 
 		return $this;
-	}
-
-
-	public function setRenderFloating(bool $renderFloating = true): self
-	{
-		$this->renderFloating = $renderFloating;
-
-		return $this;
-	}
-
-
-	public function getRenderFloating(): bool
-	{
-		return $this->renderFloating;
 	}
 
 

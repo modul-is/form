@@ -15,6 +15,7 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
 	use Helper\ButtonRounded;
+	use Helper\Render;
 
 	public function getCoreControl(): Html|string
 	{

@@ -19,7 +19,7 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	use Helper\Template;
 	use Helper\Validation;
 	use Helper\WrapControl;
-	use Helper\RenderInline;
+	use Helper\RenderTypeState;
 	use Helper\RenderBasic;
 	use Helper\Dependent;
 

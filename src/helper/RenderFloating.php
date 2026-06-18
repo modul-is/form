@@ -5,51 +5,45 @@ declare(strict_types = 1);
 namespace ModulIS\Form\Helper;
 
 use Nette\Utils\Html;
+use ModulIS\Form\Helper\QuickCopyable;
 
 trait RenderFloating
 {
-	use RenderFloatingState;
-
-
 	public function renderFloating(): Html
 	{
-		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'field';
-
+		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'mb-3 col-12';
+		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
 		$validationFeedBack = $this->getValidationFeedback();
 
 		$input = $this->getControl();
 
-		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
 		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
+		$inputClass = $this->controlClass . $currentClass . $validationClass;
 
-		$inputClass = $currentClass . $validationClass . ' new-design-input';
-
-		if($inputClass)
-		{
-			$input->class(ltrim($inputClass));
-		}
+		$input->class($inputClass);
+		$input->placeholder($this->getCaption());
 
 		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
 		{
 			$this->addSignalsToInput($input);
 		}
 
-		$required = $this->isRequired()
-			? ' ' . Html::el('span')->style('color:var(--red)')->setText('*')
-			: '';
+		$label = $this->getCoreLabel();
 
-		$labelEl = Html::el('label')
-			->for($this->getHtmlId())
-			->addHtml($this->getCaption() . $required);
+		$floatingDiv = Html::el('div')
+			->class('form-floating')
+			->addHtml($input . $label . $validationFeedBack);
 
 		$quickCopyHtml = $this instanceof QuickCopyable && $this->getQuickCopy()
 			? $this->getQuickCopyButton()
 			: null;
 
-		$fieldDiv = Html::el('div')
-			->class($wrapClass . ' new-design-label')
-			->addHtml($labelEl . $input . $validationFeedBack . $quickCopyHtml);
+		$inputGroup = Html::el('div')
+			->class('input-group')
+			->addHtml($this->getPrepend() . $floatingDiv . $this->getAppend() . $quickCopyHtml);
 
-		return $fieldDiv;
+		return Html::el('div')
+			->class($wrapClass)
+			->addHtml($inputGroup);
 	}
 }

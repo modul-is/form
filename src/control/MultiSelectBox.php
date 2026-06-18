@@ -18,9 +18,11 @@ class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Ren
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
-	use Helper\WrapControl;
-	use Helper\RenderInline;
+	use Helper\RenderTypeState;
 	use Helper\ControlClass;
 	use Helper\Signals;
-	use Helper\RenderBasic;
+	use Helper\Render;
+	use Helper\RenderInline;
+	use Helper\RenderFloating;
+	use Helper\RenderDefault;
 }

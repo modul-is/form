@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 trait RenderFloatingList
 {
-	use RenderFloatingState;
+	use RenderTypeState;
 
 
 	public function renderFloating(): Html
@@ -20,7 +20,7 @@ trait RenderFloatingList
 		\assert($form instanceof \ModulIS\Form\Form);
 
 		$required = $this->isRequired()
-			? ' ' . Html::el('span')->style('color:var(--red)')->setText('*')
+			? ' ' . Html::el('span')->style('required')->setText('*')
 			: '';
 
 		$labelEl = Html::el('label')
