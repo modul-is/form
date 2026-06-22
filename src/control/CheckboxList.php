@@ -69,9 +69,6 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 
 		$validationFeedBack = $this->getValidationFeedback();
 
-		bdump($validationFeedBack);
-
-
 		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'col-12 mb-2';
 
 		return Html::el('div')
