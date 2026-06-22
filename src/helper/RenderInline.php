@@ -104,7 +104,7 @@ trait RenderInline
 			->addHtml($input);
 
 		return $this->getWrapControl()
-			->class('text-input-new-inline')
+			->class('text-input-new-inline ' . ($this->getWrapControl()->getAttribute('class') ?: ''))
 			->addHtml($labelDiv)
 			->addHtml($inputDiv);
 	}

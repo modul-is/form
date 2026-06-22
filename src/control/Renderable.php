@@ -8,9 +8,5 @@ use ModulIS\Form\Enum\RenderType;
 
 interface Renderable
 {
-	public function setRenderType(RenderType $renderType): self;
-
-	public function getRenderType(): ?RenderType;
-
 	public function render(): \Nette\Utils\Html|string;
 }

@@ -9,12 +9,11 @@ use Nette\Utils\Html;
 
 class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Renderable
 {
-	use Helper\Icon;
+	use Helper\ButtonIcon;
 	use Helper\Color;
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
 	use Helper\ButtonRounded;
-	use Helper\Render;
 
 	public function getCoreControl(): Html
 	{
@@ -25,16 +24,16 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 		$button = Html::el('button');
 
 		$button->name($this->getName())
-			->appendAttribute('class', 'btn px-4')
 			->appendAttribute('class', 'btn-' . $color)
-			->appendAttribute('class', $this->getFormButtonClass())
 			->appendAttribute('class', (string) $input->getAttribute('class'))
+			->appendAttribute('class', 'new-design-btn')
 			->type('submit')
 			->formnovalidate(true);
 
 		if($this->icon)
 		{
-			$iconHtml = \Kravcik\LatteFontAwesomeIcon\Extension::render($this->icon);
+			$iconHtml = \Kravcik\LatteFontAwesomeIcon\Extension::render($this->icon)
+				->appendAttribute('class', $this->iconPosition);
 			$button->addHtml($iconHtml . '&nbsp;');
 		}
 

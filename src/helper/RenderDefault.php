@@ -20,11 +20,11 @@ trait RenderDefault
 		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
 		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
 
-		$inputClass = $currentClass . $validationClass . ' new-design-input';
+		$inputClass = $currentClass . $validationClass . ' new-design-input form-control ' . $this->getInputWrapClass();
 
 		if($inputClass)
 		{
-			$input->class(ltrim($inputClass));
+			$input->appendAttribute('class', ltrim($inputClass));
 		}
 
 		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
@@ -37,6 +37,7 @@ trait RenderDefault
 			: '';
 
 		$labelEl = Html::el('label')
+			->class($this->getLabelWrapClass())
 			->for($this->getHtmlId())
 			->addHtml($this->getCaption() . $required);
 
@@ -44,9 +45,26 @@ trait RenderDefault
 			? $this->getQuickCopyButton()
 			: null;
 
+		$group = Html::el('div')
+			->class('input-group');
+
+		if($this->getPrepend())
+		{
+			$group->addHtml($this->getPrepend());
+		}
+
+		$group->addHtml($input);
+
+		if($this->getAppend())
+		{
+			$group->addHtml($this->getAppend());
+		}
+
+		$group->addHtml($validationFeedBack);
+
 		$fieldDiv = Html::el('div')
 			->class($wrapClass . ' new-design-label')
-			->addHtml($labelEl . $input . $validationFeedBack . $quickCopyHtml);
+			->addHtml($labelEl . $group . $quickCopyHtml);
 
 		return $fieldDiv;
 	}

@@ -4,10 +4,26 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Helper;
 
+use ModulIS\Form\Enum\RenderType;
 use Nette\Utils\Html;
 
 trait RenderBasic
 {
+	protected ?RenderType $renderType = null;
+
+
+	public function setRenderType(RenderType $renderType): self
+	{
+		$this->renderType = $renderType;
+
+		return $this;
+	}
+
+	public function getRenderType(): ?RenderType
+	{
+		return $this->renderType;
+	}
+
 	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
@@ -21,7 +37,6 @@ trait RenderBasic
 
 			$this->setTemplate(null, $this->templateParams, $this->templateEngine);
 
-
 			$template = $this->templateEngine ?: new \Latte\Engine;
 
 			return $template->renderToString($path, array_merge(['input' => $this], $this->templateParams));
@@ -30,14 +45,14 @@ trait RenderBasic
 		$form = $this->getForm();
 		\assert($form instanceof \ModulIS\Form\Form);
 
-		if($this instanceof \ModulIS\Form\Control\FloatingRenderable && ($this->getRenderFloating() ?? $form->getRenderFloating()))
+		$effectiveRenderType = $this->getRenderType() ?: $form->getRenderType();
+
+		$outerDiv = match($effectiveRenderType)
 		{
-			$outerDiv = $this->renderFloating();
-		}
-		else
-		{
-			$outerDiv = $this->renderWrap();
-		}
+			RenderType::Floating => $this->renderFloating(),
+			RenderType::Inline => $this->renderInline(),
+			RenderType::Default => $this->renderDefault()
+		};
 
 		if($this->getOption('id'))
 		{

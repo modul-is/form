@@ -19,7 +19,7 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, Sig
 	use Helper\Template;
 	use Helper\Validation;
 	use Helper\Signals;
-	use Helper\Render;
+	use Helper\RenderBasic;
 	use Helper\RenderDefault;
 	use Helper\RenderFloating;
 	use Helper\RenderInline;

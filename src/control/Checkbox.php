@@ -16,7 +16,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
-	use Helper\Render;
+	use Helper\RenderBasic;
 	use Helper\ControlClass;
 	use Helper\Signals;
 	use Helper\ToggleButton;
@@ -139,7 +139,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 
 		$input = $this->getCoreControl();
 
-		$inputClass = $this->inputClass ?? 'col-sm-8 offset-sm-4';
+		$inputClass = $this->inputClass ?? 'col-12';
 
 		$wrapClass = $this->wrapClass ?? 'col-12';
 

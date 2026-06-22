@@ -20,7 +20,7 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, S
 	use Helper\Validation;
 	use Helper\Signals;
 	use Helper\ControlClass;
-	use Helper\Render;
+	use Helper\RenderBasic;
 	use Helper\RenderDefault;
 	use Helper\RenderFloating;
 	use Helper\RenderInline;

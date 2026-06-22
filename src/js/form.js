@@ -476,6 +476,36 @@ function initForm()
 	{
 		formatCurrencyInput($(this));
 	});
+
+	document.addEventListener('change', function (e) {
+
+		// Radio
+		if (e.target.matches('input[type="radio"]')) {
+			const groupName = e.target.name;
+
+			document.querySelectorAll(`input[type="radio"][name="${groupName}"]`).forEach(radio => {
+				radio.closest('label')?.classList.remove('active');
+			});
+
+			e.target.closest('label')?.classList.add('active');
+		}
+
+		// Checkbox
+		if (e.target.matches('input[type="checkbox"]')) {
+			const label = e.target.closest('label');
+
+			label?.classList.toggle('active', e.target.checked);
+		}
+	});
+
+// Inicializace po načtení stránky
+	document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+		radio.closest('label')?.classList.add('active');
+	});
+
+	document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+		checkbox.closest('label')?.classList.toggle('active', checkbox.checked);
+	});
 }
 
 function initQuickCopy()

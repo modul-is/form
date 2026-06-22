@@ -9,7 +9,7 @@ use Latte\Engine;
 use ModulIS\Form\Container;
 use ModulIS\Form\DuplicatorContainer;
 use ModulIS\Form\Helper\AutoRenderSkip;
-use ModulIS\Form\Helper\Render;
+use ModulIS\Form\Helper\RenderBasic;
 use ModulIS\Form\Helper\RenderDefault;
 use ModulIS\Form\Helper\RenderFloating;
 use ModulIS\Form\Helper\RenderInline;
@@ -24,12 +24,13 @@ use Nette\Utils\Html;
 use Nette\Utils\Strings;
 use Traversable;
 use function assert;
+use ModulIS\Form\Control\DuplicatorRemoveSubmit;
 
 class Duplicator extends Container implements Renderable
 {
 	use AutoRenderSkip;
 	use Template;
-	use Render;
+	use RenderBasic;
 	use RenderInline;
 	use RenderDefault;
 	use RenderFloating;
@@ -149,20 +150,36 @@ class Duplicator extends Container implements Renderable
 				continue;
 			}
 
-			$inputs = $key === 0 ? null : '<hr />';
+			$inputs = null;
 			$buttons = null;
+
+			$containerHeader = Html::el('div')
+				->class('duplicator-head');
 
 			if($container->getTitle())
 			{
-				$bodyRow .= Html::el('div')
-					->class('card-header bg-transparent px-0 fw-bolder border-bottom mb-2')
-					->addHtml($container->getTitle());
+				$title = Html::el('div')
+					->class('lbl')
+					->addText($container->getTitle());
+
+				$containerHeader->addHtml($title);
+			}
+
+			if($container->getComponent('del', false))
+			{
+				$containerHeader->addHtml($container->getComponent('del')->render());
 			}
 
 			foreach($container->getComponents() as $duplicatorInput)
 			{
 				assert($duplicatorInput instanceof Renderable);
-				if($duplicatorInput instanceof Button || $duplicatorInput instanceof DuplicatorRemoveSubmit || $duplicatorInput instanceof Link)
+
+				if($duplicatorInput instanceof DuplicatorRemoveSubmit)
+				{
+					continue;
+				}
+
+				if($duplicatorInput instanceof Button || $duplicatorInput instanceof Link)
 				{
 					$buttons .= $duplicatorInput->render();
 				}
@@ -181,6 +198,7 @@ class Duplicator extends Container implements Renderable
 
 			$bodyRow .= Html::el('div')
 				->class('row')
+				->addHtml($containerHeader)
 				->addHtml($inputs);
 		}
 

@@ -5,7 +5,10 @@ declare(strict_types = 1);
 namespace ModulIS\Form\Helper;
 
 use Kravcik\LatteFontAwesomeIcon\Extension;
+use ModulIS\Form\Control\CheckboxList;
 use ModulIS\Form\Control\Signalable;
+use ModulIS\Form\Enum\RenderListType;
+use ModulIS\Form\Enum\RenderType;
 use ModulIS\Form\Form;
 use Nette\Utils\Html;
 use function assert;
@@ -19,6 +22,222 @@ trait CoreList
 	protected ?string $itemClass = null;
 
 	protected array $wrapRowAttributes = [];
+
+	protected ?RenderListType $renderType = null;
+
+
+	public function setRenderType(RenderListType $renderType): self
+	{
+		$this->renderType = $renderType;
+
+		return $this;
+	}
+
+	public function getRenderType(): ?RenderListType
+	{
+		return $this->renderType;
+	}
+
+
+	public function render(): Html|string
+	{
+		if($this->getOption('hide') || $this->autoRenderSkip)
+		{
+			return '';
+		}
+
+		if($this->templatePath)
+		{
+			$path = $this->templatePath;
+
+			$this->setTemplate(null, $this->templateParams, $this->templateEngine);
+
+			$template = $this->templateEngine ?: new \Latte\Engine;
+
+			return $template->renderToString($path, array_merge(['input' => $this], $this->templateParams));
+		}
+
+		$form = $this->getForm();
+		\assert($form instanceof \ModulIS\Form\Form);
+
+		$inputRenderType = $this->getRenderType();
+
+		if(!$inputRenderType)
+		{
+			$inputRenderType = match($form->getRenderType())
+			{
+				RenderType::Inline => RenderListType::Inline,
+				RenderType::Floating => RenderListType::Inline,
+				RenderType::Default => RenderListType::Default
+			};
+		}
+
+		$outerDiv = match($inputRenderType)
+		{
+			RenderListType::Inline, RenderType::Floating => $this->renderInline(),
+			RenderListType::Big => $this->renderBig(),
+			RenderListType::Compact => $this->renderCompact(),
+			RenderListType::Default => $this->renderDefault()
+		};
+
+		if($this->getOption('id'))
+		{
+			$outerDiv->id($this->getOption('id'));
+		}
+
+		return $outerDiv;
+	}
+
+
+	public function renderCompact(): Html|string
+	{
+		$required = $this->isRequired()
+			? ' ' . Html::el('span')->class('required')->setText('*')
+			: '';
+
+		$labelEl = Html::el('label')
+			->class('new-design-compact-label ' . $this->getLabelWrapClass())
+			->addHtml($this->getCaption() . $required);
+
+		$itemsWrapField = Html::el('div')
+			->class('new-design-compact-input-field ' . $this->getInputWrapClass());
+
+		foreach($this->getItems() as $key => $itemLabel)
+		{
+			$inputEl = $this->getControlPart($key);
+
+			if($this instanceof Signalable && $this->hasSignal())
+			{
+				$this->addSignalsToInput($inputEl);
+			}
+
+			$itemLabelEl = Html::el('label')
+				->for($inputEl->getAttribute('id'))
+				->addHtml($inputEl . $itemLabel);
+
+			$itemsWrapField->addHtml($itemLabelEl);
+		}
+
+		$itemsWrap = Html::el('div')
+			->class('new-design-compact-input-wrap')
+			->addHtml($itemsWrapField);
+
+		$validationFeedBack = $this->getValidationFeedback();
+
+		return Html::el('div')
+			->id($this->getOption('id') ?: null)
+			->class('new-design-compact ' . ($this->getWrapControl()->getAttribute('class') ?: ''))
+			->addHtml($labelEl . $itemsWrap . $validationFeedBack);
+	}
+
+
+	public function renderBig(): Html|string
+	{
+		$form = $this->getForm();
+		\assert($form instanceof \ModulIS\Form\Form);
+
+		$validationFeedBack = '';
+		$validationClass = '';
+
+		if($form->isAnchored() && $form->isSubmitted())
+		{
+			if($this->hasErrors())
+			{
+				$validationClass = ' is-invalid';
+				$validationFeedBack = Html::el('div')
+					->class('invalid-feedback')
+					->addHtml($this->getError());
+			}
+			elseif($this->getValidationSuccessMessage())
+			{
+				$validationClass = ' is-valid';
+				$validationFeedBack = Html::el('div')
+					->class('valid-feedback')
+					->addHtml($this->getValidationSuccessMessage());
+			}
+		}
+
+		$icon = $this instanceof CheckboxList ? 'check-circle' : 'circle';
+		$checkHtml = \Kravcik\LatteFontAwesomeIcon\Extension::render($icon);
+
+		$tilesWrap = Html::el('div')
+			->class('new-design-checkbox-big-tiles');
+
+		foreach($this->getItems() as $key => $itemLabel)
+		{
+			$input = $this->getControlPart($key);
+
+			if($this instanceof Signalable && $this->hasSignal())
+			{
+				$this->addSignalsToInput($input);
+			}
+
+			if(isset($this->iconArray[$key]))
+			{
+				$icoHtml = Html::el('span')
+					->class('new-design-checkbox-big-ico')
+					->addText(\Kravcik\LatteFontAwesomeIcon\Extension::render($this->iconArray[$key]));
+			}
+			else
+			{
+				$icoHtml = '';
+			}
+
+			if(isset($this->tooltips[$key]))
+			{
+				$desc = Html::el('span')
+					->class('new-design-checkbox-big-desc')
+					->addText($this->tooltips[$key]);
+			}
+			else
+			{
+				$desc = '';
+			}
+
+			$lbl = Html::el('span')
+				->class('new-design-checkbox-big-lbl')
+				->addText($itemLabel);
+
+			$chk = Html::el('span')
+				->class('new-design-checkbox-big-chk')
+				->addHtml($checkHtml);
+
+			$tileLabel = Html::el('label')
+				->class('new-design-checkbox-big-tile radio');
+
+			$tileLabel->addHtml($input)
+				->addHtml($icoHtml)
+				->addHtml($lbl)
+				->addHtml($desc)
+				->addHtml($chk);
+
+			$tilesWrap->addHtml($tileLabel);
+		}
+
+		$label = $this->getLabel()->addAttributes(['class' => $this->isRequired() ? 'required' : '']);
+
+		$blockTitle = Html::el('div')
+			->class('new-design-checkbox-big-block-title' . $validationClass)
+			->addHtml($label);
+
+		$tooltip = $this->getTooltip() === null ? '' : Html::el('div')
+			->class('new-design-checkbox-big-block-sub')
+			->addHtml($this->getTooltip());
+
+		$blockHead = Html::el('div')
+			->class('new-design-checkbox-big-block-head')
+			->addHtml($blockTitle)
+			->addHtml($tooltip);
+
+		$block = Html::el('div')
+			->id($this->getOption('id') ?: null)
+			->class('new-design-checkbox-big-block' . $this->inputClass)
+			->addHtml($blockHead)
+			->addHtml($tilesWrap)
+			->addHtml($validationFeedBack);
+
+		return $block;
+	}
 
 
 	public function getCoreControl(): Html|string

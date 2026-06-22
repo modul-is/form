@@ -21,7 +21,7 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 	use Helper\RenderFloating;
 	use Helper\Validation;
 	use Helper\ControlClass;
-	use Helper\Render;
+	use Helper\RenderBasic;
 	use Helper\RenderDefault;
 	use Helper\RenderFloating;
 	use Helper\RenderInline;

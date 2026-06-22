@@ -270,6 +270,7 @@ class Container extends \Nette\Forms\Container
 	public function addWhisperer(string $name, $label = null, array $items = []): Control\Whisperer
 	{
 		return $this[$name] = (new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
+			->setClass('form-control-chosen')
 			->setHtmlAttribute('data-placeholder', 'Vyberte')
 			->checkDefaultValue(false);
 	}

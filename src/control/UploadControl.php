@@ -18,7 +18,7 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 	use Helper\Template;
 	use Helper\Validation;
 	use Helper\ControlClass;
-	use Helper\Render;
+	use Helper\RenderBasic;
 	use Helper\RenderDefault;
 	use Helper\RenderFloating;
 	use Helper\RenderInline;

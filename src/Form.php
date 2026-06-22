@@ -442,6 +442,7 @@ class Form extends UIForm
 	{
 		return $this[$name] = (new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
 			->setHtmlAttribute('data-placeholder', 'Vyberte')
+			->setClass('form-control-chosen')
 			->checkDefaultValue(false);
 	}
 

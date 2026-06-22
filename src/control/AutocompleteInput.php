@@ -27,7 +27,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	}
 	use Helper\WrapControl;
 	use Helper\ControlClass;
-	use Helper\Render;
+	use Helper\RenderBasic;
 
 	public $onSearchChangeCallback;
 

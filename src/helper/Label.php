@@ -15,7 +15,16 @@ trait Label
 	{
 		$required = $this->isRequired() ? ' required' : '';
 
-		$label = $this->getLabel()->class('col-form-label' . $required);
+		$label = $this->getLabel();
+
+		if($this->isRequired())
+		{
+			$required = $this->isRequired()
+				? ' ' . Html::el('span')->class('required')->setText('*')
+				: '';
+
+			$label->addHtml($required);
+		}
 
 		if(!$this->tooltip)
 		{

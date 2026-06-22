@@ -61,8 +61,7 @@ class DuplicatorCreateSubmit extends SubmitButton
 		$form = $this->getForm();
 		assert($form instanceof Form);
 
-		$class = 'btn' . $this->getFormButtonClass()
-			. ' btn-outline-primary btn-sm float-start'
+		$class = 'btn-duplicator btn-sm float-start'
 			. ($form->ajax ? ' ajax' : '')
 			. ($currentClass ? ' ' . $currentClass : '');
 

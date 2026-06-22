@@ -52,8 +52,7 @@ class DuplicatorRemoveSubmit extends SubmitButton
 		assert($form instanceof Form);
 
 		$currentClass = $this->getControl()->getAttribute('class');
-		$class = 'btn' . $this->getFormButtonClass()
-			. ' btn-sm btn-outline-danger float-end'
+		$class = 'btn-sm btn-duplicator btn-duplicator-remove float-end'
 			. ($form->ajax ? ' ajax' : '')
 			. ($currentClass ? ' ' . $currentClass : '');
 

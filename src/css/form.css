@@ -376,7 +376,9 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
 
 .chosen-container
 {
-    font-size: 0.875rem;
+    font-size: 0.875rem !important;
+	font-weight: normal;
+	text-transform: none;
 }
 
 .chosen-container-single a:not([href]):not([tabindex]), .chosen-container-single a:not([href]):not([tabindex]).chosen-single:not(.chosen-default)
@@ -1194,9 +1196,9 @@ form input[type=number], form input[type=text], form textarea
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	padding: 10px 14px;
 	border-radius: 8px;
 	margin-bottom: 5px;
+	padding: 14px 14px;
 }
 
 .new-design-checkbox-row .checkbox
@@ -1365,3 +1367,153 @@ form input[type=number], form input[type=text], form textarea
 	color: #9BA3B4;
 	font-weight: 600;
 }
+
+.new-design-radio-label.radio-rounded
+{
+	border-radius: 20px;
+}
+
+.new-design-compact
+{
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 9px 0;
+	min-height: 40px;
+}
+
+.new-design-compact>.new-design-compact-label
+{
+	flex: 0 0 210px;
+	font-size: 13px;
+	font-weight: 500;
+	color: #5A6478;
+}
+
+.new-design-compact>.new-design-compact-input-wrap
+{
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.new-design-compact-input-field
+{
+	display: inline-flex;
+	background: #F7F8FA;
+	border: 1.5px solid #DDE1E9;
+	border-radius: 20px;
+	padding: 3px;
+	gap: 2px;
+}
+
+.new-design-compact-input-field label
+{
+	position: relative;
+	padding: 5px 13px;
+	font-size: 13px;
+	font-weight: 500;
+	color: #5A6478;
+	border-radius: 20px;
+	cursor: pointer;
+	white-space: nowrap;
+	text-transform: none;
+	letter-spacing: 0;
+	transition: all .15s;
+}
+
+.new-design-compact-input-field label:has(input:checked)
+{
+	background: #FFFFFF;
+	color: var(--navy);
+	font-weight: 700;
+	box-shadow: 0 1px 4px rgba(27, 47, 94, .10);
+}
+
+.new-design-compact-input-field input
+{
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.new-design-btn
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 18px;
+	font-family: 'Source Sans 3', sans-serif;
+	font-size: 13px;
+	font-weight: 700;
+	border-radius: 50px;
+	cursor: pointer;
+	transition: all .15s;
+	white-space: nowrap;
+	letter-spacing: .2px;
+	background: #FFFFFF;
+	color: var(--navy);
+	border: 1.5px solid #DDE1E9;
+}
+
+.chosen-container
+{
+	font-size: 0.875rem !important;
+	font-weight: normal !important;
+	text-transform: none !important;
+}
+
+.new-design-input.is-invalid
+{
+	border-color: #fa896b;
+	padding-right: calc(1.5em + 16px);
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23fa896b'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23fa896b' stroke='none'/%3e%3c/svg%3e");
+	background-repeat: no-repeat;
+	background-position: right calc(0.375em + 4px) center;
+	background-size: calc(0.75em + 8px) calc(0.75em + 8px);
+}
+
+.input-group-text
+{
+	text-transform: none !important;
+}
+
+.btn-duplicator
+{
+	background: none;
+	border: none;
+	color: var(--navy);
+	font-size: 13px;
+	font-weight: 700;
+	cursor: pointer;
+	padding: 0;
+	font-family: inherit;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	letter-spacing: .1px;
+}
+
+.btn-duplicator-remove
+{
+	color: #C0392B;
+}
+
+.duplicator-head
+{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}
+
+.duplicator-head .lbl
+{
+	font-size: 11px;
+	font-weight: 800;
+	letter-spacing: .5px;
+	text-transform: uppercase;
+	color: #9BA3B4;
+}
+

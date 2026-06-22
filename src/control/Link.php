@@ -14,7 +14,7 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
 	use Helper\ButtonRounded;
-	use Helper\Render;
+	use Helper\RenderBasic;
 
 	protected string|null $link = null;
 

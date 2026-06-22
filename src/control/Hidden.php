@@ -9,8 +9,6 @@ use Nette\Utils\Html;
 
 class Hidden extends \Nette\Forms\Controls\HiddenField implements Renderable
 {
-	use Render;
-
 	public function getCoreControl(): Html
 	{
 		return $this->getControl();
