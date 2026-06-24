@@ -95,18 +95,34 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 		$validationClass = $this->getValidationClass();
 		$validationMessage = $this->getValidationFeedback();
 
-		$input->class($input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null));
-
 		if($this->hasSignal())
 		{
 			$this->addSignalsToInput($input);
 		}
 
+		$polyline = Html::el('polyline')
+			->points('20 6 9 17 4 12');
+
+		$svg = Html::el('svg')
+			->viewBox('0 0 24 24')
+			->fill('none')
+			->setAttribute('stroke-linecap', 'round')
+			->addHtml($polyline);
+
 		$boxSpan = Html::el('span')
 			->class('box')
-			->addHtml(Extension::render('check', 'white'));
+			->addHtml($svg);
 
-		$labelClass = 'checkbox' . ($this->isRequired() ? ' required' : null);
+		$required = null;
+
+		if($this->isRequired())
+		{
+			$required = Html::el('span')
+				->class('required')
+				->addText('*');
+		}
+
+		$labelClass = 'checkbox' . ($validationClass ? ' ' . $validationClass : null);
 		$labelClass = $this->labelClass ? $labelClass . ' ' . $this->labelClass : $labelClass;
 
 		if($this->checkboxLeft)
@@ -115,7 +131,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 				->class($labelClass)
 				->addHtml($input)
 				->addHtml($boxSpan)
-				->addHtml($this->translate($this->getCaption()));
+				->addHtml($this->translate($this->getCaption()) . $required);
 
 			$checkboxClass = $this->checkboxClass ? ' ' . $this->checkboxClass : null;
 
@@ -138,10 +154,10 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 			 $label = Html::el('label')
 				 ->class('rf-label')
 				 ->for($input->getAttribute('id'))
-				 ->addHtml($this->translate($this->getCaption()));
+				 ->addHtml($this->translate($this->getCaption()) . $required);
 
 			 $inputLabel = Html::el('label')
-				 ->class('checkbox')
+				 ->class($labelClass)
 				 ->addHtml($input)
 				 ->addHtml($boxSpan);
 

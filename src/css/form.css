@@ -1160,14 +1160,44 @@ form input[type=number], form input[type=text], form textarea
 	position: absolute;
 	top: 12px;
 	right: 12px;
-	width: 13px;
-	height: 13px;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	border: 1.5px solid #DDE1E9;
+	background: #FFFFFF;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	transition: all .15s;
+	transition: all .15s
+}
+
+.new-design-checkbox-big-tile .new-design-checkbox-big-chk svg
+{
+	width: 10px;
+	height: 10px;
+	opacity: 0;
+	stroke: #fff;
+	stroke-width: 3;
+	fill: none;
+}
+
+.new-design-checkbox-big-tile .new-design-checkbox-big-chk svg
+{
+	opacity: 1;
+}
+
+.new-design-checkbox-big-tile.radio .new-design-checkbox-big-chk::after {
+	content: '';
+	width: 8px;
+	height: 8px;
 	border-radius: 50%;
-	border: 1.5px solid #fff;
+	background: #fff;
+	opacity: 0;
+	transition: opacity .15s;
+}
+
+.new-design-checkbox-big-tile.active.radio .new-design-checkbox-big-chk::after {
+	opacity: 1;
 }
 
 :root
@@ -1548,4 +1578,20 @@ form input[type=number], form input[type=text], form textarea
 .chosen-container
 {
 	font-family: 'Source Sans 3', 'Barlow', sans-serif;
+}
+
+.checkbox-new-row-item-wrap .checkbox .box svg, .new-design-checkbox-row .checkbox .box svg,
+.rf-control .checkbox .box svg
+{
+	width: 10px;
+	height: 10px;
+	opacity: 0;
+	stroke: #fff;
+	stroke-width: 3;
+}
+
+.checkbox-new-row-item-wrap .checkbox input:checked ~ .box svg, .new-design-checkbox-row .checkbox input:checked ~ .box svg,
+.rf-control .checkbox input:checked ~ .box svg
+{
+	opacity: 1;
 }

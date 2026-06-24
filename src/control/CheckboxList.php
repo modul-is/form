@@ -45,6 +45,19 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 		$itemsWrap = Html::el('div')
 			->class('checkbox-new-row-item-wrap ' . $this->getValidationClass());
 
+		$polyline = Html::el('polyline')
+			->points('20 6 9 17 4 12');
+
+		$svg = Html::el('svg')
+			->viewBox('0 0 24 24')
+			->fill('none')
+			->setAttribute('stroke-linecap', 'round')
+			->addHtml($polyline);
+
+		$boxSpan = Html::el('span')
+			->class('box')
+			->addHtml($svg);
+
 		foreach($this->getItems() as $key => $itemLabel)
 		{
 			$inputEl = $this->getControlPart($key);
@@ -53,10 +66,6 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 			{
 				$this->addSignalsToInput($inputEl);
 			}
-
-			$boxSpan = Html::el('span')
-				->class('box')
-				->addHtml(Extension::render('check', 'white'));
 
 			$itemLabelEl = Html::el('label')
 				->class('checkbox')

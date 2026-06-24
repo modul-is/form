@@ -6,7 +6,9 @@ namespace ModulIS\Form\Helper;
 
 use Kravcik\LatteFontAwesomeIcon\Extension;
 use ModulIS\Form\Control\CheckboxList;
+use ModulIS\Form\Control\RadioList;
 use ModulIS\Form\Control\Signalable;
+use ModulIS\Form\Enum\RadioEnum;
 use ModulIS\Form\Enum\RenderListType;
 use ModulIS\Form\Enum\RenderType;
 use ModulIS\Form\Form;
@@ -157,8 +159,21 @@ trait CoreList
 			}
 		}
 
-		$icon = $this instanceof CheckboxList ? 'check-circle' : 'circle';
-		$checkHtml = \Kravcik\LatteFontAwesomeIcon\Extension::render($icon);
+		if($this instanceof CheckboxList)
+		{
+			$polyline = Html::el('polyline')
+				->points('20 6 9 17 4 12');
+
+			$checkHtml = Html::el('svg')
+				->viewBox('0 0 24 24')
+				->fill('none')
+				->setAttribute('stroke-linecap', 'round')
+				->addHtml($polyline);
+		}
+		else
+		{
+			$checkHtml = null;
+		}
 
 		$tilesWrap = Html::el('div')
 			->class('new-design-checkbox-big-tiles');
@@ -199,11 +214,15 @@ trait CoreList
 				->addText($itemLabel);
 
 			$chk = Html::el('span')
-				->class('new-design-checkbox-big-chk')
-				->addHtml($checkHtml);
+				->class('new-design-checkbox-big-chk');
+
+			if($checkHtml)
+			{
+				$chk->addHtml($checkHtml);
+			}
 
 			$tileLabel = Html::el('label')
-				->class('new-design-checkbox-big-tile radio');
+				->class('new-design-checkbox-big-tile' . ($this instanceof RadioList ? ' radio' : ''));
 
 			$tileLabel->addHtml($input)
 				->addHtml($icoHtml)
