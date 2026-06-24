@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form;
 
-use Kravcik\LatteFontAwesomeIcon\Extension;
 use ModulIS\Form\Enum\RenderType;
 use Nette\Application\UI\Form as UIForm;
 use Nette\ComponentModel\IContainer;
@@ -36,13 +35,13 @@ class Form extends UIForm
 
 	public bool $ajax = false;
 
-	private ?string $buttonClass = null;
-
 	public Html|string|null $title = null;
 
 	public ?string $icon = null;
 
 	public bool $noValidate = true;
+
+	private ?string $buttonClass = null;
 
 	private RenderType $renderType = RenderType::Default;
 
@@ -55,7 +54,10 @@ class Form extends UIForm
 	private array $dividerArray = [];
 
 
-	public function __construct(?IContainer $parent = null, $name = null)
+	public function __construct
+	(
+		?IContainer $parent = null, $name = null
+	)
 	{
 		parent::__construct($parent, $name);
 
@@ -260,14 +262,14 @@ class Form extends UIForm
 
 	public function addText(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
-		return $this[$name] = (new Control\TextInput($label, $maxLength))
+		return $this[$name] = new Control\TextInput($label, $maxLength)
 			->setHtmlAttribute('size', $cols);
 	}
 
 
 	public function addFloat(string $name, $label = null): Control\TextInput
 	{
-		return $this[$name] = (new Control\TextInput($label))
+		return $this[$name] = new Control\TextInput($label)
 			->setNullable()
 			->setHtmlType('number')
 			->setHtmlAttribute('step', 'any')
@@ -277,7 +279,7 @@ class Form extends UIForm
 
 	public function addAutocomplete(string $name, $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
 	{
-		return $this[$name] = (new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? []))
+		return $this[$name] = new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? [])
 			->setHtmlAttribute('autocomplete', 'off')
 			->setClass('autocomplete-input');
 	}
@@ -295,7 +297,7 @@ class Form extends UIForm
 
 	public function addDateWeek(string $name, $label = null): Control\TextInput
 	{
-		return $this[$name] = (new Control\TextInput($label))
+		return $this[$name] = new Control\TextInput($label)
 			->setHtmlAttribute('type', 'week');
 	}
 
@@ -312,14 +314,14 @@ class Form extends UIForm
 
 	public function addTime(string $name, $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
-		return $this[$name] = (new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds))
+		return $this[$name] = new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds)
 			->setFormat($withSeconds ? 'H:i:00' : 'H:i');
 	}
 
 
 	public function addPassword(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
-		return $this[$name] = (new Control\TextInput($label, $maxLength))
+		return $this[$name] = new Control\TextInput($label, $maxLength)
 			->setHtmlAttribute('size', $cols)
 			->setHtmlType('password');
 	}
@@ -327,14 +329,14 @@ class Form extends UIForm
 
 	public function addTextArea(string $name, $label = null, ?int $cols = null, ?int $rows = null): Control\TextArea
 	{
-		return $this[$name] = (new Control\TextArea($label))
+		return $this[$name] = new Control\TextArea($label)
 			->setHtmlAttribute('cols', $cols)->setHtmlAttribute('rows', $rows);
 	}
 
 
 	public function addEmail(string $name, string|Stringable|null $label = null, int $maxLength = 255): Control\TextInput
 	{
-		return $this[$name] = (new Control\TextInput($label))
+		return $this[$name] = new Control\TextInput($label)
 			->setRequired(false)
 			->addRule(self::Email);
 	}
@@ -342,7 +344,7 @@ class Form extends UIForm
 
 	public function addInteger(string $name, $label = null): Control\TextInput
 	{
-		return $this[$name] = (new Control\TextInput($label))
+		return $this[$name] = new Control\TextInput($label)
 			->setNullable()
 			->setRequired(false)
 			->addRule(self::Integer);
@@ -394,21 +396,21 @@ class Form extends UIForm
 
 	public function addSelect(string $name, null|string|Stringable $label = null, ?array $items = null, $size = null): Control\SelectBox
 	{
-		return $this[$name] = (new Control\SelectBox($label, $items))
+		return $this[$name] = new Control\SelectBox($label, $items)
 			->setHtmlAttribute('size', $size > 1 ? (int) $size : null);
 	}
 
 
 	public function addMultiSelect(string $name, null|string|Stringable $label = null, ?array $items = null, $size = null): Control\MultiSelectBox
 	{
-		return $this[$name] = (new Control\MultiSelectBox($label, $items))
+		return $this[$name] = new Control\MultiSelectBox($label, $items)
 			->setHtmlAttribute('size', $size > 1 ? (int) $size : null);
 	}
 
 
 	public function addSubmit(string $name, $caption = ''): Control\SubmitButton
 	{
-		return $this[$name] = (new Control\SubmitButton($caption))
+		return $this[$name] = new Control\SubmitButton($caption)
 			->setIcon('save')
 			->setColor('success');
 	}
@@ -440,7 +442,7 @@ class Form extends UIForm
 
 	public function addWhisperer(string $name, $label = null, array $items = []): Control\Whisperer
 	{
-		return $this[$name] = (new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
+		return $this[$name] = new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items)
 			->setHtmlAttribute('data-placeholder', 'Vyberte')
 			->setClass('form-control-chosen')
 			->checkDefaultValue(false);
@@ -459,7 +461,7 @@ class Form extends UIForm
 
 	public function addMultiWhisperer(string $name, $label = null, ?array $items = null): Control\MultiWhisperer
 	{
-		return $this[$name] = (new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
+		return $this[$name] = new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items)
 			->setHtmlAttribute('class', 'form-control-chosen')
 			->setHtmlAttribute('data-placeholder', 'Vyberte');
 	}

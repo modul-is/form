@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Helper;
 
-use ModulIS\Form\Enum\RenderType;
 use Nette\Utils\Html;
 
 trait RenderDefault

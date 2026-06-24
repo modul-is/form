@@ -10,7 +10,6 @@ interface QuickCopyable
 {
 	public function getQuickCopy(): bool;
 
-
 	public function getQuickCopyButton(): Html;
 }
 

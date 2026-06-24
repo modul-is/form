@@ -25,7 +25,10 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	private ?string $prompt = null;
 
 
-	public function __construct($label = null, array $parents = [], ?callable $dependentCallback = null)
+	public function __construct
+	(
+		$label = null, array $parents = [], ?callable $dependentCallback = null
+	)
 	{
 		$this->parents = $parents;
 

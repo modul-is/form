@@ -85,7 +85,7 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 				->addHtml(Extension::render($this->getIcon()));
 
 			$titleDiv->addHtml($iconSpan);
-		};
+		}
 
 		$groupTitle = $this->getOption('label');
 

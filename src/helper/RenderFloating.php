@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace ModulIS\Form\Helper;
 
 use Nette\Utils\Html;
-use ModulIS\Form\Helper\QuickCopyable;
 
 trait RenderFloating
 {

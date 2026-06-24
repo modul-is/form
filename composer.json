@@ -16,7 +16,7 @@
     "require-dev":
     {
 		"phpstan/phpstan-nette": "^2",
-		"modul-is/coding-standard": "^4",
+		"modul-is/coding-standard": "^5",
 		"nette/tester": "^2.1"
     },
     "autoload":

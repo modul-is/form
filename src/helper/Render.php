@@ -19,10 +19,12 @@ trait Render
 		return $this;
 	}
 
+
 	public function getRenderType(): ?RenderType
 	{
 		return $this->renderType;
 	}
+
 
 	public function render(): Html|string
 	{

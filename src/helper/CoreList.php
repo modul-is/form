@@ -8,7 +8,6 @@ use Kravcik\LatteFontAwesomeIcon\Extension;
 use ModulIS\Form\Control\CheckboxList;
 use ModulIS\Form\Control\RadioList;
 use ModulIS\Form\Control\Signalable;
-use ModulIS\Form\Enum\RadioEnum;
 use ModulIS\Form\Enum\RenderListType;
 use ModulIS\Form\Enum\RenderType;
 use ModulIS\Form\Form;
@@ -34,6 +33,7 @@ trait CoreList
 
 		return $this;
 	}
+
 
 	public function getRenderType(): ?RenderListType
 	{

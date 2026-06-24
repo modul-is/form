@@ -24,7 +24,6 @@ use Nette\Utils\Html;
 use Nette\Utils\Strings;
 use Traversable;
 use function assert;
-use ModulIS\Form\Control\DuplicatorRemoveSubmit;
 
 class Duplicator extends Container implements Renderable
 {
@@ -62,7 +61,10 @@ class Duplicator extends Container implements Renderable
 	private ?string $duplicatorContainerClass = null;
 
 
-	public function __construct($factory, int $createDefault = 0, bool $forceDefault = false)
+	public function __construct
+	(
+		$factory, int $createDefault = 0, bool $forceDefault = false
+	)
 	{
 		$this->monitor(Presenter::class, function()
 		{

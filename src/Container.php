@@ -80,14 +80,14 @@ class Container extends \Nette\Forms\Container
 
 	public function addText(string $name, null|string|Stringable $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
-		return $this[$name] = (new Control\TextInput($label, $maxLength))
+		return $this[$name] = new Control\TextInput($label, $maxLength)
 			->setHtmlAttribute('size', $cols);
 	}
 
 
 	public function addFloat(string $name, null|string|Stringable $label = null): Control\TextInput
 	{
-		return $this[$name] = (new Control\TextInput($label))
+		return $this[$name] = new Control\TextInput($label)
 			->setNullable()
 			->setHtmlType('number')
 			->setHtmlAttribute('step', 'any')
@@ -97,7 +97,7 @@ class Container extends \Nette\Forms\Container
 
 	public function addAutocomplete(string $name, null|string|Stringable $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
 	{
-		return $this[$name] = (new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? []))
+		return $this[$name] = new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? [])
 			->setHtmlAttribute('autocomplete', 'off')
 			->setClass('autocomplete-input');
 	}
@@ -105,7 +105,7 @@ class Container extends \Nette\Forms\Container
 
 	public function addPassword(string $name, null|string|Stringable $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
-		return $this[$name] = (new Control\TextInput($label, $maxLength))
+		return $this[$name] = new Control\TextInput($label, $maxLength)
 			->setHtmlAttribute('size', $cols)
 			->setHtmlType('password');
 	}
@@ -113,7 +113,7 @@ class Container extends \Nette\Forms\Container
 
 	public function addTextArea(string $name, null|string|Stringable $label = null, ?int $cols = null, ?int $rows = null): Control\TextArea
 	{
-		return $this[$name] = (new Control\TextArea($label))
+		return $this[$name] = new Control\TextArea($label)
 			->setHtmlAttribute('cols', $cols)
 			->setHtmlAttribute('rows', $rows);
 	}
@@ -121,7 +121,7 @@ class Container extends \Nette\Forms\Container
 
 	public function addEmail(string $name, string|Stringable|null $label = null, int $maxLength = 255): Control\TextInput
 	{
-		return $this[$name] = (new Control\TextInput($label))
+		return $this[$name] = new Control\TextInput($label)
 			->setRequired(false)
 			->addRule(Form::Email);
 	}
@@ -129,7 +129,7 @@ class Container extends \Nette\Forms\Container
 
 	public function addInteger(string $name, null|string|Stringable $label = null): Control\TextInput
 	{
-		return $this[$name] = (new Control\TextInput($label))
+		return $this[$name] = new Control\TextInput($label)
 			->setNullable()
 			->setRequired(false)
 			->addRule(Form::Integer);
@@ -171,14 +171,14 @@ class Container extends \Nette\Forms\Container
 
 	public function addDateWeek(string $name, null|string|Stringable $label = null): Control\TextInput
 	{
-		return $this[$name] = (new Control\TextInput($label))
+		return $this[$name] = new Control\TextInput($label)
 			->setHtmlAttribute('type', 'week');
 	}
 
 
 	public function addTime(string $name, object|string|null $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
-		return $this[$name] = (new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds))
+		return $this[$name] = new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds)
 			->setFormat($withSeconds ? 'H:i:00' : 'H:i');
 	}
 
@@ -215,14 +215,14 @@ class Container extends \Nette\Forms\Container
 
 	public function addSelect(string $name, null|string|Stringable $label = null, ?array $items = null, $size = null): Control\SelectBox
 	{
-		return $this[$name] = (new Control\SelectBox($label, $items))
+		return $this[$name] = new Control\SelectBox($label, $items)
 			->setHtmlAttribute('size', $size > 1 ? (int) $size : null);
 	}
 
 
 	public function addMultiSelect(string $name, null|string|Stringable $label = null, ?array $items = null, $size = null): Control\MultiSelectBox
 	{
-		return $this[$name] = (new Control\MultiSelectBox($label, $items))
+		return $this[$name] = new Control\MultiSelectBox($label, $items)
 			->setHtmlAttribute('size', $size > 1 ? (int) $size : null);
 	}
 
@@ -269,7 +269,7 @@ class Container extends \Nette\Forms\Container
 
 	public function addWhisperer(string $name, $label = null, array $items = []): Control\Whisperer
 	{
-		return $this[$name] = (new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items))
+		return $this[$name] = new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items)
 			->setClass('form-control-chosen')
 			->setHtmlAttribute('data-placeholder', 'Vyberte')
 			->checkDefaultValue(false);

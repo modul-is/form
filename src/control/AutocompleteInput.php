@@ -40,7 +40,10 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	private array $items = [];
 
 
-	public function __construct($label = null, ?int $maxLength = null, ?array $items = null)
+	public function __construct
+	(
+		$label = null, ?int $maxLength = null, ?array $items = null
+	)
 	{
 		parent::__construct($label, $maxLength);
 

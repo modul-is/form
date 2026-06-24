@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Control;
 
-use Kravcik\LatteFontAwesomeIcon\Extension;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 

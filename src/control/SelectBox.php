@@ -27,7 +27,10 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, S
 	private array $imageArray = [];
 
 
-	public function __construct($label = null, ?array $items = null)
+	public function __construct
+	(
+		$label = null, ?array $items = null
+	)
 	{
 		parent::__construct($label, $items);
 
