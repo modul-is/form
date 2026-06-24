@@ -911,6 +911,14 @@ form input[type=number], form input[type=text], form textarea
 
 .new-design-label
 {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	min-width: 0;
+}
+
+.new-design-label label, .new-design-radio-wrap label
+{
 	font-size: 11px;
 	font-weight: 700;
 	letter-spacing: .5px;
@@ -924,9 +932,9 @@ form input[type=number], form input[type=text], form textarea
 	font-weight: 700;
 	letter-spacing: .5px;
 	text-transform: uppercase;
+	text-align: center;
 	color: #5A6478;
 	position: relative;
-	display: flex;
 	align-items: center;
 	justify-content: center;
 	padding: 10px;
@@ -934,6 +942,7 @@ form input[type=number], form input[type=text], form textarea
 	border-radius: 8px;
 	cursor: pointer;
 	transition: all .15s;
+	flex: 1;
 }
 
 .new-design-radio-label:hover
@@ -1201,7 +1210,7 @@ form input[type=number], form input[type=text], form textarea
 	padding: 14px 14px;
 }
 
-.new-design-checkbox-row .checkbox
+.new-design-checkbox-row .checkbox, .new-design-checkbox-right .checkbox
 {
 	display: inline-flex;
 	align-items: center;
@@ -1211,7 +1220,8 @@ form input[type=number], form input[type=text], form textarea
 	color: #5A6478;
 }
 
-.new-design-checkbox-row .checkbox .box {
+.new-design-checkbox-row .checkbox .box, .new-design-checkbox-right .checkbox .box
+{
 	width: 18px;
 	height: 18px;
 	border: 1.5px solid #DDE1E9;
@@ -1224,13 +1234,13 @@ form input[type=number], form input[type=text], form textarea
 	flex-shrink: 0;
 }
 
-.new-design-checkbox-row .checkbox input:checked ~ .box
+.new-design-checkbox-row .checkbox input:checked ~ .box, .new-design-checkbox-right .checkbox input:checked ~ .box
 {
 	background: var(--navy);
 	border-color: var(--navy);
 }
 
-.new-design-checkbox-row .checkbox input
+.new-design-checkbox-row .checkbox input, .new-design-checkbox-right .checkbox input
 {
 	position: absolute;
 	opacity: 0;
@@ -1517,3 +1527,26 @@ form input[type=number], form input[type=text], form textarea
 	color: #9BA3B4;
 }
 
+
+.new-design-checkbox-right
+{
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	margin-bottom: 5px;
+	padding: 14px 0px;
+}
+
+.new-design-checkbox-right>.rf-label
+{
+	flex: 0 0 210px;
+	font-size: 13px;
+	font-weight: 500;
+	color: #5A6478;
+}
+
+.chosen-container
+{
+	font-family: 'Source Sans 3', 'Barlow', sans-serif;
+}

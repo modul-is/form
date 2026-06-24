@@ -31,10 +31,20 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 
 	private ?string $wrapClass = null;
 
+	private bool $checkboxLeft = true;
+
 
 	public function setSwitch(bool $switch = true): self
 	{
 		$this->switch = $switch;
+
+		return $this;
+	}
+
+
+	public function setCheckboxLeft(bool $checkboxLeft = true): self
+	{
+		$this->checkboxLeft = $checkboxLeft;
 
 		return $this;
 	}
@@ -99,26 +109,50 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 		$labelClass = 'checkbox' . ($this->isRequired() ? ' required' : null);
 		$labelClass = $this->labelClass ? $labelClass . ' ' . $this->labelClass : $labelClass;
 
-		$label = Html::el('label')
-			->class($labelClass)
-			->addHtml($input)
-			->addHtml($boxSpan)
-			->addHtml($this->translate($this->caption));
-
-		$checkboxClass = $this->checkboxClass ? ' ' . $this->checkboxClass : null;
-
-		$wrapDiv = Html::el('div')
-			->class('new-design-checkbox-row' . $checkboxClass)
-			->addHtml($label);
-
-		if($this->tooltip)
+		if($this->checkboxLeft)
 		{
-			$tooltip = Html::el('span')
-				->title($this->tooltip)
-				->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
-				->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
+			$label = Html::el('label')
+				->class($labelClass)
+				->addHtml($input)
+				->addHtml($boxSpan)
+				->addHtml($this->translate($this->getCaption()));
 
-			$wrapDiv->addHtml($tooltip);
+			$checkboxClass = $this->checkboxClass ? ' ' . $this->checkboxClass : null;
+
+			$wrapDiv = Html::el('div')
+				->class('new-design-checkbox-row' . $checkboxClass)
+				->addHtml($label);
+
+			if($this->tooltip)
+			{
+				$tooltip = Html::el('span')
+					->title($this->tooltip)
+					->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
+					->addHtml(\Kravcik\LatteFontAwesomeIcon\Extension::render('question-circle', color: 'blue'));
+
+				$wrapDiv->addHtml($tooltip);
+			}
+		}
+		else
+		{
+			 $label = Html::el('label')
+				 ->class('rf-label')
+				 ->for($input->getAttribute('id'))
+				 ->addHtml($this->translate($this->getCaption()));
+
+			 $inputLabel = Html::el('label')
+				 ->class('checkbox')
+				 ->addHtml($input)
+				 ->addHtml($boxSpan);
+
+			$control = Html::el('div')
+				->class('rf-control')
+				->addHtml($inputLabel);
+
+			$wrapDiv = Html::el('div')
+				->class('new-design-checkbox-right')
+				->addHtml($label)
+				->addHtml($control);
 		}
 
 		return $wrapDiv->addHtml($validationMessage);
