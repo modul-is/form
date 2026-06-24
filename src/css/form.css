@@ -1067,7 +1067,7 @@ form input[type=number], form input[type=text], form textarea
 	font-weight: 800;
 	letter-spacing: .6px;
 	text-transform: uppercase;
-	color: var(--navy);
+	color: var(--form-primary-color);
 	margin-bottom: 2px;
 }
 
@@ -1202,32 +1202,32 @@ form input[type=number], form input[type=text], form textarea
 
 :root
 {
-	--navy: #1B2F5E;
+	--form-primary-color: #1B2F5E;
 }
 
 .new-design-checkbox-big-tile.active
 {
-	border-color: var(--navy);
+	border-color: var(--form-primary-color);
 	background: #EEF2FF;
 }
 
 .new-design-checkbox-big-tile.active .new-design-checkbox-big-ico
 {
 	color: #fff;
-	border-color: var(--navy);
-	background: var(--navy);
+	border-color: var(--form-primary-color);
+	background: var(--form-primary-color);
 }
 
 .new-design-checkbox-big-tile.active .new-design-checkbox-big-lbl
 {
-	color: var(--navy);
+	color: var(--form-primary-color);
 }
 
 .new-design-checkbox-big-tile.active .new-design-checkbox-big-chk
 {
 	color: #fff;
-	background: var(--navy);
-	border-color: var(--navy);
+	background: var(--form-primary-color);
+	border-color: var(--form-primary-color);
 }
 
 .new-design-checkbox-row
@@ -1265,8 +1265,8 @@ form input[type=number], form input[type=text], form textarea
 
 .new-design-checkbox-row .checkbox input:checked ~ .box, .new-design-checkbox-right .checkbox input:checked ~ .box
 {
-	background: var(--navy);
-	border-color: var(--navy);
+	background: var(--form-primary-color);
+	border-color: var(--form-primary-color);
 }
 
 .new-design-checkbox-row .checkbox input, .new-design-checkbox-right .checkbox input
@@ -1290,7 +1290,7 @@ form input[type=number], form input[type=text], form textarea
 	font-weight: 800;
 	letter-spacing: .7px;
 	text-transform: uppercase;
-	color: var(--navy);
+	color: var(--form-primary-color);
 	flex: 1;
 	display: flex;
 	align-items: center;
@@ -1302,7 +1302,7 @@ form input[type=number], form input[type=text], form textarea
 	width: 36px;
 	height: 36px;
 	border-radius: 50%;
-	border: 2px solid var(--navy);
+	border: 2px solid var(--form-primary-color);
 	background: transparent;
 	display: flex;
 	align-items: center;
@@ -1365,8 +1365,8 @@ form input[type=number], form input[type=text], form textarea
 }
 
 .checkbox-new-row-item-wrap .checkbox input:checked ~ .box {
-	background: var(--navy);
-	border-color: var(--navy);
+	background: var(--form-primary-color);
+	border-color: var(--form-primary-color);
 }
 
 .checkbox-new-row-item-wrap .checkbox .box .ico {
@@ -1465,7 +1465,7 @@ form input[type=number], form input[type=text], form textarea
 .new-design-compact-input-field label:has(input:checked)
 {
 	background: #FFFFFF;
-	color: var(--navy);
+	color: var(--form-primary-color);
 	font-weight: 700;
 	box-shadow: 0 1px 4px rgba(27, 47, 94, .10);
 }
@@ -1492,7 +1492,7 @@ form input[type=number], form input[type=text], form textarea
 	white-space: nowrap;
 	letter-spacing: .2px;
 	background: #FFFFFF;
-	color: var(--navy);
+	color: var(--form-primary-color);
 	border: 1.5px solid #DDE1E9;
 }
 
@@ -1522,7 +1522,7 @@ form input[type=number], form input[type=text], form textarea
 {
 	background: none;
 	border: none;
-	color: var(--navy);
+	color: var(--form-primary-color);
 	font-size: 13px;
 	font-weight: 700;
 	cursor: pointer;
