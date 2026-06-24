@@ -21,10 +21,7 @@ trait RenderDefault
 
 		$inputClass = $currentClass . $validationClass . ' new-design-input form-control ' . $this->getInputWrapClass();
 
-		if($inputClass)
-		{
-			$input->appendAttribute('class', ltrim($inputClass));
-		}
+		$input->appendAttribute('class', ltrim($inputClass));
 
 		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
 		{

@@ -86,7 +86,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 		{
 			$inputEl = $this->getControlPart($key);
 
-			if($this instanceof Signalable && $this->hasSignal())
+			if($this->hasSignal())
 			{
 				$this->addSignalsToInput($inputEl);
 			}

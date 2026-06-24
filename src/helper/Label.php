@@ -13,15 +13,13 @@ trait Label
 {
 	public function getCoreLabel()
 	{
-		$required = $this->isRequired() ? ' required' : '';
-
 		$label = $this->getLabel();
 
 		if($this->isRequired())
 		{
-			$required = $this->isRequired()
-				? ' ' . Html::el('span')->class('required')->setText('*')
-				: '';
+			$required = Html::el('span')
+				->class('required')
+				->setText('*');
 
 			$label->addHtml($required);
 		}

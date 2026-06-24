@@ -44,11 +44,11 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 			->class('checkbox-new-row-item-wrap ' . $this->getValidationClass());
 
 		$polyline = Html::el('polyline')
-			->points('20 6 9 17 4 12');
+			->setAttribute('points', '20 6 9 17 4 12');
 
 		$svg = Html::el('svg')
-			->viewBox('0 0 24 24')
-			->fill('none')
+			->setAttribute('viewBox', '0 0 24 24')
+			->setAttribute('fill', 'none')
 			->setAttribute('stroke-linecap', 'round')
 			->addHtml($polyline);
 
@@ -60,7 +60,7 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 		{
 			$inputEl = $this->getControlPart($key);
 
-			if($this instanceof Signalable && $this->hasSignal())
+			if($this->hasSignal())
 			{
 				$this->addSignalsToInput($inputEl);
 			}

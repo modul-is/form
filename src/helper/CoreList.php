@@ -68,15 +68,14 @@ trait CoreList
 		{
 			$inputRenderType = match($form->getRenderType())
 			{
-				RenderType::Inline => RenderListType::Inline,
-				RenderType::Floating => RenderListType::Inline,
+				RenderType::Inline, RenderType::Floating => RenderListType::Inline,
 				RenderType::Default => RenderListType::Default
 			};
 		}
 
 		$outerDiv = match($inputRenderType)
 		{
-			RenderListType::Inline, RenderType::Floating => $this->renderInline(),
+			RenderListType::Inline, RenderListType::Floating => $this->renderInline(),
 			RenderListType::Big => $this->renderBig(),
 			RenderListType::Compact => $this->renderCompact(),
 			RenderListType::Default => $this->renderDefault()
@@ -162,11 +161,11 @@ trait CoreList
 		if($this instanceof CheckboxList)
 		{
 			$polyline = Html::el('polyline')
-				->points('20 6 9 17 4 12');
+				->setAttribute('points', '20 6 9 17 4 12');
 
 			$checkHtml = Html::el('svg')
-				->viewBox('0 0 24 24')
-				->fill('none')
+				->setAttribute('viewBox', '0 0 24 24')
+				->setAttribute('fill', 'none')
 				->setAttribute('stroke-linecap', 'round')
 				->addHtml($polyline);
 		}
@@ -182,7 +181,7 @@ trait CoreList
 		{
 			$input = $this->getControlPart($key);
 
-			if($this instanceof Signalable && $this->hasSignal())
+			if($this->hasSignal())
 			{
 				$this->addSignalsToInput($input);
 			}

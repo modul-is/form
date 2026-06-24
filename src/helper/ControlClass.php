@@ -6,7 +6,7 @@ namespace ModulIS\Form\Helper;
 
 trait ControlClass
 {
-	public function setClass(string $class): self
+	public function setClass(string $class): static
 	{
 		$this->setHtmlAttribute('class', $class);
 
