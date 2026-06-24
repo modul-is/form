@@ -1202,7 +1202,6 @@ form input[type=number], form input[type=text], form textarea
 
 .new-design-checkbox-row
 {
-	display: flex;
 	align-items: center;
 	gap: 10px;
 	border-radius: 8px;
