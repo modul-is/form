@@ -8,6 +8,7 @@ use Kravcik\LatteFontAwesomeIcon\Extension;
 use ModulIS\Form\Control\CheckboxList;
 use ModulIS\Form\Control\RadioList;
 use ModulIS\Form\Control\Signalable;
+use ModulIS\Form\Enum\RadioEnum;
 use ModulIS\Form\Enum\RenderListType;
 use ModulIS\Form\Enum\RenderType;
 use ModulIS\Form\Form;
@@ -92,6 +93,9 @@ trait CoreList
 
 	public function renderCompact(): Html|string
 	{
+		$validationFeedBack = $this->getValidationFeedback();
+		$validationClass = $this->getvalidationClass();
+
 		$required = $this->isRequired()
 			? ' ' . Html::el('span')->class('required')->setText('*')
 			: '';
@@ -101,13 +105,13 @@ trait CoreList
 			->addHtml($this->getCaption() . $required);
 
 		$itemsWrapField = Html::el('div')
-			->class('new-design-compact-input-field ' . $this->getInputWrapClass());
+			->class('new-design-compact-input-field ' . $this->getInputWrapClass() . ' ' . $validationClass);
 
 		foreach($this->getItems() as $key => $itemLabel)
 		{
 			$inputEl = $this->getControlPart($key);
 
-			if($this instanceof Signalable && $this->hasSignal())
+			if($this->hasSignal())
 			{
 				$this->addSignalsToInput($inputEl);
 			}
@@ -123,40 +127,22 @@ trait CoreList
 			->class('new-design-compact-input-wrap')
 			->addHtml($itemsWrapField);
 
-		$validationFeedBack = $this->getValidationFeedback();
+		if($validationFeedBack)
+		{
+			$itemsWrap->addHtml($validationFeedBack);
+		}
 
 		return Html::el('div')
 			->id($this->getOption('id') ?: null)
 			->class('new-design-compact ' . ($this->getWrapControl()->getAttribute('class') ?: ''))
-			->addHtml($labelEl . $itemsWrap . $validationFeedBack);
+			->addHtml($labelEl . $itemsWrap);
 	}
 
 
 	public function renderBig(): Html|string
 	{
-		$form = $this->getForm();
-		\assert($form instanceof \ModulIS\Form\Form);
-
-		$validationFeedBack = '';
-		$validationClass = '';
-
-		if($form->isAnchored() && $form->isSubmitted())
-		{
-			if($this->hasErrors())
-			{
-				$validationClass = ' is-invalid';
-				$validationFeedBack = Html::el('div')
-					->class('invalid-feedback')
-					->addHtml($this->getError());
-			}
-			elseif($this->getValidationSuccessMessage())
-			{
-				$validationClass = ' is-valid';
-				$validationFeedBack = Html::el('div')
-					->class('valid-feedback')
-					->addHtml($this->getValidationSuccessMessage());
-			}
-		}
+		$validationFeedBack = $this->getValidationFeedback();
+		$validationClass = $this->getvalidationClass();
 
 		if($this instanceof CheckboxList)
 		{
