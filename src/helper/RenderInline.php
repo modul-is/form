@@ -89,11 +89,28 @@ trait RenderInline
 
 	public function renderInline(): Html
 	{
-		$form = $this->getForm();
-		assert($form instanceof Form);
-
 		$label = $this->getCoreLabel();
-		$input = $this->getCoreControl();
+		$input = $this->getControl();
+
+		$input->appendAttribute('class', $this->controlClass);
+
+		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
+		{
+			$this->addSignalsToInput($input);
+		}
+
+		$quickCopyHtml = $this instanceof QuickCopyable && $this->getQuickCopy()
+			? $this->getQuickCopyButton()
+			: null;
+
+		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
+		$validationFeedBack = $this->getValidationFeedback();
+
+		$input->appendAttribute('class', $validationClass);
+
+		$inputControl = Html::el('div')
+			->class('input-group' . ($validationClass ? ' ' . $validationClass : ''))
+			->addHtml($this->getPrepend() . $input . $this->getAppend() . $quickCopyHtml);
 
 		$labelDiv = Html::el('div')
 			->class('text-input-new-label')
@@ -101,7 +118,8 @@ trait RenderInline
 
 		$inputDiv = Html::el('div')
 			->class('text-input-new-control')
-			->addHtml($input);
+			->addHtml($inputControl)
+			->addHtml($validationFeedBack);
 
 		return $this->getWrapControl()
 			->class('text-input-new-inline ' . ($this->getWrapControl()->getAttribute('class') ?: ''))
