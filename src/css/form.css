@@ -1434,6 +1434,11 @@ form input[type=number], form input[type=text], form textarea
 	gap: 8px;
 }
 
+.new-design-compact-input-field.is-invalid
+{
+	border: 1.5px solid #fa896b;
+}
+
 .new-design-compact-input-field
 {
 	background: #F7F8FA;
