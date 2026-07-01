@@ -18,6 +18,7 @@ use Nette\Forms\Form;
 use Nette\Forms\SubmitterControl;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
+use Stringable;
 use Traversable;
 use function assert;
 
@@ -436,7 +437,7 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	public function addSubmit(string $name, $caption = '', $callback = null): SubmitButton
+	public function addSubmit(string $name, Stringable|string|null $caption = null, $callback = null): SubmitButton
 	{
 		$control = new DuplicatorCreateSubmit($caption);
 

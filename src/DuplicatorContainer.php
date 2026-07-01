@@ -4,9 +4,11 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form;
 
+use Stringable;
+
 class DuplicatorContainer extends Container
 {
-	public function addSubmit(string $name, $caption = '', $callable = null): Control\DuplicatorRemoveSubmit
+	public function addSubmit(string $name, Stringable|string|null $caption = null, $callable = null): Control\DuplicatorRemoveSubmit
 	{
 		$control = new Control\DuplicatorRemoveSubmit($caption);
 
