@@ -1497,6 +1497,12 @@ form input[type=number], form input[type=text], form textarea
 	border: 1.5px solid #DDE1E9;
 }
 
+.new-design-btn:disabled
+{
+	background: #eaeff4;
+	cursor: default;
+}
+
 .chosen-container
 {
 	font-size: 0.875rem !important;
