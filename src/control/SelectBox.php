@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
-class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
+class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, HasInputGroup, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;

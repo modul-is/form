@@ -76,7 +76,7 @@ trait CoreList
 
 		$outerDiv = match($inputRenderType)
 		{
-			RenderListType::Inline, RenderListType::Floating => $this->renderInline(),
+			RenderListType::Inline, RenderListType::Floating => $this->renderInlineList(),
 			RenderListType::Big => $this->renderBig(),
 			RenderListType::Compact => $this->renderCompact(),
 			RenderListType::Default => $this->renderDefault()
@@ -358,6 +358,36 @@ trait CoreList
 		return Html::el('div')
 			->class(($this->toggleButton ? 'p-0 ' : '') . $class)
 			->addHtml($input . $label . $tooltip);
+	}
+
+
+	public function renderInlineList(): Html|string
+	{
+		$form = $this->getForm();
+		assert($form instanceof Form);
+
+		$label = $this->getCoreLabel();
+		$input = $this->getCoreControl();
+
+		$labelClass = 'align-self-center' . ($this->labelClass ? ' ' . $this->labelClass : ' col-sm-4');
+		$inputClass = 'align-self-center' . ($this->inputClass ? ' ' . $this->inputClass : ' col-sm-8');
+
+		$labelDiv = Html::el('div')
+			->class($labelClass)
+			->addHtml($label);
+
+		$inputDiv = Html::el('div')
+			->class($inputClass)
+			->addHtml($input);
+
+		$rowClass = $this->rowClass ?? 'row';
+
+		$rowDiv = Html::el('div')
+			->class($rowClass)
+			->addHtml($labelDiv . $inputDiv);
+
+		return $this->getWrapControl()
+			->addHtml($rowDiv);
 	}
 
 

@@ -6,7 +6,7 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 
-class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, Signalable, Helper\QuickCopyable, \Nette\Application\UI\SignalReceiver
+class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, Signalable, HasInputGroup, Helper\QuickCopyable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\QuickCopy;

@@ -6,7 +6,7 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 
-class DateTimeInput extends \Nette\Forms\Controls\DateTimeControl implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
+class DateTimeInput extends \Nette\Forms\Controls\DateTimeControl implements Renderable, Signalable, HasInputGroup, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\Color;

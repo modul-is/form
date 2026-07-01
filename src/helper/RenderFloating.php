@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Helper;
 
+use ModulIS\Form\Control\HasInputGroup;
 use Nette\Utils\Html;
 
 trait RenderFloating
@@ -38,8 +39,24 @@ trait RenderFloating
 			: null;
 
 		$inputGroup = Html::el('div')
-			->class('input-group')
-			->addHtml($this->getPrepend() . $floatingDiv . $this->getAppend() . $quickCopyHtml);
+			->class('input-group');
+
+		if($this instanceof HasInputGroup && $this->getPrepend())
+		{
+			$inputGroup->addHtml($this->getPrepend());
+		}
+
+		$inputGroup->addHtml($floatingDiv);
+
+		if($this instanceof HasInputGroup && $this->getAppend())
+		{
+			$inputGroup->addHtml($this->getAppend());
+		}
+
+		if($quickCopyHtml)
+		{
+			$inputGroup->addHtml($quickCopyHtml);
+		}
 
 		return Html::el('div')
 			->class($wrapClass)

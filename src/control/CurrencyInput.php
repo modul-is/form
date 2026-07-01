@@ -7,7 +7,7 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
-class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderable, Signalable, Helper\QuickCopyable, \Nette\Application\UI\SignalReceiver
+class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderable, Signalable, Helper\QuickCopyable, HasInputGroup, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
 	use Helper\QuickCopy;

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Helper;
 
+use ModulIS\Form\Control\HasInputGroup;
 use ModulIS\Form\Form;
 use Nette\Utils\Html;
 
@@ -109,8 +110,24 @@ trait RenderInline
 		$input->appendAttribute('class', $validationClass);
 
 		$inputControl = Html::el('div')
-			->class('input-group' . ($validationClass ? ' ' . $validationClass : ''))
-			->addHtml($this->getPrepend() . $input . $this->getAppend() . $quickCopyHtml);
+			->class('input-group' . ($validationClass ? ' ' . $validationClass : ''));
+
+		if($this instanceof HasInputGroup && $this->getPrepend())
+		{
+			$inputControl->addHtml($this->getPrepend());
+		}
+
+		$inputControl->addHtml($input);
+
+		if($this instanceof HasInputGroup && $this->getAppend())
+		{
+			$inputControl->addHtml($this->getAppend());
+		}
+
+		if($quickCopyHtml)
+		{
+			$inputControl->addHtml($quickCopyHtml);
+		}
 
 		$labelDiv = Html::el('div')
 			->class('text-input-new-label')

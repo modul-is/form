@@ -6,7 +6,7 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 
-class UploadControl extends \Nette\Forms\Controls\UploadControl implements Renderable
+class UploadControl extends \Nette\Forms\Controls\UploadControl implements Renderable, HasInputGroup
 {
 	use Helper\Color;
 	use Helper\Tooltip;
