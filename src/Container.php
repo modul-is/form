@@ -227,7 +227,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addSubmit(string $name, $caption = ''): Control\SubmitButton
+	public function addSubmit(string $name, Stringable|string|null $caption = null, ?\Closure $onSubmit = null): Control\SubmitButton
 	{
 		return $this[$name] = new Control\SubmitButton($caption);
 	}
