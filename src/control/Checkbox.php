@@ -100,7 +100,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 		}
 
 		$polyline = Html::el('polyline')
-			->setAttribute('points', '20 6 9 17 4 12');;
+			->setAttribute('points', '20 6 9 17 4 12');
 
 		$svg = Html::el('svg')
 			->setAttribute('viewBox', '0 0 24 24')
