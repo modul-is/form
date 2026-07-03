@@ -440,7 +440,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addContainer($name): \Nette\Forms\Container
+	public function addContainer($name): self
 	{
 		$control = new self;
 
