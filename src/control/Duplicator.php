@@ -22,6 +22,7 @@ use Nette\Forms\Form;
 use Nette\Forms\SubmitterControl;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
+use Stringable;
 use Traversable;
 use function assert;
 
@@ -246,15 +247,38 @@ class Duplicator extends Container implements Renderable
 	}
 
 
+	private function getFilteredComponents(?bool $recursive = false, ?string $filterClass = null)
+	{
+		$components = $recursive ? $this->getComponentTree() : $this->getComponents();
+
+		if(!$filterClass)
+		{
+			return $components;
+		}
+
+		$componentArray = [];
+
+		foreach($components as $component)
+		{
+			if($component instanceof $filterClass)
+			{
+				$componentArray[] = $component;
+			}
+		}
+
+		return $componentArray;
+	}
+
+
 	public function getContainers(?bool $recursive = false)
 	{
-		return $this->getComponents($recursive, Container::class);
+		return $this->getFilteredComponents($recursive, Container::class);
 	}
 
 
 	public function getButtons(?bool $recursive = false)
 	{
-		return $this->getComponents($recursive, SubmitterControl::class);
+		return $this->getFilteredComponents($recursive, SubmitterControl::class);
 	}
 
 
@@ -273,7 +297,7 @@ class Duplicator extends Container implements Renderable
 
 	private function getFirstControlName(): ?string
 	{
-		$controls = $this->getComponents(false, Control::class);
+		$controls = $this->getFilteredComponents(false, Control::class);
 		$firstControl = reset($controls);
 
 		assert($firstControl instanceof BaseControl || $firstControl === false);
@@ -445,17 +469,14 @@ class Duplicator extends Container implements Renderable
 	{
 		$components = [];
 
-		foreach($this->getComponents(false, Control::class) as $control)
+		foreach($this->getFilteredComponents(false, Control::class) as $control)
 		{
 			$components[] = $control->getName();
 		}
 
-		foreach($this->getContainers() as $container)
+		foreach($this->getFilteredComponents(true, SubmitterControl::class) as $button)
 		{
-			foreach($container->getComponents(true, SubmitterControl::class) as $button)
-			{
-				$exceptChildren[] = $button->getName();
-			}
+			$exceptChildren[] = $button->getName();
 		}
 
 		$filled = $this->countFilledWithout($components, array_unique($exceptChildren));
@@ -464,7 +485,7 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	public function addSubmit(string $name, $caption = '', $callback = null): SubmitButton
+	public function addSubmit(string $name, Stringable|string|null $caption = null, $callback = null): SubmitButton
 	{
 		$control = new DuplicatorCreateSubmit($caption);
 
