@@ -28,7 +28,7 @@ class CoreLabelNode extends \Nette\Bridges\FormsLatte\Nodes\LabelNode
 			$this->attributes,
 			$this->position,
 			$this->content,
-			end($this->tagRanges),
+			$this->tagRanges ? end($this->tagRanges) : $this->position,
 		);
 	}
 }
