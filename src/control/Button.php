@@ -8,10 +8,11 @@ use Kravcik\LatteFontAwesomeIcon\Extension;
 use ModulIS\Form\Dial\SignalDial;
 use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
+use Nette\Application\UI\SignalReceiver;
 use Nette\ComponentModel\IComponent;
 use Nette\Utils\Html;
 
-class Button extends \Nette\Forms\Controls\Button implements Renderable, Signalable
+class Button extends \Nette\Forms\Controls\Button implements Renderable, Signalable, SignalReceiver
 {
 	use Helper\Icon;
 	use Helper\Color;
