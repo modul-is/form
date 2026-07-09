@@ -11,7 +11,7 @@ trait ButtonIcon
 	protected ?string $iconPosition = 'float-start';
 
 
-	public function setIcon(string $icon, ?string $position = null): self
+	public function setIcon(string $icon, ?string $position = null): static
 	{
 		$this->icon = $icon;
 

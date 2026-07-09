@@ -29,7 +29,7 @@ class DependentData
 	}
 
 
-	public function setItems(array $items): self
+	public function setItems(array $items): static
 	{
 		$this->items = $items;
 		return $this;
@@ -42,7 +42,7 @@ class DependentData
 	}
 
 
-	public function setValue(string|int|null $value): self
+	public function setValue(string|int|null $value): static
 	{
 		$this->value = $value;
 		return $this;
@@ -55,7 +55,7 @@ class DependentData
 	}
 
 
-	public function setPrompt(?string $value): self
+	public function setPrompt(?string $value): static
 	{
 		$this->prompt = $value;
 		return $this;

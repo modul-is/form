@@ -11,7 +11,7 @@ trait ToggleButton
 	protected string|array $buttonColor = 'outline-primary';
 
 
-	public function setToggleButton(bool $toggleButton = true): self
+	public function setToggleButton(bool $toggleButton = true): static
 	{
 		$this->toggleButton = $toggleButton;
 
@@ -19,7 +19,7 @@ trait ToggleButton
 	}
 
 
-	public function setButtonColor(string|array $color = 'primary'): self
+	public function setButtonColor(string|array $color = 'primary'): static
 	{
 		$this->buttonColor = $color;
 

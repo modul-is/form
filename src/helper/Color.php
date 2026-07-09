@@ -9,7 +9,7 @@ trait Color
 	public ?string $color = null;
 
 
-	public function setColor(string $color): self
+	public function setColor(string $color): static
 	{
 		$this->color = $color;
 		return $this;

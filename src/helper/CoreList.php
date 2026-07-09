@@ -27,7 +27,7 @@ trait CoreList
 	protected ?RenderListType $renderType = null;
 
 
-	public function setRenderType(RenderListType $renderType): self
+	public function setRenderType(RenderListType $renderType): static
 	{
 		$this->renderType = $renderType;
 
@@ -390,28 +390,28 @@ trait CoreList
 	}
 
 
-	public function setTooltips(array $tooltips): self
+	public function setTooltips(array $tooltips): static
 	{
 		$this->tooltips = $tooltips;
 		return $this;
 	}
 
 
-	public function setItemsPerRow(int $number): self
+	public function setItemsPerRow(int $number): static
 	{
 		$this->itemsPerRow = $number;
 		return $this;
 	}
 
 
-	public function setItemClass(string $itemClass): self
+	public function setItemClass(string $itemClass): static
 	{
 		$this->itemClass = $itemClass;
 		return $this;
 	}
 
 
-	public function setWrapAttributes(array $attributes): self
+	public function setWrapAttributes(array $attributes): static
 	{
 		$this->wrapRowAttributes = $attributes;
 

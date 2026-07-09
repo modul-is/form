@@ -12,7 +12,7 @@ trait RenderBasic
 	protected ?RenderType $renderType = null;
 
 
-	public function setRenderType(RenderType $renderType): self
+	public function setRenderType(RenderType $renderType): static
 	{
 		$this->renderType = $renderType;
 

@@ -9,7 +9,7 @@ trait AutoRenderSkip
 	protected bool $autoRenderSkip = false;
 
 
-	public function setAutoRenderSkip(bool $autoRenderSkip = true): self
+	public function setAutoRenderSkip(bool $autoRenderSkip = true): static
 	{
 		$this->autoRenderSkip = $autoRenderSkip;
 

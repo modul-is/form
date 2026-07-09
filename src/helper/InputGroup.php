@@ -45,7 +45,7 @@ trait InputGroup
 	}
 
 
-	public function setAppend(string|\Stringable $text, string $class = ''): self
+	public function setAppend(string|\Stringable $text, string $class = ''): static
 	{
 		$this->append = $text instanceof \Stringable ? (string) $text : $text;
 
@@ -55,7 +55,7 @@ trait InputGroup
 	}
 
 
-	public function setPrepend(string|\Stringable $text, string $class = ''): self
+	public function setPrepend(string|\Stringable $text, string $class = ''): static
 	{
 		$this->prepend = $text instanceof \Stringable ? (string) $text : $text;
 
@@ -65,7 +65,7 @@ trait InputGroup
 	}
 
 
-	public function setIcon(string $icon): self
+	public function setIcon(string $icon): static
 	{
 		$this->prepend = \Kravcik\LatteFontAwesomeIcon\Extension::render($icon)->toHtml();
 

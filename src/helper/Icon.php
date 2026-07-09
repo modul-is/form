@@ -9,7 +9,7 @@ trait Icon
 	protected ?string $icon = null;
 
 
-	public function setIcon(string $icon): self
+	public function setIcon(string $icon): static
 	{
 		$this->icon = $icon;
 		return $this;

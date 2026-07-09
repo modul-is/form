@@ -13,7 +13,7 @@ trait Validation
 	private bool $submitted = false;
 
 
-	public function setValidationSuccessMessage(string $validationSuccessMessage): self
+	public function setValidationSuccessMessage(string $validationSuccessMessage): static
 	{
 		$this->validationSuccessMessage = $validationSuccessMessage;
 
