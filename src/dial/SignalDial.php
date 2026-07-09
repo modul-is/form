@@ -15,4 +15,6 @@ class SignalDial
 	public const OnFocusOut = 'onFocusOut';
 
 	public const OnSearchChange = 'onSearchChange';
+
+	public const OnClick = 'onClick';
 }

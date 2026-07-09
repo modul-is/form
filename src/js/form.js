@@ -361,10 +361,18 @@ function formatCurrencyInput(input)
 	input[0].setSelectionRange(newPos, newPos);
 }
 
+async function buttonSignal(button, url, event)
+{
+	let form = button.closest('form');
+
+	naja.makeRequest('POST', url, {formdata: form.serialize()});
+}
+
 function initForm()
 {
 	$('[data-on-focusout]').unbind();
 	$('[data-on-change]').unbind();
+	$('[data-on-click]').unbind();
 	$('[data-whisperer], [data-whisperer-onselect], [data-whisperer-delay]').unbind();
 
 	$('[data-on-focusout]').focusout(function(e)
@@ -375,6 +383,11 @@ function initForm()
 	$('[data-on-change]').change(function(e)
 	{
 		inputSignal($(this), $(this).attr('data-on-change'), e);
+	});
+
+	$('[data-on-click]').click(function(e)
+	{
+		buttonSignal($(this), $(this).attr('data-on-click'), e);
 	});
 
 	$('.form-control-chosen, .form-control-chosen-required').each(function()
