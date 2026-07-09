@@ -19,7 +19,7 @@ trait RenderInline
 	protected ?Html $wrapControl = null;
 
 
-	public function setLabelWrapClass(string $class): self
+	public function setLabelWrapClass(string $class): static
 	{
 		$this->labelClass = $class;
 
@@ -33,7 +33,7 @@ trait RenderInline
 	}
 
 
-	public function setInputWrapClass(string $class): self
+	public function setInputWrapClass(string $class): static
 	{
 		$this->inputClass = $class;
 
@@ -47,7 +47,7 @@ trait RenderInline
 	}
 
 
-	public function setRowClass(string $class): self
+	public function setRowClass(string $class): static
 	{
 		$this->rowClass = $class;
 
@@ -55,7 +55,7 @@ trait RenderInline
 	}
 
 
-	public function setWrapClass(string $class): self
+	public function setWrapClass(string $class): static
 	{
 		$this->getWrapControl()
 			->setAttribute('class', $class);
@@ -64,7 +64,7 @@ trait RenderInline
 	}
 
 
-	public function setWrapId(string $id): self
+	public function setWrapId(string $id): static
 	{
 		$this->getWrapControl()
 			->setAttribute('id', $id);
