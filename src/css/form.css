@@ -1609,3 +1609,24 @@ form input[type=number], form input[type=text], form textarea
 {
     opacity: 1;
 }
+
+
+input:read-only {
+    background: #EEF0F4;
+    color: #5A6478;
+    cursor: not-allowed;
+    border-color: #DDE1E9;
+}
+
+label.checkbox:has(input[readonly]) {
+    cursor: not-allowed;
+    color: #5A6478;
+}
+
+label.checkbox input[readonly] + .box {
+    background: #5A6478 !important;
+    border-color: #5A6478!important;
+    opacity: .85;
+    cursor: not-allowed;
+}
+
