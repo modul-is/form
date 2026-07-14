@@ -1383,7 +1383,6 @@ form input[type=number], form input[type=text], form textarea
     align-items: center;
     gap: 14px;
     padding: 9px 0;
-    border-bottom: 1px solid #EEF0F4;
     min-height: 40px;
 }
 
