@@ -1610,7 +1610,7 @@ form input[type=number], form input[type=text], form textarea
 }
 
 
-input:read-only {
+input[readonly] {
     background: #EEF0F4;
     color: #5A6478;
     cursor: not-allowed;
