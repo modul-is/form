@@ -407,6 +407,12 @@ function initForm()
 			{
 				$el.chosen('destroy');
 			}
+			// Chosen zobrazí křížek (allow_single_deselect) pouze pokud je první option prázdná.
+			// Pro whisperer elementy s předvyplněnou hodnotou přidáme prázdnou option před inicializací.
+			if($el.data('whisperer') && $el.val() && $el.find('option:first').val() !== '')
+			{
+				$el.prepend($('<option>', {value: '', text: ''}));
+			}
 			$el.chosen({
 				allow_single_deselect: true,
 				no_results_text: $el.attr('no-result-message') ?? 'Nebyla nalezena žádná položka - ',

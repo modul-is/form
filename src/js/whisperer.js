@@ -56,12 +56,32 @@
 
 			if(typeof varUrlOnChange !== 'undefined')
 			{
+				element.on('change', function()
+				{
+					if(!element.val())
+					{
+						element.empty();
+						element.append($('<option>', {value: '', text: ''}));
+						element.trigger('chosen:updated');
+
+						if(typeof varUrlOnSelect !== 'undefined')
+						{
+							var form = element.closest('form');
+							naja.makeRequest('GET', varUrlOnSelect, {
+								selected: '',
+								formdata: form.serialize()
+							});
+						}
+					}
+				});
+
 				element.on('chosen:no_results', function()
 				{
 					$('#' + chosenId).find('li.no-results').html('<span class="color-black"><i class="fal fa-spinner fa-spin"></i>&nbsp;&nbsp;Načítají se položky</span>');
 				});
 
-				$(document).on('keydown', '#' + chosenId + ' input.chosen-search-input', function(event)
+				$(document).off('keydown.whisperer.' + chosenId);
+				$(document).on('keydown.whisperer.' + chosenId, '#' + chosenId + ' input.chosen-search-input', function(event)
 				{
 					var searchInput = $(this);
 					var code = (event.keyCode || event.which);
@@ -124,6 +144,7 @@
 
 								var empty = true;
 								element.empty();
+								element.append($('<option>', {value: '', text: ''}));
 
 								$.each(response.suggestions || [], function(index, el)
 								{
