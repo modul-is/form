@@ -967,6 +967,19 @@ form input[type=number], form input[type=text], form textarea
     flex-wrap:wrap;
 }
 
+.new-design-radio-input-wrap.is-invalid .new-design-radio-label
+{
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.new-design-radio-input-wrap.is-invalid input:checked + .new-design-radio-label,
+.new-design-radio-input-wrap.is-invalid .new-design-radio-label:has(input:checked)
+{
+    color: #fff;
+    border-color: #dc3545;
+}
+
 .new-design-radio-wrap
 {
     display:flex;
