@@ -61,7 +61,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, H
 
 			$imageDiv = Html::el('div')
 				->id($this->getHtmlId() . '-select2')
-				->style('display:none;');
+				->class('d-none');
 
 			foreach($this->getItems() as $key => $value)
 			{
