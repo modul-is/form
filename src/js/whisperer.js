@@ -80,17 +80,11 @@
 					$('#' + chosenId).find('li.no-results').html('<span class="color-black"><i class="fal fa-spinner fa-spin"></i>&nbsp;&nbsp;Načítají se položky</span>');
 				});
 
-				$(document).off('keydown.whisperer.' + chosenId);
-				$(document).on('keydown.whisperer.' + chosenId, '#' + chosenId + ' input.chosen-search-input', function(event)
+				var runWhisper = function(searchInput)
 				{
-					var searchInput = $(this);
-					var code = (event.keyCode || event.which);
+					clearTimeout(typingTimer);
 
-					if(jQuery.inArray(code, disallowedKeyArray) === -1)
-					{
-						clearTimeout(typingTimer);
-
-						typingTimer = setTimeout(function()
+					typingTimer = setTimeout(function()
 						{
 							var param = searchInput.val();
 							if(param.length < 1)
@@ -183,7 +177,29 @@
 								}
 							});
 						}, delay);
+				};
+
+				$(document).off('keydown.whisperer.' + chosenId);
+				$(document).on('keydown.whisperer.' + chosenId, '#' + chosenId + ' input.chosen-search-input', function(event)
+				{
+					var searchInput = $(this);
+					var code = (event.keyCode || event.which);
+
+					if(jQuery.inArray(code, disallowedKeyArray) === -1)
+					{
+						runWhisper(searchInput);
 					}
+				});
+
+				$(document).off('paste.whisperer.' + chosenId);
+				$(document).on('paste.whisperer.' + chosenId, '#' + chosenId + ' input.chosen-search-input', function()
+				{
+					var searchInput = $(this);
+
+					setTimeout(function()
+					{
+						runWhisper(searchInput);
+					}, 0);
 				});
 			}
 		});
