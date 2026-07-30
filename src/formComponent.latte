@@ -1,5 +1,5 @@
 {snippet form}
-	{form form, class => 'form-horizontal ' . ($form->color ? $form->color) . ($form->ajax ? ' ajax'),  style=> 'margin-bottom: 0;', novalidate => $form->noValidate}
+	{form form, class => 'form-horizontal mb-0 ' . ($form->color ? $form->color) . ($form->ajax ? ' ajax'), novalidate => $form->noValidate}
 		{$form->renderForm()|noescape}
 	{/form}
 {/snippet}
