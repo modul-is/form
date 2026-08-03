@@ -23,35 +23,58 @@
 			{
 				var form = element.closest('form');
 
+				/**
+				 * Never send the signal without a value - the callback would receive an empty id
+				 */
+				var sendOnSelect = function()
+				{
+					var selected = element.val();
+
+					if(!selected)
+					{
+						return null;
+					}
+
+					return naja.makeRequest('GET', varUrlOnSelect, {
+						selected: selected,
+						formdata: form.serialize()
+					});
+				};
+
 				var searchEvent = function(e)
 				{
 					if((e.keyCode || e.which) === 13)
 					{
-						naja.makeRequest('GET', varUrlOnSelect, {
-							selected: element.val(),
-							formdata: form.serialize()
-						}).then(function()
+						var request = sendOnSelect();
+
+						if(request)
 						{
-							$(this).closest('.chosen-with-drop').removeClass('chosen-with-drop');
-						});
+							request.then(function()
+							{
+								$('#' + chosenId).removeClass('chosen-with-drop');
+							});
+						}
 					}
 				};
 
-				var searchInput = getSearchInput();
-				var events = $._data(searchInput[0], "events");
+				/**
+				 * Event namespace keeps the binding idempotent - the previous check relied on
+				 * the handler function name, which minifiers mangle, so handlers piled up
+				 */
+				getSearchInput()
+					.off('keyup.whisperer')
+					.on('keyup.whisperer', searchEvent);
 
-				if(!(events && events.keyup && events.keyup.some(function(ev){ return ev.handler.name === "searchEvent"; })))
-				{
-					searchInput.on('keyup', searchEvent);
-				}
-
-				$('#' + chosenId).find('ul.chosen-results').on('click touchend', function()
-				{
-					naja.makeRequest('GET', varUrlOnSelect, {
-						selected: element.val(),
-						formdata: form.serialize()
+				/**
+				 * Delegate to the result item - a click on the list padding or on the
+				 * "no results" row must not trigger the signal
+				 */
+				$('#' + chosenId).find('ul.chosen-results')
+					.off('click.whisperer touchend.whisperer')
+					.on('click.whisperer touchend.whisperer', 'li.active-result', function()
+					{
+						sendOnSelect();
 					});
-				});
 			}
 
 			if(typeof varUrlOnChange !== 'undefined')
