@@ -56,7 +56,8 @@ class Form extends UIForm
 
 	public function __construct
 	(
-		?IContainer $parent = null, $name = null
+		?IContainer $parent = null,
+		$name = null
 	)
 	{
 		parent::__construct($parent, $name);

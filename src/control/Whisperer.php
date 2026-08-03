@@ -24,7 +24,8 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 	public function __construct
 	(
-		$label = null, ?array $items = null
+		$label = null,
+		?array $items = null
 	)
 	{
 		parent::__construct($label, $items);
