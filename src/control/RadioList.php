@@ -77,7 +77,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 			: '';
 
 		$labelEl = Html::el('label')
-			->addHtml($this->getCaption() . $required);
+			->addHtml($this->translate($this->getCaption()) . $required);
 
 		$itemsWrap = Html::el('div')
 			->class('new-design-radio-input-wrap ' . $this->getValidationClass());
