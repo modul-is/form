@@ -91,8 +91,6 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 				$this->addSignalsToInput($inputEl);
 			}
 
-			$inputEl->style('position:absolute;opacity:0;pointer-events:none');
-
 			$itemLabelEl = Html::el('label')
 				->for($inputEl->getAttribute('id'))
 				->class('new-design-radio-label' . ($this->rounded ? ' radio-rounded' : ''))

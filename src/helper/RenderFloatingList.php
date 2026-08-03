@@ -17,11 +17,11 @@ trait RenderFloatingList
 		\assert($form instanceof \ModulIS\Form\Form);
 
 		$required = $this->isRequired()
-			? ' ' . Html::el('span')->style('required')->setText('*')
+			? ' ' . Html::el('span')->class('required')->setText('*')
 			: '';
 
 		$labelEl = Html::el('label')
-			->style('font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--gray-600)')
+			->class('new-design-list-label')
 			->addHtml($this->getCaption() . $required);
 
 		$checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
@@ -57,8 +57,7 @@ trait RenderFloatingList
 		$validationFeedBack = $this->getValidationFeedback();
 
 		return Html::el('div')
-			->style('display:flex;flex-direction:column;gap:5px;min-width:0')
-			->class($wrapClass)
+			->class('new-design-list-wrap ' . $wrapClass)
 			->addHtml($labelEl . $itemsWrap . $validationFeedBack);
 	}
 }
