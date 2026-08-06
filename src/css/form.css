@@ -587,6 +587,16 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
 	margin-right: 0 !important;
 }
 
+.width-auto
+{
+	width: auto;
+}
+
+.width-toggle
+{
+	width: calc(100% - 7.5px);
+}
+
 /* Compact spacing for checkbox/radio lists rendered in row columns */
 .container > .row > .form-check
 {

@@ -87,14 +87,12 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 		if($this->toggleButton)
 		{
 			$inputClass = 'btn-check';
-			$labelClass = 'me-2 btn btn-' . $this->buttonColor;
-			$labelAttribute = 'width: calc(100% - 7.5px)';
+			$labelClass = 'me-2 btn btn-' . $this->buttonColor . ' width-toggle';
 		}
 		else
 		{
 			$inputClass = 'form-check-input' . ($this->color ? ' ' . $this->color : null);
-			$labelClass = 'form-check-label' . ($this->isRequired() ? ' required' : null);
-			$labelAttribute = 'width: auto';
+			$labelClass = 'form-check-label width-auto' . ($this->isRequired() ? ' required' : null);
 		}
 
 		$labelClass = $this->labelClass ? $labelClass . ' ' . $this->labelClass : $labelClass;
@@ -108,7 +106,6 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 
 		$label = Html::el('label')
 			->setAttribute('for', $this->getHtmlId())
-			->setAttribute('style', $labelAttribute)
 			->class($labelClass)
 			->addHtml($this->translate($this->getCaption()));
 
