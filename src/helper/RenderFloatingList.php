@@ -22,7 +22,7 @@ trait RenderFloatingList
 
 		$labelEl = Html::el('label')
 			->class('new-design-list-label')
-			->addHtml($this->getCaption() . $required);
+			->addHtml($this->translate($this->getCaption()) . $required);
 
 		$checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
 

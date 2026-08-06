@@ -101,7 +101,7 @@ trait CoreList
 
 		$labelEl = Html::el('label')
 			->class('new-design-compact-label ' . $this->getLabelWrapClass())
-			->addHtml($this->getCaption() . $required);
+			->addHtml($this->translate($this->getCaption()) . $required);
 
 		$itemsWrapField = Html::el('div')
 			->class('new-design-compact-input-field ' . $this->getInputWrapClass() . ' ' . $validationClass);

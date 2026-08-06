@@ -38,7 +38,7 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 			: '';
 
 		$labelEl = Html::el('label')
-			->addHtml($this->getCaption() . $required);
+			->addHtml($this->translate($this->getCaption()) . $required);
 
 		$itemsWrap = Html::el('div')
 			->class('checkbox-new-row-item-wrap ' . $this->getValidationClass());

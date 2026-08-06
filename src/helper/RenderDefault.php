@@ -35,7 +35,7 @@ trait RenderDefault
 		$labelEl = Html::el('label')
 			->class($this->getLabelWrapClass())
 			->for($this->getHtmlId())
-			->addHtml($this->getCaption() . $required);
+			->addHtml($this->translate($this->getCaption()) . $required);
 
 		$quickCopyHtml = $this instanceof QuickCopyable && $this->getQuickCopy()
 			? $this->getQuickCopyButton()
