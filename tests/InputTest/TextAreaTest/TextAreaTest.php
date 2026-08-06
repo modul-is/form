@@ -6,6 +6,7 @@ namespace ModulIS\Form\Tests;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+use ModulIS\Form\Enum\RenderType;
 use Tester\Assert;
 
 class TextAreaTest extends TestCase
@@ -66,7 +67,7 @@ class TextAreaTest extends TestCase
 		$form = $this->getForm();
 
 		$form->addTextArea('text', 'Area')
-			->setRenderFloating();
+			->setRenderType(RenderType::Floating);
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
 
@@ -95,7 +96,7 @@ class TextAreaTest extends TestCase
 		$form->setRenderFloating();
 
 		$form->addTextArea('text', 'Area')
-			->setRenderFloating(false);
+			->setRenderType(RenderType::Default);
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
 

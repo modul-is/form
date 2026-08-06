@@ -6,6 +6,7 @@ namespace ModulIS\Form\Tests;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+use ModulIS\Form\Enum\RenderType;
 use Tester\Assert;
 
 class SelectTest extends TestCase
@@ -40,7 +41,7 @@ class SelectTest extends TestCase
 		$form = $this->getForm();
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
-			->setRenderFloating();
+			->setRenderType(RenderType::Floating);
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
 
@@ -69,7 +70,7 @@ class SelectTest extends TestCase
 		$form->setRenderFloating();
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
-			->setRenderFloating(false);
+			->setRenderType(RenderType::Default);
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
 

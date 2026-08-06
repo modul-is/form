@@ -1,21 +1,23 @@
-<div class="mb-3 col-12" id="customId">
-	<div class="row">
-		<div class="align-self-center col-sm-4">
-			<label class="col-form-label">Checklist</label>
-		</div>
-		<div class="align-self-center col-sm-8">
-			<div class="container">
-				<div class="row">
-					<div class="form-check col-12">
-						<input type="checkbox" name="checkboxlist[]" id="frm-form-checkboxlist-first" value="first" class="form-check-input">
-						<label for="frm-form-checkboxlist-first" class="form-check-label width-auto">First</label>
-					</div>
-					<div class="form-check col-12">
-						<input type="checkbox" name="checkboxlist[]" id="frm-form-checkboxlist-second" value="second" class="form-check-input">
-						<label for="frm-form-checkboxlist-second" class="form-check-label width-auto">Second</label>
-					</div>
-				</div>
-			</div>
-		</div>
+<div id="customId" class="mb-2 col-12 checkbox-new-row">
+	<label>Checklist</label>
+	<div class="checkbox-new-row-item-wrap ">
+		<label class="checkbox">
+			<input type="checkbox" name="checkboxlist[]" id="frm-form-checkboxlist-first" value="first">
+			<span class="box">
+				<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round">
+					<polyline points="20 6 9 17 4 12"></polyline>
+				</svg>
+			</span>
+			First
+		</label>
+		<label class="checkbox">
+			<input type="checkbox" name="checkboxlist[]" id="frm-form-checkboxlist-second" value="second">
+			<span class="box">
+				<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round">
+					<polyline points="20 6 9 17 4 12"></polyline>
+				</svg>
+			</span>
+			Second
+		</label>
 	</div>
 </div>
