@@ -21,7 +21,7 @@ trait RenderFloating
 		$inputClass = $this->controlClass . $currentClass . $validationClass;
 
 		$input->class($inputClass);
-		$input->placeholder($this->getCaption());
+		$input->placeholder($this->translate($this->getCaption()));
 
 		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
 		{
