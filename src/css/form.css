@@ -1642,8 +1642,8 @@ label.checkbox input[readonly] + .box {
     cursor: not-allowed;
 }
 
-/* #380 - hláška schovaná poté, co pole projde validací na klientovi */
-.invalid-feedback.validation-feedback-hidden
+.invalid-feedback.validation-feedback-hidden,
+.valid-feedback.validation-feedback-hidden
 {
     display: none !important;
 }

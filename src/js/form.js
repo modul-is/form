@@ -371,19 +371,37 @@ async function buttonSignal(button, url, event)
 /**
  * Validační stav (#380)
  *
- * Červené zvýraznění a hlášku vykreslí server až při odeslání formuláře a do dalšího odeslání
- * je nepřekreslí. Jakmile pole projde klientskou validací (typicky se vyplní required),
+ * Červené i zelené zvýraznění a hlášku vykreslí server až při odeslání formuláře a do dalšího
+ * odeslání je nepřekreslí. Jakmile pole projde klientskou validací (typicky se vyplní required),
  * stav uklidíme na klientovi - a když se hodnota zase pokazí, vrátíme ho zpět.
+ *
+ * Stav jen přepínáme mezi vykreslenou a značkovací třídou, nikdy ho poli nepřidáváme -
+ * na klientovi nemáme hlášku, kterou by server vypsal.
  */
-const invalidClass = 'is-invalid';
-const invalidMarkClass = 'validation-was-invalid';
 const feedbackHiddenClass = 'validation-feedback-hidden';
+
+const validationStates = [
+	{stateClass: 'is-invalid', markClass: 'validation-was-invalid', feedbackClass: 'invalid-feedback', shownWhenValid: false},
+	{stateClass: 'is-valid', markClass: 'validation-was-valid', feedbackClass: 'valid-feedback', shownWhenValid: true}
+];
+
+const validationSelector = validationStates
+	.map(function(state)
+	{
+		return '.' + state.stateClass + ', .' + state.markClass;
+	})
+	.join(', ');
+
+const validationMarkupSelector = validationSelector + ', ' + validationStates
+	.map(function(state)
+	{
+		return '.' + state.feedbackClass;
+	})
+	.join(', ');
 
 function hasValidationMarkup(element)
 {
-	return element.classList.contains(invalidClass)
-		|| element.classList.contains(invalidMarkClass)
-		|| element.querySelector('.' + invalidClass + ', .' + invalidMarkClass + ', .invalid-feedback') !== null;
+	return element.matches(validationMarkupSelector) || element.querySelector(validationMarkupSelector) !== null;
 }
 
 /**
@@ -396,15 +414,16 @@ function getValidationScope(input)
 	let element = input.parentElement;
 	let scope = null;
 
+	let foreignInputSelector = ['input', 'select', 'textarea', 'button']
+		.map(function(tag)
+		{
+			return tag + '[name]:not([name="' + name + '"])';
+		})
+		.join(', ');
+
 	while(element && element.tagName !== 'FORM')
 	{
-		let hasForeignInput = Array.from(element.querySelectorAll('input[name], select[name], textarea[name], button[name]'))
-			.some(function(foreignInput)
-			{
-				return foreignInput.getAttribute('name') !== name;
-			});
-
-		if(hasForeignInput)
+		if(element.querySelector(foreignInputSelector))
 		{
 			break;
 		}
@@ -455,32 +474,21 @@ function getRuleElement(input)
 	return input;
 }
 
-function clearValidationState(scope)
+function toggleValidationState(scope, state, show)
 {
-	getElementsWithClass(scope, invalidClass).forEach(function(element)
+	let fromClass = show ? state.markClass : state.stateClass;
+	let toClass = show ? state.stateClass : state.markClass;
+
+	getElementsWithClass(scope, fromClass).forEach(function(element)
 	{
-		element.classList.remove(invalidClass);
-		element.classList.add(invalidMarkClass);
+		element.classList.remove(fromClass);
+		element.classList.add(toClass);
 	});
 
 	/** Hlášku necháme v DOMu (kvůli has-validation a zaoblení input-group), jen ji schováme */
-	scope.querySelectorAll('.invalid-feedback').forEach(function(element)
+	scope.querySelectorAll('.' + state.feedbackClass).forEach(function(element)
 	{
-		element.classList.add(feedbackHiddenClass);
-	});
-}
-
-function restoreValidationState(scope)
-{
-	getElementsWithClass(scope, invalidMarkClass).forEach(function(element)
-	{
-		element.classList.remove(invalidMarkClass);
-		element.classList.add(invalidClass);
-	});
-
-	scope.querySelectorAll('.' + feedbackHiddenClass).forEach(function(element)
-	{
-		element.classList.remove(feedbackHiddenClass);
+		element.classList.toggle(feedbackHiddenClass, !show);
 	});
 }
 
@@ -491,27 +499,25 @@ function refreshValidationState(input)
 		return;
 	}
 
-	/** Formulář bez chyby řešit nemusíme */
-	if(!input.form.querySelector('.' + invalidClass + ', .' + invalidMarkClass))
+	/** Formulář bez vykresleného validačního stavu řešit nemusíme */
+	if(!input.form.querySelector(validationSelector))
 	{
 		return;
 	}
 
 	let scope = getValidationScope(input);
 
-	if(!getElementsWithClass(scope, invalidClass).length && !getElementsWithClass(scope, invalidMarkClass).length)
+	if(!scope.matches(validationSelector) && !scope.querySelector(validationSelector))
 	{
 		return;
 	}
 
-	if(Nette.validateControl(getRuleElement(input), undefined, true))
+	let isValid = Nette.validateControl(getRuleElement(input), undefined, true);
+
+	validationStates.forEach(function(state)
 	{
-		clearValidationState(scope);
-	}
-	else
-	{
-		restoreValidationState(scope);
-	}
+		toggleValidationState(scope, state, isValid === state.shownWhenValid);
+	});
 }
 
 function initForm()
