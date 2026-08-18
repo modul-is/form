@@ -1289,6 +1289,37 @@ form input[type=number], form input[type=text], form textarea
     pointer-events: none;
 }
 
+.new-design-checkbox-row .checkbox.checkbox-switch .box, .new-design-checkbox-right .checkbox.checkbox-switch .box
+{
+    width: 38px;
+    height: 20px;
+    border-radius: 20px;
+    background: #DDE1E9;
+    border-color: #DDE1E9;
+    justify-content: flex-start;
+}
+
+.new-design-checkbox-row .checkbox.checkbox-switch .box::after, .new-design-checkbox-right .checkbox.checkbox-switch .box::after
+{
+    content: '';
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    transform: translateX(2px);
+    transition: transform .15s;
+}
+
+.new-design-checkbox-row .checkbox.checkbox-switch input:checked ~ .box::after, .new-design-checkbox-right .checkbox.checkbox-switch input:checked ~ .box::after
+{
+    transform: translateX(20px);
+}
+
+.new-design-checkbox-row .checkbox.checkbox-switch .box svg, .new-design-checkbox-right .checkbox.checkbox-switch .box svg
+{
+    display: none;
+}
+
 .section-header {
     padding: 16px 22px 0;
     display: flex;

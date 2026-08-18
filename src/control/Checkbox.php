@@ -122,6 +122,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 		}
 
 		$labelClass = 'checkbox' . ($validationClass ? ' ' . $validationClass : null);
+		$labelClass = $this->switch ? $labelClass . ' checkbox-switch' : $labelClass;
 		$labelClass = $this->labelClass ? $labelClass . ' ' . $this->labelClass : $labelClass;
 
 		if($this->checkboxLeft)
