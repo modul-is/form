@@ -368,6 +368,158 @@ async function buttonSignal(button, url, event)
 	naja.makeRequest('POST', url, {formdata: form.serialize()});
 }
 
+/**
+ * Validační stav (#380)
+ *
+ * Červené i zelené zvýraznění a hlášku vykreslí server až při odeslání formuláře a do dalšího
+ * odeslání je nepřekreslí. Jakmile pole projde klientskou validací (typicky se vyplní required),
+ * stav uklidíme na klientovi - a když se hodnota zase pokazí, vrátíme ho zpět.
+ *
+ * Stav jen přepínáme mezi vykreslenou a značkovací třídou, nikdy ho poli nepřidáváme -
+ * na klientovi nemáme hlášku, kterou by server vypsal.
+ */
+const feedbackHiddenClass = 'validation-feedback-hidden';
+
+const validationStates = [
+	{stateClass: 'is-invalid', markClass: 'validation-was-invalid', feedbackClass: 'invalid-feedback', shownWhenValid: false},
+	{stateClass: 'is-valid', markClass: 'validation-was-valid', feedbackClass: 'valid-feedback', shownWhenValid: true}
+];
+
+const validationSelector = validationStates
+	.map(function(state)
+	{
+		return '.' + state.stateClass + ', .' + state.markClass;
+	})
+	.join(', ');
+
+const validationMarkupSelector = validationSelector + ', ' + validationStates
+	.map(function(state)
+	{
+		return '.' + state.feedbackClass;
+	})
+	.join(', ');
+
+function hasValidationMarkup(element)
+{
+	return element.matches(validationMarkupSelector) || element.querySelector(validationMarkupSelector) !== null;
+}
+
+/**
+ * Nejvyšší obal, ve kterém leží validační stav pole. Bere jen ty, které neobsahují jiné pole -
+ * jinak bychom uklidili i chybu u souseda ve stejném řádku.
+ */
+function getValidationScope(input)
+{
+	let name = input.getAttribute('name');
+	let element = input.parentElement;
+	let scope = null;
+
+	let foreignInputSelector = ['input', 'select', 'textarea', 'button']
+		.map(function(tag)
+		{
+			return tag + '[name]:not([name="' + name + '"])';
+		})
+		.join(', ');
+
+	while(element && element.tagName !== 'FORM')
+	{
+		if(element.querySelector(foreignInputSelector))
+		{
+			break;
+		}
+
+		if(hasValidationMarkup(element))
+		{
+			scope = element;
+		}
+
+		element = element.parentElement;
+	}
+
+	return scope ?? input;
+}
+
+function getElementsWithClass(scope, className)
+{
+	let elements = Array.from(scope.querySelectorAll('.' + className));
+
+	if(scope.classList.contains(className))
+	{
+		elements.push(scope);
+	}
+
+	return elements;
+}
+
+/**
+ * Pravidla nese u skupin (radio/checkbox list) jen první input, ale změnu vyvolá kterýkoli z nich
+ */
+function getRuleElement(input)
+{
+	if(input.getAttribute('data-nette-rules'))
+	{
+		return input;
+	}
+
+	let group = input.form.elements.namedItem(input.getAttribute('name'));
+
+	if(group && !(group instanceof Element))
+	{
+		return Array.from(group).find(function(element)
+		{
+			return element.getAttribute('data-nette-rules');
+		}) ?? input;
+	}
+
+	return input;
+}
+
+function toggleValidationState(scope, state, show)
+{
+	let fromClass = show ? state.markClass : state.stateClass;
+	let toClass = show ? state.stateClass : state.markClass;
+
+	getElementsWithClass(scope, fromClass).forEach(function(element)
+	{
+		element.classList.remove(fromClass);
+		element.classList.add(toClass);
+	});
+
+	/** Hlášku necháme v DOMu (kvůli has-validation a zaoblení input-group), jen ji schováme */
+	scope.querySelectorAll('.' + state.feedbackClass).forEach(function(element)
+	{
+		element.classList.toggle(feedbackHiddenClass, !show);
+	});
+}
+
+function refreshValidationState(input)
+{
+	if(!input.form || !input.getAttribute('name') || typeof Nette === 'undefined')
+	{
+		return;
+	}
+
+	/** Formulář bez vykresleného validačního stavu řešit nemusíme */
+	if(!input.form.querySelector(validationSelector))
+	{
+		return;
+	}
+
+	let scope = getValidationScope(input);
+
+	if(!scope.matches(validationSelector) && !scope.querySelector(validationSelector))
+	{
+		return;
+	}
+
+	let isValid = Nette.validateControl(getRuleElement(input), undefined, true);
+
+	validationStates.forEach(function(state)
+	{
+		toggleValidationState(scope, state, isValid === state.shownWhenValid);
+	});
+}
+
 function initForm()
 {
 	$('[data-on-focusout]').unbind();
@@ -494,6 +646,12 @@ function initForm()
 	$(document).on('input.currencyInput', '[data-currency-input]', function()
 	{
 		formatCurrencyInput($(this));
+	});
+
+	$(document).off('.validationState');
+	$(document).on('input.validationState change.validationState focusout.validationState', 'form input, form select, form textarea', function()
+	{
+		refreshValidationState(this);
 	});
 
 	document.addEventListener('change', function (e) {

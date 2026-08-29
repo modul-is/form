@@ -1673,3 +1673,9 @@ label.checkbox input[readonly] + .box {
     cursor: not-allowed;
 }
 
+.invalid-feedback.validation-feedback-hidden,
+.valid-feedback.validation-feedback-hidden
+{
+    display: none !important;
+}
+
