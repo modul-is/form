@@ -6,6 +6,7 @@ namespace ModulIS\Form\Tests;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+use ModulIS\Form\Enum\RenderType;
 use Tester\Assert;
 
 class WhispererTest extends TestCase
@@ -53,7 +54,7 @@ class WhispererTest extends TestCase
 		$form = $this->getForm();
 
 		$form->addWhisperer('whisperer', 'Whisperer', ['a' => 'A', 'b' => 'B'])
-			->setRenderFloating();
+			->setRenderType(RenderType::Floating);
 
 		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
 

@@ -315,22 +315,19 @@ trait CoreList
 			}
 
 			$inputClass = 'btn-check';
-			$labelClass = 'me-2 btn btn-' . $buttonColor;
-			$labelAttribute = 'width: calc(100% - 7.5px)';
+			$labelClass = 'me-2 btn btn-' . $buttonColor . ' width-toggle';
 		}
 		else
 		{
 			$inputClass = 'form-check-input';
-			$labelClass = 'form-check-label';
-			$labelAttribute = 'width: auto';
+			$labelClass = 'form-check-label width-auto';
 		}
 
 		$input->class($inputClass . $currentClass . $inputColorClass);
 
 		$label = $this->getLabelPart($itemName);
 
-		$label->class($labelClass)
-			->setAttribute('style', $labelAttribute);
+		$label->class($labelClass);
 
 		$tooltip = null;
 

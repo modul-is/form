@@ -589,6 +589,16 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
     margin-right: 0 !important;
 }
 
+.width-auto
+{
+	width: auto;
+}
+
+.width-toggle
+{
+	width: calc(100% - 7.5px);
+}
+
 /* Compact spacing for checkbox/radio lists rendered in row columns */
 .container > .row > .form-check
 {
@@ -926,6 +936,24 @@ form input[type=number], form input[type=text], form textarea
     color: #5A6478;
 }
 
+/* Checkbox/radio list rendered by RenderFloatingList */
+.new-design-list-wrap
+{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.new-design-list-label
+{
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: var(--gray-600);
+}
+
 .new-design-radio-label
 {
     font-size: 11px;
@@ -943,6 +971,13 @@ form input[type=number], form input[type=text], form textarea
     cursor: pointer;
     transition: all .15s;
     flex: 1;
+}
+
+.new-design-radio-label input
+{
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .new-design-radio-label:hover

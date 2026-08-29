@@ -6,6 +6,7 @@ namespace ModulIS\Form\Tests;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+use ModulIS\Form\Enum\RenderType;
 use Tester\Assert;
 
 class DependentTest extends TestCase
@@ -100,7 +101,7 @@ class DependentTest extends TestCase
 		$form->addSelect('select', 'Select', ['a' => 'A', 'b' => 'B']);
 
 		$form->addDependentSelect('dependent', 'Dependent', [$form['select']])
-			->setRenderFloating()
+			->setRenderType(RenderType::Floating)
 			->setDependentCallback(function($parentArray)
 			{
 				if($parentArray['select'] === 'a')
