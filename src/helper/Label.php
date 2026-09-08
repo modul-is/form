@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace ModulIS\Form\Helper;
 
 use Kravcik\LatteFontAwesomeIcon\Extension;
+use ModulIS\Form\Enum\RenderType;
 use ModulIS\Form\Form;
 use Nette\Utils\Html;
 use function assert;
@@ -37,7 +38,9 @@ trait Label
 		$form = $this->getForm();
 		assert($form instanceof Form);
 
-		if($form->getRenderFloating() === true)
+		$renderType = $this->getRenderType() ?? $form->getRenderType();
+
+		if($renderType === RenderType::Floating)
 		{
 			$label->addHtml(' ');
 			if($this->isRequired())
