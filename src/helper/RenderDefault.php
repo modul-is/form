@@ -37,6 +37,15 @@ trait RenderDefault
 			->for($this->getHtmlId())
 			->addHtml($this->translate($this->getCaption()) . $required);
 
+		/**
+		 * Tento typ vykresleni si label sklada sam, ne pres getCoreLabel(), proto se tooltip
+		 * pripoji tady. Button, Link ani Duplicator trait Tooltip nemaji - odtud method_exists().
+		 */
+		if(\method_exists($this, 'getTooltipHtml') && $tooltipHtml = $this->getTooltipHtml())
+		{
+			$labelEl->addHtml(' ' . $tooltipHtml);
+		}
+
 		$quickCopyHtml = $this instanceof QuickCopyable && $this->getQuickCopy()
 			? $this->getQuickCopyButton()
 			: null;

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Helper;
 
-use Kravcik\LatteFontAwesomeIcon\Extension;
 use ModulIS\Form\Enum\RenderType;
 use ModulIS\Form\Form;
 use Nette\Utils\Html;
@@ -25,15 +24,12 @@ trait Label
 			$label->addHtml($required);
 		}
 
-		if(!$this->tooltip)
+		$tooltip = $this->getTooltipHtml();
+
+		if(!$tooltip)
 		{
 			return $label;
 		}
-
-		$tooltip = Html::el('span')
-			->title($this->tooltip)
-			->addAttributes(['data-bs-placement' => 'right', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
-			->addHtml(Extension::render('question-circle', color: 'blue'));
 
 		$form = $this->getForm();
 		assert($form instanceof Form);
