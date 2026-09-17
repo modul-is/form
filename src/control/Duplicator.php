@@ -9,10 +9,6 @@ use Latte\Engine;
 use ModulIS\Form\Container;
 use ModulIS\Form\DuplicatorContainer;
 use ModulIS\Form\Helper\AutoRenderSkip;
-use ModulIS\Form\Helper\RenderBasic;
-use ModulIS\Form\Helper\RenderDefault;
-use ModulIS\Form\Helper\RenderFloating;
-use ModulIS\Form\Helper\RenderInline;
 use ModulIS\Form\Helper\Template;
 use Nette;
 use Nette\Application\UI\Presenter;
@@ -30,10 +26,6 @@ class Duplicator extends Container implements Renderable
 {
 	use AutoRenderSkip;
 	use Template;
-	use RenderBasic;
-	use RenderInline;
-	use RenderDefault;
-	use RenderFloating;
 
 	public bool $forceDefault = false;
 
@@ -168,9 +160,11 @@ class Duplicator extends Container implements Renderable
 				$containerHeader->addHtml($title);
 			}
 
-			if($container->getComponent('del', false))
+			$removeSubmit = $container->getComponent('del', false);
+
+			if($removeSubmit instanceof DuplicatorRemoveSubmit)
 			{
-				$containerHeader->addHtml($container->getComponent('del')->render());
+				$containerHeader->addHtml($removeSubmit->render());
 			}
 
 			foreach($container->getComponents() as $duplicatorInput)

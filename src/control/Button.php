@@ -85,14 +85,13 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable, Signala
 
 		$label = $this->getCaption();
 
-		$color = $this->color ?? '';
-
 		$button = Html::el('button')
 			->name($this->getName())
 			->type('button')
-			->appendAttribute('class', 'btn-' . $color)
+			->appendAttribute('class', 'btn-' . ($this->color ?: 'default'))
 			->appendAttribute('class', (string) $input->getAttribute('class'))
-			->appendAttribute('class', 'new-design-btn');
+			->appendAttribute('class', ltrim($this->getFormButtonClass()))
+			->appendAttribute('class', 'mis-btn');
 
 		$button->addHtml($this->icon ? Extension::render($this->icon) : '')
 			->addHtml($this->translate($label));

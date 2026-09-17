@@ -20,8 +20,8 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 	use Helper\ControlClass;
 	use Helper\Signals;
 	use Helper\ToggleButton;
-	use Helper\RenderFloatingList;
 	use Helper\RenderInline;
+	use Helper\WrapControl;
 
 	private array $iconArray = [];
 
@@ -41,7 +41,7 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 			->addHtml($this->translate($this->getCaption()) . $required);
 
 		$itemsWrap = Html::el('div')
-			->class('checkbox-new-row-item-wrap ' . $this->getValidationClass());
+			->class(trim('mis-checklist-items ' . $this->getValidationClass()));
 
 		$polyline = Html::el('polyline')
 			->setAttribute('points', '20 6 9 17 4 12');
@@ -80,7 +80,7 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 
 		return Html::el('div')
 			->id($this->getOption('id') ?: null)
-			->class($wrapClass . ' checkbox-new-row')
+			->class($wrapClass . ' mis-checklist')
 			->addHtml($labelEl . $itemsWrap . $validationFeedBack);
 	}
 

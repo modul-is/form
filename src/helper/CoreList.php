@@ -41,6 +41,36 @@ trait CoreList
 	}
 
 
+	public function setRenderDefault(): static
+	{
+		return $this->setRenderType(RenderListType::Default);
+	}
+
+
+	public function setRenderFloating(): static
+	{
+		return $this->setRenderType(RenderListType::Floating);
+	}
+
+
+	public function setRenderInline(): static
+	{
+		return $this->setRenderType(RenderListType::Inline);
+	}
+
+
+	public function setRenderBig(): static
+	{
+		return $this->setRenderType(RenderListType::Big);
+	}
+
+
+	public function setRenderCompact(): static
+	{
+		return $this->setRenderType(RenderListType::Compact);
+	}
+
+
 	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)
@@ -100,11 +130,11 @@ trait CoreList
 			: '';
 
 		$labelEl = Html::el('label')
-			->class('new-design-compact-label ' . $this->getLabelWrapClass())
+			->class('mis-compact-label ' . $this->getLabelWrapClass())
 			->addHtml($this->translate($this->getCaption()) . $required);
 
 		$itemsWrapField = Html::el('div')
-			->class('new-design-compact-input-field ' . $this->getInputWrapClass() . ' ' . $validationClass);
+			->class('mis-compact-field ' . $this->getInputWrapClass() . ' ' . $validationClass);
 
 		foreach($this->getItems() as $key => $itemLabel)
 		{
@@ -123,7 +153,7 @@ trait CoreList
 		}
 
 		$itemsWrap = Html::el('div')
-			->class('new-design-compact-input-wrap')
+			->class('mis-compact-items')
 			->addHtml($itemsWrapField);
 
 		if($validationFeedBack)
@@ -133,7 +163,7 @@ trait CoreList
 
 		return Html::el('div')
 			->id($this->getOption('id') ?: null)
-			->class('new-design-compact ' . ($this->getWrapControl()->getAttribute('class') ?: ''))
+			->class('mis-compact ' . ($this->getWrapControl()->getAttribute('class') ?: ''))
 			->addHtml($labelEl . $itemsWrap);
 	}
 
@@ -160,7 +190,7 @@ trait CoreList
 		}
 
 		$tilesWrap = Html::el('div')
-			->class('new-design-checkbox-big-tiles');
+			->class('mis-tiles-list');
 
 		foreach($this->getItems() as $key => $itemLabel)
 		{
@@ -174,7 +204,7 @@ trait CoreList
 			if(isset($this->iconArray[$key]))
 			{
 				$icoHtml = Html::el('span')
-					->class('new-design-checkbox-big-ico')
+					->class('mis-tile-ico')
 					->addText(\Kravcik\LatteFontAwesomeIcon\Extension::render($this->iconArray[$key]));
 			}
 			else
@@ -185,7 +215,7 @@ trait CoreList
 			if(isset($this->tooltips[$key]))
 			{
 				$desc = Html::el('span')
-					->class('new-design-checkbox-big-desc')
+					->class('mis-tile-desc')
 					->addText($this->tooltips[$key]);
 			}
 			else
@@ -194,11 +224,11 @@ trait CoreList
 			}
 
 			$lbl = Html::el('span')
-				->class('new-design-checkbox-big-lbl')
+				->class('mis-tile-lbl')
 				->addText($itemLabel);
 
 			$chk = Html::el('span')
-				->class('new-design-checkbox-big-chk');
+				->class('mis-tile-chk');
 
 			if($checkHtml)
 			{
@@ -206,7 +236,7 @@ trait CoreList
 			}
 
 			$tileLabel = Html::el('label')
-				->class('new-design-checkbox-big-tile' . ($this instanceof RadioList ? ' radio' : ''));
+				->class('mis-tile' . ($this instanceof RadioList ? ' radio' : ''));
 
 			$tileLabel->addHtml($input)
 				->addHtml($icoHtml)
@@ -220,21 +250,21 @@ trait CoreList
 		$label = $this->getLabel()->addAttributes(['class' => $this->isRequired() ? 'required' : '']);
 
 		$blockTitle = Html::el('div')
-			->class('new-design-checkbox-big-block-title' . $validationClass)
+			->class('mis-tiles-title' . $validationClass)
 			->addHtml($label);
 
 		$tooltip = $this->getTooltip() === null ? '' : Html::el('div')
-			->class('new-design-checkbox-big-block-sub')
+			->class('mis-tiles-sub')
 			->addHtml($this->getTooltip());
 
 		$blockHead = Html::el('div')
-			->class('new-design-checkbox-big-block-head')
+			->class('mis-tiles-head')
 			->addHtml($blockTitle)
 			->addHtml($tooltip);
 
 		$block = Html::el('div')
 			->id($this->getOption('id') ?: null)
-			->class('new-design-checkbox-big-block' . $this->inputClass)
+			->class('mis-tiles' . $this->inputClass)
 			->addHtml($blockHead)
 			->addHtml($tilesWrap)
 			->addHtml($validationFeedBack);
@@ -315,22 +345,19 @@ trait CoreList
 			}
 
 			$inputClass = 'btn-check';
-			$labelClass = 'me-2 btn btn-' . $buttonColor;
-			$labelAttribute = 'width: calc(100% - 7.5px)';
+			$labelClass = 'me-2 btn btn-' . $buttonColor . ' width-toggle';
 		}
 		else
 		{
 			$inputClass = 'form-check-input';
-			$labelClass = 'form-check-label';
-			$labelAttribute = 'width: auto';
+			$labelClass = 'form-check-label width-auto';
 		}
 
 		$input->class($inputClass . $currentClass . $inputColorClass);
 
 		$label = $this->getLabelPart($itemName);
 
-		$label->class($labelClass)
-			->setAttribute('style', $labelAttribute);
+		$label->class($labelClass);
 
 		$tooltip = null;
 

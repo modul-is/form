@@ -875,7 +875,6 @@ table thead th .input-group .form-control
     visibility: hidden;
 }
 
-
 form
 {
     font-family: 'Source Sans 3', 'Barlow', sans-serif;
@@ -896,7 +895,7 @@ form input[type=number], form input[type=text], form textarea
     color: #C0392B;
 }
 
-.new-design-input
+.mis-input
 {
     border: 1.5px solid #DDE1E9;
     border-radius: 8px;
@@ -909,7 +908,14 @@ form input[type=number], form input[type=text], form textarea
     appearance: none;
 }
 
-.new-design-label
+/* .mis-input pouziva zkratku padding, ktera by prebila padding-right z .form-select
+   a sipka by zasahovala do textu */
+select.mis-input
+{
+    padding-right: 2.25rem;
+}
+
+.mis-field
 {
     display: flex;
     flex-direction: column;
@@ -917,7 +923,7 @@ form input[type=number], form input[type=text], form textarea
     min-width: 0;
 }
 
-.new-design-label label, .new-design-radio-wrap label
+.mis-field label, .mis-radio label
 {
     font-size: 11px;
     font-weight: 700;
@@ -926,7 +932,7 @@ form input[type=number], form input[type=text], form textarea
     color: #5A6478;
 }
 
-.new-design-radio-label
+.mis-radio-label
 {
     font-size: 11px;
     font-weight: 700;
@@ -945,13 +951,13 @@ form input[type=number], form input[type=text], form textarea
     flex: 1;
 }
 
-.new-design-radio-label:hover
+.mis-radio-label:hover
 {
     border-color: #1B2F5E;
     color: #1B2F5E;
 }
 
-.new-design-radio-label.active
+.mis-radio-label.active
 {
     background: #1B2F5E;
     border-color: #1B2F5E;
@@ -959,7 +965,7 @@ form input[type=number], form input[type=text], form textarea
     font-weight: 700;
 }
 
-.new-design-radio-input-wrap
+.mis-radio-items
 {
     display:flex;
     gap:14px;
@@ -967,20 +973,37 @@ form input[type=number], form input[type=text], form textarea
     flex-wrap:wrap;
 }
 
-.new-design-radio-input-wrap.is-invalid .new-design-radio-label
+.mis-radio-input
+{
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.width-auto
+{
+    width: auto;
+}
+
+.width-toggle
+{
+    width: calc(100% - 7.5px);
+}
+
+.mis-radio-items.is-invalid .mis-radio-label
 {
     border-color: #dc3545;
     color: #dc3545;
 }
 
-.new-design-radio-input-wrap.is-invalid input:checked + .new-design-radio-label,
-.new-design-radio-input-wrap.is-invalid .new-design-radio-label:has(input:checked)
+.mis-radio-items.is-invalid input:checked + .mis-radio-label,
+.mis-radio-items.is-invalid .mis-radio-label:has(input:checked)
 {
     color: #fff;
     border-color: #dc3545;
 }
 
-.new-design-radio-wrap
+.mis-radio
 {
     display:flex;
     flex-direction:column;
@@ -988,93 +1011,7 @@ form input[type=number], form input[type=text], form textarea
     min-width:0;
 }
 
-.new-design-checkbox-wrap
-{
-    display: grid;
-    gap: 7px;
-}
-
-.new-design-checkbox-item
-{
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 9px 14px;
-    border: 1.5px solid #DDE1E9;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all .15s;
-}
-
-.new-design-checkbox-item input
-{
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.new-design-checkbox-item span.check
-{
-    width: 18px;
-    height: 18px;
-    border-radius: 4px;
-    border: 1.5px solid #DDE1E9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .15s;
-    flex-shrink: 0;
-    order: 1;
-}
-
-.new-design-checkbox-item-label
-{
-    font-weight: 600;
-    font-size: 13px;
-    flex: 1;
-    order: 2;
-    color: #5A6478;
-}
-
-.new-design-checkbox-item:hover
-{
-    border-color: #1B2F5E;
-}
-
-.cb-card.active .new-design-checkbox-item-label
-{
-    color: #1B2F5E;
-    font-weight: 700;
-}
-
-.new-design-checkbox-item.active span.check
-{
-    background: #1B2F5E;
-    border-color: #1B2F5E;
-}
-
-.new-design-checkbox-item.active
-{
-    border-color: #1B2F5E;
-    background: #EEF2FF;
-}
-
-.new-design-checkbox-item .check svg
-{
-    width: 10px;
-    height: 10px;
-    opacity: 0;
-    stroke: #fff;
-    stroke-width: 3;
-}
-
-.new-design-checkbox-item.active .check svg
-{
-    opacity: 1;
-}
-
-.new-design-checkbox-big-block-title
+.mis-tiles-title
 {
     font-size: 12px;
     font-weight: 800;
@@ -1084,30 +1021,30 @@ form input[type=number], form input[type=text], form textarea
     margin-bottom: 2px;
 }
 
-.new-design-checkbox-big-block-sub
+.mis-tiles-sub
 {
     font-size: 12px;
     color: #9BA3B4;
 }
 
-.new-design-checkbox-big-block
+.mis-tiles
 {
     margin-bottom: 22px;
 }
 
-.new-design-checkbox-big-block-head
+.mis-tiles-head
 {
     margin-bottom: 12px;
 }
 
-.new-design-checkbox-big-tiles
+.mis-tiles-list
 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
 }
 
-.new-design-checkbox-big-tile
+.mis-tile
 {
     position: relative;
     display: flex;
@@ -1121,14 +1058,14 @@ form input[type=number], form input[type=text], form textarea
     transition: all .15s;
 }
 
-.new-design-checkbox-big-tile input
+.mis-tile input
 {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
-.new-design-checkbox-big-tile .new-design-checkbox-big-ico
+.mis-tile .mis-tile-ico
 {
     width: 36px;
     height: 36px;
@@ -1141,7 +1078,7 @@ form input[type=number], form input[type=text], form textarea
     transition: all .15s;
 }
 
-.new-design-checkbox-big-tile .new-design-checkbox-big-ico span
+.mis-tile .mis-tile-ico span
 {
     width: 16px;
     height: 16px;
@@ -1153,7 +1090,7 @@ form input[type=number], form input[type=text], form textarea
     transition: stroke .15s;
 }
 
-.new-design-checkbox-big-tile .new-design-checkbox-big-lbl
+.mis-tile .mis-tile-lbl
 {
     font-size: 13px;
     font-weight: 800;
@@ -1161,14 +1098,14 @@ form input[type=number], form input[type=text], form textarea
     letter-spacing: .1px;
 }
 
-.new-design-checkbox-big-tile .new-design-checkbox-big-desc
+.mis-tile .mis-tile-desc
 {
     font-size: 12px;
     color: #9BA3B4;
     line-height: 1.35;
 }
 
-.new-design-checkbox-big-tile .new-design-checkbox-big-chk
+.mis-tile .mis-tile-chk
 {
     position: absolute;
     top: 12px;
@@ -1184,7 +1121,7 @@ form input[type=number], form input[type=text], form textarea
     transition: all .15s
 }
 
-.new-design-checkbox-big-tile .new-design-checkbox-big-chk svg
+.mis-tile .mis-tile-chk svg
 {
     width: 10px;
     height: 10px;
@@ -1194,12 +1131,12 @@ form input[type=number], form input[type=text], form textarea
     fill: none;
 }
 
-.new-design-checkbox-big-tile .new-design-checkbox-big-chk svg
+.mis-tile .mis-tile-chk svg
 {
     opacity: 1;
 }
 
-.new-design-checkbox-big-tile.radio .new-design-checkbox-big-chk::after {
+.mis-tile.radio .mis-tile-chk::after {
     content: '';
     width: 8px;
     height: 8px;
@@ -1209,7 +1146,7 @@ form input[type=number], form input[type=text], form textarea
     transition: opacity .15s;
 }
 
-.new-design-checkbox-big-tile.active.radio .new-design-checkbox-big-chk::after {
+.mis-tile.active.radio .mis-tile-chk::after {
     opacity: 1;
 }
 
@@ -1218,32 +1155,32 @@ form input[type=number], form input[type=text], form textarea
     --form-primary-color: #1B2F5E;
 }
 
-.new-design-checkbox-big-tile.active
+.mis-tile.active
 {
     border-color: var(--form-primary-color);
     background: #EEF2FF;
 }
 
-.new-design-checkbox-big-tile.active .new-design-checkbox-big-ico
+.mis-tile.active .mis-tile-ico
 {
     color: #fff;
     border-color: var(--form-primary-color);
     background: var(--form-primary-color);
 }
 
-.new-design-checkbox-big-tile.active .new-design-checkbox-big-lbl
+.mis-tile.active .mis-tile-lbl
 {
     color: var(--form-primary-color);
 }
 
-.new-design-checkbox-big-tile.active .new-design-checkbox-big-chk
+.mis-tile.active .mis-tile-chk
 {
     color: #fff;
     background: var(--form-primary-color);
     border-color: var(--form-primary-color);
 }
 
-.new-design-checkbox-row
+.mis-checkbox
 {
     align-items: center;
     gap: 10px;
@@ -1252,7 +1189,7 @@ form input[type=number], form input[type=text], form textarea
     padding: 14px 14px;
 }
 
-.new-design-checkbox-row .checkbox, .new-design-checkbox-right .checkbox
+.mis-checkbox .checkbox, .mis-checkbox-right .checkbox
 {
     display: inline-flex;
     align-items: center;
@@ -1262,7 +1199,7 @@ form input[type=number], form input[type=text], form textarea
     color: #5A6478;
 }
 
-.new-design-checkbox-row .checkbox .box, .new-design-checkbox-right .checkbox .box
+.mis-checkbox .checkbox .box, .mis-checkbox-right .checkbox .box
 {
     width: 18px;
     height: 18px;
@@ -1276,20 +1213,20 @@ form input[type=number], form input[type=text], form textarea
     flex-shrink: 0;
 }
 
-.new-design-checkbox-row .checkbox input:checked ~ .box, .new-design-checkbox-right .checkbox input:checked ~ .box
+.mis-checkbox .checkbox input:checked ~ .box, .mis-checkbox-right .checkbox input:checked ~ .box
 {
     background: var(--form-primary-color);
     border-color: var(--form-primary-color);
 }
 
-.new-design-checkbox-row .checkbox input, .new-design-checkbox-right .checkbox input
+.mis-checkbox .checkbox input, .mis-checkbox-right .checkbox input
 {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
-.new-design-checkbox-row .checkbox.checkbox-switch .box, .new-design-checkbox-right .checkbox.checkbox-switch .box
+.mis-checkbox .checkbox.checkbox-switch .box, .mis-checkbox-right .checkbox.checkbox-switch .box
 {
     width: 38px;
     height: 20px;
@@ -1299,7 +1236,7 @@ form input[type=number], form input[type=text], form textarea
     justify-content: flex-start;
 }
 
-.new-design-checkbox-row .checkbox.checkbox-switch .box::after, .new-design-checkbox-right .checkbox.checkbox-switch .box::after
+.mis-checkbox .checkbox.checkbox-switch .box::after, .mis-checkbox-right .checkbox.checkbox-switch .box::after
 {
     content: '';
     width: 14px;
@@ -1310,12 +1247,12 @@ form input[type=number], form input[type=text], form textarea
     transition: transform .15s;
 }
 
-.new-design-checkbox-row .checkbox.checkbox-switch input:checked ~ .box::after, .new-design-checkbox-right .checkbox.checkbox-switch input:checked ~ .box::after
+.mis-checkbox .checkbox.checkbox-switch input:checked ~ .box::after, .mis-checkbox-right .checkbox.checkbox-switch input:checked ~ .box::after
 {
     transform: translateX(20px);
 }
 
-.new-design-checkbox-row .checkbox.checkbox-switch .box svg, .new-design-checkbox-right .checkbox.checkbox-switch .box svg
+.mis-checkbox .checkbox.checkbox-switch .box svg, .mis-checkbox-right .checkbox.checkbox-switch .box svg
 {
     display: none;
 }
@@ -1355,7 +1292,7 @@ form input[type=number], form input[type=text], form textarea
     transition: all .2s;
 }
 
-.checkbox-new-row
+.mis-checklist
 {
     display: flex;
     flex-direction: column;
@@ -1363,7 +1300,7 @@ form input[type=number], form input[type=text], form textarea
     min-width: 0;
 }
 
-.checkbox-new-row label
+.mis-checklist label
 {
     font-size: 11px;
     font-weight: 700;
@@ -1372,7 +1309,7 @@ form input[type=number], form input[type=text], form textarea
     color: #5A6478;
 }
 
-.checkbox-new-row-item-wrap
+.mis-checklist-items
 {
     display:flex;
     gap:14px;
@@ -1380,7 +1317,7 @@ form input[type=number], form input[type=text], form textarea
     flex-wrap:wrap
 }
 
-.checkbox-new-row-item-wrap .checkbox {
+.mis-checklist-items .checkbox {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -1389,13 +1326,13 @@ form input[type=number], form input[type=text], form textarea
     color: #5A6478;
 }
 
-.checkbox-new-row-item-wrap .checkbox input {
+.mis-checklist-items .checkbox input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
-.checkbox-new-row-item-wrap .checkbox .box {
+.mis-checklist-items .checkbox .box {
     width: 18px;
     height: 18px;
     border: 1.5px solid #DDE1E9;
@@ -1408,12 +1345,12 @@ form input[type=number], form input[type=text], form textarea
     flex-shrink: 0;
 }
 
-.checkbox-new-row-item-wrap .checkbox input:checked ~ .box {
+.mis-checklist-items .checkbox input:checked ~ .box {
     background: var(--form-primary-color);
     border-color: var(--form-primary-color);
 }
 
-.checkbox-new-row-item-wrap .checkbox .box .ico {
+.mis-checklist-items .checkbox .box .ico {
     width: 10px;
     height: 10px;
     opacity: 0;
@@ -1421,7 +1358,7 @@ form input[type=number], form input[type=text], form textarea
     stroke-width: 3;
 }
 
-.text-input-new-inline
+.mis-field-inline
 {
     display: flex;
     align-items: center;
@@ -1430,30 +1367,30 @@ form input[type=number], form input[type=text], form textarea
     min-height: 40px;
 }
 
-.text-input-new-inline>.text-input-new-label {
+.mis-field-inline>.mis-field-inline-label {
     flex: 0 0 210px;
     font-size: 13px;
     font-weight: 500;
     color: #5A6478;
 }
 
-.text-input-new-inline>.text-input-new-control {
+.mis-field-inline>.mis-field-inline-control {
     align-items: center;
     gap: 8px;
 }
 
-.text-input-new-inline .unit {
+.mis-field-inline .unit {
     font-size: 13px;
     color: #9BA3B4;
     font-weight: 600;
 }
 
-.new-design-radio-label.radio-rounded
+.mis-radio-label.radio-rounded
 {
     border-radius: 20px;
 }
 
-.new-design-compact
+.mis-compact
 {
     display: flex;
     align-items: center;
@@ -1463,7 +1400,7 @@ form input[type=number], form input[type=text], form textarea
     min-height: 40px;
 }
 
-.new-design-compact>.new-design-compact-label
+.mis-compact>.mis-compact-label
 {
     flex: 0 1 210px;
     font-size: 13px;
@@ -1471,7 +1408,7 @@ form input[type=number], form input[type=text], form textarea
     color: #5A6478;
 }
 
-.new-design-compact>.new-design-compact-input-wrap
+.mis-compact>.mis-compact-items
 {
     flex: 1 1 auto;
     align-items: center;
@@ -1479,12 +1416,12 @@ form input[type=number], form input[type=text], form textarea
     min-width: 0;
 }
 
-.new-design-compact-input-field.is-invalid
+.mis-compact-field.is-invalid
 {
     border: 1.5px solid #fa896b;
 }
 
-.new-design-compact-input-field
+.mis-compact-field
 {
     display: flex;
     flex-wrap: wrap;
@@ -1496,7 +1433,7 @@ form input[type=number], form input[type=text], form textarea
     max-width: 100%;
 }
 
-.new-design-compact-input-field label
+.mis-compact-field label
 {
     position: relative;
     padding: 5px 13px;
@@ -1513,7 +1450,7 @@ form input[type=number], form input[type=text], form textarea
     flex: 1 0 auto;
 }
 
-.new-design-compact-input-field label:has(input:checked)
+.mis-compact-field label:has(input:checked)
 {
     background: #FFFFFF;
     color: var(--form-primary-color);
@@ -1521,14 +1458,14 @@ form input[type=number], form input[type=text], form textarea
     box-shadow: 0 1px 4px rgba(27, 47, 94, .10);
 }
 
-.new-design-compact-input-field input
+.mis-compact-field input
 {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
-.new-design-btn
+.mis-btn
 {
     display: inline-flex;
     align-items: center;
@@ -1547,7 +1484,7 @@ form input[type=number], form input[type=text], form textarea
     border: 1.5px solid #DDE1E9;
 }
 
-.new-design-btn:disabled
+.mis-btn:disabled
 {
     background: #eaeff4;
     cursor: default;
@@ -1560,7 +1497,7 @@ form input[type=number], form input[type=text], form textarea
     text-transform: none !important;
 }
 
-.new-design-input.is-invalid
+.mis-input.is-invalid
 {
     border-color: #fa896b;
     padding-right: calc(1.5em + 16px);
@@ -1613,8 +1550,7 @@ form input[type=number], form input[type=text], form textarea
     color: #9BA3B4;
 }
 
-
-.new-design-checkbox-right
+.mis-checkbox-right
 {
     display: flex;
     align-items: center;
@@ -1624,7 +1560,7 @@ form input[type=number], form input[type=text], form textarea
     padding: 14px 0px;
 }
 
-.new-design-checkbox-right>.rf-label
+.mis-checkbox-right>.rf-label
 {
     flex: 0 0 210px;
     font-size: 13px;
@@ -1637,7 +1573,7 @@ form input[type=number], form input[type=text], form textarea
     font-family: 'Source Sans 3', 'Barlow', sans-serif;
 }
 
-.checkbox-new-row-item-wrap .checkbox .box svg, .new-design-checkbox-row .checkbox .box svg,
+.mis-checklist-items .checkbox .box svg, .mis-checkbox .checkbox .box svg,
 .rf-control .checkbox .box svg
 {
     width: 10px;
@@ -1647,12 +1583,11 @@ form input[type=number], form input[type=text], form textarea
     stroke-width: 3;
 }
 
-.checkbox-new-row-item-wrap .checkbox input:checked ~ .box svg, .new-design-checkbox-row .checkbox input:checked ~ .box svg,
+.mis-checklist-items .checkbox input:checked ~ .box svg, .mis-checkbox .checkbox input:checked ~ .box svg,
 .rf-control .checkbox input:checked ~ .box svg
 {
     opacity: 1;
 }
-
 
 input[readonly] {
     background: #EEF0F4;
@@ -1673,3 +1608,159 @@ label.checkbox input[readonly] + .box {
     cursor: not-allowed;
 }
 
+/* ------------------------------------------------------------------ *
+ * rSlider.js - https://github.com/slawomir-zaziablo/range-slider
+ * MIT. Pouziva ho SliderInput, akcentni barva zmenena na --form-primary-color.
+ * ------------------------------------------------------------------ */
+
+.rs-container * {
+    box-sizing: border-box;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.rs-container {
+    font-family: Arial, Helvetica, sans-serif;
+    height: 45px;
+    position: relative;
+}
+.rs-container .rs-bg, .rs-container .rs-selected {
+    background-color: #eee;
+    border: 1px solid #ededed;
+    height: 10px;
+    left: 0;
+    position: absolute;
+    top: 5px;
+    width: 100%;
+    border-radius: 3px;
+}
+.rs-container .rs-selected {
+    background-color: var(--form-primary-color);
+    border: 1px solid var(--form-primary-color);
+    transition: all 0.2s linear;
+    width: 0;
+}
+.rs-container.disabled .rs-selected {
+    background-color: #ccc;
+    border-color: #bbb;
+}
+.rs-container .rs-pointer {
+    background-color: #fff;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 20px;
+    left: -10px;
+    position: absolute;
+    top: 0;
+    transition: all 0.2s linear;
+    width: 30px;
+    box-shadow: inset 0 0 1px #FFF, inset 0 1px 6px #ebebeb, 1px 1px 4px rgba(0, 0, 0, 0.1);
+}
+.rs-container.disabled .rs-pointer {
+    border-color: #ccc;
+}
+.rs-container .rs-pointer::before,
+.rs-container .rs-pointer::after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 9px;
+    background-color: #ddd;
+    left: 12px;
+    top: 5px;
+}
+.rs-container .rs-pointer::after {
+    left: auto;
+    right: 12px;
+}
+.rs-container.disabled .rs-pointer {
+    cursor: default;
+}
+.rs-container.sliding .rs-selected,
+.rs-container.sliding .rs-pointer {
+    transition: none;
+}
+.rs-container .rs-scale {
+    left: 0;
+    position: absolute;
+    top: 5px;
+    white-space: nowrap;
+}
+.rs-container .rs-scale span {
+    float: left;
+    position: relative;
+}
+ .rs-container .rs-scale span::before {
+    background-color: #ededed;
+    content: "";
+    height: 8px;
+    left: 0;
+    position: absolute;
+    top: 10px;
+    width: 1px;
+}
+.rs-container.rs-noscale span::before {
+    display: none;
+}
+.rs-container.rs-noscale span:first-child::before,
+.rs-container.rs-noscale span:last-child::before {
+    display: block;
+}
+.rs-container .rs-scale span:last-child {
+    margin-left: -1px;
+    width: 0px;
+}
+.rs-container .rs-scale span ins {
+    color: #333;
+    display: inline-block;
+    font-size: 12px;
+    margin-top: 20px;
+    text-decoration: none;
+}
+.rs-container.disabled .rs-scale span ins {
+    color: #999;
+}
+.rs-tooltip {
+    color: #333;
+    width: auto;
+    min-width: 60px;
+    height: 30px;
+	position: relative;
+	background: #fff;
+	border: 1px solid var(--form-primary-color);
+    border-radius: 3px;
+    position: absolute;
+    transform: translate(-50%, -35px);
+    left: 13px;
+    text-align: center;
+    font-size: 13px;
+    padding: 6px 10px 0;
+}
+.rs-container.disabled .rs-tooltip {
+    border-color: #ccc;
+    color: #999;
+}
+
+/* Integrace do input-group - rSlider vklada svuj kontejner hned za skryty input */
+.input-group > .rs-container
+{
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+}
+
+.mis-field .rs-container
+{
+    font-family: inherit;
+    margin-top: 4px;
+}
+
+.mis-field .rs-container .rs-scale span ins
+{
+    font-size: 11px;
+    color: #5A6478;
+}

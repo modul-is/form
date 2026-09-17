@@ -23,4 +23,5 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, Sig
 	use Helper\RenderDefault;
 	use Helper\RenderFloating;
 	use Helper\RenderInline;
+	use Helper\WrapControl;
 }

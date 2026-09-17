@@ -18,13 +18,13 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 	use Helper\InputCoreControl;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
-	use Helper\RenderFloating;
 	use Helper\Validation;
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
 	use Helper\RenderDefault;
 	use Helper\RenderFloating;
 	use Helper\RenderInline;
+	use Helper\WrapControl;
 	use Helper\Signals
 	{
 		signalReceived as public signalsSignalReceived;

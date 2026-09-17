@@ -24,9 +24,7 @@ class UploadTest extends TestCase
 
 		$form->addUpload('file', 'Vyberte soubor');
 
-		$html = str_replace(["__UPLOAD_SIZE__", "\t", "\n", "\r"], [$this->uploadSize], file_get_contents(__DIR__ . '/basic.latte'));
-
-		Assert::same($html, $form->getComponent('file')->render()->__toString());
+		$this->assertRender(__DIR__ . '/basic.latte', $form->getComponent('file')->render()->__toString(), ['__UPLOAD_SIZE__' => $this->uploadSize]);
 	}
 
 
@@ -37,9 +35,7 @@ class UploadTest extends TestCase
 		$form->addUpload('file', 'Vyberte soubor')
 			->setPrepend('prepend');
 
-		$html = str_replace(["__UPLOAD_SIZE__", "\t", "\n", "\r"], [$this->uploadSize], file_get_contents(__DIR__ . '/prepend.latte'));
-
-		Assert::same($html, $form->getComponent('file')->render()->__toString());
+		$this->assertRender(__DIR__ . '/prepend.latte', $form->getComponent('file')->render()->__toString(), ['__UPLOAD_SIZE__' => $this->uploadSize]);
 	}
 
 
@@ -50,9 +46,7 @@ class UploadTest extends TestCase
 		$form->addUpload('file', 'Vyberte soubor')
 			->setAppend('append');
 
-		$html = str_replace(["__UPLOAD_SIZE__", "\t", "\n", "\r"], [$this->uploadSize], file_get_contents(__DIR__ . '/append.latte'));
-
-		Assert::same($html, $form->getComponent('file')->render()->__toString());
+		$this->assertRender(__DIR__ . '/append.latte', $form->getComponent('file')->render()->__toString(), ['__UPLOAD_SIZE__' => $this->uploadSize]);
 	}
 
 
@@ -63,9 +57,7 @@ class UploadTest extends TestCase
 		$form->addUpload('file', 'Vyberte soubor')
 			->setIcon('user');
 
-		$html = str_replace(["__UPLOAD_SIZE__", "\t", "\n", "\r"], [$this->uploadSize], file_get_contents(__DIR__ . '/icon.latte'));
-
-		Assert::same($html, $form->getComponent('file')->render()->__toString());
+		$this->assertRender(__DIR__ . '/icon.latte', $form->getComponent('file')->render()->__toString(), ['__UPLOAD_SIZE__' => $this->uploadSize]);
 	}
 
 
@@ -76,9 +68,7 @@ class UploadTest extends TestCase
 		$form->addUpload('file', 'Vyberte soubor')
 			->setOption('id', 'customId');
 
-		$html = str_replace(["__UPLOAD_SIZE__", "\t", "\n", "\r"], [$this->uploadSize], file_get_contents(__DIR__ . '/id.latte'));
-
-		Assert::same($html, $form->getComponent('file')->render()->__toString());
+		$this->assertRender(__DIR__ . '/id.latte', $form->getComponent('file')->render()->__toString(), ['__UPLOAD_SIZE__' => $this->uploadSize]);
 	}
 
 

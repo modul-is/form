@@ -26,7 +26,8 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 		$button->name($this->getName())
 			->appendAttribute('class', 'btn-' . $color)
 			->appendAttribute('class', (string) $input->getAttribute('class'))
-			->appendAttribute('class', 'new-design-btn')
+			->appendAttribute('class', ltrim($this->getFormButtonClass()))
+			->appendAttribute('class', 'mis-btn')
 			->type('submit')
 			->formnovalidate(true);
 

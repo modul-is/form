@@ -1,4 +1,5 @@
 import naja from 'naja';
+import './rSlider.js';
 
 Nette.validators.CodeComponentFormValidator_greater = function(elem, args, val)
 {
@@ -496,6 +497,68 @@ function initForm()
 		formatCurrencyInput($(this));
 	});
 
+	syncCheckableLabels();
+	initSliders();
+}
+
+/**
+ * Posuvniky (SliderInput). rSlider si vedle inputu vytvari vlastni DOM, takze pri
+ * prekresleni snippetu je nutne starou instanci zrusit - jinak by u inputu zustalo
+ * viset nekolik posuvniku najednou.
+ */
+function initSliders()
+{
+	document.querySelectorAll('input[data-slider]').forEach(input => {
+
+		if(input.rSliderInstance)
+		{
+			input.rSliderInstance.destroy();
+			input.rSliderInstance = null;
+		}
+
+		let config;
+
+		try
+		{
+			config = JSON.parse(input.getAttribute('data-slider'));
+		}
+		catch(e)
+		{
+			console.error('Invalid data-slider config on ' + input.name, e);
+			return;
+		}
+
+		config.target = input;
+
+		// rSlider zapisuje hodnotu primo do inputu a nativni change neodpali,
+		// signaly (data-on-change) i validace by tak o zmene nevedely
+		config.onChange = function()
+		{
+			$(input).trigger('change');
+		};
+
+		input.rSliderInstance = new window.rSlider(config);
+	});
+}
+
+/**
+ * Oznací labely zaskrtnutých radio/checkbox prvků třídou "active".
+ * Volá se i po překreslení snippetu, proto je stav pouze dopočítán - listener
+ * se registruje jednou v initCheckableLabels().
+ */
+function syncCheckableLabels()
+{
+	document.querySelectorAll('input[type="radio"]').forEach(radio => {
+		radio.closest('label')?.classList.toggle('active', radio.checked);
+	});
+
+	document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+		checkbox.closest('label')?.classList.toggle('active', checkbox.checked);
+	});
+}
+
+function initCheckableLabels()
+{
 	document.addEventListener('change', function (e) {
 
 		// Radio
@@ -515,15 +578,6 @@ function initForm()
 
 			label?.classList.toggle('active', e.target.checked);
 		}
-	});
-
-// Inicializace po načtení stránky
-	document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
-		radio.closest('label')?.classList.add('active');
-	});
-
-	document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-		checkbox.closest('label')?.classList.toggle('active', checkbox.checked);
 	});
 }
 
@@ -556,6 +610,7 @@ function initQuickCopy()
 $(document).ready(function()
 {
 	initQuickCopy();
+	initCheckableLabels();
 	initForm();
 });
 

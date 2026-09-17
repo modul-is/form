@@ -20,9 +20,7 @@ class ContainerTest extends TestCase
 
 		$container->addSubmit('save', 'Uložit');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
-
-		Assert::same($html, $form->getComponent('container')->render()->__toString());
+		$this->assertRender(__DIR__ . '/basic.latte', $form->getComponent('container')->render()->__toString());
 	}
 
 
@@ -46,9 +44,7 @@ class ContainerTest extends TestCase
 
 		$container->addText('text', 'Text');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/id.latte'));
-
-		Assert::same($html, $form->getComponent('container')->render()->__toString());
+		$this->assertRender(__DIR__ . '/id.latte', $form->getComponent('container')->render()->__toString());
 	}
 
 
@@ -65,9 +61,7 @@ class ContainerTest extends TestCase
 
 		$container->addText('text', 'Text');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/card.latte'));
-
-		Assert::same($html, $form->getComponent('container')->render()->__toString());
+		$this->assertRender(__DIR__ . '/card.latte', $form->getComponent('container')->render()->__toString());
 	}
 }
 

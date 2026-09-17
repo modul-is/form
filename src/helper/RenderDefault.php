@@ -16,12 +16,20 @@ trait RenderDefault
 
 		$input = $this->getControl();
 
-		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
-		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
-
-		$inputClass = $currentClass . $validationClass . ' new-design-input form-control ' . $this->getInputWrapClass();
-
-		$input->appendAttribute('class', ltrim($inputClass));
+		/**
+		 * Trida se pripojuje po castech - getControl() uz muze nejakou nest (napr. form-control-chosen)
+		 * a slozeni jednoho retezce z $input->getAttribute('class') by ji zduplikovalo.
+		 *
+		 * $controlClass je form-control / form-select / form-control-chosen podle typu prvku -
+		 * u <select> je form-select nutny, aby mel sipku (.mis-input ma appearance: none).
+		 */
+		foreach(['mis-input', $this->controlClass, $this->getValidationClass(), $this->getInputWrapClass()] as $class)
+		{
+			if($class)
+			{
+				$input->appendAttribute('class', $class);
+			}
+		}
 
 		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
 		{
@@ -39,9 +47,9 @@ trait RenderDefault
 
 		/**
 		 * Tento typ vykresleni si label sklada sam, ne pres getCoreLabel(), proto se tooltip
-		 * pripoji tady. Button, Link ani Duplicator trait Tooltip nemaji - odtud method_exists().
+		 * pripoji tady - vsechny kontrolky pouzivajici RenderDefault maji trait Tooltip.
 		 */
-		if(\method_exists($this, 'getTooltipHtml') && $tooltipHtml = $this->getTooltipHtml())
+		if($tooltipHtml = $this->getTooltipHtml())
 		{
 			$labelEl->addHtml(' ' . $tooltipHtml);
 		}
@@ -68,7 +76,7 @@ trait RenderDefault
 		$group->addHtml($validationFeedBack);
 
 		$fieldDiv = Html::el('div')
-			->class($wrapClass . ' new-design-label')
+			->class($wrapClass . ' mis-field')
 			->addHtml($labelEl . $group . $quickCopyHtml);
 
 		return $fieldDiv;

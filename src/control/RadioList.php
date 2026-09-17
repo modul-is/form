@@ -20,8 +20,8 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 	use Helper\ControlClass;
 	use Helper\Signals;
 	use Helper\ToggleButton;
-	use Helper\RenderFloatingList;
 	use Helper\RenderInline;
+	use Helper\WrapControl;
 
 	private array $iconArray = [];
 
@@ -80,7 +80,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 			->addHtml($this->translate($this->getCaption()) . $required);
 
 		$itemsWrap = Html::el('div')
-			->class('new-design-radio-input-wrap ' . $this->getValidationClass());
+			->class(trim('mis-radio-items ' . $this->getValidationClass()));
 
 		foreach($this->getItems() as $key => $itemLabel)
 		{
@@ -91,11 +91,11 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 				$this->addSignalsToInput($inputEl);
 			}
 
-			$inputEl->style('position:absolute;opacity:0;pointer-events:none');
+			$inputEl->appendAttribute('class', 'mis-radio-input');
 
 			$itemLabelEl = Html::el('label')
 				->for($inputEl->getAttribute('id'))
-				->class('new-design-radio-label' . ($this->rounded ? ' radio-rounded' : ''))
+				->class('mis-radio-label' . ($this->rounded ? ' radio-rounded' : ''))
 				->addHtml($inputEl . $itemLabel);
 
 			$itemsWrap->addHtml($itemLabelEl);
@@ -105,7 +105,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 
 		return Html::el('div')
 			->id($this->getOption('id') ?: null)
-			->class('new-design-radio-wrap ' . $wrapClass)
+			->class('mis-radio ' . $wrapClass)
 			->addHtml($labelEl . $itemsWrap . $validationFeedBack);
 	}
 }

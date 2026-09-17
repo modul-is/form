@@ -16,9 +16,7 @@ class RadiolistTest extends TestCase
 
 		$form->addRadioList('radiolist', 'Radio', ['first' => 'First', 'second' => 'Second']);
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
-
-		Assert::same($html, $form->getComponent('radiolist')->render()->__toString());
+		$this->assertRender(__DIR__ . '/basic.latte', $form->getComponent('radiolist')->render()->__toString());
 	}
 
 
@@ -29,9 +27,7 @@ class RadiolistTest extends TestCase
 		$form->addRadioList('radiolist', 'Radio', ['first' => 'First', 'second' => 'Second'])
 			->setOption('id', 'customId');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/id.latte'));
-
-		Assert::same($html, $form->getComponent('radiolist')->render()->__toString());
+		$this->assertRender(__DIR__ . '/id.latte', $form->getComponent('radiolist')->render()->__toString());
 	}
 
 
@@ -42,9 +38,7 @@ class RadiolistTest extends TestCase
 		$form->addRadioList('radiolist', 'Radio', ['first' => 'First', 'second' => 'Second'])
 			->setItemsPerRow(2);
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/itemsPerRow.latte'));
-
-		Assert::same($html, $form->getComponent('radiolist')->render()->__toString());
+		$this->assertRender(__DIR__ . '/itemsPerRow.latte', $form->getComponent('radiolist')->render()->__toString());
 	}
 
 

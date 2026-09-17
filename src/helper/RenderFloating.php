@@ -21,7 +21,14 @@ trait RenderFloating
 		$inputClass = $this->controlClass . $currentClass . $validationClass;
 
 		$input->class($inputClass);
-		$input->placeholder($this->translate($this->getCaption()));
+		/**
+		 * Floating label potrebuje neprazdny placeholder, aby se aplikovalo :placeholder-shown -
+		 * u <select> ale placeholder neni platny atribut a BS5 ho nepotrebuje.
+		 */
+		if($input->getName() !== 'select')
+		{
+			$input->placeholder($this->translate($this->getCaption()));
+		}
 
 		if($this instanceof \ModulIS\Form\Control\Signalable && $this->hasSignal())
 		{

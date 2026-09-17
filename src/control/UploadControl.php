@@ -22,4 +22,5 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 	use Helper\RenderDefault;
 	use Helper\RenderFloating;
 	use Helper\RenderInline;
+	use Helper\WrapControl;
 }

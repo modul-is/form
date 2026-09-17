@@ -16,9 +16,7 @@ class TextTest extends TestCase
 
 		$form->addText('text', 'Text');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
-
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		$this->assertRender(__DIR__ . '/basic.latte', $form->getComponent('text')->render()->__toString());
 	}
 
 
@@ -29,9 +27,7 @@ class TextTest extends TestCase
 		$form->addText('text', 'Text')
 			->setPrepend('prepend');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/prepend.latte'));
-
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		$this->assertRender(__DIR__ . '/prepend.latte', $form->getComponent('text')->render()->__toString());
 	}
 
 
@@ -42,9 +38,7 @@ class TextTest extends TestCase
 		$form->addText('text', 'Text')
 			->setAppend('append');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/append.latte'));
-
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		$this->assertRender(__DIR__ . '/append.latte', $form->getComponent('text')->render()->__toString());
 	}
 
 
@@ -55,9 +49,7 @@ class TextTest extends TestCase
 		$form->addText('text', 'Text')
 			->setIcon('user');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/icon.latte'));
-
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		$this->assertRender(__DIR__ . '/icon.latte', $form->getComponent('text')->render()->__toString());
 	}
 
 
@@ -68,9 +60,7 @@ class TextTest extends TestCase
 		$form->addText('text', 'Text')
 			->setRenderFloating();
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
-
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		$this->assertRender(__DIR__ . '/floatingLabel.latte', $form->getComponent('text')->render()->__toString());
 	}
 
 
@@ -82,9 +72,7 @@ class TextTest extends TestCase
 
 		$form->addText('text', 'Text');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
-
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		$this->assertRender(__DIR__ . '/floatingLabel.latte', $form->getComponent('text')->render()->__toString());
 	}
 
 
@@ -95,11 +83,9 @@ class TextTest extends TestCase
 		$form->setRenderFloating();
 
 		$form->addText('text', 'Text')
-			->setRenderFloating(false);
+			->setRenderDefault();
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
-
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		$this->assertRender(__DIR__ . '/basic.latte', $form->getComponent('text')->render()->__toString());
 	}
 
 
@@ -110,9 +96,7 @@ class TextTest extends TestCase
 		$form->addText('text', 'Text')
 			->setOption('id', 'customId');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/id.latte'));
-
-		Assert::same($html, $form->getComponent('text')->render()->__toString());
+		$this->assertRender(__DIR__ . '/id.latte', $form->getComponent('text')->render()->__toString());
 	}
 
 

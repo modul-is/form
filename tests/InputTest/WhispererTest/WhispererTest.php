@@ -16,9 +16,7 @@ class WhispererTest extends TestCase
 
 		$form->addWhisperer('whisperer', 'Whisperer', ['a' => 'A', 'b' => 'B']);
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
-
-		Assert::same($html, $form->getComponent('whisperer')->render()->__toString());
+		$this->assertRender(__DIR__ . '/basic.latte', $form->getComponent('whisperer')->render()->__toString());
 	}
 
 
@@ -29,9 +27,7 @@ class WhispererTest extends TestCase
 		$form->addWhisperer('whisperer', 'Whisperer', ['a' => 'A', 'b' => 'B'])
 			->setOption('id', 'customId');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/id.latte'));
-
-		Assert::same($html, $form->getComponent('whisperer')->render()->__toString());
+		$this->assertRender(__DIR__ . '/id.latte', $form->getComponent('whisperer')->render()->__toString());
 	}
 
 
@@ -42,9 +38,7 @@ class WhispererTest extends TestCase
 		$form->addWhisperer('whisperer', 'Whisperer', ['a' => 'A', 'b' => 'B'])
 			->setIcon('user');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/icon.latte'));
-
-		Assert::same($html, $form->getComponent('whisperer')->render()->__toString());
+		$this->assertRender(__DIR__ . '/icon.latte', $form->getComponent('whisperer')->render()->__toString());
 	}
 
 
@@ -55,9 +49,7 @@ class WhispererTest extends TestCase
 		$form->addWhisperer('whisperer', 'Whisperer', ['a' => 'A', 'b' => 'B'])
 			->setRenderFloating();
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
-
-		Assert::same($html, $form->getComponent('whisperer')->render()->__toString());
+		$this->assertRender(__DIR__ . '/floatingLabel.latte', $form->getComponent('whisperer')->render()->__toString());
 	}
 
 
@@ -68,9 +60,7 @@ class WhispererTest extends TestCase
 		$form->addWhisperer('whisperer', 'Whisperer', ['a' => 'A', 'b' => 'B'])
 			->setOnChangeCallback(function(){});
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/changeCallback.latte'));
-
-		Assert::same($html, $form->getComponent('whisperer')->render()->__toString());
+		$this->assertRender(__DIR__ . '/changeCallback.latte', $form->getComponent('whisperer')->render()->__toString());
 	}
 
 
@@ -87,9 +77,7 @@ class WhispererTest extends TestCase
 				return new \ModulIS\Form\Helper\DependentData([]);
 			});
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/dependent.latte'));
-
-		Assert::same($html, $form->getComponent('whisperer')->render()->__toString());
+		$this->assertRender(__DIR__ . '/dependent.latte', $form->getComponent('whisperer')->render()->__toString());
 	}
 
 
@@ -130,9 +118,7 @@ class WhispererTest extends TestCase
 				return new \ModulIS\Form\Helper\DependentData([]);
 			});
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/callbacks.latte'));
-
-		Assert::same($html, $form->getComponent('whisperer')->render()->__toString());
+		$this->assertRender(__DIR__ . '/callbacks.latte', $form->getComponent('whisperer')->render()->__toString());
 	}
 }
 

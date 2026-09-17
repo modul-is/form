@@ -136,7 +136,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 			$checkboxClass = $this->checkboxClass ? ' ' . $this->checkboxClass : null;
 
 			$wrapDiv = Html::el('div')
-				->class('new-design-checkbox-row' . $checkboxClass)
+				->class('mis-checkbox' . $checkboxClass)
 				->addHtml($label);
 
 			if($this->tooltip)
@@ -166,7 +166,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 				->addHtml($inputLabel);
 
 			$wrapDiv = Html::el('div')
-				->class('new-design-checkbox-right')
+				->class('mis-checkbox-right')
 				->addHtml($label)
 				->addHtml($control);
 		}

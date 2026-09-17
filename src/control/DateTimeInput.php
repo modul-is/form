@@ -23,4 +23,5 @@ class DateTimeInput extends \Nette\Forms\Controls\DateTimeControl implements Ren
 	use Helper\RenderDefault;
 	use Helper\RenderFloating;
 	use Helper\RenderInline;
+	use Helper\WrapControl;
 }

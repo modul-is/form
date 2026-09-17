@@ -364,6 +364,22 @@ class Form extends UIForm
 	}
 
 
+	/**
+	 * Posuvnik - rozsah hodnot se dodefinuje pres setMinMax() nebo setItems().
+	 */
+	public function addSlider(string $name, $label = null, int|float|null $min = null, int|float|null $max = null, int|float $step = 1): Control\SliderInput
+	{
+		$input = new Control\SliderInput($label);
+
+		if($min !== null && $max !== null)
+		{
+			$input->setMinMax($min, $max, $step);
+		}
+
+		return $this[$name] = $input;
+	}
+
+
 	public function addUpload(string $name, $label = null, $multiple = false): Control\UploadControl
 	{
 		return $this[$name] = new Control\UploadControl($label, $multiple);

@@ -26,6 +26,24 @@ trait RenderBasic
 	}
 
 
+	public function setRenderDefault(): static
+	{
+		return $this->setRenderType(RenderType::Default);
+	}
+
+
+	public function setRenderFloating(): static
+	{
+		return $this->setRenderType(RenderType::Floating);
+	}
+
+
+	public function setRenderInline(): static
+	{
+		return $this->setRenderType(RenderType::Inline);
+	}
+
+
 	public function render(): Html|string
 	{
 		if($this->getOption('hide') || $this->autoRenderSkip)

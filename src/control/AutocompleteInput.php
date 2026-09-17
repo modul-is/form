@@ -19,7 +19,9 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	use Helper\InputCoreControl;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
+	use Helper\RenderDefault;
 	use Helper\RenderFloating;
+	use Helper\RenderInline;
 	use Helper\Validation;
 	use Helper\Signals
 	{

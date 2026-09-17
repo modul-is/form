@@ -50,7 +50,6 @@ class DuplicatorCreateSubmit extends SubmitButton
 			'value' => 'Přidat',
 			'formnovalidate' => '',
 			'data-nette-validation-scope' => '["multiplier"]',
-			'label' => 'Přidat',
 			'type' => 'submit'
 		];
 

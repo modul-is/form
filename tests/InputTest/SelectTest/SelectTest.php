@@ -16,9 +16,7 @@ class SelectTest extends TestCase
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second']);
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
-
-		Assert::same($html, $form->getComponent('select')->render()->__toString());
+		$this->assertRender(__DIR__ . '/basic.latte', $form->getComponent('select')->render()->__toString());
 	}
 
 
@@ -29,9 +27,7 @@ class SelectTest extends TestCase
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
 			->setOption('id', 'customId');
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/id.latte'));
-
-		Assert::same($html, $form->getComponent('select')->render()->__toString());
+		$this->assertRender(__DIR__ . '/id.latte', $form->getComponent('select')->render()->__toString());
 	}
 
 
@@ -42,9 +38,7 @@ class SelectTest extends TestCase
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
 			->setRenderFloating();
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
-
-		Assert::same($html, $form->getComponent('select')->render()->__toString());
+		$this->assertRender(__DIR__ . '/floatingLabel.latte', $form->getComponent('select')->render()->__toString());
 	}
 
 
@@ -56,9 +50,7 @@ class SelectTest extends TestCase
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second']);
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingLabel.latte'));
-
-		Assert::same($html, $form->getComponent('select')->render()->__toString());
+		$this->assertRender(__DIR__ . '/floatingLabel.latte', $form->getComponent('select')->render()->__toString());
 	}
 
 
@@ -69,11 +61,9 @@ class SelectTest extends TestCase
 		$form->setRenderFloating();
 
 		$form->addSelect('select', 'Select', ['first' => 'First', 'second' => 'Second'])
-			->setRenderFloating(false);
+			->setRenderDefault();
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/basic.latte'));
-
-		Assert::same($html, $form->getComponent('select')->render()->__toString());
+		$this->assertRender(__DIR__ . '/basic.latte', $form->getComponent('select')->render()->__toString());
 	}
 
 
@@ -98,9 +88,7 @@ class SelectTest extends TestCase
 			->setPrompt('~ Vyberte ~')
 			->setImageArray(['first' => '/images/first.png', 'second' => '/images/second.png']);
 
-		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/image.latte'));
-
-		Assert::same($html, $form->getComponent('select')->render()->__toString());
+		$this->assertRender(__DIR__ . '/image.latte', $form->getComponent('select')->render()->__toString());
 	}
 
 
