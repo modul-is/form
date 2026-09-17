@@ -9,6 +9,8 @@ use Nette\Utils\Html;
 
 trait RenderInline
 {
+	use ClassList;
+
 	public function renderInline(): Html
 	{
 		$label = $this->getCoreLabel();
@@ -25,13 +27,16 @@ trait RenderInline
 			? $this->getQuickCopyButton()
 			: null;
 
-		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
+		$validationClass = $this->getValidationClass();
 		$validationFeedBack = $this->getValidationFeedback();
 
-		$input->appendAttribute('class', $validationClass);
+		if($validationClass)
+		{
+			$input->appendAttribute('class', $validationClass);
+		}
 
 		$inputControl = Html::el('div')
-			->class('input-group' . ($validationClass ? ' ' . $validationClass : ''));
+			->class($this->joinClass('input-group', $validationClass));
 
 		if($this instanceof HasInputGroup && $this->getPrepend())
 		{
@@ -59,8 +64,7 @@ trait RenderInline
 			->addHtml($inputControl)
 			->addHtml($validationFeedBack);
 
-		return $this->getWrapControl()
-			->class('mis-field-inline ' . ($this->getWrapControl()->getAttribute('class') ?: ''))
+		return $this->createWrap('mis-field-inline')
 			->addHtml($labelDiv)
 			->addHtml($inputDiv);
 	}

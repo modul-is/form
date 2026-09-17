@@ -89,6 +89,39 @@ class TextTest extends TestCase
 	}
 
 
+	public function testWrapIdInAllRenderTypes()
+	{
+		foreach(\ModulIS\Form\Enum\RenderType::cases() as $renderType)
+		{
+			$form = $this->getForm();
+			$form->setRenderType($renderType);
+
+			$input = $form->addText('text', 'Text')
+				->setWrapId('wrapId');
+
+			Assert::contains('wrapId', $input->render()->__toString(), 'render type ' . $renderType->name);
+		}
+	}
+
+
+	public function testRenderIsIdempotent()
+	{
+		foreach(\ModulIS\Form\Enum\RenderType::cases() as $renderType)
+		{
+			$form = $this->getForm();
+			$form->setRenderType($renderType);
+
+			$input = $form->addText('text', 'Text');
+
+			Assert::same(
+				$input->render()->__toString(),
+				$input->render()->__toString(),
+				'render type ' . $renderType->name
+			);
+		}
+	}
+
+
 	public function testRenderOptionId()
 	{
 		$form = $this->getForm();

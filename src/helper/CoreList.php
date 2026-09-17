@@ -16,6 +16,8 @@ use function assert;
 
 trait CoreList
 {
+	use ClassList;
+
 	protected array $tooltips = [];
 
 	protected int $itemsPerRow = 1;
@@ -130,11 +132,11 @@ trait CoreList
 			: '';
 
 		$labelEl = Html::el('label')
-			->class('mis-compact-label ' . $this->getLabelWrapClass())
+			->class($this->joinClass('mis-compact-label', $this->getLabelWrapClass()))
 			->addHtml($this->translate($this->getCaption()) . $required);
 
 		$itemsWrapField = Html::el('div')
-			->class('mis-compact-field ' . $this->getInputWrapClass() . ' ' . $validationClass);
+			->class($this->joinClass('mis-compact-field', $this->getInputWrapClass(), $validationClass));
 
 		foreach($this->getItems() as $key => $itemLabel)
 		{
@@ -161,9 +163,7 @@ trait CoreList
 			$itemsWrap->addHtml($validationFeedBack);
 		}
 
-		return Html::el('div')
-			->id($this->getOption('id') ?: null)
-			->class('mis-compact ' . ($this->getWrapControl()->getAttribute('class') ?: ''))
+		return $this->createWrap('mis-compact')
 			->addHtml($labelEl . $itemsWrap);
 	}
 
@@ -247,10 +247,15 @@ trait CoreList
 			$tilesWrap->addHtml($tileLabel);
 		}
 
-		$label = $this->getLabel()->addAttributes(['class' => $this->isRequired() ? 'required' : '']);
+		$label = $this->getLabel();
+
+		if($this->isRequired())
+		{
+			$label->appendAttribute('class', 'required');
+		}
 
 		$blockTitle = Html::el('div')
-			->class('mis-tiles-title' . $validationClass)
+			->class($this->joinClass('mis-tiles-title', $validationClass))
 			->addHtml($label);
 
 		$tooltip = $this->getTooltip() === null ? '' : Html::el('div')
@@ -263,8 +268,7 @@ trait CoreList
 			->addHtml($tooltip);
 
 		$block = Html::el('div')
-			->id($this->getOption('id') ?: null)
-			->class('mis-tiles' . $this->inputClass)
+			->class($this->joinClass('mis-tiles', $this->inputClass))
 			->addHtml($blockHead)
 			->addHtml($tilesWrap)
 			->addHtml($validationFeedBack);
@@ -412,7 +416,7 @@ trait CoreList
 			->class($rowClass)
 			->addHtml($labelDiv . $inputDiv);
 
-		return $this->getWrapControl()
+		return $this->createWrap()
 			->addHtml($rowDiv);
 	}
 

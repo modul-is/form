@@ -10,7 +10,8 @@ final class FormExtension extends \Latte\Extension
 	{
 		return [
 			'labelCore' => [\ModulIS\Extension\CoreLabelNode::class, 'create'],
-			'inputCore' => [\ModulIS\Extension\CoreInputNode::class, 'create']
+			'inputCore' => [\ModulIS\Extension\CoreInputNode::class, 'create'],
+			'inputRender' => [\ModulIS\Extension\RenderInputNode::class, 'create']
 		];
 	}
 }

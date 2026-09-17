@@ -73,6 +73,11 @@ trait WrapControl
 	}
 
 
+	/**
+	 * Prototyp obalky - drzi jen to, co na nej nastavil uzivatel pres setWrapClass()/setWrapId().
+	 * Pro samotne vykresleni pouzij createWrap(), jinak by se pri opakovanem render() do
+	 * prototypu nasypal obsah dvakrat.
+	 */
 	public function getWrapControl(): Html
 	{
 		if(!$this->wrapControl)
@@ -85,5 +90,21 @@ trait WrapControl
 		}
 
 		return $this->wrapControl;
+	}
+
+
+	/**
+	 * Cerstva obalka pro jedno vykresleni - zachova id i tridy z prototypu.
+	 */
+	public function createWrap(?string $class = null): Html
+	{
+		$wrap = clone $this->getWrapControl();
+
+		if($class)
+		{
+			$wrap->appendAttribute('class', $class);
+		}
+
+		return $wrap;
 	}
 }

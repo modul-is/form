@@ -67,8 +67,6 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 
 	public function renderDefault(): Html
 	{
-		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'field';
-
 		$form = $this->getForm();
 		\assert($form instanceof \ModulIS\Form\Form);
 
@@ -80,7 +78,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 			->addHtml($this->translate($this->getCaption()) . $required);
 
 		$itemsWrap = Html::el('div')
-			->class(trim('mis-radio-items ' . $this->getValidationClass()));
+			->class($this->joinClass('mis-radio-items', $this->getValidationClass()));
 
 		foreach($this->getItems() as $key => $itemLabel)
 		{
@@ -103,9 +101,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 
 		$validationFeedBack = $this->getValidationFeedback();
 
-		return Html::el('div')
-			->id($this->getOption('id') ?: null)
-			->class('mis-radio ' . $wrapClass)
+		return $this->createWrap('mis-radio')
 			->addHtml($labelEl . $itemsWrap . $validationFeedBack);
 	}
 }

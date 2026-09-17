@@ -115,6 +115,163 @@ $form->addText('name', 'Name')
 `CheckboxList` and `RadioList` use `\ModulIS\Form\Enum\RenderListType` instead, which adds
 `Big` (tiles) and `Compact` on top of `Default`, `Floating` and `Inline`.
 
+### Anatomy of an input
+
+Every input is wrapped in a few nested elements and each of them has its own setter.
+The trees below are the real output for `addText()` with all wrap setters used at once,
+so you can see which call lands where.
+
+**`RenderType::Default`** - label above the input
+
+```
+<div class="WRAP mis-field" id="WRAPID">          setWrapClass() / setWrapId()
+    <label class="LABELWRAP">Caption</label>      setLabelWrapClass()   <- caption + setTooltip()
+    <div class="input-group">
+        <span class="input-group-text">PRE</span>  setPrepend()
+        <input class="mis-input form-control INPUTWRAP">
+        |                                         setInputWrapClass() lands on the input itself
+        |                                         setClass() replaces the whole class attribute
+        <span class="input-group-text">APP</span>  setAppend()
+        <span class="quick-copy-wrap">…</span>     setQuickCopy()
+    </div>
+</div>
+```
+
+**`RenderType::Floating`** - Bootstrap floating label
+
+```
+<div class="WRAP" id="WRAPID">                    setWrapClass() / setWrapId()
+    <div class="input-group">
+        <span class="input-group-text">PRE</span>  setPrepend()
+        <div class="form-floating">
+            <input class="form-control" placeholder="Caption">
+            <label>Caption</label>                <- caption + setTooltip()
+        </div>
+        <span class="input-group-text">APP</span>  setAppend()
+        <span class="quick-copy-wrap">…</span>     setQuickCopy()
+    </div>
+</div>
+```
+
+**`RenderType::Inline`** - label and input side by side
+
+```
+<div class="WRAP mis-field-inline" id="WRAPID">   setWrapClass() / setWrapId()
+    <div class="mis-field-inline-label">          fixed class
+        <label>Caption</label>                    <- caption + setTooltip()
+    </div>
+    <div class="mis-field-inline-control">        fixed class
+        <div class="input-group">
+            <span class="input-group-text">PRE</span>
+            <input class="form-control">
+            <span class="input-group-text">APP</span>
+            <span class="quick-copy-wrap">…</span>
+        </div>
+    </div>
+</div>
+```
+
+`CheckboxList` and `RadioList` use `RenderListType` and have their own structure:
+
+```
+Default                                  Compact
+<div class="WRAP mis-checklist">         <div class="WRAP mis-compact">
+    <label>Caption</label>                   <label class="mis-compact-label LABELWRAP">
+    <div class="mis-checklist-items">        <div class="mis-compact-items">
+        <label class="checkbox">…</label>        <div class="mis-compact-field INPUTWRAP">
+    </div>                                           <label>…</label>
+</div>                                           </div>
+                                             </div>
+                                         </div>
+
+Big (tiles)                              Inline
+<div class="mis-tiles INPUTWRAP">        <div class="WRAP">
+    <div class="mis-tiles-head">             <div class="ROW">            setRowClass()
+        <div class="mis-tiles-title">            <div class="… LABELWRAP">
+        <div class="mis-tiles-sub">              <div class="… INPUTWRAP">
+    </div>                                   </div>
+    <div class="mis-tiles-list">         </div>
+        <label class="mis-tile">
+            <span class="mis-tile-ico">  setIconArray()
+            <span class="mis-tile-lbl">
+            <span class="mis-tile-desc"> setTooltips()
+            <span class="mis-tile-chk">
+    </div>
+</div>
+```
+
+#### Which setter works where
+
+Not every wrap setter is read by every render type - the table says where a call has an effect:
+
+| Setter | Default | Floating | Inline | List: Default | List: Compact | List: Big | List: Inline |
+| --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| `setWrapClass()` | yes | yes | yes | yes | yes | - | yes |
+| `setWrapId()` | yes | yes | yes | yes | yes | - | yes |
+| `setLabelWrapClass()` | yes | - | - | - | yes | - | yes |
+| `setInputWrapClass()` | yes* | - | - | - | yes | yes | yes |
+| `setRowClass()` | - | - | - | - | - | - | yes |
+
+\* in `Default` the class is appended to the `<input>` element, not to a wrapper div.
+
+Setters that behave the same in all render types:
+
+| Setter | Affects |
+| --- | --- |
+| `setClass()` | `class` of the `<input>` (replaces it, unlike `setInputWrapClass()`) |
+| `setPrepend()` / `setAppend()` | `.input-group-text` before / after the input |
+| `setIcon()` | icon rendered as a prepend |
+| `setTooltip()` | question-mark icon next to the caption |
+| `setQuickCopy()` | copy-to-clipboard button at the end of the input group |
+| `setColor()` | colour class of the input / button |
+| `setOption('id')` | `id` of the outermost element (same place as `setWrapId()`) |
+| `setTemplate()` | replaces the whole render with your own Latte file |
+| `setAutoRenderSkip()` | renders nothing |
+
+The wrapper class defaults to `mb-2 col-12` and can be changed for the whole form with
+`$form->setDefaultInputWrapClass()`.
+
+### Manual rendering
+
+With `setRenderManually()` the form is rendered from your own template. Register the Latte extension
+first:
+
+```neon
+latte:
+	extensions:
+		- ModulIS\Extension\FormExtension
+```
+
+It adds three tags:
+
+| Tag | Renders |
+| --- | --- |
+| `{inputRender name}` | the whole input - wrapper, label, input group and validation, exactly as `$form->getComponent('name')->render()` |
+| `{inputCore name[:part]}` | only the input itself (`getCoreControl()`), without the label and wrapper |
+| `{labelCore name[:part]}` | only the label (`getCoreLabel()`) |
+
+Use `{inputRender}` when you only want to decide *where* an input goes and keep its normal look:
+
+```latte
+<div class="row">
+	<div class="col-6">{inputRender first_name}</div>
+	<div class="col-6">{inputRender last_name}</div>
+</div>
+```
+
+Use `{inputCore}` + `{labelCore}` when you need to build the markup around the input yourself:
+
+```latte
+<div class="my-own-wrapper">
+	{labelCore property_type /}
+	{inputCore property_type}
+</div>
+```
+
+`{inputRender}` honours everything set on the input - `setRenderType()`, `setTemplate()`,
+`setAutoRenderSkip()` (renders nothing) - and works for `addDuplicator()` containers as well.
+It takes no `:part`; use `{inputCore}` for that.
+
 ### Slider
 
 `addSlider()` renders a slider built on [rSlider.js](https://github.com/slawomir-zaziablo/range-slider).
@@ -175,7 +332,7 @@ $duplicator->addSubmit('add', 'Přidat');
 
 ## Upgrading from v1 to v2.0
 
-### Render types
+### Render API
 
 `setFloatingLabel()` and the boolean `setRenderInline()` are gone. Rendering is now driven by
 `RenderType` / `RenderListType` - see [Render types](#render-types).

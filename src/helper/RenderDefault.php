@@ -10,8 +10,6 @@ trait RenderDefault
 {
 	public function renderDefault(): Html
 	{
-		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'field';
-
 		$validationFeedBack = $this->getValidationFeedback();
 
 		$input = $this->getControl();
@@ -75,10 +73,12 @@ trait RenderDefault
 
 		$group->addHtml($validationFeedBack);
 
-		$fieldDiv = Html::el('div')
-			->class($wrapClass . ' mis-field')
-			->addHtml($labelEl . $group . $quickCopyHtml);
+		if($quickCopyHtml)
+		{
+			$group->addHtml($quickCopyHtml);
+		}
 
-		return $fieldDiv;
+		return $this->createWrap('mis-field')
+			->addHtml($labelEl . $group);
 	}
 }

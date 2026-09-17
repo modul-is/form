@@ -68,6 +68,11 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 
 	public function render(): Html|string
 	{
+		if($this->getOption('hide') || $this->autoRenderSkip)
+		{
+			return '';
+		}
+
 		return $this->getCoreControl();
 	}
 }

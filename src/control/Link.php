@@ -25,8 +25,13 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 	}
 
 
-	public function render(): Html
+	public function render(): Html|string
 	{
+		if($this->getOption('hide') || $this->autoRenderSkip)
+		{
+			return '';
+		}
+
 		return $this->getCoreControl();
 	}
 

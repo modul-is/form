@@ -11,7 +11,6 @@ trait RenderFloating
 {
 	public function renderFloating(): Html
 	{
-		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'mb-3 col-12';
 		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
 		$validationFeedBack = $this->getValidationFeedback();
 
@@ -65,8 +64,7 @@ trait RenderFloating
 			$inputGroup->addHtml($quickCopyHtml);
 		}
 
-		return Html::el('div')
-			->class($wrapClass)
+		return $this->createWrap()
 			->addHtml($inputGroup);
 	}
 }

@@ -41,7 +41,7 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 			->addHtml($this->translate($this->getCaption()) . $required);
 
 		$itemsWrap = Html::el('div')
-			->class(trim('mis-checklist-items ' . $this->getValidationClass()));
+			->class($this->joinClass('mis-checklist-items', $this->getValidationClass()));
 
 		$polyline = Html::el('polyline')
 			->setAttribute('points', '20 6 9 17 4 12');
@@ -76,11 +76,7 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 
 		$validationFeedBack = $this->getValidationFeedback();
 
-		$wrapClass = $this->getWrapControl()->getAttribute('class') ?: 'col-12 mb-2';
-
-		return Html::el('div')
-			->id($this->getOption('id') ?: null)
-			->class($wrapClass . ' mis-checklist')
+		return $this->createWrap('mis-checklist')
 			->addHtml($labelEl . $itemsWrap . $validationFeedBack);
 	}
 

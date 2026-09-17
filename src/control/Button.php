@@ -119,6 +119,11 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable, Signala
 
 	public function render(): Html|string
 	{
+		if($this->getOption('hide') || $this->autoRenderSkip)
+		{
+			return '';
+		}
+
 		return $this->getCoreControl();
 	}
 }
