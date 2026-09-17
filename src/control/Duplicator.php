@@ -262,7 +262,18 @@ class Duplicator extends Container implements Renderable
 		{
 			if($component instanceof $filterClass)
 			{
-				$componentArray[] = $component;
+				/**
+				 * Names are unique only within a single level, therefore the recursive tree stays a plain list.
+				 * On a single level the name must be preserved - createOne() derives the new container name from it.
+				 */
+				if($recursive)
+				{
+					$componentArray[] = $component;
+				}
+				else
+				{
+					$componentArray[$component->getName()] = $component;
+				}
 			}
 		}
 
@@ -292,6 +303,17 @@ class Duplicator extends Container implements Renderable
 		call_user_func($this->factoryCallback, $container);
 
 		return $this->created[$container->getName()] = $container;
+	}
+
+
+	public function removeComponent(Nette\ComponentModel\IComponent $component): void
+	{
+		if($component->getName() !== null)
+		{
+			unset($this->created[$component->getName()]);
+		}
+
+		parent::removeComponent($component);
 	}
 
 
@@ -343,8 +365,9 @@ class Duplicator extends Container implements Renderable
 
 		if($name === null)
 		{
-			$names = array_keys($containers);
-			$name = $names ? max($names) + 1 : 0;
+			$names = array_filter(array_keys($containers), 'is_numeric');
+
+			$name = $names ? max(array_map('intval', $names)) + 1 : 0;
 		}
 
 		// Container is overriden, therefore every request for getComponent($name, FALSE) would return container
