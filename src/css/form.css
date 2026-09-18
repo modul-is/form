@@ -1764,3 +1764,23 @@ label.checkbox input[readonly] + .box {
     font-size: 11px;
     color: #5A6478;
 }
+
+/* Bublina s hodnotou se vykresluje nad tahitkem a presahuje nad kontejner - bez rezervy
+ * nahore by zasahovala do predchoziho pole formulare. Rezervu ma jen posuvnik, ktery
+ * bublinu opravdu vykresluje (showTooltip(false) ji do DOM vubec nevlozi). */
+.rs-container:has(.rs-tooltip)
+{
+    height: 80px;
+}
+
+.rs-container:has(.rs-tooltip) .rs-bg,
+.rs-container:has(.rs-tooltip) .rs-selected,
+.rs-container:has(.rs-tooltip) .rs-scale
+{
+    top: 40px;
+}
+
+.rs-container:has(.rs-tooltip) .rs-pointer
+{
+    top: 35px;
+}
