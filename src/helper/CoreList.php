@@ -303,7 +303,7 @@ trait CoreList
 				$validationClass = ' is-invalid';
 				$validationFeedBack = Html::el('div')
 					->class('invalid-feedback')
-					->addHtml($this->getError());
+					->addHtml((string) $this->getError());
 			}
 			elseif($this->getValidationSuccessMessage())
 			{

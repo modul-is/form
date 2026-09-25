@@ -108,9 +108,9 @@ class Form extends UIForm
 				 */
 				$inputs .= $input instanceof HiddenField ? $input->getControl() : $input->render();
 
-				if(array_key_exists($input->getName(), $this->dividerArray))
+				if(array_key_exists((string) $input->getName(), $this->dividerArray))
 				{
-					$inputs .= $this->dividerArray[$input->getName()];
+					$inputs .= $this->dividerArray[(string) $input->getName()];
 				}
 			}
 

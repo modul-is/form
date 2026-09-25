@@ -185,6 +185,11 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 			parse_str($presenter->getParameter('formdata'), $currentValues);
 
+			if($this->onFocusOutCallback === null)
+			{
+				throw new \Nette\InvalidStateException('OnFocusOut callback not set.');
+			}
+
 			call_user_func_array($this->onFocusOutCallback, [$value, $inputName, array_filter($currentValues)]);
 
 			$presenter->sendPayload();

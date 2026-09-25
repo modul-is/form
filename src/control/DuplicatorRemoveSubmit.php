@@ -35,7 +35,10 @@ class DuplicatorRemoveSubmit extends SubmitButton
 
 			$form->onSuccess = [];
 
-			$duplicator->removeComponent($button->getParent());
+			$container = $button->getParent();
+			assert($container !== null);
+
+			$duplicator->removeComponent($container);
 		};
 	}
 

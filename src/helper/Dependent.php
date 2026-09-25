@@ -84,7 +84,12 @@ trait Dependent
 
 			$this->setItems($items);
 
-			$this->setPrompt($data->getPrompt() ?: $this->getPrompt());
+			$prompt = $data->getPrompt() ?: $this->getPrompt();
+
+			if($prompt)
+			{
+				$this->setPrompt($prompt);
+			}
 		}
 		else
 		{

@@ -282,7 +282,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 			$errorMessage = Html::el('div')
 				->class('invalid-feedback')
-				->addHtml($this->getError());
+				->addHtml((string) $this->getError());
 		}
 
 		$chosenClass = $this->isRequired() ? ' form-control-chosen-required' : ' form-control-chosen';

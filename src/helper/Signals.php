@@ -40,13 +40,20 @@ trait Signals
 
 		parse_str($formData, $currentValues);
 
+		$callback = $signal === SignalDial::OnFocusOut ? $this->onFocusOutCallback : $this->onChangeCallback;
+
+		if($callback === null)
+		{
+			throw new \Nette\InvalidStateException("Callback for signal '$signal' not set for input '" . $this->getName() . "'");
+		}
+
 		if($signal === SignalDial::OnFocusOut)
 		{
-			call_user_func_array($this->onFocusOutCallback, [$value, $inputName, array_filter($currentValues)]);
+			call_user_func_array($callback, [$value, $inputName, array_filter($currentValues)]);
 		}
 		elseif($signal === SignalDial::OnChange)
 		{
-			call_user_func_array($this->onChangeCallback, [$value, $inputName, array_filter($currentValues)]);
+			call_user_func_array($callback, [$value, $inputName, array_filter($currentValues)]);
 		}
 	}
 

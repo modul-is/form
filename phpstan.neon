@@ -3,6 +3,6 @@ includes:
 	- vendor/phpstan/phpstan-nette/rules.neon
 
 parameters:
-	level: 7
+	level: 8
 	paths:
 		- src

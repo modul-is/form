@@ -57,7 +57,7 @@ trait Validation
 			{
 				$validationFeedBack = Html::el('div')
 					->class('invalid-feedback')
-					->addHtml($this->getError());
+					->addHtml((string) $this->getError());
 			}
 			elseif($this->isRequired() && $this->getValidationSuccessMessage())
 			{

@@ -81,6 +81,21 @@ class DuplicatorTest extends TestCase
 
 		Assert::same($string, $form->getComponent('duplicator')->render());
 	}
+
+
+	public function testSetValuesWithoutForm()
+	{
+		$duplicator = new \ModulIS\Form\Control\Duplicator(function(\ModulIS\Form\DuplicatorContainer $container)
+		{
+			$container->addText('text', 'text');
+		});
+
+		$duplicator->setValues([['text' => 'First'], ['text' => 'Second']]);
+
+		Assert::count(2, $duplicator->getContainers());
+		Assert::same('First', $duplicator->getComponent('0')->getComponent('text')->getValue());
+		Assert::same('Second', $duplicator->getComponent('1')->getComponent('text')->getValue());
+	}
 }
 
 $testcase = new DuplicatorTest;

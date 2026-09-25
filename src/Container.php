@@ -353,9 +353,9 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 					\assert($control instanceof Control\Renderable);
 					$inputs .= $control->render();
 
-					if(array_key_exists($control->getName(), $this->dividerArray))
+					if(array_key_exists((string) $control->getName(), $this->dividerArray))
 					{
-						$inputs .= $this->dividerArray[$control->getName()];
+						$inputs .= $this->dividerArray[(string) $control->getName()];
 					}
 				}
 
@@ -398,16 +398,16 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 		}
 		else
 		{
-			$inputs = null;
+			$inputs = '';
 
 			foreach($components as $control)
 			{
 				\assert($control instanceof Control\Renderable);
 				$inputs .= $control->render();
 
-				if(array_key_exists($control->getName(), $this->dividerArray))
+				if(array_key_exists((string) $control->getName(), $this->dividerArray))
 				{
-					$inputs .= $this->dividerArray[$control->getName()];
+					$inputs .= $this->dividerArray[(string) $control->getName()];
 				}
 			}
 

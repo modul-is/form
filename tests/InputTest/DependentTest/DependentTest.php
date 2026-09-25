@@ -137,6 +137,36 @@ class DependentTest extends TestCase
 
 		$this->assertRender(__DIR__ . '/callback.latte', $form->getComponent('dependent')->render()->__toString());
 	}
+
+
+	public function testMultiSelectWithoutPrompt()
+	{
+		$form = $this->getForm();
+
+		$form->addSelect('select', 'Select', ['a' => 'A', 'b' => 'B']);
+
+		$dependent = $form->addDependentMultiSelect('dependent', 'Dependent', [$form['select']])
+			->setDependentCallback(fn() => new \ModulIS\Form\Helper\DependentData(['a' => 'A', 'aa' => 'AA']));
+
+		Assert::noError(fn() => $dependent->getControl());
+		Assert::null($dependent->getPrompt());
+		Assert::same(['a' => 'A', 'aa' => 'AA'], $dependent->getItems());
+	}
+
+
+	public function testMultiSelectPromptFromData()
+	{
+		$form = $this->getForm();
+
+		$form->addSelect('select', 'Select', ['a' => 'A', 'b' => 'B']);
+
+		$dependent = $form->addDependentMultiSelect('dependent', 'Dependent', [$form['select']])
+			->setDependentCallback(fn() => new \ModulIS\Form\Helper\DependentData(['a' => 'A'], prompt: 'Vyberte'));
+
+		$dependent->getControl();
+
+		Assert::same('Vyberte', $dependent->getPrompt());
+	}
 }
 
 $testcase = new DependentTest;

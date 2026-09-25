@@ -57,6 +57,11 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable, Signala
 			throw new \Exception("Unknown signal '$signal' for button '" . $this->getName() . "'");
 		}
 
+		if($this->onChangeCallback === null)
+		{
+			throw new \Nette\InvalidStateException('OnClick callback not set for button "' . $this->getName() . '"');
+		}
+
 		$formData = $presenter->getParameter('formdata');
 
 		if(!$formData)

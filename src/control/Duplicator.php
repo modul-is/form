@@ -29,6 +29,7 @@ class Duplicator extends Container implements Renderable
 
 	public int $createDefault = 0;
 
+	/** @var ?class-string<DuplicatorContainer> */
 	public static ?string $containerClass = null;
 
 	/** @var Closure(DuplicatorContainer): void */
@@ -143,7 +144,7 @@ class Duplicator extends Container implements Renderable
 				continue;
 			}
 
-			$inputs = null;
+			$inputs = '';
 			$buttons = null;
 
 			$containerHeader = Html::el('div')
@@ -223,7 +224,7 @@ class Duplicator extends Container implements Renderable
 		}
 
 		$card = Html::el('div')
-			->id('container' . Strings::capitalize($this->getName()))
+			->id('container' . Strings::capitalize((string) $this->getName()))
 			->class($duplicatorContainerClass)
 			->addHtml($header . $body . $footer);
 
@@ -303,7 +304,7 @@ class Duplicator extends Container implements Renderable
 
 		call_user_func($this->factoryCallback, $container);
 
-		return $this->created[$container->getName()] = $container;
+		return $this->created[$name] = $container;
 	}
 
 
@@ -327,9 +328,9 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	protected function createContainer(): ?DuplicatorContainer
+	protected function createContainer(): DuplicatorContainer
 	{
-		$class = self::$containerClass;
+		$class = self::$containerClass ?? DuplicatorContainer::class;
 		return new $class;
 	}
 
@@ -379,7 +380,9 @@ class Duplicator extends Container implements Renderable
 
 	public function setValues(array|object $values, bool $erase = false, bool $onlyDisabled = false): static
 	{
-		if(!$this->form->isAnchored() || !$this->form->isSubmitted())
+		$form = $this->getForm(false);
+
+		if($form === null || !$form->isAnchored() || !$form->isSubmitted())
 		{
 			foreach($values instanceof Traversable ? iterator_to_array($values) : (array) $values as $name => $value)
 			{
@@ -444,10 +447,14 @@ class Duplicator extends Container implements Renderable
 		{
 			$path = explode(self::NameSeparator, $this->lookupPath(Form::class));
 
-			$httpData = $this->getForm()->getHttpData();
-			$post = is_array($httpData) ? Nette\Utils\Arrays::get($httpData, $path, null) : null;
+			/** @var array<mixed>|string|Nette\Http\FileUpload|null $post Nette documents the data as string[], but nested containers yield arrays */
+			$post = $this->getForm()->getHttpData();
 
-			/** @phpstan-ignore function.impossibleType (Nette types HTTP data as flat strings, nested containers yield arrays) */
+			foreach($path as $key)
+			{
+				$post = is_array($post) ? ($post[$key] ?? null) : null;
+			}
+
 			$this->httpPost = is_array($post) ? $post : null;
 		}
 
@@ -500,12 +507,12 @@ class Duplicator extends Container implements Renderable
 
 		foreach($this->getFilteredComponents(false, BaseControl::class) as $control)
 		{
-			$components[] = $control->getName();
+			$components[] = (string) $control->getName();
 		}
 
 		foreach($this->getFilteredComponents(true, Nette\Forms\Controls\SubmitButton::class) as $button)
 		{
-			$exceptChildren[] = $button->getName();
+			$exceptChildren[] = (string) $button->getName();
 		}
 
 		$filled = $this->countFilledWithout($components, array_values(array_unique($exceptChildren)));
