@@ -149,10 +149,11 @@
 	RS.prototype.updateScale = function () {
 		this.step = this.sliderWidth / (this.conf.values.length - 1);
 
-		var pieces = this.slider.querySelectorAll('span');
+		var pieces = this.scale.querySelectorAll('span');
 
+		// last piece only carries the end label - with a width the scale overflows and wraps to a new line
 		for (var i = 0, iLen = pieces.length; i < iLen; i++)
-			pieces[i].style.width = this.step + 'px';
+			pieces[i].style.width = i === iLen - 1 ? 0 : this.step + 'px';
 
 		return this.setValues();
 	};

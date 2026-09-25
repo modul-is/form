@@ -17,6 +17,7 @@ class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, Has
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
+	use Helper\ControlClass;
 	use Helper\Signals;
 	use Helper\RenderBasic;
 	use Helper\RenderDefault;

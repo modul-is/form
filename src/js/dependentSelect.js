@@ -112,7 +112,8 @@
                 return false;
             }
 
-            naja.makeRequest('GET', signalLink, dsb.getParentValues(dependentSelect), {history: false})
+            // own unique key - naja would otherwise abort a pending request when one parent has more dependent selects
+            naja.makeRequest('GET', signalLink, dsb.getParentValues(dependentSelect), {history: false, unique: 'dependentSelect-' + dependentSelect.attr('id')})
                 .then(function(payload)
 				{
                     let data = payload.dependentselectbox;
@@ -122,7 +123,8 @@
                         let $select = $('#' + data.id);
                         $select.empty();
 
-                        if(data.prompt != false)
+                        // multiselect has no prompt - an empty option would be a selectable item
+                        if(data.prompt != false && !$select.prop('multiple'))
 						{
                             $('<option>')
                                 .attr('value', '').text(data.prompt)

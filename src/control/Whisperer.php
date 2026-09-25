@@ -295,6 +295,21 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	}
 
 
+	/**
+	 * Whisperer already has its own empty item for chosen - a Nette prompt would add a second one
+	 * with key "\t" (submitted as the value), so the prompt is shown as chosen placeholder instead
+	 */
+	public function setPrompt(string|\Stringable|false $prompt): static
+	{
+		if($prompt !== false)
+		{
+			$this->setHtmlAttribute('data-placeholder', (string) $prompt);
+		}
+
+		return $this;
+	}
+
+
 	public function setNoResultMessage(?string $noResultMessage = null): static
 	{
 		$this->noResultMessage = $noResultMessage;

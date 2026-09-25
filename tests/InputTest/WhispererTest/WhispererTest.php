@@ -120,6 +120,21 @@ class WhispererTest extends TestCase
 
 		$this->assertRender(__DIR__ . '/callbacks.latte', $form->getComponent('whisperer')->render()->__toString());
 	}
+
+
+	public function testPromptIsPlaceholder()
+	{
+		$form = $this->getForm();
+
+		$whisperer = $form->addWhisperer('whisperer', 'Whisperer', ['a' => 'A', 'b' => 'B'])
+			->setPrompt('Choose');
+
+		$control = $whisperer->getControl();
+
+		Assert::same('Choose', $control->getAttribute('data-placeholder'));
+		Assert::notContains("\t", (string) $control);
+		Assert::same(1, substr_count((string) $control, 'value=""'));
+	}
 }
 
 $testcase = new WhispererTest;

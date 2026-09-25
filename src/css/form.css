@@ -1666,6 +1666,8 @@ label.checkbox input[readonly] + .box {
     position: absolute;
     top: 5px;
     white-space: nowrap;
+    /* floated pieces must never wrap - sub-pixel rounding of the step width would push the last one to a new line */
+    width: max-content;
 }
 .rs-container .rs-scale span {
     float: left;

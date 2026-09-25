@@ -137,6 +137,47 @@ class DateTest extends TestCase
 
 		Assert::same($string, $form->getComponent('date')->render());
 	}
+
+
+	public function testMinMaxWithDateTimeLimit()
+	{
+		$form = $this->getForm();
+
+		$date = $form->addDate('date', 'Date')
+			->addRule($form::Min, 'min', new \DateTimeImmutable('2026-01-10'))
+			->addRule($form::Max, 'max', new \DateTimeImmutable('2026-01-20'));
+
+		Assert::same('2026-01-10', $date->getControl()->min);
+		Assert::same('2026-01-20', $date->getControl()->max);
+
+		foreach(['2026-01-10' => [], '2026-01-15' => [], '2026-01-09' => ['min'], '2026-01-21' => ['max']] as $value => $errors)
+		{
+			$date->setValue($value);
+			$date->cleanErrors();
+			$date->validate();
+
+			Assert::same($errors, $date->getErrors(), $value);
+			Assert::same($value, $date->getValue());
+		}
+	}
+
+
+	public function testMinWithStringLimitOnDateTime()
+	{
+		$form = $this->getForm();
+
+		$dateTime = $form->addDateTime('datetime', 'DateTime')
+			->addRule($form::Min, 'min', '2026-01-10 12:00');
+
+		$dateTime->setValue('2026-01-10 11:00');
+		$dateTime->validate();
+		Assert::same(['min'], $dateTime->getErrors());
+
+		$dateTime->setValue('2026-01-10 13:00');
+		$dateTime->cleanErrors();
+		$dateTime->validate();
+		Assert::same([], $dateTime->getErrors());
+	}
 }
 
 $testcase = new DateTest;

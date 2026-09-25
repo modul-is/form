@@ -1,7 +1,7 @@
 # Nette form with custom BS5 renderer
 This library allows you to spend less time writing templates for Nette forms - it contains renderers for form, containers as well as all inputs
 
-> **v2.0** reworks rendering. If you are coming from v1, see [Upgrading from v1 to v2.0](#upgrading-from-v1-to-v20).
+> **v2** reworks rendering. If you are coming from v1, see [UPGRADE.md](UPGRADE.md).
 
 ## Getting started
 Easiest way to create form is to create component which extends `FormComponent` class
@@ -337,36 +337,6 @@ $duplicator = $form->addDuplicator('duplicator', function(\ModulIS\Form\Duplicat
 $duplicator->addSubmit('add', 'Přidat');
 ```
 
-## Upgrading from v1 to v2.0
+## Upgrading from v1 to v2
 
-### Render API
-
-`setFloatingLabel()` and the boolean `setRenderInline()` are gone. Rendering is now driven by
-`RenderType` / `RenderListType` - see [Render types](#render-types).
-
-| v1 | v2.0 |
-| --- | --- |
-| `$form->setFloatingLabel()` | `$form->setRenderFloating()` |
-| `$form->setRenderInline()` | unchanged (no longer takes a bool) |
-| `$input->setFloatingLabel()` | `$input->setRenderFloating()` |
-| `$input->setFloatingLabel(false)` | `$input->setRenderDefault()` |
-| `$input->setRenderInline(false)` | `$input->setRenderDefault()` |
-| `$form->addBox()` | removed, use `addGroup()` |
-
-### Escaping
-
-Captions, list item labels, titles, tooltips and error messages are escaped - same as in Nette. Pass an `Nette\Utils\Html` object where HTML is intended.
-
-### Removed and changed API
-
-+ `setColor()` is only available on buttons, links and lists - on other inputs it had no effect
-+ `setToggleButton()` / `setButtonColor()` and `setRenderType()` (with its shortcuts) were removed from Checkbox, `setRenderType()` also from Button and Link - they had no effect there
-+ fluent setters return `static` instead of `self`
-+ `Container` has the same API as `Form` - `addCheckbox()` caption defaults to `null`, `addSubmit()` gets the save icon and success colour, `addSlider()` and `addMultiWhisperer()` were added
-+ `addSubmit($name, $caption, $onSubmit)` registers `onSubmit` as `onClick` handler (it used to be ignored), `addEmail()` passes `maxLength`
-+ `addDate()` / `addDateTime()` no longer add their own format rule - Nette validates the format, `Form::Min` / `Form::Max` rules now produce `min` / `max` attributes
-+ submit buttons use the full HTML name (`container[save]`) and get `formnovalidate` only with a validation scope - client-side validation runs again
-+ `Link` is omitted from `getValues()`
-+ `Form::getFormErrors()` returns the translated form errors (`getOwnErrors()`), `Form::addError()` is no longer overridden
-+ signal callbacks receive form data with `'0'` values kept (empty values are still dropped)
-+ `Duplicator::createContainer()` returns `DuplicatorContainer` (not nullable)
+See [UPGRADE.md](UPGRADE.md) - it lists every change needed to migrate a form, including the swapped meaning of `setRenderInline()`.
