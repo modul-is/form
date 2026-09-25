@@ -135,6 +135,34 @@ trait Dependent
 
 
 	/**
+	 * Handles the Load signal - sends items for current parent values to dependentSelect.js
+	 */
+	private function sendDependentPayload(Presenter $presenter): void
+	{
+		$parentsValues = [];
+
+		foreach($this->parents as $parent)
+		{
+			$parent->setValue($presenter->getParameter($this->getNormalizeName($parent)));
+
+			$parentsValues[$parent->getName()] = $parent->getValue();
+		}
+
+		$data = $this->getDependentData([$parentsValues]);
+
+		$presenter->payload->dependentselectbox = [
+			'id' => $this->getHtmlId(),
+			'items' => $data->getPreparedItems(is_array($this->disabled) ? $this->disabled : []),
+			'value' => $data->getValue(),
+			'prompt' => $this->translate($data->getPrompt() ?: $this->getPrompt()),
+			'disabledWhenEmpty' => $this->disabledWhenEmpty
+		];
+
+		$presenter->sendPayload();
+	}
+
+
+	/**
 	 * @param list<mixed> $args
 	 */
 	private function getDependentData(array $args = []): DependentData

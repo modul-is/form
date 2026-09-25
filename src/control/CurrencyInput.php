@@ -11,7 +11,6 @@ class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderabl
 {
 	use Helper\InputGroup;
 	use Helper\QuickCopy;
-	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
@@ -44,7 +43,7 @@ class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderabl
 	}
 
 
-	public function setCurrency(string $currency): self
+	public function setCurrency(string $currency): static
 	{
 		$this->currency = $currency;
 
@@ -62,7 +61,7 @@ class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderabl
 	{
 		$currency = $this->getCurrency();
 
-		if($currency)
+		if($currency && !$this->getAppend())
 		{
 			$this->setAppend($currency);
 		}
@@ -92,7 +91,10 @@ class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderabl
 			return null;
 		}
 
-		$cleaned = str_replace([' ', "\xc2\xa0", "\xe2\x80\x8f"], '', (string) $value);
+		/**
+		 * Space, no-break space and narrow no-break space (thousands separator of cs locale)
+		 */
+		$cleaned = str_replace([' ', "\xc2\xa0", "\xe2\x80\xaf"], '', (string) $value);
 
 		return $cleaned === '' ? null : (int) $cleaned;
 	}

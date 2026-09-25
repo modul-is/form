@@ -1,17 +1,17 @@
 import naja from 'naja';
 import './rSlider.js';
 
-Nette.validators.CodeComponentFormValidator_greater = function(elem, args, val)
+Nette.validators.ModulISFormFormValidator_greater = function(elem, args, val)
 {
 	return parseInt(val) > parseInt(args);
 };
 
-Nette.validators.CodeComponentFormValidator_less = function(elem, args, val)
+Nette.validators.ModulISFormFormValidator_less = function(elem, args, val)
 {
 	return parseInt(val) < parseInt(args);
 };
 
-Nette.validators.CodeComponentFormValidator_sameLength = function(elem, args, val)
+Nette.validators.ModulISFormFormValidator_sameLength = function(elem, args, val)
 {
 	return args.length === val.length;
 };
@@ -29,7 +29,8 @@ async function inputSignal(input, url, event)
 	}
 
 	let loading = 'fa-spinner fa-spin';
-	let success = 'fa-check color-green';
+	let success = 'fa-check text-success';
+	let failure = 'fa-exclamation-triangle text-danger';
 	let progressId = input.attr('id') + '_ajax_progress';
 	let progressEl = $('#' + progressId);
 
@@ -47,7 +48,7 @@ async function inputSignal(input, url, event)
 		}
 		else
 		{
-			$('#' + progressId).find('span').removeClass(success).addClass(loading);
+			$('#' + progressId).find('span').removeClass(success + ' ' + failure).addClass(loading);
 		}
 
 		iconSpan = $('#' + progressId).find('span');
@@ -93,14 +94,16 @@ async function inputSignal(input, url, event)
 				$('#' + focusElement).focus();
 			}
 		})
-		.catch((errorMessage) =>
+		.catch((error) =>
 		{
 			if(showProgress)
 			{
 				iconSpan.removeClass('fa-spinner fa-spin');
 
-				iconSpan.addClass(success);
+				iconSpan.addClass(failure);
 			}
+
+			console.error(error);
 		});
 }
 
@@ -112,14 +115,15 @@ function registerAutocomplete(element)
 	let varUrlOnChange = jqueryElement.data('autocomplete');
 	let varUrlOnSelect = jqueryElement.data('autocomplete-onselect');
 	let delay = jqueryElement.data('autocomplete-delay');
-	let items = jqueryElement.data('autocomplete-items');
+	let items = jqueryElement.data('autocomplete-items') ?? [];
 
-	if(items === undefined)
+	// re-registering after snippet redraw must replace the previous instance, not add another one
+	if(element.autocompleteInstance)
 	{
-		let items = [];
+		element.autocompleteInstance.destroy();
 	}
 
-	autocomplete({
+	element.autocompleteInstance = autocomplete({
 		input: element,
 		minLength: 1,
 		container: document.createElement('div'),
@@ -200,9 +204,22 @@ function registerAutocomplete(element)
 
 			if(allowedChars.test(value))
 			{
-				var regex = new RegExp(value, 'gi');
-				var inner = item.value.replace(regex, function(match) { return "<strong>" + match + "</strong>";});
-				itemElement.innerHTML = inner;
+				// built from text nodes - the suggestion comes from the server and must not be parsed as HTML
+				let regex = new RegExp(value, 'gi');
+				let last = 0;
+
+				item.value.replace(regex, function(match, offset)
+				{
+					let strong = document.createElement('strong');
+					strong.textContent = match;
+
+					itemElement.append(document.createTextNode(item.value.slice(last, offset)), strong);
+					last = offset + match.length;
+
+					return match;
+				});
+
+				itemElement.append(document.createTextNode(item.value.slice(last)));
 			}
 			else
 			{
@@ -237,13 +254,13 @@ function formatSelectData(data)
 		'<span><img class="' + selectId + ' img-flag" /> <span></span></span>'
 	);
 
-	let imageDiv = $('#' + selectId + '-select2').find("div[data-key='" + data.id + "']");;
+	let imageDiv = $('#' + selectId + '-select2').find("div[data-key='" + data.id + "']");
 
 	image.find("span").text(data.text);
 	image.find("img").attr("src", imageDiv.attr('data-src'));
 
 	return image;
-};
+}
 
 function summernoteIsEmpty(noteEditable)
 {
@@ -371,22 +388,18 @@ async function buttonSignal(button, url, event)
 
 function initForm()
 {
-	$('[data-on-focusout]').unbind();
-	$('[data-on-change]').unbind();
-	$('[data-on-click]').unbind();
-	$('[data-whisperer], [data-whisperer-onselect], [data-whisperer-delay]').unbind();
-
-	$('[data-on-focusout]').focusout(function(e)
+	// namespaced handlers - only our own bindings are replaced on snippet redraw, handlers of the app and of other plugins stay
+	$('[data-on-focusout]').off('focusout.misSignal').on('focusout.misSignal', function(e)
 	{
 		inputSignal($(this), $(this).attr('data-on-focusout'), e);
 	});
 
-	$('[data-on-change]').change(function(e)
+	$('[data-on-change]').off('change.misSignal').on('change.misSignal', function(e)
 	{
 		inputSignal($(this), $(this).attr('data-on-change'), e);
 	});
 
-	$('[data-on-click]').click(function(e)
+	$('[data-on-click]').off('click.misSignal').on('click.misSignal', function(e)
 	{
 		buttonSignal($(this), $(this).attr('data-on-click'), e);
 	});
@@ -427,7 +440,7 @@ function initForm()
 		}
 	});
 
-	$('.form-control-chosen, .form-control-chosen-required').on('change', function()
+	$('.form-control-chosen, .form-control-chosen-required').off('change.misChosen').on('change.misChosen', function()
 	{
 		Nette.initOnLoad();
 	});
@@ -441,7 +454,7 @@ function initForm()
 		templateSelection: formatSelectData
 	});
 
-	$(document).keydown(function(e)
+	$(document).off('keydown.misSelect2').on('keydown.misSelect2', function(e)
 	{
 		if($.inArray(e.code, ['ArrowUp', 'ArrowDown']) === -1)
 		{
@@ -461,12 +474,10 @@ function initForm()
 		}
 	});
 
-	var inputs = document.getElementsByClassName("autocomplete-input");
-
-	for(let input of inputs)
+	for(let input of document.getElementsByClassName("autocomplete-input"))
 	{
 		registerAutocomplete(input);
-	};
+	}
 
 	$('.datepicker-input').each(function()
 	{

@@ -23,8 +23,11 @@
 			{
 				var form = element.closest('form');
 
+				var lastSelect = {value: null, time: 0};
+
 				/**
-				 * Never send the signal without a value - the callback would receive an empty id
+				 * Selecting an item never sends an empty value - clearing is signalled explicitly by the change handler below.
+				 * Touch devices fire touchend and click for one tap, the same value within a short time is sent only once.
 				 */
 				var sendOnSelect = function()
 				{
@@ -34,6 +37,13 @@
 					{
 						return null;
 					}
+
+					if(lastSelect.value === selected && Date.now() - lastSelect.time < 500)
+					{
+						return null;
+					}
+
+					lastSelect = {value: selected, time: Date.now()};
 
 					return naja.makeRequest('GET', varUrlOnSelect, {
 						selected: selected,
@@ -79,7 +89,7 @@
 
 			if(typeof varUrlOnChange !== 'undefined')
 			{
-				element.on('change', function()
+				element.off('change.whisperer').on('change.whisperer', function()
 				{
 					if(!element.val())
 					{
@@ -98,9 +108,9 @@
 					}
 				});
 
-				element.on('chosen:no_results', function()
+				element.off('chosen:no_results.whisperer').on('chosen:no_results.whisperer', function()
 				{
-					$('#' + chosenId).find('li.no-results').html('<span class="color-black"><i class="fal fa-spinner fa-spin"></i>&nbsp;&nbsp;Načítají se položky</span>');
+					$('#' + chosenId).find('li.no-results').html('<span class="text-body"><i class="fal fa-spinner fa-spin"></i>&nbsp;&nbsp;Načítají se položky</span>');
 				});
 
 				var runWhisper = function(searchInput)

@@ -63,6 +63,7 @@ class DuplicatorRemoveSubmit extends SubmitButton
 			->class($class)
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
-			->addHtml(Extension::render('times') . $this->translate($this->getCaption()));
+			->addHtml(Extension::render('times'))
+			->addText($this->translate($this->getCaption()));
 	}
 }

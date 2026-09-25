@@ -10,9 +10,7 @@ use ModulIS\Form\Control\RadioList;
 use ModulIS\Form\Control\Signalable;
 use ModulIS\Form\Enum\RenderListType;
 use ModulIS\Form\Enum\RenderType;
-use ModulIS\Form\Form;
 use Nette\Utils\Html;
-use function assert;
 
 trait CoreList
 {
@@ -127,7 +125,7 @@ trait CoreList
 	public function renderCompact(): Html
 	{
 		$validationFeedBack = $this->getValidationFeedback();
-		$validationClass = $this->getvalidationClass();
+		$validationClass = $this->getValidationClass();
 
 		$required = $this->isRequired()
 			? ' ' . Html::el('span')->class('required')->setText('*')
@@ -135,7 +133,13 @@ trait CoreList
 
 		$labelEl = Html::el('label')
 			->class($this->joinClass('mis-compact-label', $this->getLabelWrapClass()))
-			->addHtml($this->translate($this->getCaption()) . $required);
+			->addText($this->translate($this->getCaption()))
+			->addHtml($required);
+
+		if($tooltipHtml = $this->getTooltipHtml())
+		{
+			$labelEl->addHtml(' ' . $tooltipHtml);
+		}
 
 		$itemsWrapField = Html::el('div')
 			->class($this->joinClass('mis-compact-field', $this->getInputWrapClass(), $validationClass));
@@ -151,7 +155,8 @@ trait CoreList
 
 			$itemLabelEl = Html::el('label')
 				->for($inputEl->getAttribute('id'))
-				->addHtml($inputEl . $itemLabel);
+				->addHtml($inputEl)
+				->addText($this->translate($itemLabel));
 
 			$itemsWrapField->addHtml($itemLabelEl);
 		}
@@ -173,7 +178,7 @@ trait CoreList
 	public function renderBig(): Html
 	{
 		$validationFeedBack = $this->getValidationFeedback();
-		$validationClass = $this->getvalidationClass();
+		$validationClass = $this->getValidationClass();
 
 		if($this instanceof CheckboxList)
 		{
@@ -227,7 +232,7 @@ trait CoreList
 
 			$lbl = Html::el('span')
 				->class('mis-tile-lbl')
-				->addText($itemLabel);
+				->addText($this->translate($itemLabel));
 
 			$chk = Html::el('span')
 				->class('mis-tile-chk');
@@ -262,7 +267,7 @@ trait CoreList
 
 		$tooltip = $this->getTooltip() === null ? '' : Html::el('div')
 			->class('mis-tiles-sub')
-			->addHtml($this->getTooltip());
+			->addText($this->getTooltip());
 
 		$blockHead = Html::el('div')
 			->class('mis-tiles-head')
@@ -275,7 +280,8 @@ trait CoreList
 			->addHtml($tilesWrap)
 			->addHtml($validationFeedBack);
 
-		return $block;
+		return $this->createWrap()
+			->addHtml($block);
 	}
 
 
@@ -283,36 +289,13 @@ trait CoreList
 	{
 		$inputs = null;
 
-		$form = $this->getForm();
-		assert($form instanceof Form);
-
-		foreach($this->getItems() as $key => $input)
+		foreach(array_keys($this->getItems()) as $key)
 		{
-			$htmlInput = $this->renderItem($key);
-
-			$inputs .= $htmlInput;
+			$inputs .= $this->renderItem($key);
 		}
 
-		$validationFeedBack = null;
-		$validationClass = null;
-
-		if($form->isAnchored() && $form->isSubmitted())
-		{
-			if($this->hasErrors())
-			{
-				$validationClass = ' is-invalid';
-				$validationFeedBack = Html::el('div')
-					->class('invalid-feedback')
-					->addHtml((string) $this->getError());
-			}
-			elseif($this->getValidationSuccessMessage())
-			{
-				$validationClass = ' is-valid';
-				$validationFeedBack = Html::el('div')
-					->class('valid-feedback')
-					->addHtml($this->getValidationSuccessMessage());
-			}
-		}
+		$validationFeedBack = $this->getValidationFeedback();
+		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : '';
 
 		$wrapRow = Html::el('div')
 			->addAttributes($this->wrapRowAttributes)
@@ -395,9 +378,6 @@ trait CoreList
 
 	public function renderInlineList(): Html
 	{
-		$form = $this->getForm();
-		assert($form instanceof Form);
-
 		$label = $this->getCoreLabel();
 		$input = $this->getCoreControl();
 

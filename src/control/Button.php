@@ -19,7 +19,6 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable, Signala
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
 	use Helper\ButtonRounded;
-	use Helper\RenderBasic;
 
 	/** @var ?\Closure(array<mixed>): void */
 	protected ?\Closure $onChangeCallback = null;
@@ -64,16 +63,12 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable, Signala
 
 		$formData = $presenter->getParameter('formdata');
 
-		if(!$formData)
+		if($formData === null)
 		{
 			return;
 		}
 
-		$currentValues = [];
-
-		parse_str($formData, $currentValues);
-
-		call_user_func_array($this->onChangeCallback, [array_filter($currentValues)]);
+		call_user_func_array($this->onChangeCallback, [Helper\FormData::parse($formData)]);
 	}
 
 
@@ -95,7 +90,7 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable, Signala
 		$label = $this->getCaption();
 
 		$button = Html::el('button')
-			->name($this->getName())
+			->name($this->getHtmlName())
 			->type('button')
 			->appendAttribute('class', 'btn-' . ($this->color ?: 'default'))
 			->appendAttribute('class', (string) $input->getAttribute('class'))
@@ -103,7 +98,7 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable, Signala
 			->appendAttribute('class', 'mis-btn');
 
 		$button->addHtml($this->icon ? Extension::render($this->icon) : '')
-			->addHtml($this->translate($label));
+			->addText($this->translate($label));
 
 		if($this->getOption('id'))
 		{

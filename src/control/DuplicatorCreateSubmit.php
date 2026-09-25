@@ -45,15 +45,20 @@ class DuplicatorCreateSubmit extends SubmitButton
 
 	public function getCoreControl(): Html
 	{
+		$control = $this->getControl();
+
+		/**
+		 * Adding a row never runs client-side validation - scope is taken from Nette, empty when not set
+		 */
 		$attributes = [
 			'name' => $this->getHtmlName(),
-			'value' => 'Přidat',
+			'value' => $this->translate($this->getCaption()),
 			'formnovalidate' => '',
-			'data-nette-validation-scope' => '["multiplier"]',
+			'data-nette-validation-scope' => $control->getAttribute('data-nette-validation-scope') ?? '[]',
 			'type' => 'submit'
 		];
 
-		$currentClass = $this->getControl()->getAttribute('class');
+		$currentClass = $control->getAttribute('class');
 
 		$icon = Extension::render($this->isDisabled() ? 'info' : 'plus');
 
@@ -68,6 +73,7 @@ class DuplicatorCreateSubmit extends SubmitButton
 			->class($class)
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
-			->addHtml($icon . $this->translate($this->getCaption()));
+			->addHtml($icon)
+			->addText($this->translate($this->getCaption()));
 	}
 }

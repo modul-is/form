@@ -153,6 +153,18 @@ class SliderTest extends TestCase
 			\Nette\InvalidArgumentException::class
 		);
 	}
+
+
+	public function testStringItemsValue()
+	{
+		$form = $this->getForm();
+
+		$slider = $form->addSlider('size', 'Size')
+			->setItems(['S', 'M', 'L'])
+			->setValue('M');
+
+		Assert::same('M', $slider->getValue());
+	}
 }
 
 (new SliderTest)->run();

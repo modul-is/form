@@ -9,7 +9,6 @@ use ModulIS\Form\Helper;
 class DateTimeInput extends \Nette\Forms\Controls\DateTimeControl implements Renderable, Signalable, HasInputGroup, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
-	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;

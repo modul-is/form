@@ -10,7 +10,6 @@ use Nette\Utils\Html;
 class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, HasInputGroup, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
-	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
@@ -47,7 +46,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, H
 	/**
 	 * @param array<int|string, string> $imageArray
 	 */
-	public function setImageArray(array $imageArray): self
+	public function setImageArray(array $imageArray): static
 	{
 		$this->imageArray = $imageArray;
 

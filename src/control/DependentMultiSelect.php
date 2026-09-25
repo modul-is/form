@@ -7,10 +7,9 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
 
-class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implements Renderable, \Nette\Application\UI\SignalReceiver
+class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implements Renderable, HasInputGroup, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
-	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
@@ -18,11 +17,16 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
+	use Helper\ControlClass;
 	use Helper\WrapControl;
 	use Helper\RenderBasic;
 	use Helper\RenderDefault;
 	use Helper\RenderFloating;
 	use Helper\RenderInline;
+	use Helper\Signals
+	{
+		signalReceived as public signalsSignalReceived;
+	}
 	use Helper\Dependent;
 
 	private ?string $prompt = null;
@@ -39,6 +43,7 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 		?callable $dependentCallback = null
 	)
 	{
+		$this->controlClass = 'form-select';
 		$this->parents = $parents;
 
 		if($dependentCallback)
@@ -66,8 +71,19 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	}
 
 
+	/**
+	 * Same as Dependent::getValue(), which cannot be used directly - MultiSelectBox narrows the return type to array
+	 * @return array<int|string>
+	 */
 	public function getValue(): array
 	{
+		$this->tryLoadItems();
+
+		if(is_array($this->tempValue) && $this->tempValue !== [])
+		{
+			return $this->tempValue;
+		}
+
 		return parent::getValue();
 	}
 
@@ -78,37 +94,20 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 
 		if($signal === \ModulIS\Form\Dial\SignalDial::Load)
 		{
-			$parentsNames = [];
-
-			foreach($this->parents as $parent)
-			{
-				$value = $presenter->getParameter($this->getNormalizeName($parent));
-
-				$parent->setValue($value);
-
-				$parentsNames[$parent->getName()] = $parent->getValue();
-			}
-
-			$data = $this->getDependentData([$parentsNames]);
-
-			$items = $data->getPreparedItems(is_array($this->disabled) ? $this->disabled : []);
-
-			$presenter->payload->dependentselectbox = [
-				'id' => $this->getHtmlId(),
-				'items' => $items,
-				'value' => $data->getValue(),
-				'prompt' => $this->translate($data->getPrompt()),
-				'disabledWhenEmpty' => $this->disabledWhenEmpty
-			];
-
-			$presenter->sendPayload();
+			$this->sendDependentPayload($presenter);
+		}
+		else
+		{
+			$this->signalsSignalReceived($signal);
 		}
 	}
 
 
-	public function setPrompt(string $prompt): void
+	public function setPrompt(string $prompt): static
 	{
 		$this->prompt = $prompt;
+
+		return $this;
 	}
 
 

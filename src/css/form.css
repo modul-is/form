@@ -37,10 +37,6 @@ div.checkbox.sn-checkbox-use-protocol > label > input[type="checkbox"]
 }
 
 input[type="checkbox"]:disabled{
-    color: #aaa;
-}
-
-input[type="checkbox"]:disabled{
     color: #ccc;
 }
 
@@ -374,13 +370,6 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
     background: #555;
 }
 
-.chosen-container
-{
-    font-size: 0.875rem !important;
-    font-weight: normal;
-    text-transform: none;
-}
-
 .chosen-container-single a:not([href]):not([tabindex]), .chosen-container-single a:not([href]):not([tabindex]).chosen-single:not(.chosen-default)
 {
     color: #212529!important;
@@ -592,7 +581,7 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
 /* Compact spacing for checkbox/radio lists rendered in row columns */
 .container > .row > .form-check
 {
-    margin-bottom: 0.15rem;
+    margin-bottom: 0;
     padding-top: 0;
     padding-bottom: 0;
     min-height: 0;
@@ -606,12 +595,6 @@ input[type="checkbox"]:checked.checkbox-navy-dark, input[type="radio"]:checked.c
 .container > .row
 {
     row-gap: 0.1rem;
-}
-
-.container > .row > .form-check
-{
-    margin-bottom: 0;
-    min-height: 0;
 }
 
 /* Strong override for checkbox/radio list layout rendered by CoreList */
@@ -1495,6 +1478,7 @@ select.mis-input
     font-size: 0.875rem !important;
     font-weight: normal !important;
     text-transform: none !important;
+    font-family: 'Source Sans 3', 'Barlow', sans-serif;
 }
 
 .mis-input.is-invalid
@@ -1566,11 +1550,6 @@ select.mis-input
     font-size: 13px;
     font-weight: 500;
     color: #5A6478;
-}
-
-.chosen-container
-{
-    font-family: 'Source Sans 3', 'Barlow', sans-serif;
 }
 
 .mis-checklist-items .checkbox .box svg, .mis-checkbox .checkbox .box svg,
@@ -1662,6 +1641,7 @@ label.checkbox input[readonly] + .box {
 }
 .rs-container.disabled .rs-pointer {
     border-color: #ccc;
+    cursor: default;
 }
 .rs-container .rs-pointer::before,
 .rs-container .rs-pointer::after {
@@ -1676,9 +1656,6 @@ label.checkbox input[readonly] + .box {
 .rs-container .rs-pointer::after {
     left: auto;
     right: 12px;
-}
-.rs-container.disabled .rs-pointer {
-    cursor: default;
 }
 .rs-container.sliding .rs-selected,
 .rs-container.sliding .rs-pointer {

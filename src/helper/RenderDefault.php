@@ -41,7 +41,8 @@ trait RenderDefault
 		$labelEl = Html::el('label')
 			->class($this->getLabelWrapClass())
 			->for($this->getHtmlId())
-			->addHtml($this->translate($this->getCaption()) . $required);
+			->addText($this->translate($this->getCaption()))
+			->addHtml($required);
 
 		/**
 		 * Tento typ vykresleni si label sklada sam, ne pres getCoreLabel(), proto se tooltip

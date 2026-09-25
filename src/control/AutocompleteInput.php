@@ -9,10 +9,9 @@ use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 
-class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
+class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Renderable, HasInputGroup, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
-	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
@@ -26,6 +25,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	use Helper\Signals
 	{
 		setOnChangeCallback as public signalsSetOnChangeCallback;
+		signalReceived as public signalsSignalReceived;
 	}
 	use Helper\WrapControl;
 	use Helper\ControlClass;
@@ -65,7 +65,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	}
 
 
-	public function setPrompt(string $prompt): self
+	public function setPrompt(string $prompt): static
 	{
 		$this->prompt = $prompt;
 
@@ -76,7 +76,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	/**
 	 * @param callable(mixed, array<mixed>): void $callback
 	 */
-	public function setOnSelectCallback(callable $callback): self
+	public function setOnSelectCallback(callable $callback): static
 	{
 		if($this->onChangeCallback !== null)
 		{
@@ -103,7 +103,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	/**
 	 * @param callable(mixed, array<string, mixed>): array<int|string, mixed> $callback
 	 */
-	public function setOnSearchChangeCallback(callable $callback): self
+	public function setOnSearchChangeCallback(callable $callback): static
 	{
 		$this->onSearchChangeCallback = $callback(...);
 
@@ -114,7 +114,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	/**
 	 * @param array<\Nette\Forms\Controls\BaseControl> $parents
 	 */
-	public function setParents(array $parents): self
+	public function setParents(array $parents): static
 	{
 		$this->parents = $parents;
 
@@ -130,7 +130,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 		{
 			if(!is_callable($this->onSearchChangeCallback))
 			{
-				throw new \Nette\InvalidStateException('On change callback not set.');
+				throw new \Nette\InvalidStateException('OnSearchChange callback not set for input "' . $this->getName() . '"');
 			}
 
 			$parentArray = [];
@@ -141,7 +141,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 
 				foreach($this->parents as $parent)
 				{
-					$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)];
+					$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)] ?? null;
 				}
 			}
 			$data = call_user_func_array($this->onSearchChangeCallback, [$presenter->getParameter('param'), $parentArray]);
@@ -159,14 +159,10 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 		{
 			if(!is_callable($this->onSelectCallback))
 			{
-				throw new \Nette\InvalidStateException('OnSelect callback not set.');
+				throw new \Nette\InvalidStateException('OnSelect callback not set for input "' . $this->getName() . '"');
 			}
 
-			$currentValues = [];
-
-			parse_str($presenter->getParameter('formdata'), $currentValues);
-
-			call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), array_filter($currentValues)]);
+			call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), Helper\FormData::parse($presenter->getParameter('formdata'))]);
 
 			/**
 			 * If there is no snippet to redraw -> send empty response
@@ -181,18 +177,18 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 			$value = $presenter->getParameter('value');
 			$inputName = $presenter->getParameter('input');
 
-			$currentValues = [];
-
-			parse_str($presenter->getParameter('formdata'), $currentValues);
-
 			if($this->onFocusOutCallback === null)
 			{
-				throw new \Nette\InvalidStateException('OnFocusOut callback not set.');
+				throw new \Nette\InvalidStateException('OnFocusOut callback not set for input "' . $this->getName() . '"');
 			}
 
-			call_user_func_array($this->onFocusOutCallback, [$value, $inputName, array_filter($currentValues)]);
+			call_user_func_array($this->onFocusOutCallback, [$value, $inputName, Helper\FormData::parse($presenter->getParameter('formdata'))]);
 
 			$presenter->sendPayload();
+		}
+		else
+		{
+			$this->signalsSignalReceived($signal);
 		}
 	}
 

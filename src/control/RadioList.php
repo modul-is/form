@@ -29,7 +29,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 	private bool $rounded = false;
 
 
-	public function setRounded(bool $rounded): self
+	public function setRounded(bool $rounded): static
 	{
 		$this->rounded = $rounded;
 
@@ -40,7 +40,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 	/**
 	 * @param array<int|string, string> $iconArray
 	 */
-	public function setIconArray(array $iconArray): self
+	public function setIconArray(array $iconArray): static
 	{
 		$this->iconArray = $iconArray;
 
@@ -48,7 +48,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 	}
 
 
-	public function setItemsColor(string $color): self
+	public function setItemsColor(string $color): static
 	{
 		$this->color = $color;
 
@@ -59,7 +59,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 	/**
 	 * @param class-string<\BackedEnum&\ModulIS\Form\Enum\RadioEnum> $enumClass
 	 */
-	public function setValuesFromEnum(string $enumClass): self
+	public function setValuesFromEnum(string $enumClass): static
 	{
 		$this->setItems($enumClass::getList());
 
@@ -71,15 +71,18 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 
 	public function renderDefault(): Html
 	{
-		$form = $this->getForm();
-		\assert($form instanceof \ModulIS\Form\Form);
-
 		$required = $this->isRequired()
 			? ' ' . Html::el('span')->class('required')->setText('*')
 			: '';
 
 		$labelEl = Html::el('label')
-			->addHtml($this->translate($this->getCaption()) . $required);
+			->addText($this->translate($this->getCaption()))
+			->addHtml($required);
+
+		if($tooltipHtml = $this->getTooltipHtml())
+		{
+			$labelEl->addHtml(' ' . $tooltipHtml);
+		}
 
 		$itemsWrap = Html::el('div')
 			->class($this->joinClass('mis-radio-items', $this->getValidationClass()));
@@ -98,7 +101,8 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 			$itemLabelEl = Html::el('label')
 				->for($inputEl->getAttribute('id'))
 				->class('mis-radio-label' . ($this->rounded ? ' radio-rounded' : ''))
-				->addHtml($inputEl . $itemLabel);
+				->addHtml($inputEl)
+				->addText($this->translate($itemLabel));
 
 			$itemsWrap->addHtml($itemLabelEl);
 		}

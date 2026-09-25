@@ -39,7 +39,13 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 			: '';
 
 		$labelEl = Html::el('label')
-			->addHtml($this->translate($this->getCaption()) . $required);
+			->addText($this->translate($this->getCaption()))
+			->addHtml($required);
+
+		if($tooltipHtml = $this->getTooltipHtml())
+		{
+			$labelEl->addHtml(' ' . $tooltipHtml);
+		}
 
 		$itemsWrap = Html::el('div')
 			->class($this->joinClass('mis-checklist-items', $this->getValidationClass()));
@@ -70,7 +76,7 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 				->class('checkbox')
 				->addHtml($inputEl)
 				->addHtml($boxSpan)
-				->addHtml($itemLabel);
+				->addText($this->translate($itemLabel));
 
 			$itemsWrap->addHtml($itemLabelEl);
 		}
@@ -85,7 +91,7 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 	/**
 	 * @param array<int|string, string> $iconArray
 	 */
-	public function setIconArray(array $iconArray): self
+	public function setIconArray(array $iconArray): static
 	{
 		$this->iconArray = $iconArray;
 

@@ -75,7 +75,7 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 
 
 	/**
-	 * Magic fucntion for render functions, render latte file with the same name as component and name of called function
+	 * Magic function for render functions, render latte file with the same name as component and name of called function
 	 */
 	public function __call(string $name, array $arguments)
 	{

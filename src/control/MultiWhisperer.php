@@ -8,6 +8,19 @@ use Nette\Utils\Html;
 
 class MultiWhisperer extends MultiSelectBox
 {
+	public function getControl(): Html
+	{
+		$control = parent::getControl();
+
+		if($control->getAttribute('data-placeholder'))
+		{
+			$control->setAttribute('data-placeholder', $this->translate($control->getAttribute('data-placeholder')));
+		}
+
+		return $control;
+	}
+
+
 	public function getCoreControl(): Html
 	{
 		$input = $this->getControl();
@@ -26,19 +39,5 @@ class MultiWhisperer extends MultiSelectBox
 
 		return Html::el('div')->class('input-group')
 			->addHtml($this->getPrepend() . $input . $this->getAppend() . $validationFeedBack);
-	}
-
-
-	public function validate(): void
-	{
-		parent::validate();
-
-		foreach($this->getRules() as $rule)
-		{
-			if($rule->validator == \ModulIS\Form\Form::Filled && !$this->getValue())
-			{
-				$this->addError(\Nette\Forms\Validator::formatMessage($rule, true), false);
-			}
-		}
 	}
 }

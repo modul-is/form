@@ -9,16 +9,13 @@ use Nette\Utils\Html;
 
 class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
 {
-	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
-	use Helper\RenderBasic;
 	use Helper\ControlClass;
 	use Helper\Signals;
-	use Helper\ToggleButton;
 
 	private bool $switch = false;
 
@@ -33,7 +30,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 	private bool $checkboxLeft = true;
 
 
-	public function setSwitch(bool $switch = true): self
+	public function setSwitch(bool $switch = true): static
 	{
 		$this->switch = $switch;
 
@@ -41,7 +38,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 	}
 
 
-	public function setCheckboxLeft(bool $checkboxLeft = true): self
+	public function setCheckboxLeft(bool $checkboxLeft = true): static
 	{
 		$this->checkboxLeft = $checkboxLeft;
 
@@ -55,7 +52,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 	}
 
 
-	public function setInputWrapClass(string $class): self
+	public function setInputWrapClass(string $class): static
 	{
 		$this->inputClass = $class;
 
@@ -63,7 +60,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 	}
 
 
-	public function setLabelWrapClass(string $class): self
+	public function setLabelWrapClass(string $class): static
 	{
 		$this->labelClass = $class;
 
@@ -71,7 +68,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 	}
 
 
-	public function setCheckboxWrapClass(string $class): self
+	public function setCheckboxWrapClass(string $class): static
 	{
 		$this->checkboxClass = $class;
 
@@ -79,7 +76,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 	}
 
 
-	public function setWrapClass(string $class): self
+	public function setWrapClass(string $class): static
 	{
 		$this->wrapClass = $class;
 
@@ -112,7 +109,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 			->class('box')
 			->addHtml($svg);
 
-		$required = null;
+		$required = '';
 
 		if($this->isRequired())
 		{
@@ -131,7 +128,8 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 				->class($labelClass)
 				->addHtml($input)
 				->addHtml($boxSpan)
-				->addHtml($this->translate($this->getCaption()) . $required);
+				->addText($this->translate($this->getCaption()))
+				->addHtml($required);
 
 			$checkboxClass = $this->checkboxClass ? ' ' . $this->checkboxClass : null;
 
@@ -154,7 +152,8 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 			 $label = Html::el('label')
 				 ->class('rf-label')
 				 ->for($input->getAttribute('id'))
-				 ->addHtml($this->translate($this->getCaption()) . $required);
+				 ->addText($this->translate($this->getCaption()))
+				 ->addHtml($required);
 
 			 $inputLabel = Html::el('label')
 				 ->class($labelClass)

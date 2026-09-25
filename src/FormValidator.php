@@ -22,7 +22,7 @@ final class FormValidator
 
 	public static function sameLength(BaseControl $control, mixed $val): bool
 	{
-		return mb_strlen($control->getValue()) === mb_strlen($val);
+		return mb_strlen((string) $control->getValue()) === mb_strlen((string) $val);
 	}
 
 
@@ -35,7 +35,7 @@ final class FormValidator
 			return false;
 		}
 
-		[$rc, $yearString, $monthString, $day, $ext, $lastDigit] = $matches;
+		[, $yearString, $monthString, $day, $ext, $lastDigit] = $matches;
 
 		$year = intval($yearString);
 		$month = intval($monthString);
@@ -74,13 +74,13 @@ final class FormValidator
 			$month -= 20;
 		}
 
-		return \Nette\Utils\DateTime::createFromFormat('Ymd', $year . $month . $day) !== false;
+		return checkdate($month, intval($day), $year);
 	}
 
 
 	public static function validateIC(BaseControl $control): bool
 	{
-		$ic = strval($control->getValue());
+		$ic = preg_replace('/\s+/', '', strval($control->getValue())) ?? '';
 
 		if(!preg_match('/^\d{8}$/', $ic))
 		{

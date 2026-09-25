@@ -35,7 +35,7 @@ class Duplicator extends Container implements Renderable
 	/** @var Closure(DuplicatorContainer): void */
 	protected Closure $factoryCallback;
 
-	private ?string $title = null;
+	private Html|string|null $title = null;
 
 	private bool $submittedBy = false;
 
@@ -85,7 +85,7 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	public function setOption(string $key, mixed $value): self
+	public function setOption(string $key, mixed $value): static
 	{
 		if($value === null)
 		{
@@ -113,7 +113,7 @@ class Duplicator extends Container implements Renderable
 			return (new Engine)->renderToString($this->templatePath, $this);
 		}
 
-		if($this->autoRenderSkip === true)
+		if($this->autoRenderSkip === true || $this->getOption('hide'))
 		{
 			return '';
 		}
@@ -122,7 +122,7 @@ class Duplicator extends Container implements Renderable
 		{
 			$header = Html::el('div')
 				->class('card-header')
-				->addHtml($this->getTitle());
+				->addText($this->getTitle());
 		}
 		else
 		{
@@ -159,19 +159,17 @@ class Duplicator extends Container implements Renderable
 				$containerHeader->addHtml($title);
 			}
 
-			$removeSubmit = $container->getComponent('del', false);
-
-			if($removeSubmit instanceof DuplicatorRemoveSubmit)
-			{
-				$containerHeader->addHtml($removeSubmit->render());
-			}
-
 			foreach($container->getComponents() as $duplicatorInput)
 			{
 				assert($duplicatorInput instanceof Renderable);
 
+				/**
+				 * Remove button is rendered in the container head regardless of its name
+				 */
 				if($duplicatorInput instanceof DuplicatorRemoveSubmit)
 				{
+					$containerHeader->addHtml($duplicatorInput->render());
+
 					continue;
 				}
 
@@ -228,9 +226,16 @@ class Duplicator extends Container implements Renderable
 			->class($duplicatorContainerClass)
 			->addHtml($header . $body . $footer);
 
-		return Html::el('div')
+		$wrap = Html::el('div')
 			->class('mb-3 col-12')
 			->addHtml($card);
+
+		if($this->getOption('id'))
+		{
+			$wrap->id($this->getOption('id'));
+		}
+
+		return $wrap;
 	}
 
 
@@ -532,20 +537,20 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	public function setTitle(string $title): self
+	public function setTitle(Html|string $title): static
 	{
 		$this->title = $title;
 		return $this;
 	}
 
 
-	public function getTitle(): ?string
+	public function getTitle(): Html|string|null
 	{
 		return $this->title;
 	}
 
 
-	public function setDuplicatorButtonWrapClass(string $class): self
+	public function setDuplicatorButtonWrapClass(string $class): static
 	{
 		$this->buttonWrapClass = $class;
 
@@ -553,7 +558,7 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	public function setDuplicatorBodyClass(string $class): self
+	public function setDuplicatorBodyClass(string $class): static
 	{
 		$this->duplicatorBodyClass = $class;
 
@@ -561,7 +566,7 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	public function setDuplicatorFooterClass(string $class): self
+	public function setDuplicatorFooterClass(string $class): static
 	{
 		$this->duplicatorFooterClass = $class;
 
@@ -569,7 +574,7 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	public function setDuplicatorContainerClass(string $class): self
+	public function setDuplicatorContainerClass(string $class): static
 	{
 		$this->duplicatorContainerClass = $class;
 

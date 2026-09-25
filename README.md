@@ -38,13 +38,17 @@ Form supports all of the default Nette inputs and adds new ones
 
 ### Form
 
-+ `setTitle()` - add `card-header` div with title
++ `setTitle()` - title in the `card-header` of the first card (unless its group has a title of its own)
++ `setIcon()` - icon next to the form title
 + `setColor()` - set color of form
 + `setAjax()` - form is submitted via ajax
 + `setRenderType()` - render type for all inputs of the form, see [Render types](#render-types)
 + `setRenderDefault()`, `setRenderFloating()`, `setRenderInline()` - shortcuts for `setRenderType()`
 + `setButtonClass()` - default CSS class for all form buttons (e.g. `rounded rounded-4`); can be overridden by `setClass()` on individual buttons
-+ `setRenderManually()` - set manual render, template with same name as form is used (eg. file `MyForm.php` -> `myForm.latte`), see `FormComponent`
+
+### FormComponent
+
++ `setRenderManually()` (protected) - set manual render, template with same name as the component is used (eg. file `MyForm.php` -> `myForm.latte`), see [Manual rendering](#manual-rendering)
 
 ### Groups
 Form is rendered in BS5 [card](https://getbootstrap.com/docs/5.0/components/card/) - each card represents one group
@@ -83,11 +87,11 @@ $form->addCurrency('price', 'Price')->setCurrency('EUR');
 Some inputs provide new features
 
 + `setIcon()` - add icon to input or button (Buttons, Links, Text inputs)
-+ `setColor()` - add color to input or button (Buttons, Links, Checkbox, Lists)
++ `setColor()` - add color to button or list items (Buttons, Links, Lists in `Inline` render)
 + `setTemplate()` - add custom latte template instead of basic render (All inputs)
-+ `setPrepend()` - adds prepend part to [input group](https://getbootstrap.com/docs/5.0/forms/input-group/) (Text inputs, Select boxes)
-+ `setAppend()` - adds append part to [input group](https://getbootstrap.com/docs/5.0/forms/input-group/) (Text inputs, Select boxes)
-+ `setRenderType()` - render type of a single input, overwrites the setting from Form, see [Render types](#render-types) (All non-button inputs)
++ `setPrepend()` - adds prepend part to [input group](https://getbootstrap.com/docs/5.0/forms/input-group/) (Text inputs, TextArea, Select boxes, Slider, Upload)
++ `setAppend()` - adds append part to [input group](https://getbootstrap.com/docs/5.0/forms/input-group/) (Text inputs, TextArea, Select boxes, Slider, Upload)
++ `setRenderType()` - render type of a single input, overwrites the setting from Form, see [Render types](#render-types) (All non-button inputs except Checkbox)
 + `setRenderDefault()`, `setRenderFloating()`, `setRenderInline()` - shortcuts for `setRenderType()`; use `setRenderDefault()` to opt a single input out of a form-wide floating/inline setting
 + `setAutoRenderSkip()` - skips rendering of input, eg. if input is rendered as part of another input with custom template (All inputs)
 + `setTooltip()` - add icon with tooltip to input (Text inputs, Checkbox, Lists, Select boxes)
@@ -185,17 +189,19 @@ Default                                  Compact
                                          </div>
 
 Big (tiles)                              Inline
-<div class="mis-tiles INPUTWRAP">        <div class="WRAP">
-    <div class="mis-tiles-head">             <div class="ROW">            setRowClass()
-        <div class="mis-tiles-title">            <div class="… LABELWRAP">
-        <div class="mis-tiles-sub">              <div class="… INPUTWRAP">
-    </div>                                   </div>
-    <div class="mis-tiles-list">         </div>
-        <label class="mis-tile">
-            <span class="mis-tile-ico">  setIconArray()
-            <span class="mis-tile-lbl">
-            <span class="mis-tile-desc"> setTooltips()
-            <span class="mis-tile-chk">
+<div class="WRAP">                       <div class="WRAP">
+    <div class="mis-tiles INPUTWRAP">        <div class="ROW">            setRowClass()
+        <div class="mis-tiles-head">             <div class="… LABELWRAP">
+            <div class="mis-tiles-title">        <div class="… INPUTWRAP">
+            <div class="mis-tiles-sub">      </div>
+        </div>                           </div>
+        <div class="mis-tiles-list">
+            <label class="mis-tile">
+                <span class="mis-tile-ico">  setIconArray()
+                <span class="mis-tile-lbl">
+                <span class="mis-tile-desc"> setTooltips()
+                <span class="mis-tile-chk">
+        </div>
     </div>
 </div>
 ```
@@ -206,8 +212,8 @@ Not every wrap setter is read by every render type - the table says where a call
 
 | Setter | Default | Floating | Inline | List: Default | List: Compact | List: Big | List: Inline |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| `setWrapClass()` | yes | yes | yes | yes | yes | - | yes |
-| `setWrapId()` | yes | yes | yes | yes | yes | - | yes |
+| `setWrapClass()` | yes | yes | yes | yes | yes | yes | yes |
+| `setWrapId()` | yes | yes | yes | yes | yes | yes | yes |
 | `setLabelWrapClass()` | yes | - | - | - | yes | - | yes |
 | `setInputWrapClass()` | yes* | - | - | - | yes | yes | yes |
 | `setRowClass()` | - | - | - | - | - | - | yes |
@@ -223,7 +229,6 @@ Setters that behave the same in all render types:
 | `setIcon()` | icon rendered as a prepend |
 | `setTooltip()` | question-mark icon next to the caption |
 | `setQuickCopy()` | copy-to-clipboard button at the end of the input group |
-| `setColor()` | colour class of the input / button |
 | `setOption('id')` | `id` of the outermost element (same place as `setWrapId()`) |
 | `setTemplate()` | replaces the whole render with your own Latte file |
 | `setAutoRenderSkip()` | renders nothing |
@@ -319,6 +324,8 @@ Appearance of the slider itself:
 throws when the input is rendered.
 
 ### Duplicator example
+
+Every `addSubmit()` inside the `DuplicatorContainer` is a remove button and is rendered in the head of the row, regardless of its name.
 ```
 $duplicator = $form->addDuplicator('duplicator', function(\ModulIS\Form\DuplicatorContainer $container)
 {
@@ -345,3 +352,21 @@ $duplicator->addSubmit('add', 'Přidat');
 | `$input->setFloatingLabel(false)` | `$input->setRenderDefault()` |
 | `$input->setRenderInline(false)` | `$input->setRenderDefault()` |
 | `$form->addBox()` | removed, use `addGroup()` |
+
+### Escaping
+
+Captions, list item labels, titles, tooltips and error messages are escaped - same as in Nette. Pass an `Nette\Utils\Html` object where HTML is intended.
+
+### Removed and changed API
+
++ `setColor()` is only available on buttons, links and lists - on other inputs it had no effect
++ `setToggleButton()` / `setButtonColor()` and `setRenderType()` (with its shortcuts) were removed from Checkbox, `setRenderType()` also from Button and Link - they had no effect there
++ fluent setters return `static` instead of `self`
++ `Container` has the same API as `Form` - `addCheckbox()` caption defaults to `null`, `addSubmit()` gets the save icon and success colour, `addSlider()` and `addMultiWhisperer()` were added
++ `addSubmit($name, $caption, $onSubmit)` registers `onSubmit` as `onClick` handler (it used to be ignored), `addEmail()` passes `maxLength`
++ `addDate()` / `addDateTime()` no longer add their own format rule - Nette validates the format, `Form::Min` / `Form::Max` rules now produce `min` / `max` attributes
++ submit buttons use the full HTML name (`container[save]`) and get `formnovalidate` only with a validation scope - client-side validation runs again
++ `Link` is omitted from `getValues()`
++ `Form::getFormErrors()` returns the translated form errors (`getOwnErrors()`), `Form::addError()` is no longer overridden
++ signal callbacks receive form data with `'0'` values kept (empty values are still dropped)
++ `Duplicator::createContainer()` returns `DuplicatorContainer` (not nullable)

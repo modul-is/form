@@ -6,7 +6,6 @@ namespace ModulIS\Form;
 
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\DateTimeControl;
-use Nette\Utils\DateTime;
 use Nette\Utils\Html;
 use Stringable;
 
@@ -14,7 +13,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 {
 	public string $color = 'white';
 
-	private ?string $title = null;
+	private Html|string|null $title = null;
 
 	private ?string $id = null;
 
@@ -26,7 +25,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 	private array $dividerArray = [];
 
 
-	public function setId(string $id): self
+	public function setId(string $id): static
 	{
 		$this->id = $id;
 
@@ -34,7 +33,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 	}
 
 
-	public function setColor(string $color): self
+	public function setColor(string $color): static
 	{
 		$this->color = $color;
 
@@ -42,7 +41,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 	}
 
 
-	public function setTitle(string $title): self
+	public function setTitle(Html|string $title): static
 	{
 		$this->title = $title;
 
@@ -50,13 +49,13 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 	}
 
 
-	public function getTitle(): ?string
+	public function getTitle(): Html|string|null
 	{
 		return $this->title;
 	}
 
 
-	public function setWrapClass(string $wrapClass): self
+	public function setWrapClass(string $wrapClass): static
 	{
 		$this->wrapClass = $wrapClass;
 
@@ -64,7 +63,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 	}
 
 
-	public function showCard(bool $showCard): self
+	public function showCard(bool $showCard): static
 	{
 		$this->showCard = $showCard;
 
@@ -125,7 +124,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 
 	public function addEmail(string $name, string|Stringable|null $label = null, int $maxLength = 255): Control\TextInput
 	{
-		return $this[$name] = new Control\TextInput($label)
+		return $this[$name] = new Control\TextInput($label, $maxLength)
 			->setRequired(false)
 			->addRule(Form::Email);
 	}
@@ -158,8 +157,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDate);
 
 		return $this[$name] = $dateInput->setRequired(false)
-			->setFormat('Y-m-d')
-			->addRule(fn($input): bool => DateTime::createFromFormat('Y-m-d', $input->getValue()) !== false, 'Vložte datum ve formátu dd.mm.yyyy');
+			->setFormat('Y-m-d');
 	}
 
 
@@ -168,8 +166,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDateTime, $withSeconds);
 
 		return $this[$name] = $dateInput->setRequired(false)
-			->setFormat('Y-m-d H:i:s')
-			->addRule(fn($input): bool => DateTime::createFromFormat($withSeconds ? 'Y-m-d H:i:s' : 'Y-m-d H:i:00', $input->getValue()) !== false, 'Vložte datum ve formátu dd.mm.yyyy ' . ($withSeconds ? 'hh:mm:ss' : 'hh:mm'));
+			->setFormat('Y-m-d H:i:s');
 	}
 
 
@@ -183,7 +180,23 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 	public function addTime(string $name, null|string|Stringable $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
 		return $this[$name] = new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds)
-			->setFormat($withSeconds ? 'H:i:00' : 'H:i');
+			->setFormat($withSeconds ? 'H:i:s' : 'H:i');
+	}
+
+
+	/**
+	 * Slider - value range is defined by setMinMax() or setItems()
+	 */
+	public function addSlider(string $name, null|string|Stringable $label = null, int|float|null $min = null, int|float|null $max = null, int|float $step = 1): Control\SliderInput
+	{
+		$input = new Control\SliderInput($label);
+
+		if($min !== null && $max !== null)
+		{
+			$input->setMinMax($min, $max, $step);
+		}
+
+		return $this[$name] = $input;
 	}
 
 
@@ -199,7 +212,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 	}
 
 
-	public function addCheckbox(string $name, null|string|Stringable $caption = ''): Control\Checkbox
+	public function addCheckbox(string $name, null|string|Stringable $caption = null): Control\Checkbox
 	{
 		return $this[$name] = new Control\Checkbox($caption);
 	}
@@ -243,9 +256,21 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 	}
 
 
+	/**
+	 * @param ?(\Closure(Control\SubmitButton, array<mixed>|object): void|\Closure(array<mixed>|object): void) $onSubmit
+	 */
 	public function addSubmit(string $name, Stringable|string|null $caption = null, ?\Closure $onSubmit = null): Control\SubmitButton
 	{
-		return $this[$name] = new Control\SubmitButton($caption);
+		$control = new Control\SubmitButton($caption)
+			->setIcon('save')
+			->setColor('success');
+
+		if($onSubmit !== null)
+		{
+			$control->onClick[] = $onSubmit;
+		}
+
+		return $this[$name] = $control;
 	}
 
 
@@ -264,7 +289,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 	/**
 	 * @param array<BaseControl> $parents
 	 */
-	public function addDependentSelect(string $name, ?string $label = null, array $parents = [], ?callable $dependentCallback = null): Control\DependentSelect
+	public function addDependentSelect(string $name, null|string|Stringable $label = null, array $parents = [], ?callable $dependentCallback = null): Control\DependentSelect
 	{
 		return $this[$name] = new Control\DependentSelect($label, $parents, $dependentCallback);
 	}
@@ -273,7 +298,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 	/**
 	 * @param array<BaseControl> $parents
 	 */
-	public function addDependentMultiSelect(string $name, ?string $label = null, array $parents = [], ?callable $dependentCallback = null): Control\DependentMultiSelect
+	public function addDependentMultiSelect(string $name, null|string|Stringable $label = null, array $parents = [], ?callable $dependentCallback = null): Control\DependentMultiSelect
 	{
 		return $this[$name] = new Control\DependentMultiSelect($label, $parents, $dependentCallback);
 	}
@@ -301,6 +326,17 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 			->setClass('form-control-chosen')
 			->setHtmlAttribute('data-placeholder', 'Vyberte')
 			->checkDefaultValue(false);
+	}
+
+
+	/**
+	 * @param array<mixed> $items
+	 */
+	public function addMultiWhisperer(string $name, null|string|Stringable $label = null, array $items = []): Control\MultiWhisperer
+	{
+		return $this[$name] = new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items)
+			->setClass('form-control-chosen')
+			->setHtmlAttribute('data-placeholder', 'Vyberte');
 	}
 
 
@@ -339,7 +375,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 			{
 				$cardHeaderDiv = Html::el('div')
 					->class('card-header ' . ($this->color ? 'bg-' . $this->color : ''))
-					->addHtml($this->title);
+					->addText($this->title);
 			}
 
 			$inputArray = $this->getInputArray();

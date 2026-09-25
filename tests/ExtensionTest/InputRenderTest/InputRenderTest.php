@@ -161,6 +161,56 @@ class InputRenderTest extends TestCase
 			'Expected instance of ModulIS\Form\Control\Renderable, Nette\Forms\Controls\TextInput given.'
 		);
 	}
+
+
+	public function testInputCorePartRendersSingleItem()
+	{
+		[$form, $presenter] = $this->getFormWithPresenter();
+
+		$form->addRadioList('radio', 'Radio', ['a' => 'A', 'b' => 'B']);
+
+		$output = $this->renderBody('{inputCore radio:a}', $form, $presenter);
+
+		Assert::contains('value="a"', $output);
+		Assert::notContains('value="b"', $output);
+	}
+
+
+	public function testInputCoreAttributesOnStringControl()
+	{
+		[$form, $presenter] = $this->getFormWithPresenter();
+
+		$form->addRadioList('radio', 'Radio', ['a' => 'A']);
+
+		Assert::noError(fn() => $this->renderBody("{inputCore radio, class => 'extra'}", $form, $presenter));
+	}
+
+
+	public function testPairedLabelCoreWithTooltip()
+	{
+		[$form, $presenter] = $this->getFormWithPresenter();
+
+		$form->addText('text', 'Text')
+			->setTooltip('Help');
+
+		$output = $this->renderBody('{labelCore text}Custom{/labelCore}', $form, $presenter);
+
+		Assert::contains('Custom', $output);
+		Assert::contains('title="Help"', $output);
+	}
+
+
+	public function testLabelCorePartRendersItemLabel()
+	{
+		[$form, $presenter] = $this->getFormWithPresenter();
+
+		$form->addRadioList('radio', 'Radio', ['a' => 'A', 'b' => 'B']);
+
+		$output = $this->renderBody('{labelCore radio:b /}', $form, $presenter);
+
+		Assert::contains('for="frm-form-radio-b"', $output);
+		Assert::notContains('frm-form-radio-a', $output);
+	}
 }
 
 (new InputRenderTest)->run();

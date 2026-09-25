@@ -80,25 +80,30 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	}
 
 
-	public function getHeader(): Html
+	/**
+	 * Title and icon are fallbacks used when the group has none of its own (form title on the first card)
+	 */
+	public function getHeader(Html|string|null $title = null, ?string $icon = null): Html
 	{
+		$icon = $this->getIcon() ?? $icon;
+
 		$titleDiv = Html::el('div')
 			->class('section-title');
 
-		if($this->getIcon())
+		if($icon)
 		{
 			$iconSpan = Html::el('span')
 				->class('ico')
-				->addHtml(Extension::render($this->getIcon()));
+				->addHtml(Extension::render($icon));
 
 			$titleDiv->addHtml($iconSpan);
 		}
 
-		$groupTitle = $this->getOption('label');
+		$groupTitle = $this->getOption('label') ?: $title;
 
 		if($groupTitle)
 		{
-			$titleDiv->addHtml($groupTitle);
+			$titleDiv->addText($groupTitle);
 		}
 
 		$groupColor = $this->getOption('color') ? ' ' . $this->getOption('color') : null;
@@ -109,13 +114,13 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	}
 
 
-	public function setColor(string $color): self
+	public function setColor(string $color): static
 	{
 		return $this->setOption('color', $color);
 	}
 
 
-	public function setIcon(string $icon): self
+	public function setIcon(string $icon): static
 	{
 		$this->icon = $icon;
 
@@ -129,7 +134,7 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	}
 
 
-	public function setClass(string $class): self
+	public function setClass(string $class): static
 	{
 		$this->class = $class;
 

@@ -4,16 +4,17 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Helper;
 
+use Nette\HtmlStringable;
 use Nette\Utils\Html;
 
 trait Validation
 {
-	private ?string $validationSuccessMessage = null;
+	private string|HtmlStringable|null $validationSuccessMessage = null;
 
 	private bool $submitted = false;
 
 
-	public function setValidationSuccessMessage(string $validationSuccessMessage): static
+	public function setValidationSuccessMessage(string|HtmlStringable $validationSuccessMessage): static
 	{
 		$this->validationSuccessMessage = $validationSuccessMessage;
 
@@ -21,7 +22,7 @@ trait Validation
 	}
 
 
-	public function getValidationSuccessMessage(): ?string
+	public function getValidationSuccessMessage(): string|HtmlStringable|null
 	{
 		return $this->validationSuccessMessage;
 	}
@@ -55,19 +56,47 @@ trait Validation
 		{
 			if($this->hasErrors())
 			{
-				$validationFeedBack = Html::el('div')
-					->class('invalid-feedback')
-					->addHtml((string) $this->getError());
+				$validationFeedBack = $this->createErrorFeedback();
 			}
 			elseif($this->isRequired() && $this->getValidationSuccessMessage())
 			{
-				$validationFeedBack = Html::el('div')
-					->class('valid-feedback')
-					->addHtml($this->getValidationSuccessMessage());
+				$validationFeedBack = $this->createSuccessFeedback();
 			}
 		}
 
 		return $validationFeedBack;
+	}
+
+
+	/**
+	 * Error messages may contain the submitted value (%value), therefore plain strings are escaped - same as Nette renderer
+	 */
+	protected function createErrorFeedback(): Html
+	{
+		$feedback = Html::el('div')
+			->class('invalid-feedback');
+
+		foreach($this->getErrors() as $i => $error)
+		{
+			if($i > 0)
+			{
+				$feedback->addText(' ');
+			}
+
+			$feedback->addText($error);
+		}
+
+		return $feedback;
+	}
+
+
+	protected function createSuccessFeedback(): Html
+	{
+		$message = $this->getValidationSuccessMessage();
+
+		return Html::el('div')
+			->class('valid-feedback')
+			->addText($message instanceof HtmlStringable ? $message : $this->translate($message));
 	}
 
 

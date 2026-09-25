@@ -56,7 +56,7 @@
 		if (typeof this.conf.target === 'object') this.input = this.conf.target;
 		else this.input = document.getElementById(this.conf.target.replace('#', ''));
 
-		if (!this.input) return console.log('Cannot find target element...');
+		if (!this.input) return console.warn('rSlider: cannot find target element');
 
 		this.inputDisplay = getComputedStyle(this.input, null).display;
 		this.input.style.display = 'none';
@@ -64,7 +64,7 @@
 
 		if (this.valRange) {
 			if (!this.conf.values.hasOwnProperty('min') || !this.conf.values.hasOwnProperty('max'))
-				return console.log('Missing min or max value...');
+				return console.warn('rSlider: missing min or max value');
 		}
 		return this.createSlider();
 	};
@@ -161,8 +161,15 @@
 		var pointers = this.slider.querySelectorAll('.' + this.cls.pointer),
 			pieces = this.slider.querySelectorAll('span');
 
-		createEvents(document, 'mousemove touchmove', this.move.bind(this));
-		createEvents(document, 'mouseup touchend touchcancel', this.drop.bind(this));
+		// global listeners are kept so destroy() can remove them - otherwise every snippet redraw leaks a set
+		this.handlers = {
+			move: this.move.bind(this),
+			drop: this.drop.bind(this),
+			resize: this.onResize.bind(this)
+		};
+
+		createEvents(document, 'mousemove touchmove', this.handlers.move);
+		createEvents(document, 'mouseup touchend touchcancel', this.handlers.drop);
 
 		for (var i = 0, iLen = pointers.length; i < iLen; i++)
 			createEvents(pointers[i], 'mousedown touchstart', this.drag.bind(this));
@@ -170,9 +177,14 @@
 		for (var i = 0, iLen = pieces.length; i < iLen; i++)
 			createEvents(pieces[i], 'click', this.onClickPiece.bind(this));
 
-		window.addEventListener('resize', this.onResize.bind(this));
+		window.addEventListener('resize', this.handlers.resize);
 
-		return this.setValues();
+		this.setValues();
+
+		// initial value is not a change - onChange must not fire on init (it triggers input signals)
+		this.reportedValue = this.input.value;
+
+		return this;
 	};
 
 	RS.prototype.drag = function (e) {
@@ -276,7 +288,12 @@
 		if (this.timeout) clearTimeout(this.timeout);
 
 		this.timeout = setTimeout(function () {
-			if (_this.conf.onChange && typeof _this.conf.onChange === 'function') {			
+			// resize and init re-set the same value, only a real change is reported
+			if (_this.input.value === _this.reportedValue) return;
+
+			_this.reportedValue = _this.input.value;
+
+			if (_this.conf.onChange && typeof _this.conf.onChange === 'function') {
 				return _this.conf.onChange(_this.input.value);
 			}
 		}, 500);
@@ -298,6 +315,14 @@
 	};
 
 	RS.prototype.destroy = function () {
+		if (this.timeout) clearTimeout(this.timeout);
+
+		if (this.handlers) {
+			removeEvents(document, 'mousemove touchmove', this.handlers.move);
+			removeEvents(document, 'mouseup touchend touchcancel', this.handlers.drop);
+			window.removeEventListener('resize', this.handlers.resize);
+		}
+
 		this.input.style.display = this.inputDisplay;
 		this.slider.remove();
 	};
@@ -318,17 +343,27 @@
 			el.addEventListener(events[i], callback);
 	},
 
+	removeEvents = function (el, ev, callback) {
+		var events = ev.split(' ');
+
+		for (var i = 0, iLen = events.length; i < iLen; i++)
+			el.removeEventListener(events[i], callback);
+	},
+
 	prepareArrayValues = function (conf) {
 		var values = [],
 			range = conf.values.max - conf.values.min;
 
 		if (!conf.step) {
-			console.log('No step defined...');
+			console.warn('rSlider: no step defined');
 			return [conf.values.min, conf.values.max];
 		}
 
+		// round to the step precision - 0.1 + 0.2 must match the server value 0.3
+		var decimals = (String(conf.step).split('.')[1] || '').length;
+
 		for (var i = 0, iLen = (range / conf.step); i < iLen; i++)
-			values.push(conf.values.min + i * conf.step);
+			values.push(parseFloat((conf.values.min + i * conf.step).toFixed(decimals)));
 
 		if (values.indexOf(conf.values.max) < 0) values.push(conf.values.max);
 

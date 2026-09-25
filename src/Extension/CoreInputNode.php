@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace ModulIS\Extension;
 
-use Latte\Compiler\Nodes\Php\Scalar\StringNode;
 use Latte\Compiler\PrintContext;
 
 
@@ -15,13 +14,14 @@ class CoreInputNode extends \Nette\Bridges\FormsLatte\Nodes\InputNode
 {
 	public function print(PrintContext $context): string
 	{
+		/**
+		 * Core control may be a plain string (e.g. lists), attributes can be added to Html only
+		 */
 		return $context->format(
-			($this->name instanceof StringNode
-				? 'echo end($this->global->formsStack)[%node]->'
-				: '$ʟ_input = is_object($ʟ_tmp = %node) ? $ʟ_tmp : end($this->global->formsStack)[$ʟ_tmp]; echo $ʟ_input->')
-			. ($this->part ? ('getCoreControlPart(%node)') : 'getCoreControl()')
-			. ($this->attributes->items ? '->addAttributes(%2.node)' : '')
-			. ' %3.line;',
+			'$ʟ_core = $this->global->forms->get(%node)->'
+			. ($this->part ? 'getCoreControlPart(%node)' : 'getCoreControl()') . ';'
+			. ($this->attributes->items ? ' if($ʟ_core instanceof \Nette\Utils\Html) { $ʟ_core->addAttributes(%2.node); }' : '')
+			. ' echo $ʟ_core %3.line;',
 			$this->name,
 			$this->part,
 			$this->attributes,

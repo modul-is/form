@@ -15,9 +15,8 @@ use Nette\Utils\Json;
  * zapisuje jako jedno cislo, v rezimu setRange() jako dve oddelena carkou - proto getValue()
  * vraci pole az kdyz je zapnuty rozsah.
  */
-class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
+class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable, HasInputGroup, Signalable, \Nette\Application\UI\SignalReceiver
 {
-	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
@@ -66,7 +65,7 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable,
 	/**
 	 * Hodnoty posuvniku jako spojity rozsah.
 	 */
-	public function setMinMax(int|float $min, int|float $max, int|float $step = 1): self
+	public function setMinMax(int|float $min, int|float $max, int|float $step = 1): static
 	{
 		if($max <= $min)
 		{
@@ -92,7 +91,7 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable,
 	 *
 	 * @param array<int, int|float|string> $items
 	 */
-	public function setItems(array $items): self
+	public function setItems(array $items): static
 	{
 		if(count($items) < 2)
 		{
@@ -119,7 +118,7 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable,
 	/**
 	 * Dve tahitka - hodnota je potom pole [od, do].
 	 */
-	public function setRange(bool $range = true): self
+	public function setRange(bool $range = true): static
 	{
 		$this->range = $range;
 
@@ -136,7 +135,7 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable,
 	/**
 	 * Zobrazit stupnici s ryskami.
 	 */
-	public function showScale(bool $scale = true): self
+	public function showScale(bool $scale = true): static
 	{
 		$this->scale = $scale;
 
@@ -147,7 +146,7 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable,
 	/**
 	 * Zobrazit popisky pod ryskami stupnice.
 	 */
-	public function showLabels(bool $labels = true): self
+	public function showLabels(bool $labels = true): static
 	{
 		$this->labels = $labels;
 
@@ -158,7 +157,7 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable,
 	/**
 	 * Zobrazit bublinu s aktualni hodnotou nad tahitkem.
 	 */
-	public function showTooltip(bool $tooltip = true): self
+	public function showTooltip(bool $tooltip = true): static
 	{
 		$this->sliderTooltip = $tooltip;
 
@@ -173,7 +172,7 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable,
 
 
 	/**
-	 * @return int|float|array<int, int|float>|null
+	 * @return int|float|string|array<int, int|float|string>|null
 	 */
 	public function getValue(): mixed
 	{
@@ -185,7 +184,7 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable,
 		}
 
 		$parts = array_map(
-			fn(string $part): int|float => $this->castNumber(trim($part)),
+			fn(string $part): int|float|string => $this->castPart(trim($part)),
 			explode(',', (string) $value)
 		);
 
@@ -257,8 +256,24 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable,
 	}
 
 
-	private function castNumber(string $value): int|float
+	/**
+	 * With setItems() the value is one of the items (may be a string), otherwise a number from setMinMax()
+	 */
+	private function castPart(string $value): int|float|string
 	{
+		if($this->items)
+		{
+			foreach($this->items as $item)
+			{
+				if((string) $item === $value)
+				{
+					return $item;
+				}
+			}
+
+			return $value;
+		}
+
 		return str_contains($value, '.') ? (float) $value : (int) $value;
 	}
 }

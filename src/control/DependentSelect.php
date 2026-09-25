@@ -8,10 +8,9 @@ use ModulIS\Form\Dial\SignalDial;
 use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
 
-class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
+class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Renderable, HasInputGroup, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\InputGroup;
-	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
@@ -60,30 +59,7 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 
 		if($signal === SignalDial::Load)
 		{
-			$parentsNames = [];
-
-			foreach($this->parents as $parent)
-			{
-				$value = $presenter->getParameter($this->getNormalizeName($parent));
-
-				$parent->setValue($value);
-
-				$parentsNames[$parent->getName()] = $parent->getValue();
-			}
-
-			$data = $this->getDependentData([$parentsNames]);
-
-			$items = $data->getPreparedItems(is_array($this->disabled) ? $this->disabled : []);
-
-			$presenter->payload->dependentselectbox = [
-				'id' => $this->getHtmlId(),
-				'items' => $items,
-				'value' => $data->getValue(),
-				'prompt' => $this->translate($data->getPrompt()),
-				'disabledWhenEmpty' => $this->disabledWhenEmpty
-			];
-
-			$presenter->sendPayload();
+			$this->sendDependentPayload($presenter);
 		}
 		else
 		{

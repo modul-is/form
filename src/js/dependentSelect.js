@@ -30,19 +30,14 @@
 
 
         /**
-         * Get link to signal
+         * Collect parent values - sent as request data, naja takes care of URL encoding
          * @param element
-         * @returns {*}
+         * @returns {object}
          */
-        this.getSignalLink = function(element)
+        this.getParentValues = function(element)
 		{
-            let signalLink = element.data(dsb.settings.dataLinkName);
             let parents = element.data(dsb.settings.dataParentsName);
-
-            if(signalLink === undefined)
-			{
-                return false;
-            }
+            let values = {};
 
             $.each(parents, function(name, id)
 			{
@@ -66,15 +61,40 @@
                         }
                     }
 
-                    signalLink = signalLink + '&' + name + '=' + val;
+                    values[name] = val;
                 }
-                else if($("[id^='" +id + "']").length > 0)
+                else if($("[id^='" + id + "-']").length > 0)
                 {
-                    signalLink = signalLink + '&' + name + '=' + $("[id^='" +id + "']:checked").val();
+                    values[name] = $("[id^='" + id + "-']:checked").val();
                 }
             });
 
-            return signalLink;
+            return values;
+        };
+
+
+        /**
+         * Create option from prepared item (DependentData::getPreparedItems)
+         */
+        this.createOption = function(item, selectedValue)
+		{
+            let option = $('<option>')
+                .attr('value', item.key).text(item.value);
+
+            if('attributes' in item)
+			{
+                $.each(item.attributes, function(attr, attrValue)
+				{
+                    option.attr(attr, attrValue);
+                });
+            }
+
+            if(selectedValue !== null && item.key == selectedValue)
+			{
+                option.attr('selected', true);
+            }
+
+            return option;
         };
 
 
@@ -85,18 +105,15 @@
          */
         this.process = function(e, parentElement, dependentSelect)
 		{
-            // Validate if signalLink exist
-            var signalLink = dsb.getSignalLink(dependentSelect);
+            let signalLink = dependentSelect.data(dsb.settings.dataLinkName);
 
-            if(signalLink == false)
+            if(signalLink === undefined)
 			{
                 return false;
             }
 
-            // Send ajax request
-            $.ajax(signalLink, {
-                async: false,
-                success: function(payload)
+            naja.makeRequest('GET', signalLink, dsb.getParentValues(dependentSelect), {history: false})
+                .then(function(payload)
 				{
                     let data = payload.dependentselectbox;
 
@@ -126,39 +143,17 @@
                                     let otpGroup = $('<optgroup>')
                                         .attr('label', item.key);
 
+                                    // group value is a map of prepared items, not of plain labels
                                     $.each(item.value, function(objI, objItem)
 									{
-                                        let option = $('<option>').attr('value', objI).text(objItem);
-
-                                        if(data.value !== null && objI == data.value)
-										{
-                                            option.attr('selected', true);
-                                        }
-
-                                        otpGroup.append(option);
+                                        otpGroup.append(dsb.createOption(objItem, data.value));
                                     });
 
                                     otpGroup.appendTo($select);
                                 }
                                 else
 								{
-                                    let option = $('<option>')
-                                        .attr('value', item.key).text(item.value);
-
-                                    if('attributes' in item)
-									{
-                                        $.each(item.attributes, function(attr, attrValue)
-										{
-                                            option.attr(attr, attrValue);
-                                        });
-                                    }
-
-                                    if(data.value !== null && item.key == data.value)
-									{
-                                        option.attr('selected', true);
-                                    }
-
-                                    option.appendTo($select);
+                                    dsb.createOption(item, data.value).appendTo($select);
                                 }
                             });
                         }
@@ -171,10 +166,19 @@
                         }
 
                         $select.trigger("chosen:updated");
+
+                        // chained dependents listen to change of their parent - whisperer clears itself on change, so it is skipped
+                        if(!$select.is('[data-whisperer]'))
+						{
+                            $select.trigger('change');
+                        }
                     }
-                },
-                complete: callback
-            });
+                })
+                .catch(function(error)
+				{
+                    console.error(error);
+                })
+                .finally(callback);
         };
 
 
@@ -220,6 +224,9 @@
             let $dependentSelect = $(this);
             let parents = $($dependentSelect).data(dsb.settings.dataParentsName);
 
+            // namespace per dependent select - keeps rebinding after snippet redraw idempotent
+            let ns = '.dependentSelect_' + $dependentSelect.attr('id');
+
             $.each(parents, function(name, id)
 			{
                 let parentElement = $('#' + id);
@@ -228,14 +235,14 @@
 				{
                     if(parentElement.prop('type') === 'text' || parentElement.prop('nodeName').toLowerCase() === 'textarea')
 					{
-                        $(parentElement).on("keyup", function(e)
+                        $(parentElement).off('keyup' + ns).on('keyup' + ns, function(e)
 						{
                             dsb.onKeyup(e, $(this), $dependentSelect);
                         });
                     }
 					else
 					{
-                        $(parentElement).on("change", function (e)
+                        $(parentElement).off('change' + ns).on('change' + ns, function (e)
 						{
                             dsb.onChange(e, $(this), $dependentSelect);
                         });
@@ -243,7 +250,7 @@
                 }
                 else
                 {
-                    $("[id^='" +id + "-']").on("change", function(e)
+                    $("[id^='" + id + "-']").off('change' + ns).on('change' + ns, function(e)
 					{
                         dsb.onChange(e, $(this), $dependentSelect);
                     });

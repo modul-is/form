@@ -10,7 +10,6 @@ use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\DateTimeControl;
 use Nette\Forms\Controls\HiddenField;
-use Nette\Utils\DateTime;
 use Nette\Utils\Html;
 use Stringable;
 use function assert;
@@ -21,7 +20,7 @@ class Form extends UIForm
 
 	public const LessEqual = UIForm::Max;
 
-	public const Greater = '\ModulIS\Form\FormValidator::greater';
+	public const Greater = 'ModulIS\Form\FormValidator::greater';
 
 	public const Less = 'ModulIS\Form\FormValidator::less';
 
@@ -48,9 +47,6 @@ class Form extends UIForm
 	/** @var array<int|string, ControlGroup> */
 	private array $groups = [];
 
-	/** @var list<string|Stringable> */
-	private array $formErrors = [];
-
 	private string $defaultInputWrapClass = 'mb-2 col-12';
 
 	/** @var array<string, Html|string> */
@@ -71,25 +67,17 @@ class Form extends UIForm
 
 	public function renderForm(): string
 	{
-		$groups = null;
 		$submitters = null;
-		$cardFooter = null;
 
 		foreach($this->getSubmitterArray() as $submitter)
 		{
 			$submitters .= $submitter->render();
 		}
 
-		if($submitters)
-		{
-			$cardFooter = Html::el('div')
-				->class('card-footer')
-				->setHtml($submitters);
-		}
+		/** @var list<array{group: ControlGroup, content: string}> $cards */
+		$cards = [];
 
-		$groupArray = $this->getGroups();
-
-		foreach($groupArray as $groupTitle => $group)
+		foreach($this->getGroups() as $group)
 		{
 			$inputs = null;
 
@@ -127,23 +115,47 @@ class Form extends UIForm
 				->class('card-body')
 				->setHtml($row);
 
-			$cardHeader = null;
+			/**
+			 * Form title (setTitle / setIcon) is shown on the first card unless its group has a title of its own
+			 */
+			$isFirstCard = $cards === [];
+			$title = $isFirstCard ? $this->getTitle() : null;
+			$icon = $isFirstCard ? $this->icon : null;
 
-			if($groupTitle || $group->getIcon())
-			{
-				$cardHeader = $group->getHeader();
-			}
+			$cardHeader = $group->getOption('label') || $group->getIcon() || $title || $icon
+				? $group->getHeader($title, $icon)
+				: null;
 
-			$content = $cardHeader . $cardBody;
+			$cards[] = ['group' => $group, 'content' => $cardHeader . $cardBody];
+		}
+
+		if($submitters)
+		{
+			$cardFooter = Html::el('div')
+				->class('card-footer')
+				->setHtml($submitters);
 
 			/**
-			 * Last iteration - add footer with submitters
+			 * Footer belongs to the last rendered card - a form (or last group) with submitters only gets a card of its own
 			 */
-			if($groupTitle === array_key_last($groupArray))
+			if($cards)
 			{
-				$content .= $cardFooter;
+				$lastCard = array_pop($cards);
+				$lastCard['content'] .= $cardFooter;
+				$cards[] = $lastCard;
 			}
+			else
+			{
+				$groupArray = $this->getGroups();
 
+				$cards[] = ['group' => end($groupArray) ?: new ControlGroup, 'content' => (string) $cardFooter];
+			}
+		}
+
+		$groups = null;
+
+		foreach($cards as ['group' => $group, 'content' => $content])
+		{
 			$card = Html::el('div')
 				->class('card mt-2')
 				->setHtml($content);
@@ -153,11 +165,9 @@ class Form extends UIForm
 				$card->id($group->getOption('id'));
 			}
 
-			$wrapCard = Html::el('div')
+			$groups .= Html::el('div')
 				->class($group->getClass() ?? 'col-12')
 				->setHtml($card);
-
-			$groups .= $wrapCard;
 		}
 
 		$formRow = Html::el('div')
@@ -168,22 +178,23 @@ class Form extends UIForm
 
 		if($this->getFormErrors())
 		{
-			$errorString = null;
-
-			foreach($this->getFormErrors() as $error)
-			{
-				$errorString .= $error . '<br>';
-			}
-
 			$errorHtml = Html::el('div')
 				->class('alert alert-danger')
-				->setAttribute('role', 'alert')
-				->addHtml($errorString);
+				->setAttribute('role', 'alert');
+
+			foreach($this->getFormErrors() as $i => $error)
+			{
+				if($i > 0)
+				{
+					$errorHtml->addHtml(Html::el('br'));
+				}
+
+				$errorHtml->addText($error);
+			}
 		}
 
 		return $errorHtml . $formRow;
 	}
-
 
 	public function addGroup(string|Stringable|null $caption = null, bool $setAsCurrent = true): ControlGroup
 	{
@@ -205,6 +216,37 @@ class Form extends UIForm
 	public function getGroup(string|int $name): ?ControlGroup
 	{
 		return $this->groups[$name] ?? null;
+	}
+
+
+	/**
+	 * Parent keeps groups in a private property, therefore it has to be overridden together with addGroup()
+	 */
+	public function removeGroup(string|int|\Nette\Forms\ControlGroup $name): void
+	{
+		if($name instanceof \Nette\Forms\ControlGroup)
+		{
+			$key = array_search($name, $this->groups, true);
+		}
+		else
+		{
+			$key = isset($this->groups[$name]) ? $name : false;
+		}
+
+		if($key === false)
+		{
+			throw new \Nette\InvalidArgumentException("Group not found in form '{$this->getName()}'");
+		}
+
+		foreach($this->groups[$key]->getControls() as $control)
+		{
+			if($control instanceof \Nette\ComponentModel\IComponent)
+			{
+				$control->getParent()?->removeComponent($control);
+			}
+		}
+
+		unset($this->groups[$key]);
 	}
 
 
@@ -233,24 +275,17 @@ class Form extends UIForm
 	}
 
 
-	public function addError(string|Stringable $message, bool $translate = true): void
-	{
-		$this->formErrors[] = $message;
-
-		parent::addError($message, $translate);
-	}
-
-
 	/**
+	 * Errors of the form itself (not of its controls), already translated
 	 * @return list<string|Stringable>
 	 */
 	public function getFormErrors(): array
 	{
-		return $this->formErrors;
+		return $this->getOwnErrors();
 	}
 
 
-	public function setDefaultInputWrapClass(string $defaultInputWrapClass): self
+	public function setDefaultInputWrapClass(string $defaultInputWrapClass): static
 	{
 		$this->defaultInputWrapClass = $defaultInputWrapClass;
 
@@ -304,8 +339,7 @@ class Form extends UIForm
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDate);
 
 		return $this[$name] = $dateInput->setRequired(false)
-			->setFormat('Y-m-d')
-			->addRule(fn($input): bool => DateTime::createFromFormat('Y-m-d', $input->getValue()) !== false, 'Vložte datum ve formátu dd.mm.yyyy');
+			->setFormat('Y-m-d');
 	}
 
 
@@ -321,15 +355,14 @@ class Form extends UIForm
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDateTime, $withSeconds);
 
 		return $this[$name] = $dateInput->setRequired(false)
-			->setFormat('Y-m-d H:i:s')
-			->addRule(fn($input): bool => DateTime::createFromFormat($withSeconds ? 'Y-m-d H:i:s' : 'Y-m-d H:i:00', $input->getValue()) !== false, 'Vložte datum ve formátu dd.mm.yyyy ' . ($withSeconds ? 'hh:mm:ss' : 'hh:mm'));
+			->setFormat('Y-m-d H:i:s');
 	}
 
 
 	public function addTime(string $name, null|string|Stringable $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
 		return $this[$name] = new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds)
-			->setFormat($withSeconds ? 'H:i:00' : 'H:i');
+			->setFormat($withSeconds ? 'H:i:s' : 'H:i');
 	}
 
 
@@ -350,7 +383,7 @@ class Form extends UIForm
 
 	public function addEmail(string $name, string|Stringable|null $label = null, int $maxLength = 255): Control\TextInput
 	{
-		return $this[$name] = new Control\TextInput($label)
+		return $this[$name] = new Control\TextInput($label, $maxLength)
 			->setRequired(false)
 			->addRule(self::Email);
 	}
@@ -379,7 +412,7 @@ class Form extends UIForm
 
 
 	/**
-	 * Posuvnik - rozsah hodnot se dodefinuje pres setMinMax() nebo setItems().
+	 * Slider - value range is defined by setMinMax() or setItems()
 	 */
 	public function addSlider(string $name, null|string|Stringable $label = null, int|float|null $min = null, int|float|null $max = null, int|float $step = 1): Control\SliderInput
 	{
@@ -450,11 +483,21 @@ class Form extends UIForm
 	}
 
 
+	/**
+	 * @param ?(\Closure(Control\SubmitButton, array<mixed>|object): void|\Closure(array<mixed>|object): void) $onSubmit
+	 */
 	public function addSubmit(string $name, Stringable|string|null $caption = null, ?\Closure $onSubmit = null): Control\SubmitButton
 	{
-		return $this[$name] = new Control\SubmitButton($caption)
+		$control = new Control\SubmitButton($caption)
 			->setIcon('save')
 			->setColor('success');
+
+		if($onSubmit !== null)
+		{
+			$control->onClick[] = $onSubmit;
+		}
+
+		return $this[$name] = $control;
 	}
 
 
@@ -519,7 +562,7 @@ class Form extends UIForm
 	public function addMultiWhisperer(string $name, null|string|Stringable $label = null, array $items = []): Control\MultiWhisperer
 	{
 		return $this[$name] = new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items)
-			->setHtmlAttribute('class', 'form-control-chosen')
+			->setClass('form-control-chosen')
 			->setHtmlAttribute('data-placeholder', 'Vyberte');
 	}
 
@@ -540,7 +583,7 @@ class Form extends UIForm
 	}
 
 
-	public function setRenderType(RenderType $renderType): self
+	public function setRenderType(RenderType $renderType): static
 	{
 		$this->renderType = $renderType;
 
@@ -548,7 +591,7 @@ class Form extends UIForm
 	}
 
 
-	public function setRenderDefault(): self
+	public function setRenderDefault(): static
 	{
 		$this->renderType = RenderType::Default;
 
@@ -556,7 +599,7 @@ class Form extends UIForm
 	}
 
 
-	public function setRenderFloating(): self
+	public function setRenderFloating(): static
 	{
 		$this->renderType = RenderType::Floating;
 
@@ -564,7 +607,7 @@ class Form extends UIForm
 	}
 
 
-	public function setRenderInline(): self
+	public function setRenderInline(): static
 	{
 		$this->renderType = RenderType::Inline;
 
@@ -578,7 +621,7 @@ class Form extends UIForm
 	}
 
 
-	public function setAjax(bool $ajax = true): self
+	public function setAjax(bool $ajax = true): static
 	{
 		$this->ajax = $ajax;
 
@@ -586,7 +629,7 @@ class Form extends UIForm
 	}
 
 
-	public function setTitle(string|Html $title): self
+	public function setTitle(string|Html $title): static
 	{
 		$this->title = $title;
 
@@ -600,7 +643,7 @@ class Form extends UIForm
 	}
 
 
-	public function setColor(string $color): self
+	public function setColor(string $color): static
 	{
 		$this->color = $color;
 
@@ -608,7 +651,7 @@ class Form extends UIForm
 	}
 
 
-	public function setIcon(string $icon): self
+	public function setIcon(string $icon): static
 	{
 		$this->icon = $icon;
 
@@ -620,7 +663,7 @@ class Form extends UIForm
 	 * Default class(es) for all form buttons (e.g. "rounded rounded-4").
 	 * Priority: setClass() on the button overrides this.
 	 */
-	public function setButtonClass(string $class): self
+	public function setButtonClass(string $class): static
 	{
 		$this->buttonClass = $class;
 
@@ -634,7 +677,7 @@ class Form extends UIForm
 	}
 
 
-	public function setNoValidate(bool $noValidate = true): self
+	public function setNoValidate(bool $noValidate = true): static
 	{
 		$this->noValidate = $noValidate;
 

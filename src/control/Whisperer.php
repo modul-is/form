@@ -7,7 +7,6 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Dial\SignalDial;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
-use Nette\Utils\Strings;
 
 class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceiver
 {
@@ -42,7 +41,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	/**
 	 * @param callable(mixed, array<mixed>): void $callback
 	 */
-	public function setOnSelectCallback(callable $callback): self
+	public function setOnSelectCallback(callable $callback): static
 	{
 		if($this->onChangeCallback !== null)
 		{
@@ -69,7 +68,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	/**
 	 * @param callable(mixed, array<string, mixed>): array<int|string, mixed> $callback
 	 */
-	public function setOnSearchChangeCallback(callable $callback): self
+	public function setOnSearchChangeCallback(callable $callback): static
 	{
 		$this->onSearchChangeCallback = $callback(...);
 
@@ -80,7 +79,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	/**
 	 * @param array<\Nette\Forms\Controls\BaseControl> $parents
 	 */
-	public function setParents(array $parents): self
+	public function setParents(array $parents): static
 	{
 		$this->parents = $parents;
 
@@ -99,32 +98,9 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 		if($signal === SignalDial::Load)
 		{
-			$parentsNames = [];
-
-			foreach($this->parents as $parent)
-			{
-				$value = $presenter->getParameter($this->getNormalizeName($parent));
-
-				$parent->setValue($value);
-
-				$parentsNames[$parent->getName()] = $parent->getValue();
-			}
-
-			$data = $this->getDependentData([$parentsNames]);
-
-			$items = $data->getPreparedItems(is_array($this->disabled) ? $this->disabled : []);
-
-			$presenter->payload->dependentselectbox = [
-				'id' => $this->getHtmlId(),
-				'items' => $items,
-				'value' => $data->getValue(),
-				'prompt' => $this->translate($data->getPrompt()),
-				'disabledWhenEmpty' => $this->disabledWhenEmpty
-			];
-
-			$presenter->sendPayload();
+			$this->sendDependentPayload($presenter);
 		}
-		elseif($signal == SignalDial::OnSearchChange)
+		elseif($signal === SignalDial::OnSearchChange)
 		{
 			if(!is_callable($this->onSearchChangeCallback))
 			{
@@ -139,11 +115,14 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 				foreach($this->parents as $parent)
 				{
-					$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)];
+					$parentArray[$parent->getName()] = $parentValueArray[$this->getNormalizeName($parent)] ?? null;
 				}
 			}
 
-			$data = ['' => ''] + call_user_func_array($this->onSearchChangeCallback, [$presenter->getParameter('param'), $parentArray]);
+			/**
+			 * Empty option (needed by chosen for deselect) is added by whisperer.js
+			 */
+			$data = call_user_func_array($this->onSearchChangeCallback, [$presenter->getParameter('param'), $parentArray]);
 
 			$presenter->payload->suggestions = [];
 
@@ -154,18 +133,14 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 			$presenter->sendPayload();
 		}
-		elseif($signal == SignalDial::OnSelect)
+		elseif($signal === SignalDial::OnSelect)
 		{
 			if(!is_callable($this->onSelectCallback))
 			{
 				throw new \Nette\InvalidStateException('OnSelect callback not set for input "' . $this->getName() . '"');
 			}
 
-			$currentValues = [];
-
-			parse_str($presenter->getParameter('formdata'), $currentValues);
-
-			call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), array_filter($currentValues)]);
+			call_user_func_array($this->onSelectCallback, [$presenter->getParameter('selected'), \ModulIS\Form\Helper\FormData::parse($presenter->getParameter('formdata'))]);
 
 			/**
 			 * If there is no snippet to redraw -> send empty response
@@ -211,6 +186,14 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 	public function getControl(): Html
 	{
+		/**
+		 * Items have to be loaded before parent builds the options
+		 */
+		if($this->dependentCallback !== null)
+		{
+			$this->tryLoadItems();
+		}
+
 		$control = parent::getControl();
 
 		if($this->dividerValue !== '' && $this->dividerValue !== null)
@@ -234,8 +217,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 		if($this->dependentCallback !== null)
 		{
-			$this->tryLoadItems();
-
 			$control->setAttribute('data-dependentselectbox', $presenter->link($this->getLinkPath(SignalDial::Load)));
 		}
 
@@ -256,7 +237,12 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 		if($this->noResultMessage !== null)
 		{
-			$control->attrs['no-result-message'] = $this->noResultMessage;
+			$control->attrs['no-result-message'] = $this->translate($this->noResultMessage);
+		}
+
+		if($control->getAttribute('data-placeholder'))
+		{
+			$control->setAttribute('data-placeholder', $this->translate($control->getAttribute('data-placeholder')));
 		}
 
 		return $control;
@@ -280,9 +266,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 		{
 			$errorClass = ' is-invalid';
 
-			$errorMessage = Html::el('div')
-				->class('invalid-feedback')
-				->addHtml((string) $this->getError());
+			$errorMessage = $this->createErrorFeedback();
 		}
 
 		$chosenClass = $this->isRequired() ? ' form-control-chosen-required' : ' form-control-chosen';
@@ -300,7 +284,10 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 		foreach($this->getRules() as $rule)
 		{
-			if($rule->control == $this && $rule->validator == \ModulIS\Form\Form::Filled && in_array($this->getValue(), [null, false, ''], true))
+			/**
+			 * Nette considers the empty '' item as filled, therefore the required rule is checked here once more
+			 */
+			if(!$rule->branch && !$rule->isNegative && $rule->control === $this && $rule->validator === \ModulIS\Form\Form::Filled && in_array($this->getValue(), [null, false, ''], true))
 			{
 				$this->addError(\Nette\Forms\Validator::formatMessage($rule, true), false);
 			}
@@ -308,7 +295,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	}
 
 
-	public function setNoResultMessage(?string $noResultMessage = null): self
+	public function setNoResultMessage(?string $noResultMessage = null): static
 	{
 		$this->noResultMessage = $noResultMessage;
 
@@ -318,29 +305,23 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 	private function addDividerToOption(Html $control): Html
 	{
-		$optionString = '';
-		$items = explode('</option>', (string) $control->getChildren()[0]);
+		$value = htmlspecialchars((string) $this->dividerValue, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
-		foreach($items as $item)
-		{
-			if(str_contains($item, 'value="' . $this->dividerValue . '"'))
-			{
-				$optionString .= '<option class="border-bottom"' . Strings::trim($item, '<option') . '</option>';
-			}
-			else
-			{
-				$optionString .= $item . '</option>';
-			}
-		}
+		$optionString = preg_replace(
+			'~<option(?=[^>]*\svalue="' . preg_quote($value, '~') . '")~',
+			'<option class="border-bottom"',
+			(string) $control->getChildren()[0],
+			1
+		);
 
 		$control->removeChildren();
-		$control->addHtml($optionString);
+		$control->addHtml((string) $optionString);
 
 		return $control;
 	}
 
 
-	public function setDividerValue(int|string|null $dividerValue): self
+	public function setDividerValue(int|string|null $dividerValue): static
 	{
 		$this->dividerValue = $dividerValue;
 

@@ -14,9 +14,22 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
 	use Helper\ButtonRounded;
-	use Helper\RenderBasic;
 
 	protected string|null $link = null;
+
+
+	public function __construct
+	(
+		string|\Stringable|null $caption = null
+	)
+	{
+		parent::__construct($caption);
+
+		/**
+		 * Link carries no value - same as Nette buttons, it must not appear in form values
+		 */
+		$this->setOmitted();
+	}
 
 
 	public function getControl(): Html
@@ -62,7 +75,12 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 			$el->href($this->link);
 		}
 
-		$el->setHtml(trim($btnIcon . ' ' . $this->getCaption()));
+		if($btnIcon)
+		{
+			$el->addHtml($btnIcon . ' ');
+		}
+
+		$el->addText($this->translate($this->getCaption()));
 		$el->class('btn' . $this->getFormButtonClass() . $btnColor . $currentClass);
 
 		foreach($control->attrs as $name => $value)
@@ -79,7 +97,7 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 	}
 
 
-	public function setLink(string $link): self
+	public function setLink(string $link): static
 	{
 		$this->link = $link;
 		return $this;

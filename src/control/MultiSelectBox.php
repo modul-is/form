@@ -7,10 +7,9 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Application\UI\SignalReceiver;
 
-class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Renderable, Signalable, SignalReceiver
+class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Renderable, HasInputGroup, Signalable, SignalReceiver
 {
 	use Helper\InputGroup;
-	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;

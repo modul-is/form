@@ -18,7 +18,7 @@ trait QuickCopy
 	protected bool $quickCopy = false;
 
 
-	public function setQuickCopy(bool $value = true): self
+	public function setQuickCopy(bool $value = true): static
 	{
 		$this->quickCopy = $value;
 
@@ -40,7 +40,7 @@ trait QuickCopy
 				Html::el('button')
 					->type('button')
 					->class('btn quick-copy-btn')
-					->setAttribute('title', 'Zkopírovat do schránky')
+					->setAttribute('title', $this->translate('Zkopírovat do schránky'))
 					->addHtml(Html::el('i')->class('fal fa-copy fa-fw'))
 			);
 	}

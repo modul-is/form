@@ -10,7 +10,6 @@ class TextInput extends \Nette\Forms\Controls\TextInput implements Renderable, S
 {
 	use Helper\InputGroup;
 	use Helper\QuickCopy;
-	use Helper\Color;
 	use Helper\Tooltip;
 	use Helper\ControlPart;
 	use Helper\Label;
