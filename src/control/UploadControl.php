@@ -23,4 +23,12 @@ class UploadControl extends \Nette\Forms\Controls\UploadControl implements Rende
 	use Helper\RenderFloating;
 	use Helper\RenderInline;
 	use Helper\WrapControl;
+
+	public function getControl(): \Nette\Utils\Html
+	{
+		$control = parent::getControl();
+		\assert($control instanceof \Nette\Utils\Html);
+
+		return $control;
+	}
 }

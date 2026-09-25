@@ -159,7 +159,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 
 		return $this[$name] = $dateInput->setRequired(false)
 			->setFormat('Y-m-d')
-			->addRule(fn($input) => DateTime::createFromFormat('Y-m-d', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy');
+			->addRule(fn($input): bool => DateTime::createFromFormat('Y-m-d', $input->getValue()) !== false, 'Vložte datum ve formátu dd.mm.yyyy');
 	}
 
 
@@ -169,7 +169,7 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 
 		return $this[$name] = $dateInput->setRequired(false)
 			->setFormat('Y-m-d H:i:s')
-			->addRule(fn($input) => DateTime::createFromFormat($withSeconds ? 'Y-m-d H:i:s' : 'Y-m-d H:i:00', $input->getValue()), 'Vložte datum ve formátu dd.mm.yyyy ' . ($withSeconds ? 'hh:mm:ss' : 'hh:mm'));
+			->addRule(fn($input): bool => DateTime::createFromFormat($withSeconds ? 'Y-m-d H:i:s' : 'Y-m-d H:i:00', $input->getValue()) !== false, 'Vložte datum ve formátu dd.mm.yyyy ' . ($withSeconds ? 'hh:mm:ss' : 'hh:mm'));
 	}
 
 
@@ -486,6 +486,6 @@ class Container extends \Nette\Forms\Container implements Control\Renderable
 			$this->currentGroup->add($control);
 		}
 
-		return $this[$name] = $control;
+		return $this[(string) $name] = $control;
 	}
 }

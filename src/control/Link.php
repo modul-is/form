@@ -19,6 +19,15 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 	protected string|null $link = null;
 
 
+	public function getControl(): Html
+	{
+		$control = parent::getControl();
+		\assert($control instanceof Html);
+
+		return $control;
+	}
+
+
 	public function getLabel(string|\Stringable|null $caption = null)
 	{
 		return $this->translate($caption ?? $this->getCaption());

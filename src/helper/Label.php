@@ -14,6 +14,7 @@ trait Label
 	public function getCoreLabel(): Html|string
 	{
 		$label = $this->getLabel();
+		assert($label instanceof Html);
 
 		if($this->isRequired())
 		{

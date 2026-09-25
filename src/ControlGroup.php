@@ -149,6 +149,8 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 		{
 			if($item instanceof \Nette\Forms\Control || $item instanceof Container)
 			{
+				/** Containers are stored alongside controls on purpose - Nette types the map for controls only */
+				/** @phpstan-ignore offsetAssign.dimType */
 				$this->controls[$item] = null;
 			}
 			elseif(is_iterable($item))

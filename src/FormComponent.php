@@ -20,12 +20,12 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 
 		$reflection = new \Nette\Application\UI\ComponentReflection(self::class);
 
-		$template = $this->getLatteName($reflection->getFileName());
+		$template = $this->getLatteName($this->getClassFileName($reflection));
 
 		if($this->renderManually)
 		{
 			$this->template->formTemplatePath = $template;
-			$this->template->setFile($this->getLatteName($this->getReflection()->getFileName()));
+			$this->template->setFile($this->getLatteName($this->getClassFileName($this->getReflection())));
 		}
 		else
 		{
@@ -40,6 +40,22 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 	protected function setRenderManually(bool $renderManually): void
 	{
 		$this->renderManually = $renderManually;
+	}
+
+
+	/**
+	 * @param \ReflectionClass<object> $reflection
+	 */
+	private function getClassFileName(\ReflectionClass $reflection): string
+	{
+		$fileName = $reflection->getFileName();
+
+		if($fileName === false)
+		{
+			throw new \Nette\InvalidStateException('Class ' . $reflection->getName() . ' is not defined in a file.');
+		}
+
+		return $fileName;
 	}
 
 
@@ -65,7 +81,7 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 	{
 		if(str_starts_with($name, 'render'))
 		{
-			$array = explode(DIRECTORY_SEPARATOR, $this->getReflection()->getFileName());
+			$array = explode(DIRECTORY_SEPARATOR, $this->getClassFileName($this->getReflection()));
 
 			end($array);
 

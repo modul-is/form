@@ -171,6 +171,6 @@ trait Dependent
 
 	private function getNormalizeName(\Nette\Forms\Controls\BaseControl $parent): string
 	{
-		return str_replace('-', '_', $parent->getHtmlId());
+		return str_replace('-', '_', (string) $parent->getHtmlId());
 	}
 }

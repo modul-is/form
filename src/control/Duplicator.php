@@ -241,7 +241,7 @@ class Duplicator extends Container implements Renderable
 
 
 	/**
-	 * @template T of object
+	 * @template T of Nette\ComponentModel\IComponent
 	 * @param class-string<T> $filterClass
 	 * @return array<int|string, T>
 	 */
@@ -368,7 +368,7 @@ class Duplicator extends Container implements Renderable
 			throw new Nette\InvalidArgumentException("Container with name '$name' already exists.");
 		}
 
-		$container = $this[$name];
+		$container = $this->getComponent((string) $name);
 		assert($container instanceof DuplicatorContainer);
 
 		return $container;
@@ -379,7 +379,7 @@ class Duplicator extends Container implements Renderable
 	{
 		if(!$this->form->isAnchored() || !$this->form->isSubmitted())
 		{
-			foreach($values as $name => $value)
+			foreach($values instanceof Traversable ? iterator_to_array($values) : (array) $values as $name => $value)
 			{
 				if((is_array($value) || $value instanceof Traversable) && !$this->getComponent(strval($name), false))
 				{
@@ -442,10 +442,11 @@ class Duplicator extends Container implements Renderable
 		{
 			$path = explode(self::NameSeparator, $this->lookupPath(Form::class));
 
-			$post = Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, null);
+			$httpData = $this->getForm()->getHttpData();
+			$post = is_array($httpData) ? Nette\Utils\Arrays::get($httpData, $path, null) : null;
 
-			/** @phpstan-ignore-next-line */
-			$this->httpPost = $post;
+			/** @phpstan-ignore function.impossibleType (Nette types HTTP data as flat strings, nested containers yield arrays) */
+			$this->httpPost = is_array($post) ? $post : null;
 		}
 
 		return $this->httpPost;
@@ -479,7 +480,7 @@ class Duplicator extends Container implements Renderable
 					return count(array_filter($value, $filter)) > 0;
 				}
 
-				return strlen($value);
+				return strlen($value) > 0;
 			};
 			$rows[] = array_filter(array_diff_key($item, $subComponents), $filter) ?: false;
 		}
@@ -505,7 +506,7 @@ class Duplicator extends Container implements Renderable
 			$exceptChildren[] = $button->getName();
 		}
 
-		$filled = $this->countFilledWithout($components, array_unique($exceptChildren));
+		$filled = $this->countFilledWithout($components, array_values(array_unique($exceptChildren)));
 
 		return $filled === count($this->getContainers());
 	}

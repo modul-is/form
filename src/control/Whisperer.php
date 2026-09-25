@@ -318,7 +318,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	private function addDividerToOption(Html $control): Html
 	{
 		$optionString = '';
-		$items = explode('</option>', $control->getChildren()[0]);
+		$items = explode('</option>', (string) $control->getChildren()[0]);
 
 		foreach($items as $item)
 		{

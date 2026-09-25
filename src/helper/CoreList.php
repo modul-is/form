@@ -124,7 +124,7 @@ trait CoreList
 	}
 
 
-	public function renderCompact(): Html|string
+	public function renderCompact(): Html
 	{
 		$validationFeedBack = $this->getValidationFeedback();
 		$validationClass = $this->getvalidationClass();
@@ -170,7 +170,7 @@ trait CoreList
 	}
 
 
-	public function renderBig(): Html|string
+	public function renderBig(): Html
 	{
 		$validationFeedBack = $this->getValidationFeedback();
 		$validationClass = $this->getvalidationClass();
@@ -393,7 +393,7 @@ trait CoreList
 	}
 
 
-	public function renderInlineList(): Html|string
+	public function renderInlineList(): Html
 	{
 		$form = $this->getForm();
 		assert($form instanceof Form);
