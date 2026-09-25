@@ -12,7 +12,7 @@ trait Tooltip
 	protected ?string $tooltip = null;
 
 
-	public function setTooltip($text)
+	public function setTooltip(?string $text): static
 	{
 		$this->tooltip = $text;
 		return $this;

@@ -14,7 +14,7 @@ trait ControlClass
 	}
 
 
-	public function getClass()
+	public function getClass(): mixed
 	{
 		return $this->getControl()->getAttribute('class');
 	}

@@ -23,6 +23,7 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 	use Helper\RenderInline;
 	use Helper\WrapControl;
 
+	/** @var array<int|string, string> */
 	private array $iconArray = [];
 
 
@@ -81,6 +82,9 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Rendera
 	}
 
 
+	/**
+	 * @param array<int|string, string> $iconArray
+	 */
 	public function setIconArray(array $iconArray): self
 	{
 		$this->iconArray = $iconArray;

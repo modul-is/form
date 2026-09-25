@@ -18,12 +18,14 @@ trait CoreList
 {
 	use ClassList;
 
+	/** @var array<int|string, string> */
 	protected array $tooltips = [];
 
 	protected int $itemsPerRow = 1;
 
 	protected ?string $itemClass = null;
 
+	/** @var array<string, mixed> */
 	protected array $wrapRowAttributes = [];
 
 	protected ?RenderListType $renderType = null;
@@ -329,7 +331,7 @@ trait CoreList
 	}
 
 
-	public function renderItem(string|int $itemName)
+	public function renderItem(string|int $itemName): Html
 	{
 		$input = $this->getControlPart($itemName);
 
@@ -421,6 +423,9 @@ trait CoreList
 	}
 
 
+	/**
+	 * @param array<int|string, string> $tooltips
+	 */
 	public function setTooltips(array $tooltips): static
 	{
 		$this->tooltips = $tooltips;
@@ -442,6 +447,9 @@ trait CoreList
 	}
 
 
+	/**
+	 * @param array<string, mixed> $attributes
+	 */
 	public function setWrapAttributes(array $attributes): static
 	{
 		$this->wrapRowAttributes = $attributes;

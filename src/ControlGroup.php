@@ -15,6 +15,9 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	protected ?string $icon = null;
 
 
+	/**
+	 * @return list<Control\Renderable|\Nette\Forms\Controls\HiddenField>
+	 */
 	public function getInputArray(): array
 	{
 		$controlArray = [];
@@ -38,6 +41,7 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 				continue;
 			}
 
+			\assert($control instanceof Control\Renderable || $control instanceof \Nette\Forms\Controls\HiddenField);
 			$controlArray[] = $control;
 		}
 
@@ -45,6 +49,9 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 	}
 
 
+	/**
+	 * @return list<Control\Button|Control\SubmitButton|Control\Link>
+	 */
 	public function getSubmitterArray(): array
 	{
 		$controlArray = [];

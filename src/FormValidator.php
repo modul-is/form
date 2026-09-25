@@ -8,19 +8,19 @@ use Nette\Forms\Controls\BaseControl;
 
 final class FormValidator
 {
-	public static function greater(BaseControl $control, $val): bool
+	public static function greater(BaseControl $control, mixed $val): bool
 	{
 		return $control->getValue() > $val;
 	}
 
 
-	public static function less(BaseControl $control, $val): bool
+	public static function less(BaseControl $control, mixed $val): bool
 	{
 		return $control->getValue() < $val;
 	}
 
 
-	public static function sameLength(BaseControl $control, $val): bool
+	public static function sameLength(BaseControl $control, mixed $val): bool
 	{
 		return mb_strlen($control->getValue()) === mb_strlen($val);
 	}

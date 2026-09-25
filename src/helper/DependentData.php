@@ -13,6 +13,9 @@ use Nette\Utils\Html;
 
 class DependentData
 {
+	/**
+	 * @param array<int|string, string|Html|array<int|string, string|Html>> $items
+	 */
 	public function __construct
 	(
 		private array $items = [],
@@ -23,12 +26,18 @@ class DependentData
 	}
 
 
+	/**
+	 * @return array<int|string, string|Html|array<int|string, string|Html>>
+	 */
 	public function getItems(): array
 	{
 		return $this->items;
 	}
 
 
+	/**
+	 * @param array<int|string, string|Html|array<int|string, string|Html>> $items
+	 */
 	public function setItems(array $items): static
 	{
 		$this->items = $items;
@@ -62,6 +71,10 @@ class DependentData
 	}
 
 
+	/**
+	 * @param ?array<int|string, bool> $disabledItems
+	 * @return list<array<string, mixed>>
+	 */
 	public function getPreparedItems(?array $disabledItems = []): array
 	{
 		$items = [];
@@ -94,7 +107,10 @@ class DependentData
 	}
 
 
-	private function getPreparedElement(string|int $key, $item, ?array $disabledItems = []): Html
+	/**
+	 * @param ?array<int|string, bool> $disabledItems
+	 */
+	private function getPreparedElement(string|int $key, mixed $item, ?array $disabledItems = []): Html
 	{
 		if(!$item instanceof Html)
 		{
@@ -117,7 +133,10 @@ class DependentData
 	}
 
 
-	private function addElementToItemsList(array &$items, Html $el)
+	/**
+	 * @param array<int|string, mixed> $items
+	 */
+	private function addElementToItemsList(array &$items, Html $el): void
 	{
 		$items[$el->getAttribute('value')] = [
 			'key' => $el->getAttribute('value'),

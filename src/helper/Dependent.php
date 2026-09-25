@@ -13,13 +13,15 @@ use Nette\Application\UI\Presenter;
 
 trait Dependent
 {
+	/** @var array<\Nette\Forms\Controls\BaseControl> */
 	protected array $parents = [];
 
-	private $dependentCallback;
+	/** @var ?\Closure(array<string, mixed>): mixed */
+	private ?\Closure $dependentCallback = null;
 
 	private bool $disabledWhenEmpty = false;
 
-	private $tempValue;
+	private mixed $tempValue = null;
 
 
 	public function getControl(): \Nette\Utils\Html
@@ -127,6 +129,9 @@ trait Dependent
 	}
 
 
+	/**
+	 * @param list<mixed> $args
+	 */
 	private function getDependentData(array $args = []): DependentData
 	{
 		if($this->dependentCallback === null)
@@ -145,9 +150,12 @@ trait Dependent
 	}
 
 
+	/**
+	 * @param callable(array<string, mixed>): DependentData $callback
+	 */
 	public function setDependentCallback(callable $callback): static
 	{
-		$this->dependentCallback = $callback;
+		$this->dependentCallback = $callback(...);
 
 		return $this;
 	}

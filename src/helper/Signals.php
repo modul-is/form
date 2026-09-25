@@ -11,12 +11,14 @@ use Nette\Utils\Html;
 
 trait Signals
 {
-	protected $onFocusOutCallback;
+	/** @var ?\Closure(mixed, mixed, array<mixed>): void */
+	protected ?\Closure $onFocusOutCallback = null;
 
-	protected $onChangeCallback;
+	/** @var ?\Closure(mixed, mixed, array<mixed>): void */
+	protected ?\Closure $onChangeCallback = null;
 
 
-	public function signalReceived($signal): void
+	public function signalReceived(string $signal): void
 	{
 		$presenter = $this->lookup(Presenter::class);
 
@@ -71,29 +73,35 @@ trait Signals
 	}
 
 
+	/**
+	 * @param callable(mixed, mixed, array<mixed>): void $callback
+	 */
 	public function setOnFocusOutCallback(callable $callback): static
 	{
-		$this->onFocusOutCallback = $callback;
+		$this->onFocusOutCallback = $callback(...);
 
 		return $this;
 	}
 
 
+	/**
+	 * @param callable(mixed, mixed, array<mixed>): void $callback
+	 */
 	public function setOnChangeCallback(callable $callback): static
 	{
-		$this->onChangeCallback = $callback;
+		$this->onChangeCallback = $callback(...);
 
 		return $this;
 	}
 
 
-	public function getOnChangeCallback()
+	public function getOnChangeCallback(): ?\Closure
 	{
 		return $this->onChangeCallback;
 	}
 
 
-	public function getOnFocusOutCallback()
+	public function getOnFocusOutCallback(): ?\Closure
 	{
 		return $this->onFocusOutCallback;
 	}

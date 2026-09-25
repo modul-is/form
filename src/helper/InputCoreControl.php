@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 trait InputCoreControl
 {
-	public function getCoreControl()
+	public function getCoreControl(): Html
 	{
 		$input = $this->getControl();
 

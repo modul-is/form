@@ -31,9 +31,13 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 	}
 	use Helper\Dependent;
 
+	/**
+	 * @param array<\Nette\Forms\Controls\BaseControl> $parents
+	 * @param ?callable(array<string, mixed>): \ModulIS\Form\Helper\DependentData $dependentCallback
+	 */
 	public function __construct
 	(
-		$label = null, array $parents = [], ?callable $dependentCallback = null
+		string|\Stringable|null $label = null, array $parents = [], ?callable $dependentCallback = null
 	)
 	{
 		$this->controlClass = 'form-select';
@@ -48,7 +52,7 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 	}
 
 
-	public function signalReceived($signal): void
+	public function signalReceived(string $signal): void
 	{
 		$presenter = $this->lookup(Presenter::class);
 

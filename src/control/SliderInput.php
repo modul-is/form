@@ -54,7 +54,7 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable,
 
 	public function __construct
 	(
-		$label = null
+		string|\Stringable|null $label = null
 	)
 	{
 		parent::__construct($label);

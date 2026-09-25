@@ -23,6 +23,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 	use Helper\RenderInline;
 	use Helper\WrapControl;
 
+	/** @var array<int|string, string> */
 	private array $iconArray = [];
 
 	private bool $rounded = false;
@@ -36,6 +37,9 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Renderable, S
 	}
 
 
+	/**
+	 * @param array<int|string, string> $iconArray
+	 */
 	public function setIconArray(array $iconArray): self
 	{
 		$this->iconArray = $iconArray;

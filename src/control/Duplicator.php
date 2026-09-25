@@ -12,10 +12,8 @@ use ModulIS\Form\Helper\AutoRenderSkip;
 use ModulIS\Form\Helper\Template;
 use Nette;
 use Nette\Application\UI\Presenter;
-use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\SubmitterControl;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 use Stringable;
@@ -33,16 +31,20 @@ class Duplicator extends Container implements Renderable
 
 	public static ?string $containerClass = null;
 
-	protected $factoryCallback;
+	/** @var Closure(DuplicatorContainer): void */
+	protected Closure $factoryCallback;
 
 	private ?string $title = null;
 
 	private bool $submittedBy = false;
 
+	/** @var array<int|string, DuplicatorContainer> */
 	private array $created = [];
 
+	/** @var ?array<mixed> */
 	private ?array $httpPost = null;
 
+	/** @var array<string, mixed> */
 	private array $options = [];
 
 	private ?string $buttonWrapClass = null;
@@ -54,9 +56,12 @@ class Duplicator extends Container implements Renderable
 	private ?string $duplicatorContainerClass = null;
 
 
+	/**
+	 * @param callable(DuplicatorContainer): void $factory
+	 */
 	public function __construct
 	(
-		$factory, int $createDefault = 0, bool $forceDefault = false
+		callable $factory, int $createDefault = 0, bool $forceDefault = false
 	)
 	{
 		$this->monitor(Presenter::class, function()
@@ -70,23 +75,14 @@ class Duplicator extends Container implements Renderable
 			self::$containerClass = DuplicatorContainer::class;
 		}
 
-		try
-		{
-			$this->factoryCallback = Closure::fromCallable($factory);
-		}
-		catch(Nette\InvalidArgumentException $e)
-		{
-			$type = is_object($factory) ? 'instanceof ' . $factory::class : gettype($factory);
-
-			throw new Nette\InvalidArgumentException('Duplicator requires callable factory, ' . $type . ' given.', 0, $e);
-		}
+		$this->factoryCallback = Closure::fromCallable($factory);
 
 		$this->createDefault = $createDefault;
 		$this->forceDefault = $forceDefault;
 	}
 
 
-	public function setOption(string $key, $value): self
+	public function setOption(string $key, mixed $value): self
 	{
 		if($value === null)
 		{
@@ -101,7 +97,7 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	public function getOption($key, $default = null)
+	public function getOption(string $key, mixed $default = null): mixed
 	{
 		return $this->options[$key] ?? $default;
 	}
@@ -235,20 +231,23 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	public function setFactory($factory): void
+	/**
+	 * @param callable(DuplicatorContainer): void $factory
+	 */
+	public function setFactory(callable $factory): void
 	{
 		$this->factoryCallback = Closure::fromCallable($factory);
 	}
 
 
-	private function getFilteredComponents(?bool $recursive = false, ?string $filterClass = null)
+	/**
+	 * @template T of object
+	 * @param class-string<T> $filterClass
+	 * @return array<int|string, T>
+	 */
+	private function getFilteredComponents(bool $recursive, string $filterClass): array
 	{
 		$components = $recursive ? $this->getComponentTree() : $this->getComponents();
-
-		if(!$filterClass)
-		{
-			return $components;
-		}
 
 		$componentArray = [];
 
@@ -275,19 +274,25 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	public function getContainers(?bool $recursive = false)
+	/**
+	 * @return array<int|string, Container>
+	 */
+	public function getContainers(bool $recursive = false): array
 	{
 		return $this->getFilteredComponents($recursive, Container::class);
 	}
 
 
-	public function getButtons(?bool $recursive = false)
+	/**
+	 * @return array<int|string, Nette\Forms\Controls\SubmitButton>
+	 */
+	public function getButtons(bool $recursive = false): array
 	{
-		return $this->getFilteredComponents($recursive, SubmitterControl::class);
+		return $this->getFilteredComponents($recursive, Nette\Forms\Controls\SubmitButton::class);
 	}
 
 
-	protected function createComponent($name): ?Nette\ComponentModel\IComponent
+	protected function createComponent(string $name): ?Nette\ComponentModel\IComponent
 	{
 		$container = $this->createContainer();
 
@@ -313,10 +318,8 @@ class Duplicator extends Container implements Renderable
 
 	private function getFirstControlName(): ?string
 	{
-		$controls = $this->getFilteredComponents(false, Control::class);
+		$controls = $this->getFilteredComponents(false, BaseControl::class);
 		$firstControl = reset($controls);
-
-		assert($firstControl instanceof BaseControl || $firstControl === false);
 
 		return $firstControl ? $firstControl->getName() : null;
 	}
@@ -348,14 +351,9 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	public function createOne($name = null)
+	public function createOne(string|int|null $name = null): DuplicatorContainer
 	{
 		$containers = $this->getContainers();
-
-		if(!is_array($containers))
-		{
-			$containers = iterator_to_array($containers);
-		}
 
 		if($name === null)
 		{
@@ -370,7 +368,10 @@ class Duplicator extends Container implements Renderable
 			throw new Nette\InvalidArgumentException("Container with name '$name' already exists.");
 		}
 
-		return $this[$name];
+		$container = $this[$name];
+		assert($container instanceof DuplicatorContainer);
+
+		return $container;
 	}
 
 
@@ -391,7 +392,7 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	protected function loadHttpData()
+	protected function loadHttpData(): void
 	{
 		if(!$this->getForm()->isSubmitted())
 		{
@@ -408,7 +409,7 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	protected function createDefault()
+	protected function createDefault(): void
 	{
 		if(!$this->createDefault)
 		{
@@ -424,7 +425,7 @@ class Duplicator extends Container implements Renderable
 		}
 		elseif($this->forceDefault)
 		{
-			while(iterator_count($this->getContainers()) < $this->createDefault)
+			while(count($this->getContainers()) < $this->createDefault)
 			{
 				$this->createOne();
 			}
@@ -432,7 +433,10 @@ class Duplicator extends Container implements Renderable
 	}
 
 
-	private function getHttpData()
+	/**
+	 * @return ?array<mixed>
+	 */
+	private function getHttpData(): ?array
 	{
 		if($this->httpPost === null)
 		{
@@ -450,6 +454,8 @@ class Duplicator extends Container implements Renderable
 
 	/**
 	 * Counts filled values, filtered by given names
+	 * @param list<string> $components
+	 * @param list<string> $subComponents
 	 */
 	public function countFilledWithout(array $components = [], array $subComponents = []): int
 	{
@@ -482,23 +488,26 @@ class Duplicator extends Container implements Renderable
 	}
 
 
+	/**
+	 * @param list<string> $exceptChildren
+	 */
 	public function isAllFilled(array $exceptChildren = []): bool
 	{
 		$components = [];
 
-		foreach($this->getFilteredComponents(false, Control::class) as $control)
+		foreach($this->getFilteredComponents(false, BaseControl::class) as $control)
 		{
 			$components[] = $control->getName();
 		}
 
-		foreach($this->getFilteredComponents(true, SubmitterControl::class) as $button)
+		foreach($this->getFilteredComponents(true, Nette\Forms\Controls\SubmitButton::class) as $button)
 		{
 			$exceptChildren[] = $button->getName();
 		}
 
 		$filled = $this->countFilledWithout($components, array_unique($exceptChildren));
 
-		return $filled === iterator_count($this->getContainers());
+		return $filled === count($this->getContainers());
 	}
 
 

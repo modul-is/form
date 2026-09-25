@@ -11,7 +11,7 @@ use function assert;
 
 trait Label
 {
-	public function getCoreLabel()
+	public function getCoreLabel(): Html|string
 	{
 		$label = $this->getLabel();
 

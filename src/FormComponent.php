@@ -9,12 +9,12 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 	protected bool $renderManually = false;
 
 
-	protected function beforeRender()
+	protected function beforeRender(): void
 	{
 	}
 
 
-	public function render()
+	public function render(): void
 	{
 		$this->beforeRender();
 
@@ -24,7 +24,6 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 
 		if($this->renderManually)
 		{
-			/* @phpstan-ignore-next-line */
 			$this->template->formTemplatePath = $template;
 			$this->template->setFile($this->getLatteName($this->getReflection()->getFileName()));
 		}
@@ -33,7 +32,6 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 			$this->template->setFile($template);
 		}
 
-		/* @phpstan-ignore-next-line */
 		$this->template->form = $this->getComponent('form');
 		$this->template->render();
 	}
@@ -63,7 +61,7 @@ abstract class FormComponent extends \Nette\Application\UI\Control
 	/**
 	 * Magic fucntion for render functions, render latte file with the same name as component and name of called function
 	 */
-	public function __call($name, $arguments)
+	public function __call(string $name, array $arguments)
 	{
 		if(str_starts_with($name, 'render'))
 		{

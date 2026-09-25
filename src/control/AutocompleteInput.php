@@ -31,20 +31,27 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	use Helper\ControlClass;
 	use Helper\RenderBasic;
 
-	public $onSearchChangeCallback;
+	/** @var ?\Closure(mixed, array<string, mixed>): mixed */
+	public ?\Closure $onSearchChangeCallback = null;
 
-	public $onSelectCallback;
+	/** @var ?\Closure(mixed, array<mixed>): void */
+	public ?\Closure $onSelectCallback = null;
 
+	/** @var array<\Nette\Forms\Controls\BaseControl> */
 	private array $parents = [];
 
 	private ?string $prompt = null;
 
+	/** @var array<mixed> */
 	private array $items = [];
 
 
+	/**
+	 * @param ?array<mixed> $items
+	 */
 	public function __construct
 	(
-		$label = null, ?int $maxLength = null, ?array $items = null
+		string|\Stringable|null $label = null, ?int $maxLength = null, ?array $items = null
 	)
 	{
 		parent::__construct($label, $maxLength);
@@ -64,6 +71,9 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	}
 
 
+	/**
+	 * @param callable(mixed, array<mixed>): void $callback
+	 */
 	public function setOnSelectCallback(callable $callback): self
 	{
 		if($this->onChangeCallback !== null)
@@ -71,7 +81,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 			throw new \Nette\InvalidStateException('Cannot use onSelectCallback and onChangeCallback together for input "' . $this->getName() . '"');
 		}
 
-		$this->onSelectCallback = $callback;
+		$this->onSelectCallback = $callback(...);
 
 		return $this;
 	}
@@ -88,14 +98,20 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	}
 
 
+	/**
+	 * @param callable(mixed, array<string, mixed>): array<int|string, mixed> $callback
+	 */
 	public function setOnSearchChangeCallback(callable $callback): self
 	{
-		$this->onSearchChangeCallback = $callback;
+		$this->onSearchChangeCallback = $callback(...);
 
 		return $this;
 	}
 
 
+	/**
+	 * @param array<\Nette\Forms\Controls\BaseControl> $parents
+	 */
 	public function setParents(array $parents): self
 	{
 		$this->parents = $parents;
@@ -104,7 +120,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	}
 
 
-	public function signalReceived($signal): void
+	public function signalReceived(string $signal): void
 	{
 		$presenter = $this->lookup(Presenter::class);
 
@@ -213,12 +229,16 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	}
 
 
-	private function getNormalizeName(\Nette\Forms\Controls\BaseControl $parent)
+	private function getNormalizeName(\Nette\Forms\Controls\BaseControl $parent): string
 	{
 		return str_replace('-', '_', $parent->getHtmlId());
 	}
 
 
+	/**
+	 * @param array<int|string, mixed> $data
+	 * @return list<array{value: string, data: int|string}>
+	 */
 	private function prepareData(array $data): array
 	{
 		$array = [];
@@ -232,7 +252,7 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	}
 
 
-	public function getCoreControl()
+	public function getCoreControl(): Html
 	{
 		$input = $this->getControl();
 

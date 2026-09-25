@@ -8,6 +8,7 @@ trait ToggleButton
 {
 	protected bool $toggleButton = false;
 
+	/** @var string|array<int|string, string> */
 	protected string|array $buttonColor = 'outline-primary';
 
 
@@ -19,6 +20,9 @@ trait ToggleButton
 	}
 
 
+	/**
+	 * @param string|array<int|string, string> $color
+	 */
 	public function setButtonColor(string|array $color = 'primary'): static
 	{
 		$this->buttonColor = $color;

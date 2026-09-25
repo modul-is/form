@@ -10,7 +10,7 @@ use Nette\Utils\DateTime;
 use Nette\Utils\Html;
 use Stringable;
 
-class Container extends \Nette\Forms\Container
+class Container extends \Nette\Forms\Container implements Control\Renderable
 {
 	public string $color = 'white';
 
@@ -22,6 +22,7 @@ class Container extends \Nette\Forms\Container
 
 	private ?string $wrapClass = null;
 
+	/** @var array<string, Html|string> */
 	private array $dividerArray = [];
 
 
@@ -71,7 +72,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addHidden(string $name, $default = null): Control\Hidden
+	public function addHidden(string $name, mixed $default = null): Control\Hidden
 	{
 		return $this[$name] = (new Control\Hidden)
 			->setDefaultValue($default);
@@ -95,6 +96,9 @@ class Container extends \Nette\Forms\Container
 	}
 
 
+	/**
+	 * @param ?array<mixed> $itemArray
+	 */
 	public function addAutocomplete(string $name, null|string|Stringable $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
 	{
 		return $this[$name] = new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? [])
@@ -149,7 +153,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addDate(string $name, object|string|null $label = null): Control\DateTimeInput
+	public function addDate(string $name, null|string|Stringable $label = null): Control\DateTimeInput
 	{
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDate);
 
@@ -159,7 +163,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addDateTime(string $name, object|string|null $label = null, bool $withSeconds = false): Control\DateTimeInput
+	public function addDateTime(string $name, null|string|Stringable $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDateTime, $withSeconds);
 
@@ -176,14 +180,14 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addTime(string $name, object|string|null $label = null, bool $withSeconds = false): Control\DateTimeInput
+	public function addTime(string $name, null|string|Stringable $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
 		return $this[$name] = new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds)
 			->setFormat($withSeconds ? 'H:i:00' : 'H:i');
 	}
 
 
-	public function addUpload(string $name, null|string|Stringable $label = null, $multiple = false): Control\UploadControl
+	public function addUpload(string $name, null|string|Stringable $label = null, bool $multiple = false): Control\UploadControl
 	{
 		return $this[$name] = new Control\UploadControl($label, $multiple);
 	}
@@ -195,32 +199,44 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addCheckbox(string $name, $caption = ''): Control\Checkbox
+	public function addCheckbox(string $name, null|string|Stringable $caption = ''): Control\Checkbox
 	{
 		return $this[$name] = new Control\Checkbox($caption);
 	}
 
 
+	/**
+	 * @param ?array<mixed> $items
+	 */
 	public function addRadioList(string $name, null|string|Stringable $label = null, ?array $items = null): Control\RadioList
 	{
 		return $this[$name] = new Control\RadioList($label, $items);
 	}
 
 
+	/**
+	 * @param ?array<mixed> $items
+	 */
 	public function addCheckboxList(string $name, null|string|Stringable $label = null, ?array $items = null): Control\CheckboxList
 	{
 		return $this[$name] = new Control\CheckboxList($label, $items);
 	}
 
 
-	public function addSelect(string $name, null|string|Stringable $label = null, ?array $items = null, $size = null): Control\SelectBox
+	/**
+	 * @param ?array<mixed> $items
+	 */
+	public function addSelect(string $name, null|string|Stringable $label = null, ?array $items = null, ?int $size = null): Control\SelectBox
 	{
 		return $this[$name] = new Control\SelectBox($label, $items)
 			->setHtmlAttribute('size', $size > 1 ? (int) $size : null);
 	}
 
 
-	public function addMultiSelect(string $name, null|string|Stringable $label = null, ?array $items = null, $size = null): Control\MultiSelectBox
+	/**
+	 * @param ?array<mixed> $items
+	 */
+	public function addMultiSelect(string $name, null|string|Stringable $label = null, ?array $items = null, ?int $size = null): Control\MultiSelectBox
 	{
 		return $this[$name] = new Control\MultiSelectBox($label, $items)
 			->setHtmlAttribute('size', $size > 1 ? (int) $size : null);
@@ -233,31 +249,40 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addButton(string $name, $caption = ''): Control\Button
+	public function addButton(string $name, null|string|Stringable $caption = ''): Control\Button
 	{
 		return $this[$name] = new Control\Button($caption);
 	}
 
 
-	public function addLink(string $name, string $caption = ''): Control\Link
+	public function addLink(string $name, null|string|Stringable $caption = ''): Control\Link
 	{
 		return $this[$name] = new Control\Link($caption);
 	}
 
 
+	/**
+	 * @param array<BaseControl> $parents
+	 */
 	public function addDependentSelect(string $name, ?string $label = null, array $parents = [], ?callable $dependentCallback = null): Control\DependentSelect
 	{
 		return $this[$name] = new Control\DependentSelect($label, $parents, $dependentCallback);
 	}
 
 
+	/**
+	 * @param array<BaseControl> $parents
+	 */
 	public function addDependentMultiSelect(string $name, ?string $label = null, array $parents = [], ?callable $dependentCallback = null): Control\DependentMultiSelect
 	{
 		return $this[$name] = new Control\DependentMultiSelect($label, $parents, $dependentCallback);
 	}
 
 
-	public function addDuplicator($name, $factory, $copyNumber = 1, $forceDefault = false): Control\Duplicator
+	/**
+	 * @param callable(DuplicatorContainer): void $factory
+	 */
+	public function addDuplicator(string $name, callable $factory, int $copyNumber = 1, bool $forceDefault = false): Control\Duplicator
 	{
 		$duplicator = new Control\Duplicator($factory, $copyNumber, $forceDefault);
 
@@ -267,7 +292,10 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addWhisperer(string $name, $label = null, array $items = []): Control\Whisperer
+	/**
+	 * @param array<mixed> $items
+	 */
+	public function addWhisperer(string $name, null|string|Stringable $label = null, array $items = []): Control\Whisperer
 	{
 		return $this[$name] = new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items)
 			->setClass('form-control-chosen')
@@ -322,6 +350,7 @@ class Container extends \Nette\Forms\Container
 
 				foreach($inputArray as $control)
 				{
+					\assert($control instanceof Control\Renderable);
 					$inputs .= $control->render();
 
 					if(array_key_exists($control->getName(), $this->dividerArray))
@@ -400,6 +429,9 @@ class Container extends \Nette\Forms\Container
 	}
 
 
+	/**
+	 * @return list<\Nette\ComponentModel\IComponent>
+	 */
 	public function getInputArray(): array
 	{
 		$controlArray = [];
@@ -421,6 +453,9 @@ class Container extends \Nette\Forms\Container
 	}
 
 
+	/**
+	 * @return list<Control\Button|Control\SubmitButton|Control\Link>
+	 */
 	public function getSubmitterArray(): array
 	{
 		$controlArray = [];
@@ -440,7 +475,7 @@ class Container extends \Nette\Forms\Container
 	}
 
 
-	public function addContainer($name): self
+	public function addContainer(string|int $name): self
 	{
 		$control = new self;
 

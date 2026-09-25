@@ -49,7 +49,7 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Renderable, Sig
 	}
 
 
-	public function getCoreLabel()
+	public function getCoreLabel(): null
 	{
 		return null;
 	}

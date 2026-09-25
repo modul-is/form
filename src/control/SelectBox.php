@@ -25,12 +25,16 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, H
 	use Helper\RenderInline;
 	use Helper\WrapControl;
 
+	/** @var array<int|string, string> */
 	private array $imageArray = [];
 
 
+	/**
+	 * @param ?array<mixed> $items
+	 */
 	public function __construct
 	(
-		$label = null, ?array $items = null
+		string|\Stringable|null $label = null, ?array $items = null
 	)
 	{
 		parent::__construct($label, $items);
@@ -39,6 +43,9 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, H
 	}
 
 
+	/**
+	 * @param array<int|string, string> $imageArray
+	 */
 	public function setImageArray(array $imageArray): self
 	{
 		$this->imageArray = $imageArray;
@@ -47,7 +54,7 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, H
 	}
 
 
-	public function getCoreControl()
+	public function getCoreControl(): Html
 	{
 		$input = $this->getControl();
 

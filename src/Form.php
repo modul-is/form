@@ -45,18 +45,21 @@ class Form extends UIForm
 
 	private RenderType $renderType = RenderType::Default;
 
+	/** @var array<int|string, ControlGroup> */
 	private array $groups = [];
 
+	/** @var list<string|Stringable> */
 	private array $formErrors = [];
 
 	private string $defaultInputWrapClass = 'mb-2 col-12';
 
+	/** @var array<string, Html|string> */
 	private array $dividerArray = [];
 
 
 	public function __construct
 	(
-		?IContainer $parent = null, $name = null
+		?IContainer $parent = null, ?string $name = null
 	)
 	{
 		parent::__construct($parent, $name);
@@ -65,7 +68,7 @@ class Form extends UIForm
 	}
 
 
-	public function renderForm()
+	public function renderForm(): string
 	{
 		$groups = null;
 		$submitters = null;
@@ -87,7 +90,6 @@ class Form extends UIForm
 
 		foreach($groupArray as $groupTitle => $group)
 		{
-			assert($group instanceof ControlGroup);
 			$inputs = null;
 
 			foreach($group->getInputArray() as $input)
@@ -182,7 +184,7 @@ class Form extends UIForm
 	}
 
 
-	public function addGroup($caption = null, bool $setAsCurrent = true): ControlGroup
+	public function addGroup(string|Stringable|null $caption = null, bool $setAsCurrent = true): ControlGroup
 	{
 		$group = new ControlGroup;
 		$group->setOption('label', $caption);
@@ -199,25 +201,30 @@ class Form extends UIForm
 	}
 
 
-	public function getGroup($name): ?ControlGroup
+	public function getGroup(string|int $name): ?ControlGroup
 	{
 		return $this->groups[$name] ?? null;
 	}
 
 
+	/**
+	 * @return array<int|string, ControlGroup>
+	 */
 	public function getGroups(): array
 	{
 		return $this->groups;
 	}
 
 
+	/**
+	 * @return list<Control\Button|Control\SubmitButton|Control\Link>
+	 */
 	public function getSubmitterArray(): array
 	{
 		$submitterArray = [];
 
 		foreach($this->getGroups() as $group)
 		{
-			assert($group instanceof ControlGroup);
 			$submitterArray = array_merge($submitterArray, $group->getSubmitterArray());
 		}
 
@@ -225,7 +232,7 @@ class Form extends UIForm
 	}
 
 
-	public function addError($message, bool $translate = true): void
+	public function addError(string|Stringable $message, bool $translate = true): void
 	{
 		$this->formErrors[] = $message;
 
@@ -233,6 +240,9 @@ class Form extends UIForm
 	}
 
 
+	/**
+	 * @return list<string|Stringable>
+	 */
 	public function getFormErrors(): array
 	{
 		return $this->formErrors;
@@ -253,21 +263,21 @@ class Form extends UIForm
 	}
 
 
-	public function addHidden(string $name, $default = null): Control\Hidden
+	public function addHidden(string $name, mixed $default = null): Control\Hidden
 	{
 		return $this[$name] = (new Control\Hidden)
 			->setDefaultValue($default);
 	}
 
 
-	public function addText(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
+	public function addText(string $name, null|string|Stringable $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
 		return $this[$name] = new Control\TextInput($label, $maxLength)
 			->setHtmlAttribute('size', $cols);
 	}
 
 
-	public function addFloat(string $name, $label = null): Control\TextInput
+	public function addFloat(string $name, null|string|Stringable $label = null): Control\TextInput
 	{
 		return $this[$name] = new Control\TextInput($label)
 			->setNullable()
@@ -277,7 +287,10 @@ class Form extends UIForm
 	}
 
 
-	public function addAutocomplete(string $name, $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
+	/**
+	 * @param ?array<mixed> $itemArray
+	 */
+	public function addAutocomplete(string $name, null|string|Stringable $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
 	{
 		return $this[$name] = new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? [])
 			->setHtmlAttribute('autocomplete', 'off')
@@ -285,7 +298,7 @@ class Form extends UIForm
 	}
 
 
-	public function addDate(string $name, $label = null): Control\DateTimeInput
+	public function addDate(string $name, null|string|Stringable $label = null): Control\DateTimeInput
 	{
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDate);
 
@@ -295,14 +308,14 @@ class Form extends UIForm
 	}
 
 
-	public function addDateWeek(string $name, $label = null): Control\TextInput
+	public function addDateWeek(string $name, null|string|Stringable $label = null): Control\TextInput
 	{
 		return $this[$name] = new Control\TextInput($label)
 			->setHtmlAttribute('type', 'week');
 	}
 
 
-	public function addDateTime(string $name, $label = null, bool $withSeconds = false): Control\DateTimeInput
+	public function addDateTime(string $name, null|string|Stringable $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
 		$dateInput = new Control\DateTimeInput($label, DateTimeControl::TypeDateTime, $withSeconds);
 
@@ -312,14 +325,14 @@ class Form extends UIForm
 	}
 
 
-	public function addTime(string $name, $label = null, bool $withSeconds = false): Control\DateTimeInput
+	public function addTime(string $name, null|string|Stringable $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
 		return $this[$name] = new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds)
 			->setFormat($withSeconds ? 'H:i:00' : 'H:i');
 	}
 
 
-	public function addPassword(string $name, $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
+	public function addPassword(string $name, null|string|Stringable $label = null, ?int $cols = null, ?int $maxLength = null): Control\TextInput
 	{
 		return $this[$name] = new Control\TextInput($label, $maxLength)
 			->setHtmlAttribute('size', $cols)
@@ -327,7 +340,7 @@ class Form extends UIForm
 	}
 
 
-	public function addTextArea(string $name, $label = null, ?int $cols = null, ?int $rows = null): Control\TextArea
+	public function addTextArea(string $name, null|string|Stringable $label = null, ?int $cols = null, ?int $rows = null): Control\TextArea
 	{
 		return $this[$name] = new Control\TextArea($label)
 			->setHtmlAttribute('cols', $cols)->setHtmlAttribute('rows', $rows);
@@ -342,7 +355,7 @@ class Form extends UIForm
 	}
 
 
-	public function addInteger(string $name, $label = null): Control\TextInput
+	public function addInteger(string $name, null|string|Stringable $label = null): Control\TextInput
 	{
 		return $this[$name] = new Control\TextInput($label)
 			->setNullable()
@@ -351,7 +364,7 @@ class Form extends UIForm
 	}
 
 
-	public function addCurrency(string $name, $label = null, ?string $currency = null): Control\CurrencyInput
+	public function addCurrency(string $name, null|string|Stringable $label = null, ?string $currency = null): Control\CurrencyInput
 	{
 		$input = new Control\CurrencyInput($label);
 
@@ -367,7 +380,7 @@ class Form extends UIForm
 	/**
 	 * Posuvnik - rozsah hodnot se dodefinuje pres setMinMax() nebo setItems().
 	 */
-	public function addSlider(string $name, $label = null, int|float|null $min = null, int|float|null $max = null, int|float $step = 1): Control\SliderInput
+	public function addSlider(string $name, null|string|Stringable $label = null, int|float|null $min = null, int|float|null $max = null, int|float $step = 1): Control\SliderInput
 	{
 		$input = new Control\SliderInput($label);
 
@@ -380,44 +393,56 @@ class Form extends UIForm
 	}
 
 
-	public function addUpload(string $name, $label = null, $multiple = false): Control\UploadControl
+	public function addUpload(string $name, null|string|Stringable $label = null, bool $multiple = false): Control\UploadControl
 	{
 		return $this[$name] = new Control\UploadControl($label, $multiple);
 	}
 
 
-	public function addMultiUpload(string $name, $label = null): Control\UploadControl
+	public function addMultiUpload(string $name, null|string|Stringable $label = null): Control\UploadControl
 	{
 		return $this[$name] = new Control\UploadControl($label, true);
 	}
 
 
-	public function addCheckbox(string $name, $caption = null): Control\Checkbox
+	public function addCheckbox(string $name, null|string|Stringable $caption = null): Control\Checkbox
 	{
 		return $this[$name] = new Control\Checkbox($caption);
 	}
 
 
+	/**
+	 * @param ?array<mixed> $items
+	 */
 	public function addRadioList(string $name, null|string|Stringable $label = null, ?array $items = null): Control\RadioList
 	{
 		return $this[$name] = new Control\RadioList($label, $items);
 	}
 
 
+	/**
+	 * @param ?array<mixed> $items
+	 */
 	public function addCheckboxList(string $name, null|string|Stringable $label = null, ?array $items = null): Control\CheckboxList
 	{
 		return $this[$name] = new Control\CheckboxList($label, $items);
 	}
 
 
-	public function addSelect(string $name, null|string|Stringable $label = null, ?array $items = null, $size = null): Control\SelectBox
+	/**
+	 * @param ?array<mixed> $items
+	 */
+	public function addSelect(string $name, null|string|Stringable $label = null, ?array $items = null, ?int $size = null): Control\SelectBox
 	{
 		return $this[$name] = new Control\SelectBox($label, $items)
 			->setHtmlAttribute('size', $size > 1 ? (int) $size : null);
 	}
 
 
-	public function addMultiSelect(string $name, null|string|Stringable $label = null, ?array $items = null, $size = null): Control\MultiSelectBox
+	/**
+	 * @param ?array<mixed> $items
+	 */
+	public function addMultiSelect(string $name, null|string|Stringable $label = null, ?array $items = null, ?int $size = null): Control\MultiSelectBox
 	{
 		return $this[$name] = new Control\MultiSelectBox($label, $items)
 			->setHtmlAttribute('size', $size > 1 ? (int) $size : null);
@@ -432,31 +457,40 @@ class Form extends UIForm
 	}
 
 
-	public function addButton(string $name, $caption = ''): Control\Button
+	public function addButton(string $name, null|string|Stringable $caption = ''): Control\Button
 	{
 		return $this[$name] = new Control\Button($caption);
 	}
 
 
-	public function addLink(string $name, $caption = ''): Control\Link
+	public function addLink(string $name, null|string|Stringable $caption = ''): Control\Link
 	{
 		return $this[$name] = new Control\Link($caption);
 	}
 
 
-	public function addDependentSelect(string $name, $label = null, ?array $parents = [], ?callable $dependentCallback = null): Control\DependentSelect
+	/**
+	 * @param array<BaseControl> $parents
+	 */
+	public function addDependentSelect(string $name, null|string|Stringable $label = null, array $parents = [], ?callable $dependentCallback = null): Control\DependentSelect
 	{
 		return $this[$name] = new Control\DependentSelect($label, $parents, $dependentCallback);
 	}
 
 
-	public function addDependentMultiSelect(string $name, $label = null, ?array $parents = [], ?callable $dependentCallback = null): Control\DependentMultiSelect
+	/**
+	 * @param array<BaseControl> $parents
+	 */
+	public function addDependentMultiSelect(string $name, null|string|Stringable $label = null, array $parents = [], ?callable $dependentCallback = null): Control\DependentMultiSelect
 	{
 		return $this[$name] = new Control\DependentMultiSelect($label, $parents, $dependentCallback);
 	}
 
 
-	public function addWhisperer(string $name, $label = null, array $items = []): Control\Whisperer
+	/**
+	 * @param array<mixed> $items
+	 */
+	public function addWhisperer(string $name, null|string|Stringable $label = null, array $items = []): Control\Whisperer
 	{
 		return $this[$name] = new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items)
 			->setHtmlAttribute('data-placeholder', 'Vyberte')
@@ -465,7 +499,10 @@ class Form extends UIForm
 	}
 
 
-	public function addDuplicator($name, $factory, $copyNumber = 1, $forceDefault = false): Control\Duplicator
+	/**
+	 * @param callable(DuplicatorContainer): void $factory
+	 */
+	public function addDuplicator(string $name, callable $factory, int $copyNumber = 1, bool $forceDefault = false): Control\Duplicator
 	{
 		$duplicator = new Control\Duplicator($factory, $copyNumber, $forceDefault);
 
@@ -475,7 +512,10 @@ class Form extends UIForm
 	}
 
 
-	public function addMultiWhisperer(string $name, $label = null, ?array $items = null): Control\MultiWhisperer
+	/**
+	 * @param array<mixed> $items
+	 */
+	public function addMultiWhisperer(string $name, null|string|Stringable $label = null, array $items = []): Control\MultiWhisperer
 	{
 		return $this[$name] = new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items)
 			->setHtmlAttribute('class', 'form-control-chosen')
@@ -601,7 +641,7 @@ class Form extends UIForm
 	}
 
 
-	public function addContainer($name): Container
+	public function addContainer(string|int $name): Container
 	{
 		$control = new Container;
 

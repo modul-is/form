@@ -21,18 +21,22 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable, Signala
 	use Helper\ButtonRounded;
 	use Helper\RenderBasic;
 
-	protected $onChangeCallback;
+	/** @var ?\Closure(array<mixed>): void */
+	protected ?\Closure $onChangeCallback = null;
 
 
+	/**
+	 * @param callable(array<mixed>): void $callback
+	 */
 	public function setOnChangeCallback(callable $callback): static
 	{
-		$this->onChangeCallback = $callback;
+		$this->onChangeCallback = $callback(...);
 
 		return $this;
 	}
 
 
-	public function getOnChangeCallback()
+	public function getOnChangeCallback(): ?\Closure
 	{
 		return $this->onChangeCallback;
 	}
@@ -44,7 +48,7 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable, Signala
 	}
 
 
-	public function signalReceived($signal): void
+	public function signalReceived(string $signal): void
 	{
 		$presenter = $this->lookup(Presenter::class);
 

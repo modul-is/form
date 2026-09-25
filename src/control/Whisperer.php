@@ -13,18 +13,23 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 {
 	use \ModulIS\Form\Helper\Dependent;
 
-	private $onSelectCallback;
+	/** @var ?\Closure(mixed, array<mixed>): void */
+	private ?\Closure $onSelectCallback = null;
 
-	private $onSearchChangeCallback;
+	/** @var ?\Closure(mixed, array<string, mixed>): array<int|string, mixed> */
+	private ?\Closure $onSearchChangeCallback = null;
 
 	private ?string $noResultMessage = null;
 
 	private int|string|null $dividerValue = null;
 
 
+	/**
+	 * @param ?array<mixed> $items
+	 */
 	public function __construct
 	(
-		$label = null, ?array $items = null
+		string|\Stringable|null $label = null, ?array $items = null
 	)
 	{
 		parent::__construct($label, $items);
@@ -33,6 +38,9 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	}
 
 
+	/**
+	 * @param callable(mixed, array<mixed>): void $callback
+	 */
 	public function setOnSelectCallback(callable $callback): self
 	{
 		if($this->onChangeCallback !== null)
@@ -40,7 +48,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 			throw new \Nette\InvalidStateException('Cannot use onSelectCallback and onChangeCallback together for input "' . $this->getName() . '"');
 		}
 
-		$this->onSelectCallback = $callback;
+		$this->onSelectCallback = $callback(...);
 
 		return $this;
 	}
@@ -57,14 +65,20 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	}
 
 
+	/**
+	 * @param callable(mixed, array<string, mixed>): array<int|string, mixed> $callback
+	 */
 	public function setOnSearchChangeCallback(callable $callback): self
 	{
-		$this->onSearchChangeCallback = $callback;
+		$this->onSearchChangeCallback = $callback(...);
 
 		return $this;
 	}
 
 
+	/**
+	 * @param array<\Nette\Forms\Controls\BaseControl> $parents
+	 */
 	public function setParents(array $parents): self
 	{
 		$this->parents = $parents;
@@ -73,7 +87,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	}
 
 
-	public function signalReceived($signal): void
+	public function signalReceived(string $signal): void
 	{
 		$presenter = $this->lookup(Presenter::class);
 
@@ -254,7 +268,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	}
 
 
-	public function getCoreControl()
+	public function getCoreControl(): Html
 	{
 		$input = $this->getControl();
 

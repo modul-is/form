@@ -28,9 +28,13 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	private ?string $prompt = null;
 
 
+	/**
+	 * @param array<\Nette\Forms\Controls\BaseControl> $parents
+	 * @param ?callable(array<string, mixed>): \ModulIS\Form\Helper\DependentData $dependentCallback
+	 */
 	public function __construct
 	(
-		$label = null, array $parents = [], ?callable $dependentCallback = null
+		string|\Stringable|null $label = null, array $parents = [], ?callable $dependentCallback = null
 	)
 	{
 		$this->parents = $parents;
@@ -66,7 +70,7 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	}
 
 
-	public function signalReceived($signal): void
+	public function signalReceived(string $signal): void
 	{
 		$presenter = $this->lookup(Presenter::class);
 
@@ -100,7 +104,7 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	}
 
 
-	public function setPrompt(string $prompt)
+	public function setPrompt(string $prompt): void
 	{
 		$this->prompt = $prompt;
 	}
