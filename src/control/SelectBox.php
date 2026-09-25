@@ -34,7 +34,8 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, H
 	 */
 	public function __construct
 	(
-		string|\Stringable|null $label = null, ?array $items = null
+		string|\Stringable|null $label = null,
+		?array $items = null
 	)
 	{
 		parent::__construct($label, $items);

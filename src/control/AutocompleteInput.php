@@ -51,7 +51,9 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 	 */
 	public function __construct
 	(
-		string|\Stringable|null $label = null, ?int $maxLength = null, ?array $items = null
+		string|\Stringable|null $label = null,
+		?int $maxLength = null,
+		?array $items = null
 	)
 	{
 		parent::__construct($label, $maxLength);

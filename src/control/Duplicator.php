@@ -61,7 +61,9 @@ class Duplicator extends Container implements Renderable
 	 */
 	public function __construct
 	(
-		callable $factory, int $createDefault = 0, bool $forceDefault = false
+		callable $factory,
+		int $createDefault = 0,
+		bool $forceDefault = false
 	)
 	{
 		$this->monitor(Presenter::class, function()
