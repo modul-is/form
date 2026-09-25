@@ -214,8 +214,11 @@
 					}
 				});
 
-				$(document).off('paste.whisperer.' + chosenId);
-				$(document).on('paste.whisperer.' + chosenId, '#' + chosenId + ' input.chosen-search-input', function()
+				/**
+				 * Input covers value changes without a keydown - context menu cut, drag & drop, autofill, mobile keyboards
+				 */
+				$(document).off('paste.whisperer.' + chosenId + ' input.whisperer.' + chosenId);
+				$(document).on('paste.whisperer.' + chosenId + ' input.whisperer.' + chosenId, '#' + chosenId + ' input.chosen-search-input', function()
 				{
 					var searchInput = $(this);
 
