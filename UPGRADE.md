@@ -142,14 +142,6 @@ For item arrays wrap only the items that contain HTML. When the HTML comes from 
 
 ## Step 8 – submit buttons
 
-- **Client-side validation now runs.** v1 put `formnovalidate` on every submit button, so the browser
-  never validated. v2 adds it only to buttons with a validation scope.
-
-  **Find:** `addSubmit\(` whose button should submit without validating (cancel, back, delete,
-  "save draft", …), typically together with `setValidationScope(null)` or no scope at all.
-
-  **Change:** add `->setValidationScope([])` to such buttons. **Report** buttons where it is unclear.
-
 - **The third argument of `addSubmit()` is used.** v1 ignored `$onSubmit`; v2 registers it as `onClick`.
 
   **Find:** `addSubmit\([^)]*,[^)]*,` (three arguments).

@@ -16,6 +16,20 @@ Nette.validators.ModulISFormFormValidator_sameLength = function(elem, args, val)
 	return args.length === val.length;
 };
 
+/**
+ * CurrencyInput renders thousands separators and parseFloat in client-side min/max/range stops at them ("10 000" -> 10)
+ */
+const netteGetValue = Nette.getValue.bind(Nette);
+
+Nette.getValue = function(elem)
+{
+	let value = netteGetValue(elem);
+
+	return elem instanceof HTMLInputElement && elem.hasAttribute('data-currency-input') && typeof value === 'string'
+		? value.replace(/[\s  ]/g, '')
+		: value;
+};
+
 async function inputSignal(input, url, event)
 {
 	if(event.type === 'focusout')

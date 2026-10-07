@@ -28,7 +28,8 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 			->appendAttribute('class', (string) $input->getAttribute('class'))
 			->appendAttribute('class', ltrim($this->getFormButtonClass()))
 			->appendAttribute('class', 'mis-btn')
-			->type('submit');
+			->type('submit')
+			->formnovalidate(true);
 
 		if($this->icon)
 		{
@@ -53,7 +54,7 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 
 		foreach($input->attrs as $name => $value)
 		{
-			if(in_array($name, ['name', 'required', 'data-nette-rules', 'class'], true))
+			if(in_array($name, ['name', 'required', 'data-nette-rules', 'class', 'formnovalidate'], true))
 			{
 				continue;
 			}
