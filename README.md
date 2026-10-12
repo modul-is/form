@@ -67,7 +67,7 @@ Container works as standard Nette Container and has these new features
 
 ### Currency input
 
-`addCurrency()` - numeric input that visually formats values with thousands separators (e.g. `1 000 000`) but returns a plain integer on submit. Currency label is appended to the input.
+`addCurrency()` - numeric input that visually formats values with thousands separators (e.g. `1 000 000`) but returns a plain integer on submit (or float when decimals are set). Currency label is appended to the input.
 
 Default currency can be set globally for the whole project (e.g. in bootstrap or DI extension):
 
@@ -81,6 +81,16 @@ Per-input currency can be set via:
 $form->addCurrency('price', 'Price', 'EUR');
 // or
 $form->addCurrency('price', 'Price')->setCurrency('EUR');
+```
+
+Decimal places (e.g. cents) can be set globally or per input. The value is then rendered with decimal comma
+(`1 234,50`), the user may type both decimal comma and decimal point and the value is returned as float
+rounded to the set number of decimals:
+
+```php
+\ModulIS\Form\Control\CurrencyInput::setDefaultDecimals(2);
+// or
+$form->addCurrency('price', 'Price', 'EUR')->setDecimals(2);
 ```
 
 ### Inputs

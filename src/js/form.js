@@ -17,7 +17,8 @@ Nette.validators.ModulISFormFormValidator_sameLength = function(elem, args, val)
 };
 
 /**
- * CurrencyInput renders thousands separators and parseFloat in client-side min/max/range stops at them ("10 000" -> 10)
+ * CurrencyInput renders thousands separators and decimal comma and parseFloat in client-side min/max/range
+ * stops at them ("10 000" -> 10, "10,50" -> 10)
  */
 const netteGetValue = Nette.getValue.bind(Nette);
 
@@ -26,7 +27,7 @@ Nette.getValue = function(elem)
 	let value = netteGetValue(elem);
 
 	return elem instanceof HTMLInputElement && elem.hasAttribute('data-currency-input') && typeof value === 'string'
-		? value.replace(/[\s  ]/g, '')
+		? value.replace(/[\s  ]/g, '').replace(',', '.')
 		: value;
 };
 
@@ -374,22 +375,56 @@ function syncSummernoteRequiredLabels()
 	});
 }
 
-function formatCurrencyInput(input)
+/**
+ * Both decimal comma and decimal point are accepted, the last one of them is the decimal separator
+ * (so pasted "1,234.56" and "1.234,56" both work). Decimal comma is rendered.
+ * With pad = true (leaving the input) decimal part is filled with zeros up to the set number of decimals.
+ */
+function formatCurrencyInput(input, pad = false)
 {
-	let raw = input.val().replace(/[^0-9]/g, '');
+	let decimals = parseInt(input.attr('data-currency-decimals'), 10) || 0;
+	let value = input.val();
+	let integerPart = value;
+	let decimalPart = null;
 
-	if(raw === '')
+	if(decimals > 0)
+	{
+		let separator = Math.max(value.lastIndexOf(','), value.lastIndexOf('.'));
+
+		if(separator !== -1)
+		{
+			integerPart = value.slice(0, separator);
+			decimalPart = value.slice(separator + 1).replace(/[^0-9]/g, '').slice(0, decimals);
+		}
+	}
+
+	integerPart = integerPart.replace(/[^0-9]/g, '');
+
+	if(integerPart === '' && decimalPart === null)
 	{
 		input.val('');
 		return;
 	}
 
-	let formatted = parseInt(raw, 10).toLocaleString('cs-CZ').replace(/\u202f/g, '\u00a0');
+	if(pad && decimals > 0)
+	{
+		decimalPart = (decimalPart ?? '').padEnd(decimals, '0');
+	}
+
+	let formatted = parseInt(integerPart || '0', 10).toLocaleString('cs-CZ').replace(/\u202f/g, '\u00a0')
+		+ (decimalPart !== null ? ',' + decimalPart : '');
+
+	if(pad)
+	{
+		input.val(formatted);
+		return;
+	}
+
 	let cursorFromEnd = input[0].selectionEnd !== undefined ? input[0].value.length - input[0].selectionEnd : 0;
 
 	input.val(formatted);
 
-	let newPos = input[0].value.length - cursorFromEnd;
+	let newPos = Math.max(0, input[0].value.length - cursorFromEnd);
 	input[0].setSelectionRange(newPos, newPos);
 }
 
@@ -520,6 +555,12 @@ function initForm()
 	$(document).on('input.currencyInput', '[data-currency-input]', function()
 	{
 		formatCurrencyInput($(this));
+	});
+
+	$(document).off('change.currencyInput', '[data-currency-input]');
+	$(document).on('change.currencyInput', '[data-currency-input]', function()
+	{
+		formatCurrencyInput($(this), true);
 	});
 
 	syncCheckableLabels();

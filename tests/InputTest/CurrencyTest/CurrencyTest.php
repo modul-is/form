@@ -14,6 +14,7 @@ class CurrencyTest extends TestCase
 	public function tearDown()
 	{
 		CurrencyInput::setDefaultCurrency('Kč');
+		CurrencyInput::setDefaultDecimals(0);
 	}
 
 
@@ -109,6 +110,87 @@ class CurrencyTest extends TestCase
 		$input->setValue('');
 
 		Assert::null($input->getValue());
+	}
+
+
+	public function testDecimalsRender()
+	{
+		$form = $this->getForm();
+
+		$input = $form->addCurrency('price', 'Price', 'EUR')
+			->setDecimals(2)
+			->setValue(1234.5);
+
+		$control = $input->getControl()->__toString();
+
+		Assert::contains("value=\"1\u{00A0}234,50\"", $control);
+		Assert::contains('inputmode="decimal"', $control);
+		Assert::contains('data-currency-decimals="2"', $control);
+		Assert::same(1234.5, $input->getValue());
+	}
+
+
+	public function testDecimalsAcceptCommaAndPoint()
+	{
+		$form = $this->getForm();
+
+		$input = $form->addCurrency('price', 'Price')
+			->setDecimals(2);
+
+		foreach(["1\u{00A0}234,56", '1 234.56', '1234,56', '1,234.56', '1.234,56', '1234,555'] as $raw)
+		{
+			$input->setValue($raw);
+
+			Assert::same(1234.56, $input->getValue(), 'raw value "' . $raw . '"');
+		}
+
+		$input->setValue('10');
+
+		Assert::same(10.0, $input->getValue());
+	}
+
+
+	public function testDefaultDecimals()
+	{
+		CurrencyInput::setDefaultDecimals(2);
+
+		$form = $this->getForm();
+
+		Assert::same(2, $form->addCurrency('price', 'Price')->getDecimals());
+		Assert::same(0, $form->addCurrency('amount', 'Amount')->setDecimals(0)->getDecimals());
+	}
+
+
+	public function testWithoutDecimalsValueIsRounded()
+	{
+		$form = $this->getForm();
+
+		$input = $form->addCurrency('price', 'Price')
+			->setValue('10,6');
+
+		Assert::same(11, $input->getValue());
+	}
+
+
+	public function testInvalidValue()
+	{
+		$form = $this->getForm();
+
+		$input = $form->addCurrency('price', 'Price')
+			->setValue('abc');
+
+		Assert::null($input->getValue());
+	}
+
+
+	public function testNegativeDecimals()
+	{
+		$form = $this->getForm();
+
+		Assert::exception(
+			fn() => $form->addCurrency('price', 'Price')->setDecimals(-1),
+			\Nette\InvalidArgumentException::class,
+		);
 	}
 }
 
