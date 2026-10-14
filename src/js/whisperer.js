@@ -85,6 +85,17 @@
 					{
 						sendOnSelect();
 					});
+
+				/**
+				 * Chosen also selects the highlighted result on Tab - without this the input shows
+				 * the item, but the signal is never sent
+				 */
+				element
+					.off('change.whispererSelect')
+					.on('change.whispererSelect', function()
+					{
+						sendOnSelect();
+					});
 			}
 
 			if(typeof varUrlOnChange !== 'undefined')
