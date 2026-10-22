@@ -10,6 +10,12 @@
 const ClientFeedback = 'data-mis-client-feedback';
 
 
+function isServerValidated(form)
+{
+	return form instanceof HTMLFormElement && form.dataset.misValidate === 'server';
+}
+
+
 function findField(element)
 {
 	return element.closest('[data-mis-field]');
@@ -63,6 +69,20 @@ export function installValidation(netteForms)
 	netteForms.validators.ModulISFormFormValidator_less = (element, arg, value) => Number.parseFloat(value) < Number.parseFloat(arg);
 	netteForms.validators.ModulISFormFormValidator_sameLength = (element, arg, value) => String(arg).length === String(value).length;
 
+	/**
+	 * Forms validated by the server only (data-mis-validate="server", the default of Form) are sent without client side
+	 * validation - all errors come from the server at once. Rules stay in the HTML for toggles (addCondition()->toggle()).
+	 * Both nette-forms and naja ask validateForm() before sending.
+	 */
+	const validateForm = netteForms.validateForm.bind(netteForms);
+
+	netteForms.validateForm = function(sender, onlyCheck = false)
+	{
+		const form = sender.form ?? sender;
+
+		return isServerValidated(form) && !onlyCheck ? true : validateForm(sender, onlyCheck);
+	};
+
 	const showFormErrors = netteForms.showFormErrors.bind(netteForms);
 
 	netteForms.showFormErrors = function(form, errors)
@@ -105,11 +125,12 @@ export function installValidation(netteForms)
 		}
 	};
 
-	// once the user fixes an invalid control its error disappears, without waiting for the next submit
+	// once the user fixes an invalid control its error disappears, without waiting for the next submit - not in forms
+	// validated by the server only, their errors may come from rules the client does not know
 	const revalidate = (event) =>
 	{
 		const element = event.target;
-		const field = element.form && element.matches('[data-nette-rules]') ? findField(element) : null;
+		const field = element.form && !isServerValidated(element.form) && element.matches('[data-nette-rules]') ? findField(element) : null;
 
 		if (field?.querySelector('.is-invalid') && netteForms.validateControl(element, undefined, true))
 		{

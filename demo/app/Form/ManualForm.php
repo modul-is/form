@@ -29,6 +29,9 @@ class ManualForm extends FormComponent
 		$form = $this->getForm();
 		$form->setAjax();
 
+		// validated also on the client - the demo form next to it is validated by the server only (default)
+		$form->setClientValidation();
+
 		$form->addText('name', 'Jméno')
 			->setRequired('Vyplňte jméno');
 

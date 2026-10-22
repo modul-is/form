@@ -38,8 +38,8 @@ Rules:
   initForms(naja);
   ```
 
-  `src/js` and `src/css/form.css` were removed. Peer dependencies of the package are `bootstrap` (with `@floating-ui/dom`
-  and `vanilla-calendar-pro`) and `nette-forms`, `naja` is optional.
+  `src/js` and `src/css/form.css` were removed. Peer dependencies of the package are `bootstrap` and `nette-forms`,
+  `naja` is optional (`@floating-ui/dom` and `vanilla-calendar-pro` come with Bootstrap).
 
   **Find** in the application: `jquery|chosen|select2|autocompleter|rSlider|selectize` in `package.json` and in the
   JS entry points. **Change:** remove them when nothing else uses them; **report** what stays.
@@ -75,13 +75,18 @@ and colors written with a prefix like `outline-primary`.
 
 `setColor()` on a group, container or form colors the card header (not the whole card).
 
-## Step 4 – client side validation is on
+## Step 4 – validation
 
-Submit buttons no longer carry `formnovalidate` - the form is validated on the client before it is sent
-(errors are shown next to the inputs). Buttons with `setValidationScope()` keep their scope.
+Forms are validated by the **server only** by default - all errors (also of rules the client does not know) come at
+once, the form is redrawn with them (AJAX) or rendered again. Rules stay in the HTML, so toggles
+(`addCondition()->toggle()`) keep working. Submit buttons no longer carry `formnovalidate`.
 
-**Find:** `addSubmit\(`. **Report** forms whose rules can't be checked on the client (custom validators without a
-JS counterpart) - add `->setValidationScope([])` to their submit buttons if the server should validate only.
+The Bootstrap 5 version did not validate on the client either (every submit button carried `formnovalidate`), so the
+behaviour of migrated forms does not change.
+
+Client side validation can be switched on: `$form->setClientValidation()` on a form, or `clientValidation: true` in the
+configuration of `ModulIS\Form\DI\FormExtension` for the whole application. **Find:** `setValidationScope\(\[\]\)` added only
+to stop client side validation - it is not needed anymore. **Report** them.
 
 ## Step 5 – removed and changed members
 

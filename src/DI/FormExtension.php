@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace ModulIS\Form\DI;
 
 use ModulIS\Form\Control\CurrencyInput;
+use ModulIS\Form\Form;
 use ModulIS\Form\Icon\ClassIconRenderer;
 use ModulIS\Form\Icon\IconRenderer;
 use ModulIS\Form\Renderer\Bootstrap6Renderer;
@@ -26,6 +27,7 @@ use Nette\Schema\Schema;
  *         currency: CZK
  *         currencyDecimals: 2
  *         latte: true                 # tags {inputRender}, {inputCore}, {labelCore}
+ *         clientValidation: false     # rules checked by the server only (Form::setClientValidation())
  *
  * @property-read \stdClass $config
  */
@@ -38,7 +40,8 @@ final class FormExtension extends CompilerExtension
 			'iconStyle' => Expect::string('fa-solid'),
 			'currency' => Expect::string()->nullable(),
 			'currencyDecimals' => Expect::int()->nullable()->min(0),
-			'latte' => Expect::bool(true)
+			'latte' => Expect::bool(true),
+			'clientValidation' => Expect::bool(false)
 		]);
 	}
 
@@ -81,6 +84,11 @@ final class FormExtension extends CompilerExtension
 		if($this->config->currencyDecimals !== null)
 		{
 			$this->initialization->addBody('?::setDefaultDecimals(?);', [new \Nette\PhpGenerator\Literal('\\' . CurrencyInput::class), $this->config->currencyDecimals]);
+		}
+
+		if($this->config->clientValidation)
+		{
+			$this->initialization->addBody('?::setDefaultClientValidation(true);', [new \Nette\PhpGenerator\Literal('\\' . Form::class)]);
 		}
 	}
 

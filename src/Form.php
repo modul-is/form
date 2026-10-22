@@ -38,6 +38,10 @@ class Form extends UIForm
 
 	public bool $noValidate = true;
 
+	private static bool $defaultClientValidation = false;
+
+	private ?bool $clientValidation = null;
+
 	private ?string $buttonClass = null;
 
 	private ?string $size = null;
@@ -293,11 +297,43 @@ class Form extends UIForm
 	}
 
 
+	/**
+	 * Without client side validation (default) the browser does not validate the form either (novalidate),
+	 * false lets it check HTML attributes like required
+	 */
 	public function setNoValidate(bool $noValidate = true): static
 	{
 		$this->noValidate = $noValidate;
 
 		return $this;
+	}
+
+
+	/**
+	 * Default for all forms of the application - false (default) means the rules are checked by the server only
+	 */
+	public static function setDefaultClientValidation(bool $clientValidation): void
+	{
+		self::$defaultClientValidation = $clientValidation;
+	}
+
+
+	/**
+	 * Rules are checked by nette-forms on the client before the form is sent. Off by default - the form is validated
+	 * by the server only, so all errors (also of rules the client does not know) come at once.
+	 * Toggles (addCondition()->toggle()) work in both cases.
+	 */
+	public function setClientValidation(bool $clientValidation = true): static
+	{
+		$this->clientValidation = $clientValidation;
+
+		return $this;
+	}
+
+
+	public function isClientValidation(): bool
+	{
+		return $this->clientValidation ?? self::$defaultClientValidation;
 	}
 
 
@@ -313,6 +349,19 @@ class Form extends UIForm
 			$element->appendAttribute('class', 'ajax');
 		}
 
-		$element->setAttribute('novalidate', $this->noValidate ?: null);
+		/**
+		 * nette-forms skips a form with novalidate - with client validation it sets novalidate itself
+		 * and validates on submit, assets/js skips forms marked as validated by the server
+		 */
+		if($this->isClientValidation())
+		{
+			$element->setAttribute('novalidate', null);
+			$element->setAttribute('data-mis-validate', null);
+		}
+		else
+		{
+			$element->setAttribute('novalidate', $this->noValidate ?: null);
+			$element->setAttribute('data-mis-validate', 'server');
+		}
 	}
 }

@@ -115,10 +115,37 @@ class RendererTest extends TestCase
 
 		$html = (string) $form;
 
-		Assert::match('<form action="#" method="post" id="frm-form" class="ajax" novalidate>%A%', $html);
+		Assert::match('<form action="#" method="post" id="frm-form" class="ajax" novalidate data-mis-validate="server">%A%', $html);
 		Assert::contains('<div class="card card-subtle"><div class="card-header flex-row align-items-center gap-2 theme-info">Group</div>', $html);
 		Assert::contains('<div class="card-footer d-flex flex-wrap gap-2"><button name="save"', $html);
 		Assert::contains('</form>', $html);
+	}
+
+
+	/**
+	 * Server only validation is the default - nette-forms validates on the client only when it is switched on
+	 * (it skips a form with novalidate and sets the attribute itself)
+	 */
+	public function testClientValidation()
+	{
+		$server = $this->getForm();
+		$server->addText('text', 'Text')->setRequired();
+
+		$client = $this->getForm();
+		$client->setClientValidation();
+		$client->addText('text', 'Text')->setRequired();
+
+		Assert::false($server->isClientValidation());
+		Assert::match('<form action="#" method="post" id="frm-form" novalidate data-mis-validate="server">%A%', (string) $server);
+		Assert::match('<form action="#" method="post" id="frm-form">%A%', (string) $client);
+		Assert::contains('data-nette-rules', (string) $server, 'rules stay for toggles');
+
+		\ModulIS\Form\Form::setDefaultClientValidation(true);
+
+		Assert::true($this->getForm()->isClientValidation());
+		Assert::false($this->getForm()->setClientValidation(false)->isClientValidation(), 'form setting wins over the default');
+
+		\ModulIS\Form\Form::setDefaultClientValidation(false);
 	}
 
 

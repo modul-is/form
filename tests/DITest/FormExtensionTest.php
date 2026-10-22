@@ -37,10 +37,11 @@ class FormExtensionTest extends TestCase
 
 	public function testConfiguration()
 	{
-		$container = $this->createContainer("modulisForm:\n\ticons: fontawesome\n\ticonStyle: fa-light\n\tcurrency: EUR\n\tcurrencyDecimals: 2\n");
+		$container = $this->createContainer("modulisForm:\n\ticons: fontawesome\n\ticonStyle: fa-light\n\tcurrency: EUR\n\tcurrencyDecimals: 2\n\tclientValidation: true\n");
 
 		Assert::same('EUR', CurrencyInput::getDefaultCurrency());
 		Assert::same(2, CurrencyInput::getDefaultDecimals());
+		Assert::true((new \ModulIS\Form\Form)->isClientValidation());
 		Assert::same('<i class="fa-light fa-circle-question fa-fw" aria-hidden="true"></i>', (string) Bootstrap6Renderer::getDefaultIconRenderer()->render('help'));
 
 		$latte = $container->getByType(\Nette\Bridges\ApplicationLatte\LatteFactory::class)->create();

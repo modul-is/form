@@ -37,27 +37,20 @@
 		"demo:build": "vite build"
 	},
 	"peerDependencies": {
-		"@floating-ui/dom": "^1.7.6",
 		"bootstrap": "6.0.0-alpha.1",
 		"naja": "^3.3.0",
-		"nette-forms": "^3.5.3",
-		"vanilla-calendar-pro": "^3.4.0"
+		"nette-forms": "^3.5.3"
 	},
 	"peerDependenciesMeta": {
 		"naja": {
 			"optional": true
-		},
-		"vanilla-calendar-pro": {
-			"optional": true
 		}
 	},
 	"devDependencies": {
-		"@floating-ui/dom": "^1.7.6",
 		"bootstrap": "6.0.0-alpha.1",
 		"bootstrap-icons": "^1.13.1",
 		"naja": "^3.3.0",
 		"nette-forms": "^3.5.3",
-		"vanilla-calendar-pro": "^3.4.0",
 		"vite": "^8.3.5"
 	},
 	"engines": {

@@ -28,7 +28,7 @@ A form works without `FormComponent` too - `Form` renders itself (`{control form
 
 ```
 composer require modul-is/form
-npm install @modul-is/form bootstrap@6.0.0-alpha.1 @floating-ui/dom nette-forms
+npm install @modul-is/form bootstrap@6.0.0-alpha.1 nette-forms
 ```
 
 Register the DI extension (optional - it registers the Latte tags and sets the defaults of the whole application):
@@ -43,6 +43,7 @@ modulisForm:
 	currency: CZK
 	currencyDecimals: 0
 	latte: true              # tags {inputRender}, {inputCore}, {labelCore}
+	clientValidation: false  # rules checked by the server only
 ```
 
 and the client side (see [Client side](#client-side)):
@@ -82,6 +83,9 @@ Form supports all of the default Nette inputs and adds new ones
 + `setRenderType()` - render type for all inputs of the form, see [Render types](#render-types)
 + `setRenderDefault()`, `setRenderFloating()`, `setRenderInline()` - shortcuts for `setRenderType()`
 + `setButtonClass()` - default CSS class for all form buttons (e.g. `rounded rounded-4`); can be overridden by `setClass()` on individual buttons
++ `setClientValidation()` - rules are checked also on the client before the form is sent; off by default - the form is
+  validated by the server only and all errors come at once (default for the application: `Form::setDefaultClientValidation()`
+  or `clientValidation` of the DI extension)
 + `setDefaultInputWrapClass()` - class of the column around every input (default `col-12`)
 
 ### FormComponent
@@ -259,14 +263,16 @@ initForms(naja);   // before naja.initialize()
 
 `initForms()` mounts everything the forms need - also in snippets redrawn by naja:
 
-+ client side validation errors next to the inputs (instead of the alert of nette-forms), rules of `FormValidator`
++ validation - forms validated by the server only are sent without client checks; with `setClientValidation()` errors
+  are shown next to the inputs (instead of the alert of nette-forms), rules of `FormValidator` included
 + comboboxes (whisperer, selects with `setSearch()` or `setImageArray()`), dependent selects, autocomplete
 + AJAX callbacks of inputs and buttons (`setOnChangeCallback()`, `setOnFocusOutCallback()`)
 + currency input, quick copy, slider with two handles, chips, OTP, password strength, datepicker, tooltips
 
 AJAX requests go through naja when it is passed to `initForms()` (snippets redrawn by the callbacks are updated),
-otherwise through `fetch`. Peer dependencies are `bootstrap` (with `@floating-ui/dom`, and `vanilla-calendar-pro` for the
-datepicker - loaded only when a form uses it) and `nette-forms`; `naja` is optional.
+otherwise through `fetch`. Peer dependencies are `bootstrap` and `nette-forms`, `naja` is optional. Bootstrap brings its own peer
+dependencies `@floating-ui/dom` and `vanilla-calendar-pro` (npm and pnpm install them automatically, Yarn does not);
+the datepicker with Vanilla Calendar Pro is loaded only when a form uses it.
 
 Controls enhanced on the client (combobox, chips, datepicker, slider with two handles) keep the native control as the
 source of truth - it is only hidden, carries the name and Nette rules and the form works with it as with any other input.
