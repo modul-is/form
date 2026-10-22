@@ -15,4 +15,10 @@ trait AutoRenderSkip
 
 		return $this;
 	}
+
+
+	public function isAutoRenderSkip(): bool
+	{
+		return $this->autoRenderSkip;
+	}
 }

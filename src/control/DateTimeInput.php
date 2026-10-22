@@ -6,23 +6,10 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 
-class DateTimeInput extends \Nette\Forms\Controls\DateTimeControl implements Renderable, Signalable, HasInputGroup, \Nette\Application\UI\SignalReceiver
+class DateTimeInput extends \Nette\Forms\Controls\DateTimeControl implements InputField, Signalable, \Nette\Application\UI\SignalReceiver
 {
-	use Helper\InputGroup;
-	use Helper\Tooltip;
-	use Helper\ControlPart;
-	use Helper\Label;
-	use Helper\InputCoreControl;
-	use Helper\AutoRenderSkip;
-	use Helper\Template;
-	use Helper\Validation;
+	use Helper\Field;
 	use Helper\Signals;
-	use Helper\ControlClass;
-	use Helper\RenderBasic;
-	use Helper\RenderDefault;
-	use Helper\RenderFloating;
-	use Helper\RenderInline;
-	use Helper\WrapControl;
 
 
 	/**

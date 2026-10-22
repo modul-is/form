@@ -4,9 +4,7 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form;
 
-use Kravcik\LatteFontAwesomeIcon\Extension;
 use Nette\ComponentModel\Component;
-use Nette\Utils\Html;
 
 class ControlGroup extends \Nette\Forms\ControlGroup
 {
@@ -77,40 +75,6 @@ class ControlGroup extends \Nette\Forms\ControlGroup
 		}
 
 		return $controlArray;
-	}
-
-
-	/**
-	 * Title and icon are fallbacks used when the group has none of its own (form title on the first card)
-	 */
-	public function getHeader(Html|string|null $title = null, ?string $icon = null): Html
-	{
-		$icon = $this->getIcon() ?? $icon;
-
-		$titleDiv = Html::el('div')
-			->class('section-title');
-
-		if($icon)
-		{
-			$iconSpan = Html::el('span')
-				->class('ico')
-				->addHtml(Extension::render($icon));
-
-			$titleDiv->addHtml($iconSpan);
-		}
-
-		$groupTitle = $this->getOption('label') ?: $title;
-
-		if($groupTitle)
-		{
-			$titleDiv->addText($groupTitle);
-		}
-
-		$groupColor = $this->getOption('color') ? ' ' . $this->getOption('color') : null;
-
-		return Html::el('div')
-			->class('card-header section-header' . $groupColor)
-			->addHtml($titleDiv);
 	}
 
 

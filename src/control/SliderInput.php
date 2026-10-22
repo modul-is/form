@@ -15,23 +15,10 @@ use Nette\Utils\Json;
  * zapisuje jako jedno cislo, v rezimu setRange() jako dve oddelena carkou - proto getValue()
  * vraci pole az kdyz je zapnuty rozsah.
  */
-class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable, HasInputGroup, Signalable, \Nette\Application\UI\SignalReceiver
+class SliderInput extends \Nette\Forms\Controls\TextInput implements InputField, Signalable, \Nette\Application\UI\SignalReceiver
 {
-	use Helper\Tooltip;
-	use Helper\ControlPart;
-	use Helper\Label;
-	use Helper\InputCoreControl;
-	use Helper\AutoRenderSkip;
-	use Helper\Template;
-	use Helper\Validation;
+	use Helper\Field;
 	use Helper\Signals;
-	use Helper\ControlClass;
-	use Helper\RenderBasic;
-	use Helper\RenderDefault;
-	use Helper\RenderFloating;
-	use Helper\RenderInline;
-	use Helper\WrapControl;
-	use Helper\InputGroup;
 
 	/** @var array<int, int|float|string> */
 	private array $items = [];
@@ -49,17 +36,6 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements Renderable,
 	private bool $labels = true;
 
 	private bool $sliderTooltip = true;
-
-
-	public function __construct
-	(
-		string|\Stringable|null $label = null
-	)
-	{
-		parent::__construct($label);
-
-		$this->controlClass = 'mis-slider-input';
-	}
 
 
 	/**

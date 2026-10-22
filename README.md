@@ -1,7 +1,7 @@
-# Nette form with custom BS5 renderer
+# Nette form with Bootstrap 6 renderer
 This library allows you to spend less time writing templates for Nette forms - it contains renderers for form, containers as well as all inputs
 
-> **v2** reworks rendering. If you are coming from v1, see [UPGRADE.md](UPGRADE.md).
+> This branch renders **Bootstrap 6**. Migrating from the Bootstrap 5 version is described in [UPGRADE-BS6.md](UPGRADE-BS6.md).
 
 ## Getting started
 Easiest way to create form is to create component which extends `FormComponent` class
@@ -40,30 +40,34 @@ Form supports all of the default Nette inputs and adds new ones
 
 + `setTitle()` - title in the `card-header` of the first card (unless its group has a title of its own)
 + `setIcon()` - icon next to the form title
-+ `setColor()` - set color of form
++ `setColor()` - theme color of the card headers of groups without a color of their own
 + `setAjax()` - form is submitted via ajax
 + `setRenderType()` - render type for all inputs of the form, see [Render types](#render-types)
 + `setRenderDefault()`, `setRenderFloating()`, `setRenderInline()` - shortcuts for `setRenderType()`
 + `setButtonClass()` - default CSS class for all form buttons (e.g. `rounded rounded-4`); can be overridden by `setClass()` on individual buttons
++ `setDefaultInputWrapClass()` - class of the column around every input (default `col-12`)
 
 ### FormComponent
 
 + `setRenderManually()` (protected) - set manual render, template with same name as the component is used (eg. file `MyForm.php` -> `myForm.latte`), see [Manual rendering](#manual-rendering)
 
 ### Groups
-Form is rendered in BS5 [card](https://getbootstrap.com/docs/5.0/components/card/) - each card represents one group
+Form is rendered as Bootstrap 6 [cards](https://getbootstrap.com/docs/6.0/components/card/) - each card represents one group
 
-Inputs are rendered in `card-body` div
++ `setIcon()` - icon in the card header
++ `setColor()` - theme color of the card header
++ `setClass()` - class of the column around the card (default `col-12`)
 
-Submitters, links and buttons in `card-footer`
+Inputs are rendered in `card-body` (a `row g-3` grid), submitters, links and buttons in `card-footer` of the last card
 
 ### Container
 Container works as standard Nette Container and has these new features
 
 + `setId()` - add html id to outer div of container
-+ `showCard()` - show container as BS5 [card](https://getbootstrap.com/docs/5.0/components/card/)
++ `showCard()` - show container as Bootstrap [card](https://getbootstrap.com/docs/6.0/components/card/)
 + `setTitle()` - show title of container (only works when container is rendered as card)
-+ `setColor()` - set color of container (only works when container is rendered as card)
++ `setColor()` - theme color of the card header (only works when container is rendered as card)
++ `setWrapClass()` - class of the column around the container (default `col-12`)
 
 ### Currency input
 
@@ -96,19 +100,43 @@ $form->addCurrency('price', 'Price', 'EUR')->setDecimals(2);
 ### Inputs
 Some inputs provide new features
 
-+ `setIcon()` - add icon to input or button (Buttons, Links, Text inputs)
-+ `setColor()` - add color to button or list items (Buttons, Links, Lists in `Inline` render)
++ `setWidth()` - width in grid columns: `setWidth(6)` is half width from the `md` breakpoint up, `setWidth(['md' => 6, 'xl' => 4])` per breakpoint (All non-button inputs)
++ `setIcon()` - icon inside the input ([form adorn](https://getbootstrap.com/docs/6.0/forms/form-adorn/)) or in the button (Text inputs, Selects, Buttons, Links)
++ `setColor()` - theme color - `primary`, `secondary`, `success`, `danger`, `warning`, `info`, `accent`, `inverse` (Buttons, Links, Lists)
++ `setVariant()` - button style - `solid` (default), `outline`, `subtle`, `text`, `link` (Buttons, Links)
++ `setDescription()` - help text under the input (`form-text`) (Text inputs, Checkbox, Lists, Select boxes)
++ `setTooltip()` - help icon with a tooltip next to the caption (Text inputs, Checkbox, Lists, Select boxes)
 + `setTemplate()` - add custom latte template instead of basic render (All inputs)
-+ `setPrepend()` - adds prepend part to [input group](https://getbootstrap.com/docs/5.0/forms/input-group/) (Text inputs, TextArea, Select boxes, Slider, Upload)
-+ `setAppend()` - adds append part to [input group](https://getbootstrap.com/docs/5.0/forms/input-group/) (Text inputs, TextArea, Select boxes, Slider, Upload)
++ `setPrepend()` - adds prepend part to [input group](https://getbootstrap.com/docs/6.0/forms/input-group/) (Text inputs, TextArea, Select boxes, Slider, Upload)
++ `setAppend()` - adds append part to [input group](https://getbootstrap.com/docs/6.0/forms/input-group/) (Text inputs, TextArea, Select boxes, Slider, Upload)
 + `setRenderType()` - render type of a single input, overwrites the setting from Form, see [Render types](#render-types) (All non-button inputs except Checkbox)
 + `setRenderDefault()`, `setRenderFloating()`, `setRenderInline()` - shortcuts for `setRenderType()`; use `setRenderDefault()` to opt a single input out of a form-wide floating/inline setting
 + `setAutoRenderSkip()` - skips rendering of input, eg. if input is rendered as part of another input with custom template (All inputs)
-+ `setTooltip()` - add icon with tooltip to input (Text inputs, Checkbox, Lists, Select boxes)
 + `setQuickCopy()` - add button to copy input value to clipboard (Text inputs, TextArea)
-+ `setWrapClass()` - set class to outer div around label and input - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Select boxes)
-+ `setLabelWrapClass()` - set class to wrap div around label - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Select boxes)
-+ `setInputWrapClass()` - set class to wrap div around input - overwrites basic `col-` class (Text inputs, Checkbox, Lists, Select boxes)
++ `setWrapClass()` - replaces the class of the column around the input (default `col-12`, see `Form::setDefaultInputWrapClass()`)
++ `setLabelWrapClass()` - class of the label; in `Inline` the class of the label column (default `sm:col-4`)
++ `setInputWrapClass()` - class of the input; in `Inline` the class of the control column (default `sm:col-8`)
++ `setSwitch()` - checkbox rendered as a [switch](https://getbootstrap.com/docs/6.0/forms/switch/) (Checkbox)
+
+### Icons
+
+Icons are rendered by `\ModulIS\Form\Icon\IconRenderer` - the default renders [Bootstrap Icons](https://icons.getbootstrap.com/)
+(`<i class="bi bi-…">`), the font itself has to be loaded by the application. Another icon set can be used for the whole
+application or per form:
+
+```php
+\ModulIS\Form\Renderer\Bootstrap6Renderer::setDefaultIconRenderer(\ModulIS\Form\Icon\ClassIconRenderer::fontAwesome('fa-light'));
+
+$form->setRenderer(new \ModulIS\Form\Renderer\Bootstrap6Renderer(new MyIconRenderer));
+```
+
+The library itself uses semantic names `help`, `save`, `add`, `remove`, `copy` and `info` - icon renderers map them to their icon set.
+
+### Rendering
+
+All markup is created by `\ModulIS\Form\Renderer\Bootstrap6Renderer` (set by `Form` as its Nette form renderer, so
+`{control form}` and `echo $form` work as well). Controls only hold their settings - to change the markup of the whole
+application extend the renderer and set it with `$form->setRenderer()`.
 
 ### Render types
 
@@ -116,8 +144,8 @@ Every input is rendered in one of the modes of `\ModulIS\Form\Enum\RenderType`. 
 a single input can override it.
 
 + `RenderType::Default` - label above the input (default)
-+ `RenderType::Floating` - [floating label](https://getbootstrap.com/docs/5.0/forms/floating-labels/)
-+ `RenderType::Inline` - label and input side by side
++ `RenderType::Floating` - [floating label](https://getbootstrap.com/docs/6.0/forms/floating-labels/) (file inputs and multiselects fall back to `Default`, Bootstrap does not support them)
++ `RenderType::Inline` - label and input side by side ([horizontal form](https://getbootstrap.com/docs/6.0/forms/layout/#horizontal-form))
 
 ```php
 $form->setRenderFloating();
@@ -126,125 +154,66 @@ $form->addText('name', 'Name')
 	->setRenderDefault();
 ```
 
-`CheckboxList` and `RadioList` use `\ModulIS\Form\Enum\RenderListType` instead, which adds
-`Big` (tiles) and `Compact` on top of `Default`, `Floating` and `Inline`.
+`CheckboxList` and `RadioList` use `\ModulIS\Form\Enum\RenderListType` instead:
+
++ `Default` - items under each other
++ `Compact` - items next to each other
++ `Big` - items as cards (`form-field-card`) with icons (`setIconArray()`) and descriptions (`setTooltips()`)
++ `Inline` - label and items side by side
++ `Floating` - same as `Default` (Bootstrap has no floating lists)
+
+Independently of the render type the items can be rendered as toggle buttons (`setToggleButton()`, `setButtonColor()`)
+or in several columns (`setItemsPerRow()`).
 
 ### Anatomy of an input
 
-Every input is wrapped in a few nested elements and each of them has its own setter.
-The trees below are the real output for `addText()` with all wrap setters used at once,
-so you can see which call lands where.
-
-**`RenderType::Default`** - label above the input
-
 ```
-<div class="WRAP mis-field" id="WRAPID">          setWrapClass() / setWrapId()
-    <label class="LABELWRAP">Caption</label>      setLabelWrapClass()   <- caption + setTooltip()
-    <div class="input-group">
-        <span class="input-group-text">PRE</span>  setPrepend()
-        <input class="mis-input form-control INPUTWRAP">
-        |                                         setInputWrapClass() lands on the input itself
-        |                                         setClass() replaces the whole class attribute
-        <span class="input-group-text">APP</span>  setAppend()
-        <span class="quick-copy-wrap">…</span>     setQuickCopy()
-    </div>
+Default                                          Inline
+<div class="WRAP">          setWrapClass()       <div class="WRAP">
+  <div class="form-field" data-mis-field>          <div class="row">                         setRowClass()
+    <label class="form-label">Caption *</label>      <label class="col-form-label sm:col-4"> setLabelWrapClass()
+    <div class="input-group">                        <div class="form-field sm:col-8">       setInputWrapClass()
+      <span class="input-group-text">PRE</span>        … input group, feedback, form-text
+      <input class="form-control">                   </div>
+      <span class="input-group-text">APP</span>    </div>
+    </div>                                         </div>
+    <div class="invalid-feedback">…</div>
+    <div class="form-text">…</div>  setDescription()
+  </div>
 </div>
-```
 
-**`RenderType::Floating`** - Bootstrap floating label
-
-```
-<div class="WRAP" id="WRAPID">                    setWrapClass() / setWrapId()
-    <div class="input-group">
-        <span class="input-group-text">PRE</span>  setPrepend()
-        <div class="form-floating">
-            <input class="form-control" placeholder="Caption">
-            <label>Caption</label>                <- caption + setTooltip()
-        </div>
-        <span class="input-group-text">APP</span>  setAppend()
-        <span class="quick-copy-wrap">…</span>     setQuickCopy()
+Floating                                         With setIcon()
+<div class="WRAP">                               <label class="form-control form-adorn">
+  <div class="form-field" data-mis-field>          <span class="form-adorn-icon">…</span>
+    <div class="form-floating">                    <input class="form-ghost">
+      <label>Caption</label>                     </label>
+      <input class="form-control" placeholder="Caption">
     </div>
-</div>
+    …
 ```
 
-**`RenderType::Inline`** - label and input side by side
+`data-mis-field` marks the element validation feedback belongs to - client side validation (`assets/js`) shows errors there
+the same way as the server does.
 
-```
-<div class="WRAP mis-field-inline" id="WRAPID">   setWrapClass() / setWrapId()
-    <div class="mis-field-inline-label">          fixed class
-        <label>Caption</label>                    <- caption + setTooltip()
-    </div>
-    <div class="mis-field-inline-control">        fixed class
-        <div class="input-group">
-            <span class="input-group-text">PRE</span>
-            <input class="form-control">
-            <span class="input-group-text">APP</span>
-            <span class="quick-copy-wrap">…</span>
-        </div>
-    </div>
-</div>
-```
+### Client side
 
-`CheckboxList` and `RadioList` use `RenderListType` and have their own structure:
+The package contains its client side in `assets/` (ES modules, published as npm package `@modul-is/form`) - no jQuery,
+only Bootstrap 6 and `nette-forms`:
 
-```
-Default                                  Compact
-<div class="WRAP mis-checklist">         <div class="WRAP mis-compact">
-    <label>Caption</label>                   <label class="mis-compact-label LABELWRAP">
-    <div class="mis-checklist-items">        <div class="mis-compact-items">
-        <label class="checkbox">…</label>        <div class="mis-compact-field INPUTWRAP">
-    </div>                                           <label>…</label>
-</div>                                           </div>
-                                             </div>
-                                         </div>
+```js
+import naja from 'naja';
+import netteForms from 'nette-forms';
+import { initForms } from '@modul-is/form';
+import '@modul-is/form/css';
 
-Big (tiles)                              Inline
-<div class="WRAP">                       <div class="WRAP">
-    <div class="mis-tiles INPUTWRAP">        <div class="ROW">            setRowClass()
-        <div class="mis-tiles-head">             <div class="… LABELWRAP">
-            <div class="mis-tiles-title">        <div class="… INPUTWRAP">
-            <div class="mis-tiles-sub">      </div>
-        </div>                           </div>
-        <div class="mis-tiles-list">
-            <label class="mis-tile">
-                <span class="mis-tile-ico">  setIconArray()
-                <span class="mis-tile-lbl">
-                <span class="mis-tile-desc"> setTooltips()
-                <span class="mis-tile-chk">
-        </div>
-    </div>
-</div>
+netteForms.initOnLoad();
+naja.formsHandler.netteForms = netteForms;
+
+initForms(naja);   // before naja.initialize()
 ```
 
-#### Which setter works where
-
-Not every wrap setter is read by every render type - the table says where a call has an effect:
-
-| Setter | Default | Floating | Inline | List: Default | List: Compact | List: Big | List: Inline |
-| --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| `setWrapClass()` | yes | yes | yes | yes | yes | yes | yes |
-| `setWrapId()` | yes | yes | yes | yes | yes | yes | yes |
-| `setLabelWrapClass()` | yes | - | - | - | yes | - | yes |
-| `setInputWrapClass()` | yes* | - | - | - | yes | yes | yes |
-| `setRowClass()` | - | - | - | - | - | - | yes |
-
-\* in `Default` the class is appended to the `<input>` element, not to a wrapper div.
-
-Setters that behave the same in all render types:
-
-| Setter | Affects |
-| --- | --- |
-| `setClass()` | `class` of the `<input>` (replaces it, unlike `setInputWrapClass()`) |
-| `setPrepend()` / `setAppend()` | `.input-group-text` before / after the input |
-| `setIcon()` | icon rendered as a prepend |
-| `setTooltip()` | question-mark icon next to the caption |
-| `setQuickCopy()` | copy-to-clipboard button at the end of the input group |
-| `setOption('id')` | `id` of the outermost element (same place as `setWrapId()`) |
-| `setTemplate()` | replaces the whole render with your own Latte file |
-| `setAutoRenderSkip()` | renders nothing |
-
-The wrapper class defaults to `mb-2 col-12` and can be changed for the whole form with
-`$form->setDefaultInputWrapClass()`.
+`initForms()` shows client side validation errors next to the inputs (instead of the alert of nette-forms) and initializes
+tooltips - also in snippets redrawn by naja.
 
 ### Manual rendering
 
@@ -350,3 +319,29 @@ $duplicator->addSubmit('add', 'Přidat');
 ## Upgrading from v1 to v2
 
 See [UPGRADE.md](UPGRADE.md) - it lists every change needed to migrate a form, including the swapped meaning of `setRenderInline()`.
+
+## Development
+
+The repository contains a demo application with a form showing every input (`demo/`).
+
+```
+composer install
+npm install
+npm run demo          # builds demo assets to demo/www/dist and rebuilds them on change
+```
+
+Open the demo through a web server pointing to `demo/www` (e.g. `http://localhost/modulis-form/demo/www/`
+under XAMPP) or run `php -S localhost:8000 -t demo/www`.
+
+Client side of the library lives in `assets/` (ES modules, published to npm as `@modul-is/form`),
+the demo page imports it straight from there.
+
+Checks:
+
+```
+vendor/bin/tester -C tests/
+vendor/bin/phpstan analyse
+```
+
+Render tests compare HTML with fixtures - after an intended change of the markup regenerate them with
+`BLESS_FIXTURES=1 vendor/bin/tester -C tests/` and review the diff before committing.

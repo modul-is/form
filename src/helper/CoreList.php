@@ -4,20 +4,18 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Helper;
 
-use Kravcik\LatteFontAwesomeIcon\Extension;
-use ModulIS\Form\Control\CheckboxList;
-use ModulIS\Form\Control\RadioList;
-use ModulIS\Form\Control\Signalable;
 use ModulIS\Form\Enum\RenderListType;
-use ModulIS\Form\Enum\RenderType;
-use Nette\Utils\Html;
 
+/**
+ * Settings of radio and checkbox lists - rendered by the renderer
+ */
 trait CoreList
 {
-	use ClassList;
-
 	/** @var array<int|string, string> */
 	protected array $tooltips = [];
+
+	/** @var array<int|string, string> */
+	protected array $iconArray = [];
 
 	protected int $itemsPerRow = 1;
 
@@ -28,6 +26,11 @@ trait CoreList
 
 	protected ?RenderListType $renderType = null;
 
+	protected bool $toggleButton = false;
+
+	/** @var string|array<int|string, string> */
+	protected string|array $buttonColor = 'primary';
+
 
 	public function setRenderType(RenderListType $renderType): static
 	{
@@ -37,6 +40,9 @@ trait CoreList
 	}
 
 
+	/**
+	 * Null means derived from the form
+	 */
 	public function getRenderType(): ?RenderListType
 	{
 		return $this->renderType;
@@ -49,6 +55,9 @@ trait CoreList
 	}
 
 
+	/**
+	 * Bootstrap has no floating lists - rendered as Default
+	 */
 	public function setRenderFloating(): static
 	{
 		return $this->setRenderType(RenderListType::Floating);
@@ -61,378 +70,158 @@ trait CoreList
 	}
 
 
+	/**
+	 * Items as cards (form-field-card) - with icons (setIconArray()) and descriptions (setTooltips())
+	 */
 	public function setRenderBig(): static
 	{
 		return $this->setRenderType(RenderListType::Big);
 	}
 
 
+	/**
+	 * Items next to each other
+	 */
 	public function setRenderCompact(): static
 	{
 		return $this->setRenderType(RenderListType::Compact);
 	}
 
 
-	public function render(): Html|string
-	{
-		if($this->getOption('hide') || $this->autoRenderSkip)
-		{
-			return '';
-		}
-
-		if($this->templatePath)
-		{
-			$path = $this->templatePath;
-
-			$this->setTemplate(null, $this->templateParams, $this->templateEngine);
-
-			$template = $this->templateEngine ?: new \Latte\Engine;
-
-			return $template->renderToString($path, array_merge(['input' => $this], $this->templateParams));
-		}
-
-		$form = $this->getForm();
-		\assert($form instanceof \ModulIS\Form\Form);
-
-		$inputRenderType = $this->getRenderType();
-
-		if(!$inputRenderType)
-		{
-			$inputRenderType = match($form->getRenderType())
-			{
-				RenderType::Inline, RenderType::Floating => RenderListType::Inline,
-				RenderType::Default => RenderListType::Default
-			};
-		}
-
-		$outerDiv = match($inputRenderType)
-		{
-			RenderListType::Inline, RenderListType::Floating => $this->renderInlineList(),
-			RenderListType::Big => $this->renderBig(),
-			RenderListType::Compact => $this->renderCompact(),
-			RenderListType::Default => $this->renderDefault()
-		};
-
-		if($this->getOption('id'))
-		{
-			$outerDiv->id($this->getOption('id'));
-		}
-
-		return $outerDiv;
-	}
-
-
-	public function renderCompact(): Html
-	{
-		$validationFeedBack = $this->getValidationFeedback();
-		$validationClass = $this->getValidationClass();
-
-		$required = $this->isRequired()
-			? ' ' . Html::el('span')->class('required')->setText('*')
-			: '';
-
-		$labelEl = Html::el('label')
-			->class($this->joinClass('mis-compact-label', $this->getLabelWrapClass()))
-			->addText($this->translate($this->getCaption()))
-			->addHtml($required);
-
-		if($tooltipHtml = $this->getTooltipHtml())
-		{
-			$labelEl->addHtml(' ' . $tooltipHtml);
-		}
-
-		$itemsWrapField = Html::el('div')
-			->class($this->joinClass('mis-compact-field', $this->getInputWrapClass(), $validationClass));
-
-		foreach($this->getItems() as $key => $itemLabel)
-		{
-			$inputEl = $this->getControlPart($key);
-
-			if($this->hasSignal())
-			{
-				$this->addSignalsToInput($inputEl);
-			}
-
-			$itemLabelEl = Html::el('label')
-				->for($inputEl->getAttribute('id'))
-				->addHtml($inputEl)
-				->addText($this->translate($itemLabel));
-
-			$itemsWrapField->addHtml($itemLabelEl);
-		}
-
-		$itemsWrap = Html::el('div')
-			->class('mis-compact-items')
-			->addHtml($itemsWrapField);
-
-		if($validationFeedBack)
-		{
-			$itemsWrap->addHtml($validationFeedBack);
-		}
-
-		return $this->createWrap('mis-compact')
-			->addHtml($labelEl . $itemsWrap);
-	}
-
-
-	public function renderBig(): Html
-	{
-		$validationFeedBack = $this->getValidationFeedback();
-		$validationClass = $this->getValidationClass();
-
-		if($this instanceof CheckboxList)
-		{
-			$polyline = Html::el('polyline')
-				->setAttribute('points', '20 6 9 17 4 12');
-
-			$checkHtml = Html::el('svg')
-				->setAttribute('viewBox', '0 0 24 24')
-				->setAttribute('fill', 'none')
-				->setAttribute('stroke-linecap', 'round')
-				->addHtml($polyline);
-		}
-		else
-		{
-			$checkHtml = null;
-		}
-
-		$tilesWrap = Html::el('div')
-			->class('mis-tiles-list');
-
-		foreach($this->getItems() as $key => $itemLabel)
-		{
-			$input = $this->getControlPart($key);
-
-			if($this->hasSignal())
-			{
-				$this->addSignalsToInput($input);
-			}
-
-			if(isset($this->iconArray[$key]))
-			{
-				$icoHtml = Html::el('span')
-					->class('mis-tile-ico')
-					->addText(\Kravcik\LatteFontAwesomeIcon\Extension::render($this->iconArray[$key]));
-			}
-			else
-			{
-				$icoHtml = '';
-			}
-
-			if(isset($this->tooltips[$key]))
-			{
-				$desc = Html::el('span')
-					->class('mis-tile-desc')
-					->addText($this->tooltips[$key]);
-			}
-			else
-			{
-				$desc = '';
-			}
-
-			$lbl = Html::el('span')
-				->class('mis-tile-lbl')
-				->addText($this->translate($itemLabel));
-
-			$chk = Html::el('span')
-				->class('mis-tile-chk');
-
-			if($checkHtml)
-			{
-				$chk->addHtml($checkHtml);
-			}
-
-			$tileLabel = Html::el('label')
-				->class('mis-tile' . ($this instanceof RadioList ? ' radio' : ''));
-
-			$tileLabel->addHtml($input)
-				->addHtml($icoHtml)
-				->addHtml($lbl)
-				->addHtml($desc)
-				->addHtml($chk);
-
-			$tilesWrap->addHtml($tileLabel);
-		}
-
-		$label = $this->getLabel();
-
-		if($this->isRequired())
-		{
-			$label->appendAttribute('class', 'required');
-		}
-
-		$blockTitle = Html::el('div')
-			->class($this->joinClass('mis-tiles-title', $validationClass))
-			->addHtml($label);
-
-		$tooltip = $this->getTooltip() === null ? '' : Html::el('div')
-			->class('mis-tiles-sub')
-			->addText($this->getTooltip());
-
-		$blockHead = Html::el('div')
-			->class('mis-tiles-head')
-			->addHtml($blockTitle)
-			->addHtml($tooltip);
-
-		$block = Html::el('div')
-			->class($this->joinClass('mis-tiles', $this->inputClass))
-			->addHtml($blockHead)
-			->addHtml($tilesWrap)
-			->addHtml($validationFeedBack);
-
-		return $this->createWrap()
-			->addHtml($block);
-	}
-
-
-	public function getCoreControl(): Html|string
-	{
-		$inputs = null;
-
-		foreach(array_keys($this->getItems()) as $key)
-		{
-			$inputs .= $this->renderItem($key);
-		}
-
-		$validationFeedBack = $this->getValidationFeedback();
-		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : '';
-
-		$wrapRow = Html::el('div')
-			->addAttributes($this->wrapRowAttributes)
-			->class('row');
-
-		if($inputs)
-		{
-			$wrapRow->addHtml($inputs);
-		}
-
-		$wrapContainer = Html::el('div')
-			->class('container' . $validationClass)
-			->addHtml($wrapRow);
-
-		return $wrapContainer . $validationFeedBack;
-	}
-
-
-	public function renderItem(string|int $itemName): Html
-	{
-		$input = $this->getControlPart($itemName);
-
-		$inputColorClass = $this->color ? ' checkbox-' . $this->color : null;
-
-		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : null;
-
-		if($this->toggleButton)
-		{
-			if(is_array($this->buttonColor))
-			{
-				$buttonColor = $this->buttonColor[$itemName] ?? 'primary';
-			}
-			else
-			{
-				$buttonColor = $this->buttonColor;
-			}
-
-			$inputClass = 'btn-check';
-			$labelClass = 'me-2 btn btn-' . $buttonColor . ' width-toggle';
-		}
-		else
-		{
-			$inputClass = 'form-check-input';
-			$labelClass = 'form-check-label width-auto';
-		}
-
-		$input->class($inputClass . $currentClass . $inputColorClass);
-
-		$label = $this->getLabelPart($itemName);
-
-		$label->class($labelClass);
-
-		$tooltip = null;
-
-		if(isset($this->tooltips[$itemName]))
-		{
-			$tooltip = Html::el('span')
-				->title($this->tooltips[$itemName])
-				->addAttributes(['data-bs-placement' => 'top', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
-				->addHtml(Extension::render('question-circle', color: 'blue'));
-		}
-
-		$class = 'form-check col-' . (12 / $this->itemsPerRow);
-
-		if($this->itemClass)
-		{
-			$class .= ' ' . $this->itemClass;
-		}
-
-		if($this instanceof Signalable && $this->hasSignal())
-		{
-			$this->addSignalsToInput($input);
-		}
-
-		return Html::el('div')
-			->class(($this->toggleButton ? 'p-0 ' : '') . $class)
-			->addHtml($input . $label . $tooltip);
-	}
-
-
-	public function renderInlineList(): Html
-	{
-		$label = $this->getCoreLabel();
-		$input = $this->getCoreControl();
-
-		$labelClass = 'align-self-center' . ($this->labelClass ? ' ' . $this->labelClass : ' col-sm-4');
-		$inputClass = 'align-self-center' . ($this->inputClass ? ' ' . $this->inputClass : ' col-sm-8');
-
-		$labelDiv = Html::el('div')
-			->class($labelClass)
-			->addHtml($label);
-
-		$inputDiv = Html::el('div')
-			->class($inputClass)
-			->addHtml($input);
-
-		$rowClass = $this->rowClass ?? 'row';
-
-		$rowDiv = Html::el('div')
-			->class($rowClass)
-			->addHtml($labelDiv . $inputDiv);
-
-		return $this->createWrap()
-			->addHtml($rowDiv);
-	}
-
-
 	/**
+	 * Description of the items (item key => text), rendered under the item label
 	 * @param array<int|string, string> $tooltips
 	 */
 	public function setTooltips(array $tooltips): static
 	{
 		$this->tooltips = $tooltips;
+
 		return $this;
+	}
+
+
+	public function getItemDescription(string|int $key): ?string
+	{
+		return isset($this->tooltips[$key]) ? $this->translate($this->tooltips[$key]) : null;
+	}
+
+
+	/**
+	 * Icons of the items (item key => icon name)
+	 * @param array<int|string, string> $iconArray
+	 */
+	public function setIconArray(array $iconArray): static
+	{
+		$this->iconArray = $iconArray;
+
+		return $this;
+	}
+
+
+	public function getItemIcon(string|int $key): ?string
+	{
+		return $this->iconArray[$key] ?? null;
 	}
 
 
 	public function setItemsPerRow(int $number): static
 	{
 		$this->itemsPerRow = $number;
+
 		return $this;
 	}
 
 
-	public function setItemClass(string $itemClass): static
+	public function getItemsPerRow(): int
 	{
-		$this->itemClass = $itemClass;
-		return $this;
+		return $this->itemsPerRow;
 	}
 
 
 	/**
+	 * Class of every item (form-field element)
+	 */
+	public function setItemClass(string $itemClass): static
+	{
+		$this->itemClass = $itemClass;
+
+		return $this;
+	}
+
+
+	public function getItemClass(): ?string
+	{
+		return $this->itemClass;
+	}
+
+
+	/**
+	 * Attributes of the element around the items
 	 * @param array<string, mixed> $attributes
 	 */
 	public function setWrapAttributes(array $attributes): static
 	{
 		$this->wrapRowAttributes = $attributes;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return array<string, mixed>
+	 */
+	public function getWrapAttributes(): array
+	{
+		return $this->wrapRowAttributes;
+	}
+
+
+	/**
+	 * Items as a group of toggle buttons
+	 */
+	public function setToggleButton(bool $toggleButton = true): static
+	{
+		$this->toggleButton = $toggleButton;
+
+		return $this;
+	}
+
+
+	public function isToggleButton(): bool
+	{
+		return $this->toggleButton;
+	}
+
+
+	/**
+	 * Theme color of the toggle buttons - one for all, or per item (item key => color)
+	 * @param string|array<int|string, string> $color
+	 */
+	public function setButtonColor(string|array $color = 'primary'): static
+	{
+		$this->buttonColor = $color;
+
+		return $this;
+	}
+
+
+	/**
+	 * Bootstrap 5 names (outline-primary) are accepted, toggle buttons are always outlined
+	 */
+	public function getButtonColor(string|int $key): string
+	{
+		$color = is_array($this->buttonColor) ? ($this->buttonColor[$key] ?? 'primary') : $this->buttonColor;
+
+		return str_starts_with($color, 'outline-') ? substr($color, 8) : $color;
+	}
+
+
+	/**
+	 * Theme color of the items
+	 */
+	public function setItemsColor(string $color): static
+	{
+		$this->color = $color;
 
 		return $this;
 	}

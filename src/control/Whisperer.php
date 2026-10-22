@@ -24,21 +24,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 
 	/**
-	 * @param ?array<mixed> $items
-	 */
-	public function __construct
-	(
-		string|\Stringable|null $label = null,
-		?array $items = null
-	)
-	{
-		parent::__construct($label, $items);
-
-		$this->controlClass = 'form-control-chosen';
-	}
-
-
-	/**
 	 * @param callable(mixed, array<mixed>): void $callback
 	 */
 	public function setOnSelectCallback(callable $callback): static
@@ -252,29 +237,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	private function getLinkPath(string $signal): string
 	{
 		return $this->lookupPath(Presenter::class) . self::NameSeparator . $signal . '!';
-	}
-
-
-	public function getCoreControl(): Html
-	{
-		$input = $this->getControl();
-
-		$errorClass = '';
-		$errorMessage = null;
-
-		if($this->hasErrors())
-		{
-			$errorClass = ' is-invalid';
-
-			$errorMessage = $this->createErrorFeedback();
-		}
-
-		$chosenClass = $this->isRequired() ? ' form-control-chosen-required' : ' form-control-chosen';
-
-		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . $errorClass . $chosenClass]);
-
-		return Html::el('div')->class('input-group')
-			->addHtml($this->getPrepend() . $input . $this->getAppend() . $errorMessage);
 	}
 
 

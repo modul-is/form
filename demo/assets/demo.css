@@ -1,0 +1,8 @@
+/* Demo page only - nothing here is part of the library */
+@layer custom
+{
+	pre
+	{
+		white-space: pre-wrap;
+	}
+}

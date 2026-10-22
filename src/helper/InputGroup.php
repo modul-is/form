@@ -4,71 +4,80 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Helper;
 
-use Nette\Utils\Html;
-
 trait InputGroup
 {
-	public string $append = '';
+	protected ?string $prepend = null;
 
-	public string $prepend = '';
+	protected ?string $prependClass = null;
 
-	public string $appendClass = '';
+	protected ?string $append = null;
 
-	public string $prependClass = '';
+	protected ?string $appendClass = null;
+
+	protected ?string $icon = null;
 
 
-	public function getPrepend(): ?Html
+	/**
+	 * Input group text before the control - HTML
+	 */
+	public function setPrepend(string|\Stringable $html, ?string $class = null): static
 	{
-		$prepend = Html::el('span')
-			->class('input-group-text' . ($this->prependClass ? ' ' . $this->prependClass : null))
-			->addHtml($this->prepend);
-
-		if(!$this->prepend)
-		{
-			return null;
-		}
-
-		return $prepend;
-	}
-
-
-	public function getAppend(): ?Html
-	{
-		if(!$this->append)
-		{
-			return null;
-		}
-
-		return Html::el('span')
-			->class('input-group-text' . ($this->appendClass ? ' ' . $this->appendClass : null))
-			->addHtml($this->append);
-	}
-
-
-	public function setAppend(string|\Stringable $text, string $class = ''): static
-	{
-		$this->append = $text instanceof \Stringable ? (string) $text : $text;
-
-		$this->appendClass = $class;
-
-		return $this;
-	}
-
-
-	public function setPrepend(string|\Stringable $text, string $class = ''): static
-	{
-		$this->prepend = $text instanceof \Stringable ? (string) $text : $text;
-
+		$this->prepend = (string) $html;
 		$this->prependClass = $class;
 
 		return $this;
 	}
 
 
-	public function setIcon(string $icon): static
+	/**
+	 * Input group text after the control - HTML
+	 */
+	public function setAppend(string|\Stringable $html, ?string $class = null): static
 	{
-		$this->prepend = \Kravcik\LatteFontAwesomeIcon\Extension::render($icon)->toHtml();
+		$this->append = (string) $html;
+		$this->appendClass = $class;
 
 		return $this;
+	}
+
+
+	/**
+	 * Icon inside the control (Bootstrap form-adorn), name is passed to the icon renderer
+	 */
+	public function setIcon(string $icon): static
+	{
+		$this->icon = $icon;
+
+		return $this;
+	}
+
+
+	public function getPrepend(): ?string
+	{
+		return $this->prepend === '' ? null : $this->prepend;
+	}
+
+
+	public function getPrependClass(): ?string
+	{
+		return $this->prependClass;
+	}
+
+
+	public function getAppend(): ?string
+	{
+		return $this->append === '' ? null : $this->append;
+	}
+
+
+	public function getAppendClass(): ?string
+	{
+		return $this->appendClass;
+	}
+
+
+	public function getIcon(): ?string
+	{
+		return $this->icon;
 	}
 }

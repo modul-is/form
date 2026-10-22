@@ -19,25 +19,4 @@ class MultiWhisperer extends MultiSelectBox
 
 		return $control;
 	}
-
-
-	public function getCoreControl(): Html
-	{
-		$input = $this->getControl();
-
-		$validationClass = $this->getValidationClass();
-		$validationFeedBack = $this->getValidationFeedback();
-
-		$chosenClass = $this->isRequired() ? ' form-control-chosen-required' : ' form-control-chosen';
-
-		$input->addAttributes(['class' => 'form-control ' . $input->getAttribute('class') . ($validationClass ? ' ' . $validationClass : null) . $chosenClass]);
-
-		if($this->hasSignal())
-		{
-			$this->addSignalsToInput($input);
-		}
-
-		return Html::el('div')->class('input-group')
-			->addHtml($this->getPrepend() . $input . $this->getAppend() . $validationFeedBack);
-	}
 }

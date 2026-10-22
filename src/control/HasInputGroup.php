@@ -4,11 +4,24 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Control;
 
-use Nette\Utils\Html;
-
 interface HasInputGroup
 {
-	public function getPrepend(): ?Html;
+	/**
+	 * HTML of the input group text before the control
+	 */
+	public function getPrepend(): ?string;
 
-	public function getAppend(): ?Html;
+	public function getPrependClass(): ?string;
+
+	/**
+	 * HTML of the input group text after the control
+	 */
+	public function getAppend(): ?string;
+
+	public function getAppendClass(): ?string;
+
+	/**
+	 * Icon inside the control (form-adorn)
+	 */
+	public function getIcon(): ?string;
 }

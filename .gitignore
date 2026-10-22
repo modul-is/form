@@ -3,3 +3,11 @@
 /vendor/*
 tests/*/*/output/*
 composer.lock
+/node_modules
+/demo/temp/*
+/demo/log/*
+/demo/www/dist
+package-lock.json
+!/demo/temp/.gitkeep
+!/demo/log/.gitkeep
+tests/*/output/*

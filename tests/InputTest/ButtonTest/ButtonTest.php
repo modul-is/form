@@ -31,7 +31,7 @@ class ButtonTest extends TestCase
 
 		$html = $form->getComponent('button')->render()->__toString();
 
-		Assert::contains('btn-default', $html);
+		Assert::contains('btn-solid theme-secondary', $html);
 		Assert::false((bool) preg_match('~class="[^"]*btn-(\s|")~', $html), 'dangling "btn-" class');
 	}
 

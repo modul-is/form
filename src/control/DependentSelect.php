@@ -8,22 +8,9 @@ use ModulIS\Form\Dial\SignalDial;
 use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
 
-class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Renderable, HasInputGroup, Signalable, \Nette\Application\UI\SignalReceiver
+class DependentSelect extends \Nette\Forms\Controls\SelectBox implements InputField, Signalable, \Nette\Application\UI\SignalReceiver
 {
-	use Helper\InputGroup;
-	use Helper\Tooltip;
-	use Helper\ControlPart;
-	use Helper\Label;
-	use Helper\InputCoreControl;
-	use Helper\AutoRenderSkip;
-	use Helper\Template;
-	use Helper\Validation;
-	use Helper\ControlClass;
-	use Helper\RenderBasic;
-	use Helper\RenderDefault;
-	use Helper\RenderFloating;
-	use Helper\RenderInline;
-	use Helper\WrapControl;
+	use Helper\Field;
 	use Helper\Signals
 	{
 		signalReceived as public signalsSignalReceived;
@@ -41,7 +28,6 @@ class DependentSelect extends \Nette\Forms\Controls\SelectBox implements Rendera
 		?callable $dependentCallback = null
 	)
 	{
-		$this->controlClass = 'form-select';
 		$this->parents = $parents;
 
 		if($dependentCallback)

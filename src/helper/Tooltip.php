@@ -4,17 +4,18 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Helper;
 
-use Kravcik\LatteFontAwesomeIcon\Extension;
-use Nette\Utils\Html;
-
 trait Tooltip
 {
 	protected ?string $tooltip = null;
 
 
+	/**
+	 * Help icon with a tooltip next to the caption (plain text)
+	 */
 	public function setTooltip(?string $text): static
 	{
 		$this->tooltip = $text;
+
 		return $this;
 	}
 
@@ -22,23 +23,5 @@ trait Tooltip
 	public function getTooltip(): ?string
 	{
 		return $this->tooltip;
-	}
-
-
-	/**
-	 * Ikona s napovedou k prvku - sdili ji Label::getCoreLabel() i RenderDefault::renderDefault(),
-	 * aby tooltip fungoval ve vsech typech vykresleni.
-	 */
-	public function getTooltipHtml(): ?Html
-	{
-		if(!$this->tooltip)
-		{
-			return null;
-		}
-
-		return Html::el('span')
-			->title($this->tooltip)
-			->addAttributes(['data-bs-placement' => 'right', 'data-bs-toggle' => 'tooltip', 'data-bs-html' => 'true'])
-			->addHtml(Extension::render('question-circle', color: 'blue'));
 	}
 }

@@ -17,6 +17,7 @@ trait Template
 
 
 	/**
+	 * Custom Latte template instead of the default render, the control is available as $input
 	 * @param array<string, mixed> $params
 	 */
 	public function setTemplate(?string $path, array $params = [], ?TemplateEngine $templateEngine = null): static
@@ -26,5 +27,34 @@ trait Template
 		$this->templateEngine = $templateEngine;
 
 		return $this;
+	}
+
+
+	/**
+	 * Null when no template is set. While the template is being rendered it is switched off,
+	 * so the template may call $input->render() to get the default markup of the control.
+	 */
+	public function renderTemplate(): ?string
+	{
+		if($this->templatePath === null)
+		{
+			return null;
+		}
+
+		$path = $this->templatePath;
+		$params = ['input' => $this] + $this->templateParams;
+
+		$this->templatePath = null;
+
+		try
+		{
+			return $this->templateEngine
+				? $this->templateEngine->renderToString($path, $params)
+				: (new \Latte\Engine)->renderToString($path, $params);
+		}
+		finally
+		{
+			$this->templatePath = $path;
+		}
 	}
 }

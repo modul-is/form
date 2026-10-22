@@ -1,0 +1,25 @@
+/**
+ * Styles of modul-is/form on top of Bootstrap 6.
+ *
+ * Bootstrap is the base - only what it does not have belongs here.
+ * Everything goes into Bootstrap's "components" layer (validation feedback of Bootstrap lives there),
+ * so utilities and application styles (later layers) can still override it.
+ */
+@layer components
+{
+	/*
+	 * Bootstrap shows feedback only next to the invalid control - lists (form-group) and controls
+	 * inside an input group with an icon have it elsewhere, data-mis-field is the element feedback belongs to
+	 */
+	[data-mis-field]:has(.is-invalid) .invalid-feedback,
+	[data-mis-field]:has(.is-valid) .valid-feedback
+	{
+		display: block;
+	}
+
+	.mis-tooltip
+	{
+		cursor: help;
+		color: var(--bs-fg-3, currentcolor);
+	}
+}

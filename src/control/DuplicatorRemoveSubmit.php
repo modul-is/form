@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Control;
 
-use Kravcik\LatteFontAwesomeIcon\Extension;
 use ModulIS\Form\Form;
 use ModulIS\Form\FormComponent;
+use ModulIS\Form\Renderer\Bootstrap6Renderer;
 use Nette\Utils\Html;
 use function assert;
 
@@ -55,7 +55,7 @@ class DuplicatorRemoveSubmit extends SubmitButton
 		assert($form instanceof Form);
 
 		$currentClass = $this->getControl()->getAttribute('class');
-		$class = 'btn-sm btn-duplicator btn-duplicator-remove float-end'
+		$class = 'btn-subtle theme-danger btn-sm ms-auto'
 			. ($form->ajax ? ' ajax' : '')
 			. ($currentClass ? ' ' . $currentClass : '');
 
@@ -63,7 +63,16 @@ class DuplicatorRemoveSubmit extends SubmitButton
 			->class($class)
 			->addAttributes($attributes)
 			->disabled($this->isDisabled())
-			->addHtml(Extension::render('times'))
+			->addHtml(Bootstrap6Renderer::of($this)->icon('remove'))
 			->addText($this->translate($this->getCaption()));
+	}
+
+
+	/**
+	 * Duplicator buttons keep their own markup (no validation, AJAX class of the form)
+	 */
+	public function render(): Html
+	{
+		return $this->getCoreControl();
 	}
 }

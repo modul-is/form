@@ -7,24 +7,11 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
 
-class CurrencyInput extends \Nette\Forms\Controls\TextInput implements Renderable, Signalable, Helper\QuickCopyable, HasInputGroup, \Nette\Application\UI\SignalReceiver
+class CurrencyInput extends \Nette\Forms\Controls\TextInput implements InputField, Signalable, Helper\QuickCopyable, \Nette\Application\UI\SignalReceiver
 {
-	use Helper\InputGroup;
+	use Helper\Field;
 	use Helper\QuickCopy;
-	use Helper\Tooltip;
-	use Helper\ControlPart;
-	use Helper\Label;
-	use Helper\InputCoreControl;
-	use Helper\AutoRenderSkip;
-	use Helper\Template;
-	use Helper\Validation;
 	use Helper\Signals;
-	use Helper\ControlClass;
-	use Helper\RenderBasic;
-	use Helper\RenderDefault;
-	use Helper\RenderInline;
-	use Helper\WrapControl;
-	use Helper\RenderFloating;
 
 	private static string $defaultCurrency = 'Kč';
 

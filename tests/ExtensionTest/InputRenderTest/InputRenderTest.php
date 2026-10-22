@@ -79,7 +79,7 @@ class InputRenderTest extends TestCase
 		$full = $this->renderBody('{inputRender text}', $form, $presenter);
 
 		Assert::notSame($core, $full);
-		Assert::contains('<label for="frm-form-text">Text</label>', $full);
+		Assert::contains('<label for="frm-form-text" class="form-label">Text</label>', $full);
 		Assert::notContains('<label', $core);
 	}
 
@@ -196,7 +196,7 @@ class InputRenderTest extends TestCase
 		$output = $this->renderBody('{labelCore text}Custom{/labelCore}', $form, $presenter);
 
 		Assert::contains('Custom', $output);
-		Assert::contains('title="Help"', $output);
+		Assert::contains('data-bs-title="Help"', $output);
 	}
 
 

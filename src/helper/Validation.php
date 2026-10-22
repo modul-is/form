@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace ModulIS\Form\Helper;
 
 use Nette\HtmlStringable;
-use Nette\Utils\Html;
 
 trait Validation
 {
@@ -28,75 +27,24 @@ trait Validation
 	}
 
 
-	protected function getValidationClass(): ?string
-	{
-		$validationClass = null;
-
-		if($this->getForm()->isAnchored() && ($this->getForm()->isSubmitted() || $this->isSubmitted()))
-		{
-			if($this->hasErrors())
-			{
-				$validationClass = 'is-invalid';
-			}
-			elseif($this->isFilled())
-			{
-				$validationClass = 'is-valid';
-			}
-		}
-
-		return $validationClass;
-	}
-
-
-	protected function getValidationFeedback(): string|Html
-	{
-		$validationFeedBack = '';
-
-		if($this->getForm()->isAnchored() && ($this->getForm()->isSubmitted() || $this->isSubmitted()))
-		{
-			if($this->hasErrors())
-			{
-				$validationFeedBack = $this->createErrorFeedback();
-			}
-			elseif($this->isRequired() && $this->getValidationSuccessMessage())
-			{
-				$validationFeedBack = $this->createSuccessFeedback();
-			}
-		}
-
-		return $validationFeedBack;
-	}
-
-
 	/**
-	 * Error messages may contain the submitted value (%value), therefore plain strings are escaped - same as Nette renderer
+	 * is-invalid / is-valid once the form (or the control alone, see setSubmitted()) was submitted
 	 */
-	protected function createErrorFeedback(): Html
+	public function getValidationClass(): ?string
 	{
-		$feedback = Html::el('div')
-			->class('invalid-feedback');
+		$form = $this->getForm(false);
 
-		foreach($this->getErrors() as $i => $error)
+		if($form === null || !$form->isAnchored() || (!$form->isSubmitted() && !$this->isSubmitted()))
 		{
-			if($i > 0)
-			{
-				$feedback->addText(' ');
-			}
-
-			$feedback->addText($error);
+			return null;
 		}
 
-		return $feedback;
-	}
+		if($this->hasErrors())
+		{
+			return 'is-invalid';
+		}
 
-
-	protected function createSuccessFeedback(): Html
-	{
-		$message = $this->getValidationSuccessMessage();
-
-		return Html::el('div')
-			->class('valid-feedback')
-			->addText($message instanceof HtmlStringable ? $message : $this->translate($message));
+		return $this->isFilled() ? 'is-valid' : null;
 	}
 
 
@@ -106,6 +54,9 @@ trait Validation
 	}
 
 
+	/**
+	 * Show validation state of the control even when the form was not submitted (e.g. after an AJAX signal)
+	 */
 	public function setSubmitted(bool $submitted = true): void
 	{
 		$this->submitted = $submitted;

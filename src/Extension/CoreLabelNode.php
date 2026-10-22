@@ -23,7 +23,7 @@ class CoreLabelNode extends \Nette\Bridges\FormsLatte\Nodes\LabelNode
 			. ($this->attributes->items ? ' if($ʟ_label instanceof \Nette\Utils\Html) { $ʟ_label->addAttributes(%2.node); }' : '')
 			. ($this->void
 				? ' echo $ʟ_label %3.line;'
-				: ' echo $ʟ_label instanceof \Nette\Utils\Html ? $ʟ_label->startTag() : $ʟ_label %3.line; %4.node if($ʟ_label instanceof \Nette\Utils\Html) echo $ʟ_label->endTag() %5.line;'),
+				: ' echo $ʟ_label instanceof \Nette\Utils\Html ? $ʟ_label->startTag() : $ʟ_label %3.line; %4.node if($ʟ_label instanceof \Nette\Utils\Html) echo \ModulIS\Extension\CoreLabelNode::renderMarks($ʟ_label), $ʟ_label->endTag() %5.line;'),
 			$this->name,
 			$this->part,
 			$this->attributes,
@@ -31,5 +31,14 @@ class CoreLabelNode extends \Nette\Bridges\FormsLatte\Nodes\LabelNode
 			$this->content,
 			$this->tagRanges ? end($this->tagRanges) : $this->position,
 		);
+	}
+
+
+	/**
+	 * Paired tag replaces the caption only - required mark and tooltip (children following the caption) stay
+	 */
+	public static function renderMarks(\Nette\Utils\Html $label): string
+	{
+		return implode('', array_map(strval(...), array_slice($label->getChildren(), 1)));
 	}
 }

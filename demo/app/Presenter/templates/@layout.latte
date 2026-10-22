@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>modul-is/form – demo</title>
+	<link rel="icon" href="data:,">
+	<link rel="stylesheet" href="{$basePath}/dist/demo.css">
+	<script type="module" src="{$basePath}/dist/demo.js"></script>
+</head>
+<body>
+	<div class="container py-4">
+		<h1 class="mb-4">modul-is/form – demo</h1>
+
+		{snippet flashMessages}
+			<div n:foreach="$flashes as $flash" class="alert theme-{$flash->type} mb-3" role="alert">{$flash->message}</div>
+		{/snippet}
+
+		{include content}
+	</div>
+</body>
+</html>

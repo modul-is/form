@@ -113,7 +113,7 @@ class RadiolistTest extends TestCase
 
 
 	/**
-	 * setInputWrapClass() se v Big rezimu lepi na blok dlazdic - drive chybela mezera.
+	 * setInputWrapClass() se v Big rezimu lepi na skupinu dlazdic (form-group).
 	 */
 	public function testRenderBigInputWrapClass()
 	{
@@ -123,7 +123,7 @@ class RadiolistTest extends TestCase
 			->setRenderBig()
 			->setInputWrapClass('col-6');
 
-		Assert::contains('mis-tiles col-6', $form->getComponent('radiolist')->render()->__toString());
+		Assert::contains('class="form-group col-6"', $form->getComponent('radiolist')->render()->__toString());
 	}
 
 

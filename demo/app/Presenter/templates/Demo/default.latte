@@ -1,0 +1,12 @@
+{block content}
+	{control demoForm}
+
+	{snippet result}
+		<div class="card mt-3" n:if="$submittedValues !== null">
+			<div class="card-header">Odeslané hodnoty</div>
+			<div class="card-body">
+				<pre class="mb-0 small">{json_encode($submittedValues, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE | \JSON_UNESCAPED_SLASHES)}</pre>
+			</div>
+		</div>
+	{/snippet}
+{/block}

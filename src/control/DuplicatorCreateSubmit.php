@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Control;
 
-use Kravcik\LatteFontAwesomeIcon\Extension;
 use ModulIS\Form\Form;
 use ModulIS\Form\FormComponent;
+use ModulIS\Form\Renderer\Bootstrap6Renderer;
 use Nette\Utils\Html;
 use function assert;
 
@@ -60,12 +60,12 @@ class DuplicatorCreateSubmit extends SubmitButton
 
 		$currentClass = $control->getAttribute('class');
 
-		$icon = Extension::render($this->isDisabled() ? 'info' : 'plus');
+		$icon = Bootstrap6Renderer::of($this)->icon($this->isDisabled() ? 'info' : 'add');
 
 		$form = $this->getForm();
 		assert($form instanceof Form);
 
-		$class = 'btn-duplicator btn-sm float-start'
+		$class = 'btn-outline theme-primary btn-sm'
 			. ($form->ajax ? ' ajax' : '')
 			. ($currentClass ? ' ' . $currentClass : '');
 
@@ -75,5 +75,14 @@ class DuplicatorCreateSubmit extends SubmitButton
 			->disabled($this->isDisabled())
 			->addHtml($icon)
 			->addText($this->translate($this->getCaption()));
+	}
+
+
+	/**
+	 * Duplicator buttons keep their own markup (no validation, AJAX class of the form)
+	 */
+	public function render(): Html
+	{
+		return $this->getCoreControl();
 	}
 }

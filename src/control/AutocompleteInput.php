@@ -9,27 +9,14 @@ use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 
-class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Renderable, HasInputGroup, Signalable, \Nette\Application\UI\SignalReceiver
+class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements InputField, Signalable, \Nette\Application\UI\SignalReceiver
 {
-	use Helper\InputGroup;
-	use Helper\Tooltip;
-	use Helper\ControlPart;
-	use Helper\Label;
-	use Helper\InputCoreControl;
-	use Helper\AutoRenderSkip;
-	use Helper\Template;
-	use Helper\RenderDefault;
-	use Helper\RenderFloating;
-	use Helper\RenderInline;
-	use Helper\Validation;
+	use Helper\Field;
 	use Helper\Signals
 	{
 		setOnChangeCallback as public signalsSetOnChangeCallback;
 		signalReceived as public signalsSignalReceived;
 	}
-	use Helper\WrapControl;
-	use Helper\ControlClass;
-	use Helper\RenderBasic;
 
 	/** @var ?\Closure(mixed, array<string, mixed>): mixed */
 	public ?\Closure $onSearchChangeCallback = null;
@@ -252,16 +239,5 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Rende
 		}
 
 		return $array;
-	}
-
-
-	public function getCoreControl(): Html
-	{
-		$input = $this->getControl();
-
-		$input->addAttributes(['class' => 'form-control autocomplete-input ' . $input->getAttribute('class') . ' ' . $this->getValidationClass()]);
-
-		return Html::el('div')->class('input-group')
-			->addHtml($this->getPrepend() . $input . $this->getAppend() . $this->getValidationFeedback());
 	}
 }

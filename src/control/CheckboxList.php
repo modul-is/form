@@ -5,96 +5,18 @@ declare(strict_types = 1);
 namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
-use Nette\Utils\Html;
 
-class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Renderable, Signalable, \Nette\Application\UI\SignalReceiver
+class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Field, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\Color;
 	use Helper\Tooltip;
+	use Helper\Description;
 	use Helper\CoreList;
-	use Helper\ControlPart;
-	use Helper\Label;
+	use Helper\Render;
 	use Helper\AutoRenderSkip;
 	use Helper\Template;
 	use Helper\Validation;
 	use Helper\ControlClass;
 	use Helper\Signals;
-	use Helper\ToggleButton;
-	use Helper\RenderInline;
 	use Helper\WrapControl;
-
-	/** @var array<int|string, string> */
-	private array $iconArray = [];
-
-
-	public function renderDefault(): Html
-	{
-		if($this->getOption('hide') || $this->autoRenderSkip)
-		{
-			return Html::el();
-		}
-
-		$required = $this->isRequired()
-			? ' ' . Html::el('span')->class('required')->setText('*')
-			: '';
-
-		$labelEl = Html::el('label')
-			->addText($this->translate($this->getCaption()))
-			->addHtml($required);
-
-		if($tooltipHtml = $this->getTooltipHtml())
-		{
-			$labelEl->addHtml(' ' . $tooltipHtml);
-		}
-
-		$itemsWrap = Html::el('div')
-			->class($this->joinClass('mis-checklist-items', $this->getValidationClass()));
-
-		$polyline = Html::el('polyline')
-			->setAttribute('points', '20 6 9 17 4 12');
-
-		$svg = Html::el('svg')
-			->setAttribute('viewBox', '0 0 24 24')
-			->setAttribute('fill', 'none')
-			->setAttribute('stroke-linecap', 'round')
-			->addHtml($polyline);
-
-		$boxSpan = Html::el('span')
-			->class('box')
-			->addHtml($svg);
-
-		foreach($this->getItems() as $key => $itemLabel)
-		{
-			$inputEl = $this->getControlPart($key);
-
-			if($this->hasSignal())
-			{
-				$this->addSignalsToInput($inputEl);
-			}
-
-			$itemLabelEl = Html::el('label')
-				->class('checkbox')
-				->addHtml($inputEl)
-				->addHtml($boxSpan)
-				->addText($this->translate($itemLabel));
-
-			$itemsWrap->addHtml($itemLabelEl);
-		}
-
-		$validationFeedBack = $this->getValidationFeedback();
-
-		return $this->createWrap('mis-checklist')
-			->addHtml($labelEl . $itemsWrap . $validationFeedBack);
-	}
-
-
-	/**
-	 * @param array<int|string, string> $iconArray
-	 */
-	public function setIconArray(array $iconArray): static
-	{
-		$this->iconArray = $iconArray;
-
-		return $this;
-	}
 }

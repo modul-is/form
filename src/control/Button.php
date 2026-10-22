@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace ModulIS\Form\Control;
 
-use Kravcik\LatteFontAwesomeIcon\Extension;
 use ModulIS\Form\Dial\SignalDial;
 use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
@@ -14,11 +13,12 @@ use Nette\Utils\Html;
 
 class Button extends \Nette\Forms\Controls\Button implements Renderable, Signalable, SignalReceiver
 {
-	use Helper\Icon;
+	use Helper\ButtonIcon;
+	use Helper\ButtonVariant;
 	use Helper\Color;
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
-	use Helper\ButtonRounded;
+	use Helper\Render;
 
 	/** @var ?\Closure(array<mixed>): void */
 	protected ?\Closure $onChangeCallback = null;
@@ -80,54 +80,5 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable, Signala
 
 			$input->setAttribute('data-on-click', $presenter->link($this->lookupPath(Presenter::class) . IComponent::NameSeparator . SignalDial::OnClick . '!'));
 		}
-	}
-
-
-	public function getCoreControl(): Html|string
-	{
-		$input = $this->getControl();
-
-		$label = $this->getCaption();
-
-		$button = Html::el('button')
-			->name($this->getHtmlName())
-			->type('button')
-			->appendAttribute('class', 'btn-' . ($this->color ?: 'default'))
-			->appendAttribute('class', (string) $input->getAttribute('class'))
-			->appendAttribute('class', ltrim($this->getFormButtonClass()))
-			->appendAttribute('class', 'mis-btn');
-
-		$button->addHtml($this->icon ? Extension::render($this->icon) : '')
-			->addText($this->translate($label));
-
-		if($this->getOption('id'))
-		{
-			$button->id($this->getOption('id'));
-		}
-
-		foreach($input->attrs as $name => $value)
-		{
-			if(in_array($name, ['name', 'required', 'data-nette-rules', 'class'], true))
-			{
-				continue;
-			}
-
-			$button->$name = $value;
-		}
-
-		$this->addSignalsToInput($button);
-
-		return $button;
-	}
-
-
-	public function render(): Html|string
-	{
-		if($this->getOption('hide') || $this->autoRenderSkip)
-		{
-			return '';
-		}
-
-		return $this->getCoreControl();
 	}
 }

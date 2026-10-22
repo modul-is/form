@@ -6,22 +6,9 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 
-class TextArea extends \Nette\Forms\Controls\TextArea implements Renderable, HasInputGroup, Signalable, Helper\QuickCopyable, \Nette\Application\UI\SignalReceiver
+class TextArea extends \Nette\Forms\Controls\TextArea implements InputField, Signalable, Helper\QuickCopyable, \Nette\Application\UI\SignalReceiver
 {
-	use Helper\InputGroup;
+	use Helper\Field;
 	use Helper\QuickCopy;
-	use Helper\Tooltip;
-	use Helper\ControlPart;
-	use Helper\Label;
-	use Helper\InputCoreControl;
-	use Helper\AutoRenderSkip;
-	use Helper\Template;
-	use Helper\Validation;
-	use Helper\ControlClass;
 	use Helper\Signals;
-	use Helper\RenderBasic;
-	use Helper\RenderDefault;
-	use Helper\RenderFloating;
-	use Helper\RenderInline;
-	use Helper\WrapControl;
 }

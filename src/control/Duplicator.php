@@ -131,10 +131,10 @@ class Duplicator extends Container implements Renderable
 
 		$body = null;
 		$bodyRow = null;
-		$buttonWrapClass = $this->buttonWrapClass ?? 'mb-3 col-12';
-		$duplicatorBodyClass = $this->duplicatorBodyClass ?? 'card-body';
+		$buttonWrapClass = $this->buttonWrapClass ?? 'col-12 d-flex flex-wrap gap-2';
+		$duplicatorBodyClass = $this->duplicatorBodyClass ?? 'card-body vstack gap-4';
 		$duplicatorFooterClass = $this->duplicatorFooterClass ?? 'card-footer';
-		$duplicatorContainerClass = $this->duplicatorContainerClass ?? 'card card-accent-primary';
+		$duplicatorContainerClass = $this->duplicatorContainerClass ?? 'card';
 
 		foreach($this->getComponents() as $key => $container)
 		{
@@ -148,12 +148,12 @@ class Duplicator extends Container implements Renderable
 			$buttons = null;
 
 			$containerHeader = Html::el('div')
-				->class('duplicator-head');
+				->class('col-12 d-flex align-items-center gap-2');
 
 			if($container->getTitle())
 			{
 				$title = Html::el('div')
-					->class('lbl')
+					->class('fw-semibold')
 					->addText($container->getTitle());
 
 				$containerHeader->addHtml($title);
@@ -191,7 +191,7 @@ class Duplicator extends Container implements Renderable
 			}
 
 			$bodyRow .= Html::el('div')
-				->class('row')
+				->class('row g-3')
 				->addHtml($containerHeader)
 				->addHtml($inputs);
 		}
@@ -227,7 +227,7 @@ class Duplicator extends Container implements Renderable
 			->addHtml($header . $body . $footer);
 
 		$wrap = Html::el('div')
-			->class('mb-3 col-12')
+			->class('col-12')
 			->addHtml($card);
 
 		if($this->getOption('id'))

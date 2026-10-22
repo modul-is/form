@@ -17,7 +17,7 @@ use Tester\Assert;
  */
 class ValidatedTextInput extends \ModulIS\Form\Control\TextInput
 {
-	protected function getValidationClass(): ?string
+	public function getValidationClass(): ?string
 	{
 		return 'is-invalid';
 	}
@@ -25,7 +25,7 @@ class ValidatedTextInput extends \ModulIS\Form\Control\TextInput
 
 class ValidatedCheckboxList extends \ModulIS\Form\Control\CheckboxList
 {
-	protected function getValidationClass(): ?string
+	public function getValidationClass(): ?string
 	{
 		return 'is-invalid';
 	}
@@ -33,7 +33,7 @@ class ValidatedCheckboxList extends \ModulIS\Form\Control\CheckboxList
 
 class ValidatedRadioList extends \ModulIS\Form\Control\RadioList
 {
-	protected function getValidationClass(): ?string
+	public function getValidationClass(): ?string
 	{
 		return 'is-invalid';
 	}
@@ -112,9 +112,9 @@ class ValidationClassTest extends TestCase
 
 
 	/**
-	 * Regrese - setInputWrapClass() se v Big rezimu lepilo bez mezery.
+	 * Validacni trida se u dlazdic pripojuje k inputum s mezerou.
 	 */
-	public function testBigTitleKeepsValidationClassSeparate()
+	public function testBigItemsKeepValidationClassSeparate()
 	{
 		$form = $this->getForm();
 
@@ -123,7 +123,7 @@ class ValidationClassTest extends TestCase
 
 		$input->setRenderBig();
 
-		Assert::contains('class="mis-tiles-title is-invalid"', $input->render()->__toString());
+		Assert::contains('class="check is-invalid"', $input->render()->__toString());
 	}
 }
 

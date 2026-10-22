@@ -9,13 +9,14 @@ use Nette\Utils\Html;
 
 class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 {
-	use Helper\Icon;
+	use Helper\ButtonIcon;
+	use Helper\ButtonVariant;
 	use Helper\Color;
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
-	use Helper\ButtonRounded;
+	use Helper\Render;
 
-	protected string|null $link = null;
+	protected ?string $link = null;
 
 
 	public function __construct
@@ -47,59 +48,16 @@ class Link extends \Nette\Forms\Controls\BaseControl implements Renderable
 	}
 
 
-	public function render(): Html|string
-	{
-		if($this->getOption('hide') || $this->autoRenderSkip)
-		{
-			return '';
-		}
-
-		return $this->getCoreControl();
-	}
-
-
-	public function getCoreControl(): Html
-	{
-		$control = $this->getControl();
-
-		$currentClass = $control->getAttribute('class') ? ' ' . $control->getAttribute('class') : '';
-		$this->setOption('rendered', true);
-
-		$btnColor = $this->color ? ' btn-' . $this->color : ' btn-default';
-		$btnIcon = $this->icon ? Html::el('span')->class('fal fa-' . $this->icon) : null;
-
-		$el = Html::el('a');
-
-		if($this->link)
-		{
-			$el->href($this->link);
-		}
-
-		if($btnIcon)
-		{
-			$el->addHtml($btnIcon . ' ');
-		}
-
-		$el->addText($this->translate($this->getCaption()));
-		$el->class('btn' . $this->getFormButtonClass() . $btnColor . $currentClass);
-
-		foreach($control->attrs as $name => $value)
-		{
-			if(in_array($name, ['name', 'required', 'data-nette-rules', 'class'], true))
-			{
-				continue;
-			}
-
-			$el->$name = $value;
-		}
-
-		return $el;
-	}
-
-
 	public function setLink(string $link): static
 	{
 		$this->link = $link;
+
 		return $this;
+	}
+
+
+	public function getLink(): ?string
+	{
+		return $this->link;
 	}
 }

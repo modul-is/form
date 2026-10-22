@@ -7,22 +7,9 @@ namespace ModulIS\Form\Control;
 use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
 
-class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implements Renderable, HasInputGroup, Signalable, \Nette\Application\UI\SignalReceiver
+class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implements InputField, Signalable, \Nette\Application\UI\SignalReceiver
 {
-	use Helper\InputGroup;
-	use Helper\Tooltip;
-	use Helper\ControlPart;
-	use Helper\Label;
-	use Helper\InputCoreControl;
-	use Helper\AutoRenderSkip;
-	use Helper\Template;
-	use Helper\Validation;
-	use Helper\ControlClass;
-	use Helper\WrapControl;
-	use Helper\RenderBasic;
-	use Helper\RenderDefault;
-	use Helper\RenderFloating;
-	use Helper\RenderInline;
+	use Helper\Field;
 	use Helper\Signals
 	{
 		signalReceived as public signalsSignalReceived;
@@ -43,7 +30,6 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 		?callable $dependentCallback = null
 	)
 	{
-		$this->controlClass = 'form-select';
 		$this->parents = $parents;
 
 		if($dependentCallback)

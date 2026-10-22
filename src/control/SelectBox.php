@@ -5,45 +5,18 @@ declare(strict_types = 1);
 namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
-use Nette\Utils\Html;
 
-class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, HasInputGroup, Signalable, \Nette\Application\UI\SignalReceiver
+class SelectBox extends \Nette\Forms\Controls\SelectBox implements InputField, Signalable, \Nette\Application\UI\SignalReceiver
 {
-	use Helper\InputGroup;
-	use Helper\Tooltip;
-	use Helper\ControlPart;
-	use Helper\Label;
-	use Helper\AutoRenderSkip;
-	use Helper\Template;
-	use Helper\Validation;
-	use Helper\ControlClass;
+	use Helper\Field;
 	use Helper\Signals;
-	use Helper\RenderBasic;
-	use Helper\RenderDefault;
-	use Helper\RenderFloating;
-	use Helper\RenderInline;
-	use Helper\WrapControl;
 
 	/** @var array<int|string, string> */
 	private array $imageArray = [];
 
 
 	/**
-	 * @param ?array<mixed> $items
-	 */
-	public function __construct
-	(
-		string|\Stringable|null $label = null,
-		?array $items = null
-	)
-	{
-		parent::__construct($label, $items);
-
-		$this->controlClass = 'form-select';
-	}
-
-
-	/**
+	 * Images of the items (item key => image URL)
 	 * @param array<int|string, string> $imageArray
 	 */
 	public function setImageArray(array $imageArray): static
@@ -54,47 +27,11 @@ class SelectBox extends \Nette\Forms\Controls\SelectBox implements Renderable, H
 	}
 
 
-	public function getCoreControl(): Html
+	/**
+	 * @return array<int|string, string>
+	 */
+	public function getImageArray(): array
 	{
-		$input = $this->getControl();
-
-		$validationClass = $this->getValidationClass() ? ' ' . $this->getValidationClass() : null;
-		$validationFeedBack = $this->getValidationFeedback();
-		$currentClass = $input->getAttribute('class') ? ' ' . $input->getAttribute('class') : '';
-		$imageDiv = null;
-
-		if($this->imageArray)
-		{
-			$currentClass .= ' select2-image';
-
-			$imageDiv = Html::el('div')
-				->id($this->getHtmlId() . '-select2')
-				->class('d-none');
-
-			foreach($this->getItems() as $key => $value)
-			{
-				if(!array_key_exists($key, $this->imageArray))
-				{
-					continue;
-				}
-				$div = Html::el('div')
-					->addAttributes(['data-key' => $key, 'data-src' => $this->imageArray[$key]]);
-
-				$imageDiv->addHtml($div);
-			}
-		}
-
-		$input->addAttributes(['class' => 'form-select' . $currentClass . $validationClass]);
-
-		if($this->hasSignal())
-		{
-			$this->addSignalsToInput($input);
-		}
-
-		$hasValidationClass = $this->getValidationClass() && $this->hasErrors() ? ' has-validation' : null;
-
-		return Html::el('div')
-			->class('input-group' . $hasValidationClass)
-			->addHtml($this->getPrepend() . $input . $this->getAppend() . $validationFeedBack . $imageDiv);
+		return $this->imageArray;
 	}
 }

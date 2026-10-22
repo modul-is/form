@@ -1,0 +1,47 @@
+{
+	"name": "@modul-is/form",
+	"version": "0.0.0",
+	"private": true,
+	"description": "Client side of modul-is/form - Nette forms rendered for Bootstrap 6",
+	"license": "MIT",
+	"homepage": "https://github.com/modul-is/form",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/modul-is/form.git"
+	},
+	"type": "module",
+	"exports": {
+		".": "./assets/js/index.js",
+		"./css": "./assets/css/form.css"
+	},
+	"files": [
+		"assets"
+	],
+	"sideEffects": [
+		"*.css"
+	],
+	"scripts": {
+		"demo": "vite build --watch",
+		"demo:build": "vite build"
+	},
+	"peerDependencies": {
+		"bootstrap": "6.0.0-alpha.1",
+		"naja": "^3.3.0",
+		"nette-forms": "^3.5.3"
+	},
+	"peerDependenciesMeta": {
+		"naja": {
+			"optional": true
+		}
+	},
+	"devDependencies": {
+		"bootstrap": "6.0.0-alpha.1",
+		"bootstrap-icons": "^1.13.1",
+		"naja": "^3.3.0",
+		"nette-forms": "^3.5.3",
+		"vite": "^8.3.5"
+	},
+	"engines": {
+		"node": ">=24.0.0"
+	}
+}

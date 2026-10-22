@@ -6,22 +6,9 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 
-class UploadControl extends \Nette\Forms\Controls\UploadControl implements Renderable, HasInputGroup
+class UploadControl extends \Nette\Forms\Controls\UploadControl implements InputField
 {
-	use Helper\Tooltip;
-	use Helper\ControlPart;
-	use Helper\Label;
-	use Helper\InputCoreControl;
-	use Helper\InputGroup;
-	use Helper\AutoRenderSkip;
-	use Helper\Template;
-	use Helper\Validation;
-	use Helper\ControlClass;
-	use Helper\RenderBasic;
-	use Helper\RenderDefault;
-	use Helper\RenderFloating;
-	use Helper\RenderInline;
-	use Helper\WrapControl;
+	use Helper\Field;
 
 	public function getControl(): \Nette\Utils\Html
 	{
