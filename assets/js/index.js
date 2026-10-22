@@ -6,7 +6,8 @@
 import netteForms from 'nette-forms';
 import { mount } from './registry.js';
 import { installValidation } from './validation.js';
-import './tooltip.js';
+import './bootstrap.js';
+import './chips.js';
 
 export { register, mount } from './registry.js';
 

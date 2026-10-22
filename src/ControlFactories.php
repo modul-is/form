@@ -124,6 +124,45 @@ trait ControlFactories
 	}
 
 
+	/**
+	 * Month as a string in Y-m format (e.g. 2026-10)
+	 */
+	public function addMonth(string $name, null|string|Stringable $label = null): Control\TextInput
+	{
+		return $this[$name] = new Control\TextInput($label)
+			->setHtmlType('month')
+			->setNullable()
+			->addRule(Form::Pattern, 'Zadejte měsíc ve formátu RRRR-MM.', '\d{4}-(0[1-9]|1[0-2])');
+	}
+
+
+	/**
+	 * Color in #rrggbb format
+	 */
+	public function addColor(string $name, null|string|Stringable $label = null): Control\ColorPicker
+	{
+		return $this[$name] = new Control\ColorPicker($label);
+	}
+
+
+	/**
+	 * One-time code of the given length, digits only by default (see OtpInput::setType())
+	 */
+	public function addOtp(string $name, null|string|Stringable $label = null, int $length = 6): Control\OtpInput
+	{
+		return $this[$name] = new Control\OtpInput($label, $length);
+	}
+
+
+	/**
+	 * List of free text values entered as chips (tags) - value is a list of strings
+	 */
+	public function addChips(string $name, null|string|Stringable $label = null): Control\ChipsInput
+	{
+		return $this[$name] = new Control\ChipsInput($label);
+	}
+
+
 	public function addTime(string $name, null|string|Stringable $label = null, bool $withSeconds = false): Control\DateTimeInput
 	{
 		return $this[$name] = new Control\DateTimeInput($label, DateTimeControl::TypeTime, $withSeconds)

@@ -12,4 +12,6 @@ use ModulIS\Form\Enum\RenderType;
 interface InputField extends Field, HasInputGroup
 {
 	public function getRenderType(): ?RenderType;
+
+	public function isPlaintext(): bool;
 }

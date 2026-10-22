@@ -19,6 +19,7 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Field, Signal
 	use Helper\ControlClass;
 	use Helper\Signals;
 	use Helper\WrapControl;
+	use Helper\Size;
 
 
 	/**

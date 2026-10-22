@@ -19,4 +19,6 @@ trait Field
 	use ControlClass;
 	use RenderType;
 	use WrapControl;
+	use Size;
+	use Plaintext;
 }

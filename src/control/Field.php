@@ -29,4 +29,6 @@ interface Field extends Renderable
 	public function getValidationSuccessMessage(): string|HtmlStringable|null;
 
 	public function isSubmitted(): bool;
+
+	public function getSize(): ?string;
 }

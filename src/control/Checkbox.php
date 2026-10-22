@@ -17,10 +17,14 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Field, Signalab
 	use Helper\ControlClass;
 	use Helper\Signals;
 	use Helper\WrapControl;
+	use Helper\Color;
+	use Helper\Size;
 
 	private bool $switch = false;
 
 	private ?string $checkboxClass = null;
+
+	private bool $indeterminate = false;
 
 
 	public function setSwitch(bool $switch = true): static
@@ -51,5 +55,22 @@ class Checkbox extends \Nette\Forms\Controls\Checkbox implements Field, Signalab
 	public function getCheckboxWrapClass(): ?string
 	{
 		return $this->checkboxClass;
+	}
+
+
+	/**
+	 * Mixed state (neither checked nor unchecked) - visual only, set by JS, the value is still a bool
+	 */
+	public function setIndeterminate(bool $indeterminate = true): static
+	{
+		$this->indeterminate = $indeterminate;
+
+		return $this;
+	}
+
+
+	public function isIndeterminate(): bool
+	{
+		return $this->indeterminate;
 	}
 }

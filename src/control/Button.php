@@ -19,6 +19,7 @@ class Button extends \Nette\Forms\Controls\Button implements Renderable, Signala
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
 	use Helper\Render;
+	use Helper\Size;
 
 	/** @var ?\Closure(array<mixed>): void */
 	protected ?\Closure $onChangeCallback = null;

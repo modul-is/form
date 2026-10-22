@@ -19,4 +19,5 @@ class CheckboxList extends \Nette\Forms\Controls\CheckboxList implements Field, 
 	use Helper\ControlClass;
 	use Helper\Signals;
 	use Helper\WrapControl;
+	use Helper\Size;
 }

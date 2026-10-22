@@ -36,8 +36,11 @@ function showError(field, element, messages)
 	getControls(field, element).forEach((control) =>
 	{
 		control.classList.add('is-invalid');
-		control.closest('.form-floating')?.classList.add('is-invalid');
+		control.closest('.form-floating, .otp')?.classList.add('is-invalid');
 	});
+
+	// hidden controls (chips) are shown by another element, which gets the state too
+	field.querySelectorAll('[data-mis-proxy]').forEach((proxy) => proxy.classList.add('is-invalid'));
 
 	const target = field.querySelector(':scope > [data-mis-feedback]') ?? field;
 	const feedback = document.createElement('div');
@@ -87,7 +90,9 @@ export function installValidation(netteForms)
 
 		fields.forEach(({ element, messages }, field) => showError(field, element, messages));
 
-		errors[0]?.element.focus();
+		const first = errors[0]?.element;
+
+		(first?.hidden ? findField(first)?.querySelector('[data-mis-proxy]') : first)?.focus();
 
 		if (unhandled.length)
 		{

@@ -18,7 +18,8 @@
 		"assets"
 	],
 	"sideEffects": [
-		"*.css"
+		"*.css",
+		"./assets/js/*.js"
 	],
 	"scripts": {
 		"demo": "vite build --watch",

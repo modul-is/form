@@ -40,6 +40,8 @@ class Form extends UIForm
 
 	private ?string $buttonClass = null;
 
+	private ?string $size = null;
+
 	private RenderType $renderType = RenderType::Default;
 
 	/** @var array<int|string, ControlGroup> */
@@ -266,6 +268,28 @@ class Form extends UIForm
 	public function getButtonClass(): ?string
 	{
 		return $this->buttonClass;
+	}
+
+
+	/**
+	 * Size of all inputs and buttons - sm or lg (a control may override it by its own setSize())
+	 */
+	public function setSize(?string $size): static
+	{
+		if($size !== null && !in_array($size, ['sm', 'lg'], true))
+		{
+			throw new \Nette\InvalidArgumentException("Size has to be 'sm' or 'lg', '$size' given.");
+		}
+
+		$this->size = $size;
+
+		return $this;
+	}
+
+
+	public function getSize(): ?string
+	{
+		return $this->size;
 	}
 
 

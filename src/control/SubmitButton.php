@@ -14,4 +14,5 @@ class SubmitButton extends \Nette\Forms\Controls\SubmitButton implements Rendera
 	use Helper\AutoRenderSkip;
 	use Helper\ControlClass;
 	use Helper\Render;
+	use Helper\Size;
 }

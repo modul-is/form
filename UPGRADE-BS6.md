@@ -4,9 +4,9 @@ Steps to migrate forms of an application from the Bootstrap 5 version of `modul-
 Every step says what to **find** (a regular expression for grep over the application code, usually `app/` and
 templates), what to **change**, and when to **report** a finding to the developer instead of changing it.
 
-The document grows with the rewrite - it covers the core rendering and basic inputs so far. Whisperers, dependent
-selects, autocomplete, currency, slider and signals still render their old control element and need the old jQuery
-scripts until they are rewritten.
+The document grows with the rewrite - it covers the core rendering, basic inputs and the inputs of Bootstrap 6 so far.
+Whisperers, dependent selects, autocomplete, currency, slider with two handles and signals still render their old
+control element and need the old jQuery scripts until they are rewritten.
 
 Rules:
 
@@ -22,7 +22,7 @@ Rules:
   **Find:** `Kravcik\\LatteFontAwesomeIcon` in config (`.neon`) and code. **Change:** keep it only if the application
   itself uses the `{icon}` tag.
 - **Icons.** The default icon set is Bootstrap Icons (`<i class="bi bi-…">`). **Change:** either load Bootstrap Icons
-  in the application (npm `bootstrap-icons`) and rename icons passed to `setIcon()` (step 6), or keep Font Awesome:
+  in the application (npm `bootstrap-icons`) and rename icons passed to `setIcon()` (step 7), or keep Font Awesome:
 
   ```php
   \ModulIS\Form\Renderer\Bootstrap6Renderer::setDefaultIconRenderer(
@@ -41,7 +41,7 @@ Rules:
   ```
 
   `src/css/form.css` was removed (it styled the Bootstrap 5 markup). **Report** forms using whisperers, dependent
-  selects, autocomplete, currency, slider or AJAX callbacks - they need the old `src/js` scripts for now.
+  selects, autocomplete, currency, sliders with `setRange()` or AJAX callbacks - they need the old `src/js` scripts for now.
 
 ## Step 2 – grid classes
 
@@ -101,13 +101,24 @@ JS counterpart) - add `->setValidationScope([])` to their submit buttons if the 
 **Find:** the names above. **Change** according to the table, **report** classes extending controls of the library
 (`extends \\?ModulIS\\Form\\`) - their overridden render methods have to move to a renderer subclass.
 
-## Step 6 – icon names
+## Step 6 – slider with a single value
+
+`addSlider()` without `setRange()` is a native range input now (rSlider.js is not used for it).
+
+- With `setItems()` the HTML input holds the index of the item - `getValue()` still returns the item.
+  **Find** JS or tests reading the value of such a slider from the DOM (`[name=…]`, `data-slider`). **Report** them.
+- Without a value the handle starts at the minimum (the browser would put it to the middle).
+- `setPrepend()` / `setAppend()` / `setIcon()` are not rendered for a single value slider. **Find** them on `addSlider()`
+  and **report**.
+- Ticks: every step, or ten parts when there are more than 20 steps; with more than 11 ticks only the ends are labeled.
+
+## Step 7 – icon names
 
 Only when switching to Bootstrap Icons (step 1). **Find:** `setIcon\(|setIconArray\(` and group / form icons.
 **Change:** Font Awesome names to [Bootstrap Icons](https://icons.getbootstrap.com/) names (e.g. `user` → `person`,
 `times` → `x-lg`, `undo` → `arrow-counterclockwise`). `save` on submit buttons is translated by the icon renderer.
 
-## Step 7 – CSS and tests
+## Step 8 – CSS and tests
 
 - **Find** application CSS targeting the old markup: `\.mis-|\.form-check|\.form-select|\.checkbox-switch|\.section-header|\.btn-default|\.chosen-`
   inside forms. **Report** the rules.

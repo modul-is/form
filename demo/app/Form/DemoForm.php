@@ -76,6 +76,7 @@ class DemoForm extends FormComponent
 		$this->addLists($form);
 		$this->addSliders($form);
 		$this->addUploads($form);
+		$this->addBootstrapInputs($form);
 		$this->addContainers($form);
 		$this->addSignals($form);
 
@@ -377,6 +378,68 @@ class DemoForm extends FormComponent
 
 		$form->addMultiUpload('multiupload', 'Více souborů')
 			->setWidth(6);
+	}
+
+
+	private function addBootstrapInputs(Form $form): void
+	{
+		$form->addGroup('Další prvky Bootstrap 6')
+			->setIcon('bootstrap');
+
+		$form->addColor('color', 'Barva')
+			->setDefaultValue('#631aff')
+			->setWidth(2);
+
+		$form->addMonth('month', 'Měsíc')
+			->setWidth(4);
+
+		$form->addText('suggestions', 'Text s návrhy (datalist)')
+			->setSuggestions(array_values(self::Cities))
+			->setDescription('Prohlížeč nabízí města, lze napsat cokoliv.')
+			->setWidth(6);
+
+		$form->addText('plaintext', 'Plaintext')
+			->setDefaultValue('jen pro čtení')
+			->setPlaintext()
+			->setWidth(4);
+
+		$form->addText('size_sm', 'Malý input')
+			->setSize('sm')
+			->setPrepend('sm')
+			->setWidth(4);
+
+		$form->addText('size_lg', 'Velký input')
+			->setSize('lg')
+			->setIcon('search')
+			->setWidth(4);
+
+		$form->addPassword('password_strength', 'Heslo se silou')
+			->setStrengthMeter()
+			->setWidth(6);
+
+		$form->addOtp('otp', 'Ověřovací kód', 6)
+			->setGroups([3, 3])
+			->setWidth(6);
+
+		$form->addChips('chips', 'Štítky (chips)')
+			->setPlaceholder('Napište a potvrďte Enterem nebo čárkou')
+			->setRequired('Zadejte alespoň jeden štítek')
+			->setDefaultValue(['nette', 'bootstrap']);
+
+		$form->addCheckbox('indeterminate', 'Checkbox – indeterminate')
+			->setIndeterminate()
+			->setWidth(4);
+
+		$form->addCheckbox('check_color', 'Checkbox – barva a velikost')
+			->setColor('success')
+			->setSize('lg')
+			->setWidth(4);
+
+		$form->addCheckbox('switch_lg', 'Switch – velký, barevný')
+			->setSwitch()
+			->setColor('danger')
+			->setSize('lg')
+			->setWidth(4);
 	}
 
 

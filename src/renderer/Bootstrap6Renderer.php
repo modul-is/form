@@ -19,6 +19,7 @@ use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Rendering\DefaultFormRenderer;
 use Nette\HtmlStringable;
 use Nette\Utils\Html;
+use Nette\Utils\Json;
 
 /**
  * The only place that knows Bootstrap 6 markup - controls hold just their settings and ask the renderer
@@ -295,6 +296,7 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 			$control instanceof Control\Checkbox => $this->renderCheckbox($control),
 			$control instanceof Control\RadioList, $control instanceof Control\CheckboxList => $this->renderList($control),
 			$control instanceof Control\SubmitButton, $control instanceof Control\Button, $control instanceof Control\Link => $this->renderButton($control),
+			$control instanceof Control\ChipsInput => $this->renderChips($control),
 			$control instanceof Control\InputField => $this->renderField($control),
 			default => throw new \Nette\NotSupportedException('Control ' . $control::class . ' cannot be rendered by ' . self::class)
 		};
@@ -320,6 +322,7 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 				? $this->createListItems($control) . $this->createFeedback($control)
 				: $this->createListItem($control, $key),
 			$control instanceof Control\SubmitButton, $control instanceof Control\Button, $control instanceof Control\Link => $this->renderButton($control),
+			$control instanceof Control\ChipsInput => $this->createChipsBlock($control) . $this->createFeedback($control),
 			$control instanceof Control\InputField => $this->createInputBlock($control, $this->createInput($control)) . $this->createFeedback($control),
 			default => $control->getControl()
 		};
@@ -374,32 +377,44 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 				->addHtml($field);
 		}
 
+		/**
+		 * In Default the input wrap class goes to the control itself, in Inline it is the class of the control column
+		 */
+		if($renderType === RenderType::Default && $control->getInputWrapClass())
+		{
+			$input->appendAttribute('class', $control->getInputWrapClass());
+		}
+
+		return $this->layoutField($control, $this->createInputBlock($control, $input), $renderType);
+	}
+
+
+	/**
+	 * Label, control block, feedback and description - label above (Default) or in its own column (Inline)
+	 */
+	protected function layoutField(BaseControl&Control\Field $control, Html $block, RenderType $renderType): Html
+	{
 		if($renderType === RenderType::Inline)
 		{
-			$label = $this->createLabel($control, 'col-form-label ' . ($control->getLabelWrapClass() ?? 'sm:col-4'));
+			$labelClass = $this->getColumnLabelClass($control);
 
 			$field = $this->createFieldElement('form-field ' . ($control->getInputWrapClass() ?? 'sm:col-8'))
-				->addHtml($this->createInputBlock($control, $input))
+				->addHtml($block)
 				->addHtml($this->createFeedback($control))
 				->addHtml($this->createDescription($control));
 
 			$row = Html::el('div')
 				->class($control->getRowClass() ?? 'row')
-				->addHtml($label ?? Html::el('div')->class('col-form-label ' . ($control->getLabelWrapClass() ?? 'sm:col-4')))
+				->addHtml($this->createLabel($control, $labelClass) ?? Html::el('div')->class($labelClass))
 				->addHtml($field);
 
 			return $control->createWrap()
 				->addHtml($row);
 		}
 
-		if($control->getInputWrapClass())
-		{
-			$input->appendAttribute('class', $control->getInputWrapClass());
-		}
-
 		$field = $this->createFieldElement('form-field')
 			->addHtml($this->createLabel($control, $this->joinClass('form-label', $control->getLabelWrapClass())) ?? '')
-			->addHtml($this->createInputBlock($control, $input))
+			->addHtml($block)
 			->addHtml($this->createFeedback($control))
 			->addHtml($this->createDescription($control));
 
@@ -436,7 +451,21 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 
 		$this->addSignals($control, $input);
 
-		$input->appendAttribute('class', $this->joinClass($control->isSwitch() ? null : 'check', $control->getValidationClass(), $control->getInputWrapClass()));
+		$size = $this->getSize($control);
+		$theme = $control->color ? $this->themeClass($control->color) : null;
+
+		$input->appendAttribute('class', $this->joinClass(
+			$control->isSwitch() ? null : 'check',
+			$control->isSwitch() || !$size ? null : 'check-' . $size,
+			$control->isSwitch() ? null : $theme,
+			$control->getValidationClass(),
+			$control->getInputWrapClass()
+		));
+
+		if($control->isIndeterminate())
+		{
+			$input->setAttribute('data-mis-indeterminate', true);
+		}
 
 		if($control->isSwitch())
 		{
@@ -444,7 +473,7 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 				->setAttribute('switch', true);
 
 			$input = Html::el('div')
-				->class('switch')
+				->class($this->joinClass('switch', $size ? 'switch-' . $size : null, $theme))
 				->addHtml($input);
 		}
 
@@ -478,7 +507,7 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 
 		if($renderType === RenderListType::Inline)
 		{
-			$label = $this->createListLabel($control, 'col-form-label ' . ($control->getLabelWrapClass() ?? 'sm:col-4'));
+			$label = $this->createListLabel($control, $this->getColumnLabelClass($control));
 
 			$group = $this->createListGroup($control, $control->getInputWrapClass() ?? 'sm:col-8');
 
@@ -534,8 +563,10 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 
 		if($control->isToggleButton())
 		{
+			$size = $this->getSize($control);
+
 			$items = Html::el('div')
-				->class('btn-group flex-wrap')
+				->class($this->joinClass('btn-group flex-wrap', $size ? 'btn-group-' . $size : null))
 				->setAttribute('role', 'group');
 		}
 		elseif($control->getItemsPerRow() > 1)
@@ -585,8 +616,12 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 			return $label;
 		}
 
+		$type = $control instanceof Control\RadioList ? 'radio' : 'check';
+		$size = $this->getSize($control);
+
 		$input->appendAttribute('class', $this->joinClass(
-			$control instanceof Control\RadioList ? 'radio' : 'check',
+			$type,
+			$size ? $type . '-' . $size : null,
 			$control->color ? $this->themeClass($control->color) : null,
 			$control->getValidationClass()
 		));
@@ -633,9 +668,12 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 		$userClass = trim((string) $prototype->getAttribute('class'));
 		$form = $control->getForm(false);
 
+		$size = $this->getSize($control);
+
 		$button->class($this->joinClass(
 			'btn-' . ($control->getVariant() ?? 'solid'),
 			$this->themeClass($control->color ?? 'secondary'),
+			$size ? 'btn-' . $size : null,
 			$userClass !== '' ? $userClass : ($form instanceof Form ? $form->getButtonClass() : null)
 		));
 
@@ -687,7 +725,32 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 		$input = $control->getControl();
 		\assert($input instanceof Html);
 
-		$input->appendAttribute('class', $this->joinClass($control->getIcon() !== null ? 'form-ghost' : 'form-control', $control->getValidationClass()));
+		$class = match(true)
+		{
+			$control instanceof Control\SliderInput && !$control->isRange() => 'form-range-input',
+			$control instanceof Control\OtpInput => 'otp-input',
+			$control->isPlaintext() => 'form-control-plaintext',
+			$control->getIcon() !== null => 'form-ghost',
+			$control instanceof Control\ColorPicker => 'form-control form-control-color',
+			default => 'form-control'
+		};
+
+		$input->appendAttribute('class', $this->joinClass($class, $control->getValidationClass()));
+
+		if($control->isPlaintext())
+		{
+			$input->setAttribute('readonly', true);
+		}
+
+		if($control instanceof Control\TextInput && $control->getSuggestions())
+		{
+			$input->setAttribute('list', $control->getHtmlId() . '-suggestions');
+
+			if($control->hasSuggestionsCaret())
+			{
+				$input->appendAttribute('class', 'form-control-caret');
+			}
+		}
 
 		$this->addSignals($control, $input);
 
@@ -701,6 +764,16 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 	 */
 	protected function createInputBlock(BaseControl&Control\InputField $control, Html $input, ?Html $floatingLabel = null): Html
 	{
+		if($control instanceof Control\SliderInput && !$control->isRange())
+		{
+			return $this->createRangeBlock($control, $input);
+		}
+
+		if($control instanceof Control\OtpInput)
+		{
+			return $this->createOtpBlock($control, $input);
+		}
+
 		$floating = $floatingLabel !== null;
 		$icon = $control->getIcon();
 
@@ -768,20 +841,189 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 				->addHtml($this->icon('copy'));
 		}
 
+		/**
+		 * Size goes to the input group as a whole, otherwise to the control (adorn wrapper is the control)
+		 */
+		$size = $floating ? null : $this->getSize($control);
+
 		if(!$before && !$after)
 		{
-			return $core;
+			if($size)
+			{
+				$core->appendAttribute('class', 'form-control-' . $size);
+			}
+
+			return $this->addInputExtras($control, $core);
 		}
 
 		$group = Html::el('div')
-			->class('input-group');
+			->class($this->joinClass('input-group', $size ? 'input-group-' . $size : null));
 
 		foreach([...$before, $core, ...$after] as $part)
 		{
 			$group->addHtml($part);
 		}
 
-		return $group;
+		return $this->addInputExtras($control, $group);
+	}
+
+
+	/**
+	 * Parts rendered after the control - suggestions (datalist) and password strength meter
+	 */
+	protected function addInputExtras(BaseControl&Control\InputField $control, Html $block): Html
+	{
+		if(!$control instanceof Control\TextInput || (!$control->getSuggestions() && !$control->hasStrengthMeter()))
+		{
+			return $block;
+		}
+
+		$fragment = Html::el()
+			->addHtml($block);
+
+		if($control->getSuggestions())
+		{
+			$datalist = Html::el('datalist')
+				->id($control->getHtmlId() . '-suggestions');
+
+			foreach($control->getSuggestions() as $suggestion)
+			{
+				$datalist->addHtml(Html::el('option')->value($suggestion));
+			}
+
+			$fragment->addHtml($datalist);
+		}
+
+		if($control->hasStrengthMeter())
+		{
+			$meter = Html::el('div')
+				->class('strength')
+				->setAttribute('data-bs-strength', true)
+				->setAttribute('data-bs-input', '#' . $control->getHtmlId())
+				->setAttribute('data-bs-min-length', $control->getStrengthMinLength())
+				->setAttribute('data-bs-messages', Json::encode([
+					'weak' => $control->translate('Slabé heslo'),
+					'fair' => $control->translate('Průměrné heslo'),
+					'good' => $control->translate('Dobré heslo'),
+					'strong' => $control->translate('Silné heslo')
+				]));
+
+			for($i = 0; $i < 4; $i++)
+			{
+				$meter->addHtml(Html::el('div')->class('strength-segment'));
+			}
+
+			/**
+			 * The text is looked up next to the meter - both have their own wrapper
+			 */
+			$fragment->addHtml(
+				Html::el('div')
+					->addHtml($meter)
+					->addHtml(Html::el('small')->class('strength-text form-text'))
+			);
+		}
+
+		return $fragment;
+	}
+
+
+	/**
+	 * Native range input with tick marks (datalist) and value bubble
+	 */
+	protected function createRangeBlock(Control\SliderInput $control, Html $input): Html
+	{
+		$range = Html::el('div')
+			->class('form-range')
+			->setAttribute('data-bs-bubble', $control->hasBubble() ? true : null)
+			->setAttribute('data-mis-range-items', $control->getItems() ? Json::encode($control->getBubbleItems()) : null)
+			->addHtml($input);
+
+		$ticks = $control->getTicks();
+
+		if(!$ticks)
+		{
+			return $range;
+		}
+
+		$datalist = Html::el('datalist')
+			->id($control->getTicksId());
+
+		foreach($ticks as ['value' => $value, 'label' => $label])
+		{
+			$datalist->addHtml(Html::el('option')->value($value)->setAttribute('label', $label));
+		}
+
+		return Html::el()
+			->addHtml($range)
+			->addHtml($datalist);
+	}
+
+
+	/**
+	 * One text input shown as slots by Bootstrap otp plugin
+	 */
+	protected function createOtpBlock(Control\OtpInput $control, Html $input): Html
+	{
+		$size = $this->getSize($control);
+
+		return Html::el('div')
+			->class($this->joinClass('otp', $size ? 'otp-' . $size : null, $control->getValidationClass()))
+			->setAttribute('data-bs-otp', true)
+			->setAttribute('data-bs-type', $control->getType())
+			->setAttribute('data-bs-mask', $control->isMasked() ? 'true' : null)
+			->setAttribute('data-bs-groups', $control->getGroups() ? Json::encode($control->getGroups()) : null)
+			->addHtml($input);
+	}
+
+
+	protected function renderChips(Control\ChipsInput $control): Html
+	{
+		return $this->layoutField($control, $this->createChipsBlock($control), $this->getFormRenderType($control));
+	}
+
+
+	/**
+	 * Chips with a text input for new ones (Bootstrap chip input) and the hidden select carrying the values
+	 */
+	protected function createChipsBlock(Control\ChipsInput $control): Html
+	{
+		$validationClass = $control->getValidationClass();
+
+		$chips = Html::el('div')
+			->class($this->joinClass('chip-input', $control->color ? $this->themeClass($control->color) : null))
+			->setAttribute('data-bs-chips', true)
+			->setAttribute('data-bs-separator', $control->getSeparator() ?? 'null')
+			->setAttribute('data-bs-max-chips', $control->getMaxChips())
+			->setAttribute('data-bs-allow-duplicates', $control->isAllowDuplicates() ? 'true' : null)
+			->setAttribute('data-mis-chips', $control->getValuesId());
+
+		foreach($control->getValue() as $value)
+		{
+			$chips->addHtml(
+				Html::el('span')
+					->class('chip')
+					->setAttribute('data-bs-chip-value', $value)
+					->setText($value)
+			);
+		}
+
+		$chips->addHtml(
+			Html::el('input')
+				->type('text')
+				->id($control->getHtmlId())
+				->class($this->joinClass('form-ghost', $validationClass))
+				->placeholder($control->getPlaceholder())
+				->disabled($control->isDisabled())
+				->setAttribute('data-mis-proxy', true)
+		);
+
+		$select = $control->getControl();
+
+		$this->addSignals($control, $select);
+
+		return Html::el()
+			->addHtml($chips)
+			->addHtml($select);
 	}
 
 
@@ -991,12 +1233,42 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 
 
 	/**
-	 * Bootstrap floating labels do not support file inputs and multiple selects
+	 * Bootstrap floating labels support text inputs, textareas and single selects only
 	 */
 	protected function supportsFloating(BaseControl $control): bool
 	{
 		return !$control instanceof \Nette\Forms\Controls\UploadControl
-			&& !$control instanceof \Nette\Forms\Controls\MultiSelectBox;
+			&& !$control instanceof \Nette\Forms\Controls\MultiSelectBox
+			&& !$control instanceof \Nette\Forms\Controls\ColorPicker
+			&& !$control instanceof Control\SliderInput
+			&& !$control instanceof Control\OtpInput;
+	}
+
+
+	/**
+	 * Size of the control, or of the form when the control has none
+	 */
+	protected function getSize(BaseControl $control): ?string
+	{
+		if(method_exists($control, 'getSize') && $control->getSize() !== null)
+		{
+			return $control->getSize();
+		}
+
+		$form = $control->getForm(false);
+
+		return $form instanceof Form ? $form->getSize() : null;
+	}
+
+
+	/**
+	 * Label column of the Inline render type
+	 */
+	protected function getColumnLabelClass(BaseControl&Control\Field $control): string
+	{
+		$size = $this->getSize($control);
+
+		return $this->joinClass('col-form-label', $size ? 'col-form-label-' . $size : null, $control->getLabelWrapClass() ?? 'sm:col-4');
 	}
 
 

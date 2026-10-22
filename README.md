@@ -33,6 +33,10 @@ Form supports all of the default Nette inputs and adds new ones
 + `addDependentMultiSelect()` - same as DependentSelect, but more options can be selected 
 + `addDate()` - date input, can limit min and max date
 + `addSlider()` - range slider, single value or an interval
++ `addMonth()` - month as a `Y-m` string
++ `addColor()` - color in `#rrggbb` format
++ `addOtp()` - one-time code rendered as separate slots ([OTP input](https://getbootstrap.com/docs/6.0/forms/otp-input/)) - `setType()` (`numeric`, `alphanumeric`, `alpha`), `setMask()`, `setGroups([3, 3])`
++ `addChips()` - list of free text values entered as [chips](https://getbootstrap.com/docs/6.0/forms/chips/), value is a list of strings - `setSeparator()`, `setMaxChips()`, `setAllowDuplicates()`, `setPlaceholder()`
 
 ## Custom settings
 
@@ -117,6 +121,11 @@ Some inputs provide new features
 + `setLabelWrapClass()` - class of the label; in `Inline` the class of the label column (default `sm:col-4`)
 + `setInputWrapClass()` - class of the input; in `Inline` the class of the control column (default `sm:col-8`)
 + `setSwitch()` - checkbox rendered as a [switch](https://getbootstrap.com/docs/6.0/forms/switch/) (Checkbox)
++ `setIndeterminate()` - mixed state of a checkbox, visual only (Checkbox)
++ `setSize()` - `sm` or `lg`, for the whole form `Form::setSize()` (All inputs and buttons)
++ `setPlaintext()` - read-only value shown as plain text (Text inputs)
++ `setSuggestions()` - values offered while typing, the user may type anything else ([datalist](https://getbootstrap.com/docs/6.0/forms/form-control/#datalists)) (Text input)
++ `setStrengthMeter()` - [password strength](https://getbootstrap.com/docs/6.0/forms/password-strength/) meter under the input - informative only, add rules for real requirements (Password)
 
 ### Icons
 
@@ -258,7 +267,10 @@ It takes no `:part`; use `{inputCore}` for that.
 
 ### Slider
 
-`addSlider()` renders a slider built on [rSlider.js](https://github.com/slawomir-zaziablo/range-slider).
+`addSlider()` with a single value renders a native [range](https://getbootstrap.com/docs/6.0/forms/range/) - the scale is a
+`<datalist>` with tick marks (every step, or ten parts when there are more than 20 steps). With `setItems()` the input holds
+the index of the item, `getValue()` returns the item. Two handles (`setRange()`) are still rendered by
+[rSlider.js](https://github.com/slawomir-zaziablo/range-slider).
 The value domain is either a continuous range or an explicit list of values.
 
 ```php

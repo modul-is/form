@@ -17,6 +17,23 @@
 		display: block;
 	}
 
+	/*
+	 * Bootstrap 6.0.0-alpha.1 fills a themed checkbox / radio (theme-*) with the theme color even when it is not
+	 * checked - it looks checked. Unchecked state keeps the default background, the theme colors its border only.
+	 */
+	.check[class*="theme-"]:not(:checked, :indeterminate),
+	.radio[class*="theme-"]:not(:checked)
+	{
+		background-color: var(--bs-bg-body);
+		border-color: var(--bs-theme-border, var(--bs-border-color));
+	}
+
+	/* value bubble is positioned above the slider - it would cover the label */
+	.form-range[data-bs-bubble]
+	{
+		margin-block-start: 2.25rem;
+	}
+
 	.mis-tooltip
 	{
 		cursor: help;

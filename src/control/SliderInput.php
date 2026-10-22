@@ -9,10 +9,10 @@ use Nette\Utils\Html;
 use Nette\Utils\Json;
 
 /**
- * Posuvnik postaveny nad rSlider.js (https://github.com/slawomir-zaziablo/range-slider).
+ * Posuvnik - jedna hodnota je nativni range input (Bootstrap form-range), rezim setRange() zatim
+ * vykresluje rSlider.js (https://github.com/slawomir-zaziablo/range-slider).
  *
- * Knihovna schova puvodni <input> a vedle nej vykresli svoje ovladani. Hodnota se do inputu
- * zapisuje jako jedno cislo, v rezimu setRange() jako dve oddelena carkou - proto getValue()
+ * V rezimu setRange() se hodnota do inputu zapisuje jako dve cisla oddelena carkou - proto getValue()
  * vraci pole az kdyz je zapnuty rozsah.
  */
 class SliderInput extends \Nette\Forms\Controls\TextInput implements InputField, Signalable, \Nette\Application\UI\SignalReceiver
@@ -173,6 +173,10 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements InputField,
 	}
 
 
+	/**
+	 * Single value is a native range input, with setItems() its value is the index of the item.
+	 * Two handles (setRange()) are rendered by rSlider.js for now.
+	 */
 	public function getControl(): Html
 	{
 		if(!$this->items && $this->min === null)
@@ -182,10 +186,129 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements InputField,
 
 		$input = parent::getControl();
 
-		$input->setAttribute('data-slider', Json::encode($this->getSliderConfig()));
-		$input->setAttribute('readonly', true);
+		if($this->range)
+		{
+			$input->setAttribute('data-slider', Json::encode($this->getSliderConfig()));
+			$input->setAttribute('readonly', true);
+
+			return $input;
+		}
+
+		$value = $this->getValue();
+
+		/**
+		 * Without a value the browser would put the handle to the middle - it starts at the beginning as before
+		 */
+		$input->type('range')
+			->setAttribute('min', $this->items ? 0 : $this->min)
+			->setAttribute('max', $this->items ? count($this->items) - 1 : $this->max)
+			->setAttribute('step', $this->items ? 1 : $this->step)
+			->setAttribute('value', $this->items ? ($this->getItemIndex($value) ?? 0) : ($value ?? $this->min))
+			->setAttribute('list', $this->scale ? $this->getTicksId() : null);
 
 		return $input;
+	}
+
+
+	/**
+	 * Value is posted as the index of the item when setItems() is used
+	 */
+	public function loadHttpData(): void
+	{
+		$value = $this->getHttpData(\Nette\Forms\Form::DataLine);
+
+		if(!$this->range && $this->items && is_string($value) && ctype_digit($value))
+		{
+			$value = $this->items[(int) $value] ?? null;
+		}
+
+		$this->setValue($value);
+	}
+
+
+	public function hasBubble(): bool
+	{
+		return $this->sliderTooltip;
+	}
+
+
+	public function getTicksId(): string
+	{
+		return $this->getHtmlId() . '-ticks';
+	}
+
+
+	/**
+	 * Tick marks under the slider - every step, or ten parts when there are more than 20 steps
+	 *
+	 * @return list<array{value: int|float, label: ?string}>
+	 */
+	public function getTicks(): array
+	{
+		if(!$this->scale)
+		{
+			return [];
+		}
+
+		$ticks = [];
+
+		if($this->items)
+		{
+			foreach($this->items as $index => $item)
+			{
+				$ticks[] = ['value' => $index, 'label' => $this->labels ? (string) $item : null];
+			}
+
+			return $ticks;
+		}
+
+		\assert($this->min !== null && $this->max !== null);
+
+		$steps = (int) floor(($this->max - $this->min) / $this->step + 1e-9);
+		$count = $steps <= 20 ? $steps : 10;
+
+		for($i = 0; $i <= $count; $i++)
+		{
+			$value = $count === $steps
+				? $this->min + $i * $this->step
+				: $this->min + $i * ($this->max - $this->min) / $count;
+
+			$value = is_float($value) ? round($value, 10) : $value;
+
+			/**
+			 * More than 11 labels would overlap - only the ends are labeled then
+			 */
+			$labeled = $this->labels && ($count <= 10 || $i === 0 || $i === $count);
+
+			$ticks[] = ['value' => $value, 'label' => $labeled ? (string) $value : null];
+		}
+
+		return $ticks;
+	}
+
+
+	/**
+	 * Items shown in the value bubble - the input itself holds their indexes
+	 *
+	 * @return list<string>
+	 */
+	public function getBubbleItems(): array
+	{
+		return array_values(array_map(strval(...), $this->items));
+	}
+
+
+	private function getItemIndex(mixed $value): ?int
+	{
+		foreach($this->items as $index => $item)
+		{
+			if((string) $item === (string) $value)
+			{
+				return $index;
+			}
+		}
+
+		return null;
 	}
 
 
