@@ -21,7 +21,6 @@ class RadioList extends \Nette\Forms\Controls\RadioList implements Field, Signal
 	use Helper\WrapControl;
 	use Helper\Size;
 
-
 	/**
 	 * @param class-string<\BackedEnum&\ModulIS\Form\Enum\RadioEnum> $enumClass
 	 */

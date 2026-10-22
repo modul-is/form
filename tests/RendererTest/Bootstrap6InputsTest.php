@@ -54,7 +54,7 @@ class Bootstrap6InputsTest extends TestCase
 		$html = (string) $form->getComponent('city')->render();
 
 		Assert::contains('class="form-control form-control-caret" list="frm-form-city-suggestions"', $html);
-		Assert::contains('<datalist id="frm-form-city-suggestions"><option value="Praha"></option><option value="Brno"></option></datalist>', $html);
+		Assert::contains('<datalist id="frm-form-city-suggestions"><option value="Praha" data-key="1"></option><option value="Brno" data-key="2"></option></datalist>', $html);
 		Assert::notContains('form-control-caret', (string) $form->getComponent('noCaret')->render());
 	}
 

@@ -9,9 +9,10 @@ use ModulIS\Form\Helper;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 
-class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements InputField, Signalable, \Nette\Application\UI\SignalReceiver
+class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements InputField, HasSuggestions, Signalable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\Field;
+	use Helper\Suggestions;
 	use Helper\Signals
 	{
 		setOnChangeCallback as public signalsSetOnChangeCallback;
@@ -29,9 +30,6 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Input
 
 	private ?string $prompt = null;
 
-	/** @var array<mixed> */
-	private array $items = [];
-
 
 	/**
 	 * @param ?array<mixed> $items
@@ -45,9 +43,9 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Input
 	{
 		parent::__construct($label, $maxLength);
 
-		if(isset($items))
+		if($items)
 		{
-			$this->items = $items;
+			$this->setSuggestions($items, false);
 		}
 	}
 
@@ -202,10 +200,6 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Input
 		{
 			$control->attrs['data-autocomplete'] = $presenter->link($this->lookupPath(Presenter::class) . self::NameSeparator . SignalDial::OnSearchChange . '!');
 		}
-		else
-		{
-			$control->attrs['data-autocomplete-items'] = $this->prepareData($this->items);
-		}
 
 		if($this->onSelectCallback !== null)
 		{
@@ -213,7 +207,11 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Input
 		}
 
 		$control->attrs['data-autocomplete-delay'] = 200;
-		$control->attrs['data-autocomplete-label'] = $this->prompt;
+
+		if($this->prompt !== null && $control->getAttribute('placeholder') === null)
+		{
+			$control->placeholder($this->translate($this->prompt));
+		}
 
 		return $control;
 	}
@@ -239,5 +237,11 @@ class AutocompleteInput extends \Nette\Forms\Controls\TextInput implements Input
 		}
 
 		return $array;
+	}
+
+
+	public function hasRemoteSuggestions(): bool
+	{
+		return $this->onSearchChangeCallback !== null;
 	}
 }

@@ -1,0 +1,32 @@
+{snippet form}
+	{form form}
+		<div class="card mt-3">
+			<div class="card-header">Ručně vykreslený formulář</div>
+			<div class="card-body">
+				<div class="row g-3">
+					{* whole field, only its position is decided here *}
+					<div class="md:col-6">{inputRender name}</div>
+					<div class="md:col-6">{inputRender email}</div>
+
+					{* own markup around the label and the control - data-mis-field marks where validation errors go *}
+					<div class="col-12">
+						<div class="form-field" data-mis-field>
+							{labelCore note class => 'form-label' /}
+							{inputCore note}
+						</div>
+					</div>
+
+					{* items of a list one by one - each is a complete form-field with its label *}
+					<div class="col-12">
+						{labelCore contact class => 'form-label' /}
+						<div class="hstack gap-4">
+							{inputCore contact:email}
+							{inputCore contact:phone}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer">{inputCore send}</div>
+		</div>
+	{/form}
+{/snippet}

@@ -34,6 +34,71 @@
 		margin-block-start: 2.25rem;
 	}
 
+	/*
+	 * Slider with two handles - two range inputs over each other with transparent tracks,
+	 * the track and the filled part between the handles are drawn by the wrapper
+	 */
+	.mis-range-dual
+	{
+		--mis-range-input-height: calc(var(--bs-range-thumb-height) + var(--bs-focus-ring-width) * 2);
+	}
+
+	.mis-range-dual::before
+	{
+		position: absolute;
+		inset-inline: calc(var(--bs-range-thumb-width) * 0.5);
+		top: calc((var(--mis-range-input-height) - var(--bs-range-track-height)) * 0.5);
+		height: var(--bs-range-track-height);
+		content: "";
+		background:
+			linear-gradient(
+				to right,
+				var(--bs-range-track-bg) calc(var(--mis-range-from, 0) * 100%),
+				var(--bs-range-track-fill-bg) calc(var(--mis-range-from, 0) * 100%),
+				var(--bs-range-track-fill-bg) calc(var(--mis-range-to, 1) * 100%),
+				var(--bs-range-track-bg) calc(var(--mis-range-to, 1) * 100%)
+			);
+		border-radius: var(--bs-range-track-border-radius);
+	}
+
+	.mis-range-dual > .form-range-input
+	{
+		position: relative;
+		pointer-events: none;
+	}
+
+	.mis-range-dual > .form-range-input + .form-range-input
+	{
+		position: absolute;
+		inset-block-start: 0;
+		inset-inline: 0;
+	}
+
+	.mis-range-dual > .form-range-input::-webkit-slider-runnable-track
+	{
+		background: transparent;
+	}
+
+	.mis-range-dual > .form-range-input::-moz-range-track
+	{
+		background: transparent;
+	}
+
+	.mis-range-dual > .form-range-input::-webkit-slider-thumb
+	{
+		pointer-events: auto;
+	}
+
+	.mis-range-dual > .form-range-input::-moz-range-thumb
+	{
+		pointer-events: auto;
+	}
+
+	.mis-range-dual[data-mis-bubble]
+	{
+		margin-block-start: 2.25rem;
+	}
+
 	.mis-tooltip
 	{
 		cursor: help;

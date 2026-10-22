@@ -24,4 +24,14 @@ interface HasInputGroup
 	 * Icon inside the control (form-adorn)
 	 */
 	public function getIcon(): ?string;
+
+	/**
+	 * Text inside the control before the value (form-adorn)
+	 */
+	public function getPrefix(): ?string;
+
+	/**
+	 * Text inside the control after the value (form-adorn)
+	 */
+	public function getSuffix(): ?string;
 }

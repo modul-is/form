@@ -123,7 +123,12 @@ class DemoForm extends FormComponent
 		$form->addText('text_prepend', 'Prepend / append')
 			->setPrepend('https://')
 			->setAppend('.cz')
-			->setWidth(6);
+			->setWidth(3);
+
+		$form->addInteger('text_suffix', 'Prefix / suffix')
+			->setPrefix('≈')
+			->setSuffix('km')
+			->setWidth(3);
 
 		$form->addText('text_pattern', 'PSČ (pattern, 5 číslic)')
 			->setNullable()
@@ -226,6 +231,11 @@ class DemoForm extends FormComponent
 		$form->addDate('date_floating', 'Datum floating')
 			->setRenderFloating()
 			->setWidth(3);
+
+		$form->addDate('date_picker', 'Datum (datepicker, max. za rok)')
+			->setPicker()
+			->addRule($form::Max, 'Datum může být nejvýše za rok', new \DateTimeImmutable('+1 year'))
+			->setWidth(3);
 	}
 
 
@@ -275,6 +285,19 @@ class DemoForm extends FormComponent
 
 		$form->addMultiWhisperer('multiwhisperer', 'Multi whisperer', self::Cities)
 			->setWidth(4);
+
+		$form->addSelect('select_search', 'Select s hledáním', self::Cities)
+			->setPrompt('-- vyberte město --')
+			->setSearch()
+			->setWidth(6);
+
+		$form->addSelect('select_image', 'Select s obrázky', self::Brands)
+			->setPrompt('-- vyberte značku --')
+			->setImageArray(array_map(
+				fn(string $color): string => 'data:image/svg+xml,' . rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="' . $color . '"/></svg>'),
+				['skoda' => '#4ba82e', 'vw' => '#001e50', 'toyota' => '#eb0a1e']
+			))
+			->setWidth(6);
 	}
 
 

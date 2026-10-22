@@ -1,10 +1,14 @@
+extensions:
+	modulisForm: ModulIS\Form\DI\FormExtension
+
 application:
 	mapping: ModulIS\Form\Demo\*Module\Presenter\*Presenter
 
 latte:
 	strictTypes: true
-	extensions:
-		- ModulIS\Extension\FormExtension
+
+modulisForm:
+	currency: CZK
 
 services:
 	router:

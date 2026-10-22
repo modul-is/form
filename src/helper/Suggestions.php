@@ -6,7 +6,7 @@ namespace ModulIS\Form\Helper;
 
 trait Suggestions
 {
-	/** @var list<string> */
+	/** @var array<int|string, string> */
 	protected array $suggestions = [];
 
 	protected bool $suggestionsCaret = true;
@@ -15,12 +15,12 @@ trait Suggestions
 	/**
 	 * Values offered by the browser while typing (<datalist>) - the user may still type anything else
 	 *
-	 * @param array<int|string, string|int|float> $suggestions
+	 * @param array<int|string, string|int|float|\Stringable> $suggestions
 	 * @param bool $caret show a dropdown arrow in the input
 	 */
 	public function setSuggestions(array $suggestions, bool $caret = true): static
 	{
-		$this->suggestions = array_map(strval(...), array_values($suggestions));
+		$this->suggestions = array_map(strval(...), $suggestions);
 		$this->suggestionsCaret = $caret;
 
 		return $this;
@@ -28,7 +28,7 @@ trait Suggestions
 
 
 	/**
-	 * @return list<string>
+	 * @return array<int|string, string>
 	 */
 	public function getSuggestions(): array
 	{
@@ -39,5 +39,11 @@ trait Suggestions
 	public function hasSuggestionsCaret(): bool
 	{
 		return $this->suggestionsCaret;
+	}
+
+
+	public function hasRemoteSuggestions(): bool
+	{
+		return false;
 	}
 }

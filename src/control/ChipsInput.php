@@ -39,7 +39,10 @@ class ChipsInput extends \Nette\Forms\Controls\BaseControl implements Field, Sig
 	private ?string $placeholder = null;
 
 
-	public function __construct(string|\Stringable|null $label = null)
+	public function __construct
+	(
+		string|\Stringable|null $label = null
+	)
 	{
 		parent::__construct($label);
 

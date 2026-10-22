@@ -4,9 +4,7 @@ Steps to migrate forms of an application from the Bootstrap 5 version of `modul-
 Every step says what to **find** (a regular expression for grep over the application code, usually `app/` and
 templates), what to **change**, and when to **report** a finding to the developer instead of changing it.
 
-The document grows with the rewrite - it covers the core rendering, basic inputs and the inputs of Bootstrap 6 so far.
-Whisperers, dependent selects, autocomplete, currency, slider with two handles and signals still render their old
-control element and need the old jQuery scripts until they are rewritten.
+The client side was rewritten as well - no jQuery, Chosen, select2, autocompleter or rSlider.js are needed anymore.
 
 Rules:
 
@@ -22,7 +20,7 @@ Rules:
   **Find:** `Kravcik\\LatteFontAwesomeIcon` in config (`.neon`) and code. **Change:** keep it only if the application
   itself uses the `{icon}` tag.
 - **Icons.** The default icon set is Bootstrap Icons (`<i class="bi bi-…">`). **Change:** either load Bootstrap Icons
-  in the application (npm `bootstrap-icons`) and rename icons passed to `setIcon()` (step 7), or keep Font Awesome:
+  in the application (npm `bootstrap-icons`) and rename icons passed to `setIcon()` (step 9), or keep Font Awesome:
 
   ```php
   \ModulIS\Form\Renderer\Bootstrap6Renderer::setDefaultIconRenderer(
@@ -40,8 +38,11 @@ Rules:
   initForms(naja);
   ```
 
-  `src/css/form.css` was removed (it styled the Bootstrap 5 markup). **Report** forms using whisperers, dependent
-  selects, autocomplete, currency, sliders with `setRange()` or AJAX callbacks - they need the old `src/js` scripts for now.
+  `src/js` and `src/css/form.css` were removed. Peer dependencies of the package are `bootstrap` (with `@floating-ui/dom`
+  and `vanilla-calendar-pro`) and `nette-forms`, `naja` is optional.
+
+  **Find** in the application: `jquery|chosen|select2|autocompleter|rSlider|selectize` in `package.json` and in the
+  JS entry points. **Change:** remove them when nothing else uses them; **report** what stays.
 
 ## Step 2 – grid classes
 
@@ -91,7 +92,10 @@ JS counterpart) - add `->setValidationScope([])` to their submit buttons if the 
 | `setTooltip()` with HTML | plain text only |
 | `setTooltips()` on lists | rendered as item descriptions under the item labels (not tooltips) |
 | `setIcon()` on text inputs | icon inside the input (`form-adorn`), not an input group prepend |
-| `SelectBox::setImageArray()` | kept, not rendered until the combobox rewrite |
+| `SelectBox::setImageArray()` | the select is rendered as a combobox with the images |
+| `Whisperer::setNoResultMessage()` | available on every select (`setSearch()`), HTML attribute `no-result-message` removed |
+| `AutocompleteInput::setPrompt()` | placeholder of the input |
+| CSS class `form-control-chosen`, `autocomplete-input`, `select2-image` | removed |
 | `ControlGroup::getHeader()` | removed - card header is created by `Bootstrap6Renderer` |
 | traits `RenderBasic`, `RenderDefault`, `RenderFloating`, `RenderInline`, `Label`, `InputCoreControl`, `ControlPart`, `ButtonRounded`, `Icon`, `ToggleButton`, `ClassList` | removed - controls use `Helper\Field` / `Helper\Render` |
 | `$input->controlClass` | removed |
@@ -101,24 +105,54 @@ JS counterpart) - add `->setValidationScope([])` to their submit buttons if the 
 **Find:** the names above. **Change** according to the table, **report** classes extending controls of the library
 (`extends \\?ModulIS\\Form\\`) - their overridden render methods have to move to a renderer subclass.
 
-## Step 6 – slider with a single value
+## Step 6 – slider
 
-`addSlider()` without `setRange()` is a native range input now (rSlider.js is not used for it).
+`addSlider()` is a native range input now, with `setRange()` two of them over each other (rSlider.js is not used).
 
 - With `setItems()` the HTML input holds the index of the item - `getValue()` still returns the item.
   **Find** JS or tests reading the value of such a slider from the DOM (`[name=…]`, `data-slider`). **Report** them.
+- With `setRange()` the value is in a hidden input (`from,to`, items of `setItems()`), the `data-slider` config is gone.
 - Without a value the handle starts at the minimum (the browser would put it to the middle).
-- `setPrepend()` / `setAppend()` / `setIcon()` are not rendered for a single value slider. **Find** them on `addSlider()`
+- `setPrepend()` / `setAppend()` / `setIcon()` are not rendered for a slider. **Find** them on `addSlider()`
   and **report**.
 - Ticks: every step, or ten parts when there are more than 20 steps; with more than 11 ticks only the ends are labeled.
 
-## Step 7 – icon names
+## Step 7 – controls driven by JavaScript
+
+The native control stays in the page as the source of truth (hidden), the visible part is created by `assets/js`:
+
+| Control | Visible part |
+| --- | --- |
+| `addWhisperer()`, `addMultiWhisperer()`, selects with `setSearch()` / `setImageArray()` | Bootstrap combobox next to the hidden select (id of the select + `-combobox`) |
+| `addAutocomplete()` | the input itself with a native `<datalist>` (browser look of the suggestions) |
+| `addDate()->setPicker()` (new) | text input with the html id, the native date input gets the id + `-value` |
+| `addChips()`, slider with `setRange()` | see the README |
+
+- **Find** application JS working with the old widgets: `\.chosen\(|chosen:updated|\.select2\(|autocomplete\(|rSlider|data-slider|form-control-chosen|\.whisperer\(|dependentSelectBox`.
+  **Change:** a select changed by the application fires `mis:options` to rebuild its combobox
+  (`select.dispatchEvent(new CustomEvent('mis:options'))`); **report** the rest.
+- AJAX callbacks (`setOnChangeCallback()`, …) show a spinner next to the label instead of an icon in the input group.
+- Currency of `addCurrency()` is shown inside the input (`setSuffix()`), unless the input has `setAppend()`.
+
+## Step 8 – duplicator, manual rendering, configuration
+
+- **Duplicator** is a card with one bordered item per container (`data-mis-duplicator-item`), the remove button is in
+  the head of the item, add buttons in the footer. **Find:** `setDuplicatorContainerClass\(|setDuplicatorBodyClass\(|setDuplicatorFooterClass\(|setDuplicatorButtonWrapClass\(`
+  and CSS targeting `card-accent-primary|duplicator-head|btn-duplicator`. **Report** them - the default classes changed.
+- **Manual templates** (`setRenderManually()`) keep working - `{inputRender}`, `{inputCore}`, `{labelCore}` render the
+  Bootstrap 6 markup. **Find** templates combining `{labelCore}` + `{inputCore}` in own markup. **Change:** put
+  `data-mis-field` on the element around them, so client side validation shows the errors there (README, Manual rendering).
+  `{inputCore list:key}` renders the whole item of a list including its label - **report** templates adding `{labelCore list:key}` next to it.
+- **Configuration.** **Find:** `CurrencyInput::setDefaultCurrency\(|CurrencyInput::setDefaultDecimals\(|ModulIS\\Extension\\FormExtension`.
+  **Change** (optional): register `ModulIS\Form\DI\FormExtension` and move them to its configuration (README, Installation).
+
+## Step 9 – icon names
 
 Only when switching to Bootstrap Icons (step 1). **Find:** `setIcon\(|setIconArray\(` and group / form icons.
 **Change:** Font Awesome names to [Bootstrap Icons](https://icons.getbootstrap.com/) names (e.g. `user` → `person`,
 `times` → `x-lg`, `undo` → `arrow-counterclockwise`). `save` on submit buttons is translated by the icon renderer.
 
-## Step 8 – CSS and tests
+## Step 10 – CSS and tests
 
 - **Find** application CSS targeting the old markup: `\.mis-|\.form-check|\.form-select|\.checkbox-switch|\.section-header|\.btn-default|\.chosen-`
   inside forms. **Report** the rules.

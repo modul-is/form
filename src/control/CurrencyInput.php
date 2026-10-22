@@ -81,9 +81,12 @@ class CurrencyInput extends \Nette\Forms\Controls\TextInput implements InputFiel
 	{
 		$currency = $this->getCurrency();
 
-		if($currency && !$this->getAppend())
+		/**
+		 * Currency is shown inside the input unless the input group is used for something else
+		 */
+		if($currency && $this->getSuffix() === null && $this->getAppend() === null)
 		{
-			$this->setAppend($currency);
+			$this->setSuffix($currency);
 		}
 
 		$input = parent::getControl();

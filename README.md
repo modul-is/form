@@ -22,16 +22,49 @@ class MyForm extends \ModulIS\Form\FormComponent
 
 Then you just add inputs to form, create `MyForm` component and all done!
 
+A form works without `FormComponent` too - `Form` renders itself (`{control form}`, `echo $form`).
+
+### Installation
+
+```
+composer require modul-is/form
+npm install @modul-is/form bootstrap@6.0.0-alpha.1 @floating-ui/dom nette-forms
+```
+
+Register the DI extension (optional - it registers the Latte tags and sets the defaults of the whole application):
+
+```neon
+extensions:
+	modulisForm: ModulIS\Form\DI\FormExtension
+
+modulisForm:
+	icons: bootstrap         # bootstrap (default), fontawesome, or a class implementing IconRenderer
+	iconStyle: fa-solid      # Font Awesome style
+	currency: CZK
+	currencyDecimals: 0
+	latte: true              # tags {inputRender}, {inputCore}, {labelCore}
+```
+
+and the client side (see [Client side](#client-side)):
+
+```js
+import { initForms } from '@modul-is/form';
+import '@modul-is/form/css';
+
+initForms(naja);
+```
+
 ## Inputs
 Form supports all of the default Nette inputs and adds new ones
 
 + `addLink()` - Button with link (eg. reset, go back buttons)
-+ `addWhisperer()` - select box with whisperer which filters options
++ `addWhisperer()` - select with a search ([combobox](https://getbootstrap.com/docs/6.0/forms/combobox/)) - items are filtered on the client, or loaded from the server by `setOnSearchChangeCallback()`; `setOnSelectCallback()` tells the server about every selection
 + `addMultiWhisperer()` - same as whisperer, more options can be selected
++ `addAutocomplete()` - text input with suggestions (native `<datalist>`), static items or loaded from the server by `setOnSearchChangeCallback()`
 + `addDuplicator()` - container which can be duplicated many times
 + `addDependentSelect()` - select box that can change options via ajax based on change of another input(s) 
 + `addDependentMultiSelect()` - same as DependentSelect, but more options can be selected 
-+ `addDate()` - date input, can limit min and max date
++ `addDate()` - date input, can limit min and max date; `setPicker()` uses the Bootstrap [datepicker](https://getbootstrap.com/docs/6.0/forms/datepicker/) instead of the browser one (limits are taken from `Min` / `Max` rules)
 + `addSlider()` - range slider, single value or an interval
 + `addMonth()` - month as a `Y-m` string
 + `addColor()` - color in `#rrggbb` format
@@ -126,6 +159,9 @@ Some inputs provide new features
 + `setPlaintext()` - read-only value shown as plain text (Text inputs)
 + `setSuggestions()` - values offered while typing, the user may type anything else ([datalist](https://getbootstrap.com/docs/6.0/forms/form-control/#datalists)) (Text input)
 + `setStrengthMeter()` - [password strength](https://getbootstrap.com/docs/6.0/forms/password-strength/) meter under the input - informative only, add rules for real requirements (Password)
++ `setPrefix()`, `setSuffix()` - text inside the input before / after the value ([form adorn](https://getbootstrap.com/docs/6.0/forms/form-adorn/)), e.g. a unit (Text inputs)
++ `setSearch()` - select rendered as a [combobox](https://getbootstrap.com/docs/6.0/forms/combobox/) with a search, `setNoResultMessage()` (Select boxes)
++ `setImageArray()` - images of the items (item key => URL), rendered as a combobox (Select box)
 
 ### Icons
 
@@ -221,13 +257,24 @@ naja.formsHandler.netteForms = netteForms;
 initForms(naja);   // before naja.initialize()
 ```
 
-`initForms()` shows client side validation errors next to the inputs (instead of the alert of nette-forms) and initializes
-tooltips - also in snippets redrawn by naja.
+`initForms()` mounts everything the forms need - also in snippets redrawn by naja:
+
++ client side validation errors next to the inputs (instead of the alert of nette-forms), rules of `FormValidator`
++ comboboxes (whisperer, selects with `setSearch()` or `setImageArray()`), dependent selects, autocomplete
++ AJAX callbacks of inputs and buttons (`setOnChangeCallback()`, `setOnFocusOutCallback()`)
++ currency input, quick copy, slider with two handles, chips, OTP, password strength, datepicker, tooltips
+
+AJAX requests go through naja when it is passed to `initForms()` (snippets redrawn by the callbacks are updated),
+otherwise through `fetch`. Peer dependencies are `bootstrap` (with `@floating-ui/dom`, and `vanilla-calendar-pro` for the
+datepicker - loaded only when a form uses it) and `nette-forms`; `naja` is optional.
+
+Controls enhanced on the client (combobox, chips, datepicker, slider with two handles) keep the native control as the
+source of truth - it is only hidden, carries the name and Nette rules and the form works with it as with any other input.
 
 ### Manual rendering
 
-With `setRenderManually()` the form is rendered from your own template. Register the Latte extension
-first:
+With `setRenderManually()` the form is rendered from your own template (`MyForm.php` -> `myForm.latte`), which contains
+the `{form}` tag and the `form` snippet itself. The Latte tags are registered by the DI extension, or by hand:
 
 ```neon
 latte:
@@ -261,6 +308,19 @@ Use `{inputCore}` + `{labelCore}` when you need to build the markup around the i
 </div>
 ```
 
+Client side validation shows errors in the element with `data-mis-field` - when you build the markup yourself, put it on
+the element around the label and the control (otherwise the errors of that input are shown by the alert of nette-forms):
+
+```latte
+<div class="form-field" data-mis-field>
+	{labelCore note class => 'form-label' /}
+	{inputCore note}
+</div>
+```
+
+`{inputCore list:key}` renders one item of a radio / checkbox list including its label.
+See `demo/app/Form/manualForm.latte`.
+
 `{inputRender}` honours everything set on the input - `setRenderType()`, `setTemplate()`,
 `setAutoRenderSkip()` (renders nothing) - and works for `addDuplicator()` containers as well.
 It takes no `:part`; use `{inputCore}` for that.
@@ -269,8 +329,8 @@ It takes no `:part`; use `{inputCore}` for that.
 
 `addSlider()` with a single value renders a native [range](https://getbootstrap.com/docs/6.0/forms/range/) - the scale is a
 `<datalist>` with tick marks (every step, or ten parts when there are more than 20 steps). With `setItems()` the input holds
-the index of the item, `getValue()` returns the item. Two handles (`setRange()`) are still rendered by
-[rSlider.js](https://github.com/slawomir-zaziablo/range-slider).
+the index of the item, `getValue()` returns the item. Two handles (`setRange()`) are two range inputs
+over each other, the value is carried by a hidden input.
 The value domain is either a continuous range or an explicit list of values.
 
 ```php
@@ -314,9 +374,17 @@ Appearance of the slider itself:
 `setMinMax()` and `setItems()` are mutually exclusive - the later call wins. Calling neither
 throws when the input is rendered.
 
-### Duplicator example
+### Duplicator
 
-Every `addSubmit()` inside the `DuplicatorContainer` is a remove button and is rendered in the head of the row, regardless of its name.
+Duplicator is rendered as a card with one bordered item per container, the buttons of `addSubmit()` on the duplicator
+add new items in the card footer. Every `addSubmit()` inside the `DuplicatorContainer` is a remove button and is rendered
+in the head of the item, regardless of its name. Adding and removing goes through the server (AJAX with `setAjax()`).
+
++ `setTitle()`, `setColor()` - title and theme color of the card header
++ `setDuplicatorContainerClass()`, `setDuplicatorBodyClass()`, `setDuplicatorFooterClass()`, `setDuplicatorItemClass()`,
+  `setDuplicatorButtonWrapClass()` - classes of the parts
++ `setTitle()` on a `DuplicatorContainer` - title in the head of the item
+
 ```
 $duplicator = $form->addDuplicator('duplicator', function(\ModulIS\Form\DuplicatorContainer $container)
 {
@@ -334,7 +402,8 @@ See [UPGRADE.md](UPGRADE.md) - it lists every change needed to migrate a form, i
 
 ## Development
 
-The repository contains a demo application with a form showing every input (`demo/`).
+The repository contains a demo application (`demo/`) with a form showing every input and a form rendered manually
+by Latte tags, configured by the DI extension.
 
 ```
 composer install
@@ -353,7 +422,11 @@ Checks:
 ```
 vendor/bin/tester -C tests/
 vendor/bin/phpstan analyse
+vendor/modul-is/coding-standard/ecs check src --preset php84
 ```
 
 Render tests compare HTML with fixtures - after an intended change of the markup regenerate them with
 `BLESS_FIXTURES=1 vendor/bin/tester -C tests/` and review the diff before committing.
+
+Publishing the client side to npm: `package.json` is marked `private` until the first release - set the version, remove
+`private` and run `npm publish` (scope `@modul-is` has to exist on npm; `publishConfig.access` is `public`).

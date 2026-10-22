@@ -48,3 +48,24 @@ jobs:
     - name: Run Coding Standard
       continue-on-error: true
       run: vendor/modul-is/coding-standard/ecs check src --preset php84
+
+  assets:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 24
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build demo assets (all modules of assets/js have to resolve)
+      run: npm run demo:build
+
+    - name: Check npm package contents
+      run: npm pack --dry-run

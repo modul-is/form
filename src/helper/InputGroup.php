@@ -16,6 +16,10 @@ trait InputGroup
 
 	protected ?string $icon = null;
 
+	protected ?string $prefix = null;
+
+	protected ?string $suffix = null;
+
 
 	/**
 	 * Input group text before the control - HTML
@@ -79,5 +83,39 @@ trait InputGroup
 	public function getIcon(): ?string
 	{
 		return $this->icon;
+	}
+
+
+	/**
+	 * Text inside the input before the value (e.g. $) - Bootstrap form-adorn
+	 */
+	public function setPrefix(?string $text): static
+	{
+		$this->prefix = $text;
+
+		return $this;
+	}
+
+
+	public function getPrefix(): ?string
+	{
+		return $this->prefix === '' ? null : $this->prefix;
+	}
+
+
+	/**
+	 * Text inside the input after the value (e.g. a unit) - Bootstrap form-adorn
+	 */
+	public function setSuffix(?string $text): static
+	{
+		$this->suffix = $text;
+
+		return $this;
+	}
+
+
+	public function getSuffix(): ?string
+	{
+		return $this->suffix === '' ? null : $this->suffix;
 	}
 }

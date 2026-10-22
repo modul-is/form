@@ -22,6 +22,11 @@
 		"tracy/tracy": "^2.10",
 		"latte/latte": "^3.1"
     },
+    "suggest":
+    {
+		"latte/latte": "for manual rendering ({inputRender}, {inputCore}, {labelCore}) and setTemplate()",
+		"nette/di": "for configuration by ModulIS\\Form\\DI\\FormExtension"
+    },
     "autoload":
     {
 		"classmap": ["src/"]

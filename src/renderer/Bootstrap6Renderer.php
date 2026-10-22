@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace ModulIS\Form\Renderer;
 
 use ModulIS\Form\Container;
-use ModulIS\Form\ControlGroup;
 use ModulIS\Form\Control;
+use ModulIS\Form\ControlGroup;
 use ModulIS\Form\DuplicatorContainer;
 use ModulIS\Form\Enum\RenderListType;
 use ModulIS\Form\Enum\RenderType;
@@ -44,7 +44,10 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 	private IconRenderer $iconRenderer;
 
 
-	public function __construct(?IconRenderer $iconRenderer = null)
+	public function __construct
+	(
+		?IconRenderer $iconRenderer = null
+	)
 	{
 		$this->iconRenderer = $iconRenderer ?? self::getDefaultIconRenderer();
 	}
@@ -272,6 +275,124 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 		}
 
 		return $wrap->addHtml($card);
+	}
+
+
+	/**
+	 * Card with one bordered item per duplicated container - remove button in the head of the item, buttons for adding
+	 * new items in the footer
+	 */
+	public function renderDuplicator(Control\Duplicator $duplicator): Html
+	{
+		$card = Html::el('div')
+			->id('container' . ucfirst((string) $duplicator->getName()))
+			->class($duplicator->getDuplicatorContainerClass() ?? ($duplicator->getColor() ? 'card card-subtle' : 'card'));
+
+		if($duplicator->getTitle() !== null)
+		{
+			$card->addHtml(
+				Html::el('div')
+					->class($this->joinClass('card-header', $duplicator->getColor() ? $this->themeClass($duplicator->getColor()) : null))
+					->addText($duplicator->getTitle())
+			);
+		}
+
+		$body = Html::el('div')
+			->class($duplicator->getDuplicatorBodyClass() ?? 'card-body vstack gap-3');
+
+		foreach($duplicator->getContainers() as $container)
+		{
+			$body->addHtml($this->createDuplicatorItem($duplicator, $container));
+		}
+
+		if($body->count())
+		{
+			$card->addHtml($body);
+		}
+
+		$createButtons = '';
+
+		foreach($duplicator->getButtons() as $button)
+		{
+			if($button instanceof Control\DuplicatorCreateSubmit)
+			{
+				$createButtons .= $button->render();
+			}
+		}
+
+		if($createButtons !== '')
+		{
+			$card->addHtml(
+				Html::el('div')
+					->class($duplicator->getDuplicatorFooterClass() ?? 'card-footer d-flex flex-wrap gap-2')
+					->addHtml($createButtons)
+			);
+		}
+
+		$wrap = Html::el('div')
+			->class('col-12')
+			->addHtml($card);
+
+		if($duplicator->getOption('id'))
+		{
+			$wrap->id($duplicator->getOption('id'));
+		}
+
+		return $wrap;
+	}
+
+
+	protected function createDuplicatorItem(Control\Duplicator $duplicator, Container $container): Html
+	{
+		$head = Html::el('div')
+			->class('d-flex align-items-center gap-2 mb-3');
+
+		if($container->getTitle() !== null)
+		{
+			$head->addHtml(Html::el('span')->class('fw-semibold')->addText($container->getTitle()));
+		}
+
+		$inputs = '';
+		$buttons = '';
+
+		foreach($container->getComponents() as $component)
+		{
+			\assert($component instanceof Control\Renderable);
+
+			/**
+			 * Remove button is rendered in the head of the item regardless of its name
+			 */
+			if($component instanceof Control\DuplicatorRemoveSubmit)
+			{
+				$head->addHtml($component->render());
+			}
+			elseif($component instanceof Control\Button || $component instanceof Control\Link)
+			{
+				$buttons .= $component->render();
+			}
+			else
+			{
+				$inputs .= $component->render();
+			}
+		}
+
+		if($buttons !== '')
+		{
+			$inputs .= Html::el('div')
+				->class($duplicator->getDuplicatorButtonWrapClass() ?? 'col-12 d-flex flex-wrap gap-2')
+				->addHtml($buttons);
+		}
+
+		$item = Html::el('div')
+			->class($duplicator->getDuplicatorItemClass() ?? 'border rounded-3 p-3')
+			->setAttribute('data-mis-duplicator-item', true);
+
+		if($head->count())
+		{
+			$item->addHtml($head);
+		}
+
+		return $item->addHtml($this->createRow($inputs));
 	}
 
 
@@ -727,10 +848,10 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 
 		$class = match(true)
 		{
-			$control instanceof Control\SliderInput && !$control->isRange() => 'form-range-input',
+			$control instanceof Control\SliderInput => $control->isRange() ? null : 'form-range-input',
 			$control instanceof Control\OtpInput => 'otp-input',
 			$control->isPlaintext() => 'form-control-plaintext',
-			$control->getIcon() !== null => 'form-ghost',
+			$this->isAdorned($control) => 'form-ghost',
 			$control instanceof Control\ColorPicker => 'form-control form-control-color',
 			default => 'form-control'
 		};
@@ -742,7 +863,7 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 			$input->setAttribute('readonly', true);
 		}
 
-		if($control instanceof Control\TextInput && $control->getSuggestions())
+		if($control instanceof Control\HasSuggestions && ($control->getSuggestions() || $control->hasRemoteSuggestions()))
 		{
 			$input->setAttribute('list', $control->getHtmlId() . '-suggestions');
 
@@ -752,9 +873,36 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 			}
 		}
 
+		/**
+		 * Select with a search or images is enhanced to a combobox by assets/js/combobox.js
+		 */
+		if(($control instanceof Control\SelectBox || $control instanceof Control\MultiSelectBox) && $control->isCombobox())
+		{
+			$input->setAttribute('data-mis-combobox', Json::encode($control->getComboboxOptions()));
+		}
+
 		$this->addSignals($control, $input);
 
 		return $input;
+	}
+
+
+	/**
+	 * Icon or text inside the control (form-adorn)
+	 */
+	protected function isAdorned(Control\InputField $control): bool
+	{
+		return $this->canAdorn($control)
+			&& ($control->getIcon() !== null || $control->getPrefix() !== null || $control->getSuffix() !== null);
+	}
+
+
+	/**
+	 * Combobox is a form control of its own - its adornments go to the input group
+	 */
+	protected function canAdorn(Control\InputField $control): bool
+	{
+		return !(($control instanceof Control\SelectBox || $control instanceof Control\MultiSelectBox) && $control->isCombobox());
 	}
 
 
@@ -764,7 +912,7 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 	 */
 	protected function createInputBlock(BaseControl&Control\InputField $control, Html $input, ?Html $floatingLabel = null): Html
 	{
-		if($control instanceof Control\SliderInput && !$control->isRange())
+		if($control instanceof Control\SliderInput)
 		{
 			return $this->createRangeBlock($control, $input);
 		}
@@ -774,6 +922,28 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 			return $this->createOtpBlock($control, $input);
 		}
 
+		/**
+		 * Datepicker runs on a text input in front of the hidden native one
+		 */
+		if($control instanceof Control\DateTimeInput && $control->isPicker())
+		{
+			$native = $input;
+			$input = $this->createDatepickerInput($control, $native);
+
+			return Html::el()
+				->addHtml($this->createTextBlock($control, $input, $floatingLabel))
+				->addHtml($native);
+		}
+
+		return $this->createTextBlock($control, $input, $floatingLabel);
+	}
+
+
+	/**
+	 * Text-like control with adornments inside (icon, prefix, suffix), input group around and floating label
+	 */
+	protected function createTextBlock(BaseControl&Control\InputField $control, Html $input, ?Html $floatingLabel = null): Html
+	{
 		$floating = $floatingLabel !== null;
 		$icon = $control->getIcon();
 
@@ -788,11 +958,17 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 			}
 
 			/**
-			 * Icon inside a floating field is not supported by Bootstrap - it goes to the input group instead
+			 * Adornments inside a floating field are not supported by Bootstrap - they go to the input group instead
 			 */
-			if($icon !== null)
+			if($this->isAdorned($control))
 			{
-				$input->class(str_replace('form-ghost', 'form-control', (string) $input->getAttribute('class')));
+				/**
+				 * appendAttribute() keeps the classes as an array (class => true)
+				 */
+				$class = $input->getAttribute('class');
+				$classes = is_array($class) ? array_keys(array_filter($class)) : explode(' ', (string) $class);
+
+				$input->class(str_replace('form-ghost', 'form-control', implode(' ', $classes)));
 			}
 
 			$core = Html::el('div')
@@ -800,12 +976,27 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 				->addHtml($floatingLabel)
 				->addHtml($input);
 		}
-		elseif($icon !== null)
+		elseif($this->isAdorned($control))
 		{
 			$core = Html::el('label')
-				->class('form-control form-adorn')
-				->addHtml(Html::el('span')->class('form-adorn-icon')->setAttribute('aria-hidden', 'true')->addHtml($this->icon($icon)))
-				->addHtml($input);
+				->class('form-control form-adorn');
+
+			if($icon !== null)
+			{
+				$core->addHtml(Html::el('span')->class('form-adorn-icon')->setAttribute('aria-hidden', 'true')->addHtml($this->icon($icon)));
+			}
+
+			if($control->getPrefix() !== null)
+			{
+				$core->addHtml(Html::el('span')->class('form-adorn-text')->setAttribute('aria-hidden', 'true')->setText($control->translate($control->getPrefix())));
+			}
+
+			$core->addHtml($input);
+
+			if($control->getSuffix() !== null)
+			{
+				$core->addHtml(Html::el('span')->class('form-adorn-text')->setAttribute('aria-hidden', 'true')->setText($control->translate($control->getSuffix())));
+			}
 		}
 		else
 		{
@@ -815,9 +1006,24 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 		$before = [];
 		$after = [];
 
-		if($floating && $icon !== null)
+		/**
+		 * Adornments which cannot be inside the control go to the input group
+		 */
+		$grouped = $floating || !$this->canAdorn($control);
+
+		if($grouped && $icon !== null)
 		{
 			$before[] = Html::el('span')->class('input-group-text')->addHtml($this->icon($icon));
+		}
+
+		if($grouped && $control->getPrefix() !== null)
+		{
+			$before[] = Html::el('span')->class('input-group-text')->setText($control->translate($control->getPrefix()));
+		}
+
+		if($grouped && $control->getSuffix() !== null)
+		{
+			$after[] = Html::el('span')->class('input-group-text')->setText($control->translate($control->getSuffix()));
 		}
 
 		if($control->getPrepend() !== null)
@@ -873,7 +1079,10 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 	 */
 	protected function addInputExtras(BaseControl&Control\InputField $control, Html $block): Html
 	{
-		if(!$control instanceof Control\TextInput || (!$control->getSuggestions() && !$control->hasStrengthMeter()))
+		$suggestions = $control instanceof Control\HasSuggestions && ($control->getSuggestions() || $control->hasRemoteSuggestions());
+		$strength = $control instanceof Control\TextInput && $control->hasStrengthMeter();
+
+		if(!$suggestions && !$strength)
 		{
 			return $block;
 		}
@@ -881,20 +1090,23 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 		$fragment = Html::el()
 			->addHtml($block);
 
-		if($control->getSuggestions())
+		if($control instanceof Control\HasSuggestions && $suggestions)
 		{
 			$datalist = Html::el('datalist')
 				->id($control->getHtmlId() . '-suggestions');
 
-			foreach($control->getSuggestions() as $suggestion)
+			/**
+			 * The key goes along for the select callback of autocomplete
+			 */
+			foreach($control->getSuggestions() as $key => $suggestion)
 			{
-				$datalist->addHtml(Html::el('option')->value($suggestion));
+				$datalist->addHtml(Html::el('option')->value($suggestion)->setAttribute('data-key', $key));
 			}
 
 			$fragment->addHtml($datalist);
 		}
 
-		if($control->hasStrengthMeter())
+		if($control instanceof Control\TextInput && $strength)
 		{
 			$meter = Html::el('div')
 				->class('strength')
@@ -934,9 +1146,44 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 	{
 		$range = Html::el('div')
 			->class('form-range')
-			->setAttribute('data-bs-bubble', $control->hasBubble() ? true : null)
-			->setAttribute('data-mis-range-items', $control->getItems() ? Json::encode($control->getBubbleItems()) : null)
-			->addHtml($input);
+			->setAttribute('data-mis-range-items', $control->getItems() ? Json::encode($control->getBubbleItems()) : null);
+
+		if($control->isRange())
+		{
+			/**
+			 * Two handles (assets/js/rangeDual.js) - their values are written to the hidden input, ticks belong to the first one
+			 */
+			$bounds = $control->getBounds();
+			$labels = [$control->translate('Od'), $control->translate('Do')];
+			$parts = [];
+
+			foreach(['from', 'to'] as $index => $part)
+			{
+				$parts[] = Html::el('input')
+					->type('range')
+					->class($this->joinClass('form-range-input', $control->getValidationClass()))
+					->setAttribute('min', $bounds['min'])
+					->setAttribute('max', $bounds['max'])
+					->setAttribute('step', $bounds['step'])
+					->setAttribute('value', $control->getRangePositions()[$index])
+					->setAttribute('list', $index === 0 && $control->getTicks() ? $control->getTicksId() : null)
+					->setAttribute('disabled', $control->isDisabled())
+					->setAttribute('aria-label', $control->translate($control->getCaption()) . ' – ' . $labels[$index])
+					->setAttribute('data-mis-range-part', $part);
+			}
+
+			$range->appendAttribute('class', 'mis-range-dual')
+				->setAttribute('data-mis-range-dual', true)
+				->setAttribute('data-mis-bubble', $control->hasBubble() ? true : null)
+				->addHtml($parts[0])
+				->addHtml($parts[1])
+				->addHtml($input);
+		}
+		else
+		{
+			$range->setAttribute('data-bs-bubble', $control->hasBubble() ? true : null)
+				->addHtml($input);
+		}
 
 		$ticks = $control->getTicks();
 
@@ -956,6 +1203,35 @@ class Bootstrap6Renderer implements \Nette\Forms\FormRenderer
 		return Html::el()
 			->addHtml($range)
 			->addHtml($datalist);
+	}
+
+
+	/**
+	 * Read-only text input with Bootstrap datepicker (assets/js/datepicker.js) - it takes over the html id, so the label
+	 * points to it, the native input stays hidden and keeps the value in Y-m-d
+	 */
+	protected function createDatepickerInput(Control\DateTimeInput $control, Html $native): Html
+	{
+		$value = $native->getAttribute('value');
+		$nativeId = $control->getHtmlId() . '-value';
+
+		$native->id($nativeId)
+			->setAttribute('hidden', true);
+
+		return Html::el('input')
+			->type('text')
+			->id($control->getHtmlId())
+			->class($native->getAttribute('class'))
+			->placeholder($native->getAttribute('placeholder') ?? $control->translate('Vyberte datum'))
+			->setAttribute('readonly', true)
+			->setAttribute('autocomplete', 'off')
+			->setAttribute('disabled', $control->isDisabled())
+			->setAttribute('data-bs-toggle', 'datepicker')
+			->setAttribute('data-bs-date-min', $control->getPickerLimit(Form::Min))
+			->setAttribute('data-bs-date-max', $control->getPickerLimit(Form::Max))
+			->setAttribute('data-bs-selected-dates', $value ? Json::encode([$value]) : null)
+			->setAttribute('data-mis-datepicker', $nativeId)
+			->setAttribute('data-mis-proxy', true);
 	}
 
 

@@ -48,8 +48,7 @@ trait ControlFactories
 	public function addAutocomplete(string $name, null|string|Stringable $label = null, ?int $maxLength = null, ?array $itemArray = []): Control\AutocompleteInput
 	{
 		return $this[$name] = new Control\AutocompleteInput($label, $maxLength, items: $itemArray ?? [])
-			->setHtmlAttribute('autocomplete', 'off')
-			->setClass('autocomplete-input');
+			->setHtmlAttribute('autocomplete', 'off');
 	}
 
 
@@ -309,7 +308,6 @@ trait ControlFactories
 	public function addWhisperer(string $name, null|string|Stringable $label = null, array $items = []): Control\Whisperer
 	{
 		return $this[$name] = new Control\Whisperer($label, isset($items['']) ? $items : ['' => ''] + $items)
-			->setClass('form-control-chosen')
 			->setHtmlAttribute('data-placeholder', 'Vyberte')
 			->checkDefaultValue(false);
 	}
@@ -321,7 +319,6 @@ trait ControlFactories
 	public function addMultiWhisperer(string $name, null|string|Stringable $label = null, array $items = []): Control\MultiWhisperer
 	{
 		return $this[$name] = new Control\MultiWhisperer($label, isset($items['']) ? $items : ['' => ''] + $items)
-			->setClass('form-control-chosen')
 			->setHtmlAttribute('data-placeholder', 'Vyberte');
 	}
 

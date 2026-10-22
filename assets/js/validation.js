@@ -58,6 +58,11 @@ function showError(field, element, messages)
  */
 export function installValidation(netteForms)
 {
+	// client side of the rules in ModulIS\Form\FormValidator
+	netteForms.validators.ModulISFormFormValidator_greater = (element, arg, value) => Number.parseFloat(value) > Number.parseFloat(arg);
+	netteForms.validators.ModulISFormFormValidator_less = (element, arg, value) => Number.parseFloat(value) < Number.parseFloat(arg);
+	netteForms.validators.ModulISFormFormValidator_sameLength = (element, arg, value) => String(arg).length === String(value).length;
+
 	const showFormErrors = netteForms.showFormErrors.bind(netteForms);
 
 	netteForms.showFormErrors = function(form, errors)

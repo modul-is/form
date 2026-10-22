@@ -4,10 +4,19 @@
  * Forms are mounted on page load and after every snippet update (naja).
  */
 import netteForms from 'nette-forms';
+import { installCurrency } from './currency.js';
 import { mount } from './registry.js';
+import { useNaja } from './request.js';
 import { installValidation } from './validation.js';
+import './autocomplete.js';
 import './bootstrap.js';
 import './chips.js';
+import './combobox.js';
+import './datepicker.js';
+import './dependent.js';
+import './quickCopy.js';
+import './rangeDual.js';
+import './signals.js';
 
 export { register, mount } from './registry.js';
 
@@ -24,14 +33,19 @@ export const najaExtension = {
 
 
 /**
- * Mounts all forms once the document is ready. Pass naja to mount also forms in redrawn snippets
- * (call it before naja.initialize()).
+ * Mounts all forms once the document is ready. Pass naja to mount also forms in redrawn snippets and to send
+ * AJAX requests of the form through it (call it before naja.initialize()).
  */
 export function initForms(naja = null)
 {
 	installValidation(netteForms);
+	installCurrency(netteForms);
 
-	naja?.registerExtension(najaExtension);
+	if (naja)
+	{
+		useNaja(naja);
+		naja.registerExtension(najaExtension);
+	}
 
 	if (document.readyState === 'loading')
 	{

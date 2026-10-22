@@ -6,13 +6,11 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 use Nette\Utils\Html;
-use Nette\Utils\Json;
 
 /**
- * Posuvnik - jedna hodnota je nativni range input (Bootstrap form-range), rezim setRange() zatim
- * vykresluje rSlider.js (https://github.com/slawomir-zaziablo/range-slider).
+ * Posuvnik - nativni range input (Bootstrap form-range), v rezimu setRange() dva pres sebe.
  *
- * V rezimu setRange() se hodnota do inputu zapisuje jako dve cisla oddelena carkou - proto getValue()
+ * V rezimu setRange() se hodnota zapisuje do skryteho inputu jako dve hodnoty oddelene carkou - proto getValue()
  * vraci pole az kdyz je zapnuty rozsah.
  */
 class SliderInput extends \Nette\Forms\Controls\TextInput implements InputField, Signalable, \Nette\Application\UI\SignalReceiver
@@ -175,7 +173,6 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements InputField,
 
 	/**
 	 * Single value is a native range input, with setItems() its value is the index of the item.
-	 * Two handles (setRange()) are rendered by rSlider.js for now.
 	 */
 	public function getControl(): Html
 	{
@@ -186,12 +183,12 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements InputField,
 
 		$input = parent::getControl();
 
+		/**
+		 * Two handles - the value "from,to" is carried by a hidden input, the handles are created by the renderer
+		 */
 		if($this->range)
 		{
-			$input->setAttribute('data-slider', Json::encode($this->getSliderConfig()));
-			$input->setAttribute('readonly', true);
-
-			return $input;
+			return $input->type('hidden');
 		}
 
 		$value = $this->getValue();
@@ -298,6 +295,49 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements InputField,
 	}
 
 
+	/**
+	 * Attributes of the range inputs - with setItems() the inputs move over indexes of the items
+	 *
+	 * @return array{min: int|float, max: int|float, step: int|float}
+	 */
+	public function getBounds(): array
+	{
+		if($this->items)
+		{
+			return ['min' => 0, 'max' => count($this->items) - 1, 'step' => 1];
+		}
+
+		\assert($this->min !== null && $this->max !== null);
+
+		return ['min' => $this->min, 'max' => $this->max, 'step' => $this->step];
+	}
+
+
+	/**
+	 * Positions of the two handles - numbers, or indexes of the items with setItems()
+	 *
+	 * @return array{int|float, int|float}
+	 */
+	public function getRangePositions(): array
+	{
+		$value = $this->getValue();
+		$parts = is_array($value) && count($value) === 2 ? array_values($value) : null;
+
+		if($this->items)
+		{
+			return $parts
+				? [$this->getItemIndex($parts[0]) ?? 0, $this->getItemIndex($parts[1]) ?? count($this->items) - 1]
+				: [0, count($this->items) - 1];
+		}
+
+		\assert($this->min !== null && $this->max !== null);
+
+		return $parts && is_numeric($parts[0]) && is_numeric($parts[1])
+			? [+$parts[0], +$parts[1]]
+			: [$this->min, $this->max];
+	}
+
+
 	private function getItemIndex(mixed $value): ?int
 	{
 		foreach($this->items as $index => $item)
@@ -309,38 +349,6 @@ class SliderInput extends \Nette\Forms\Controls\TextInput implements InputField,
 		}
 
 		return null;
-	}
-
-
-	/**
-	 * Konfigurace predavana do rSlider.js - klice odpovidaji jeho options.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getSliderConfig(): array
-	{
-		$config = [
-			'values' => $this->items ?: ['min' => $this->min, 'max' => $this->max],
-			'range' => $this->range,
-			'scale' => $this->scale,
-			'labels' => $this->labels,
-			'tooltip' => $this->sliderTooltip,
-			'disabled' => $this->isDisabled()
-		];
-
-		if(!$this->items)
-		{
-			$config['step'] = $this->step;
-		}
-
-		$value = $this->getValue();
-
-		if($value !== null)
-		{
-			$config['set'] = is_array($value) ? $value : [$value];
-		}
-
-		return $config;
 	}
 
 

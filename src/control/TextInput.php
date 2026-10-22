@@ -6,7 +6,7 @@ namespace ModulIS\Form\Control;
 
 use ModulIS\Form\Helper;
 
-class TextInput extends \Nette\Forms\Controls\TextInput implements InputField, Signalable, Helper\QuickCopyable, \Nette\Application\UI\SignalReceiver
+class TextInput extends \Nette\Forms\Controls\TextInput implements InputField, HasSuggestions, Signalable, Helper\QuickCopyable, \Nette\Application\UI\SignalReceiver
 {
 	use Helper\Field;
 	use Helper\Suggestions;

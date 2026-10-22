@@ -10,12 +10,12 @@ use ModulIS\Form\Container;
 use ModulIS\Form\DuplicatorContainer;
 use ModulIS\Form\Helper\AutoRenderSkip;
 use ModulIS\Form\Helper\Template;
+use ModulIS\Form\Renderer\Bootstrap6Renderer;
 use Nette;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
-use Nette\Utils\Strings;
 use Stringable;
 use Traversable;
 use function assert;
@@ -55,6 +55,8 @@ class Duplicator extends Container implements Renderable
 	private ?string $duplicatorFooterClass = null;
 
 	private ?string $duplicatorContainerClass = null;
+
+	private ?string $duplicatorItemClass = null;
 
 
 	/**
@@ -106,6 +108,10 @@ class Duplicator extends Container implements Renderable
 	}
 
 
+	/**
+	 * Card with one bordered item per container - markup is created by the renderer of the form.
+	 * A custom template (setTemplate()) gets the duplicator itself as parameters.
+	 */
 	public function render(): Html|string
 	{
 		if($this->templatePath)
@@ -113,129 +119,12 @@ class Duplicator extends Container implements Renderable
 			return (new Engine)->renderToString($this->templatePath, $this);
 		}
 
-		if($this->autoRenderSkip === true || $this->getOption('hide'))
+		if($this->autoRenderSkip || $this->getOption('hide'))
 		{
 			return '';
 		}
 
-		if($this->getTitle())
-		{
-			$header = Html::el('div')
-				->class('card-header')
-				->addText($this->getTitle());
-		}
-		else
-		{
-			$header = null;
-		}
-
-		$body = null;
-		$bodyRow = null;
-		$buttonWrapClass = $this->buttonWrapClass ?? 'col-12 d-flex flex-wrap gap-2';
-		$duplicatorBodyClass = $this->duplicatorBodyClass ?? 'card-body vstack gap-4';
-		$duplicatorFooterClass = $this->duplicatorFooterClass ?? 'card-footer';
-		$duplicatorContainerClass = $this->duplicatorContainerClass ?? 'card';
-
-		foreach($this->getComponents() as $key => $container)
-		{
-			assert($container instanceof DuplicatorContainer || $container instanceof DuplicatorCreateSubmit);
-			if($container instanceof DuplicatorCreateSubmit)
-			{
-				continue;
-			}
-
-			$inputs = '';
-			$buttons = null;
-
-			$containerHeader = Html::el('div')
-				->class('col-12 d-flex align-items-center gap-2');
-
-			if($container->getTitle())
-			{
-				$title = Html::el('div')
-					->class('fw-semibold')
-					->addText($container->getTitle());
-
-				$containerHeader->addHtml($title);
-			}
-
-			foreach($container->getComponents() as $duplicatorInput)
-			{
-				assert($duplicatorInput instanceof Renderable);
-
-				/**
-				 * Remove button is rendered in the container head regardless of its name
-				 */
-				if($duplicatorInput instanceof DuplicatorRemoveSubmit)
-				{
-					$containerHeader->addHtml($duplicatorInput->render());
-
-					continue;
-				}
-
-				if($duplicatorInput instanceof Button || $duplicatorInput instanceof Link)
-				{
-					$buttons .= $duplicatorInput->render();
-				}
-				else
-				{
-					$inputs .= $duplicatorInput->render();
-				}
-			}
-
-			if($buttons)
-			{
-				$inputs .= Html::el('div')
-					->class($buttonWrapClass)
-					->addHtml($buttons);
-			}
-
-			$bodyRow .= Html::el('div')
-				->class('row g-3')
-				->addHtml($containerHeader)
-				->addHtml($inputs);
-		}
-
-		if($bodyRow)
-		{
-			$body = Html::el('div')
-				->class($duplicatorBodyClass)
-				->addHtml($bodyRow);
-		}
-
-		$footer = null;
-		$createButton = null;
-
-		foreach($this->getButtons() as $button)
-		{
-			if($button instanceof DuplicatorCreateSubmit)
-			{
-				$createButton .= $button->render();
-			}
-		}
-
-		if($createButton)
-		{
-			$footer = Html::el('div')
-				->class($duplicatorFooterClass)
-				->addHtml($createButton);
-		}
-
-		$card = Html::el('div')
-			->id('container' . Strings::capitalize((string) $this->getName()))
-			->class($duplicatorContainerClass)
-			->addHtml($header . $body . $footer);
-
-		$wrap = Html::el('div')
-			->class('col-12')
-			->addHtml($card);
-
-		if($this->getOption('id'))
-		{
-			$wrap->id($this->getOption('id'));
-		}
-
-		return $wrap;
+		return Bootstrap6Renderer::of($this)->renderDuplicator($this);
 	}
 
 
@@ -574,10 +463,54 @@ class Duplicator extends Container implements Renderable
 	}
 
 
+	/**
+	 * Class of the card around the whole duplicator (default card)
+	 */
 	public function setDuplicatorContainerClass(string $class): static
 	{
 		$this->duplicatorContainerClass = $class;
 
 		return $this;
+	}
+
+
+	/**
+	 * Class of every item - one duplicated container (default bordered box)
+	 */
+	public function setDuplicatorItemClass(string $class): static
+	{
+		$this->duplicatorItemClass = $class;
+
+		return $this;
+	}
+
+
+	public function getDuplicatorButtonWrapClass(): ?string
+	{
+		return $this->buttonWrapClass;
+	}
+
+
+	public function getDuplicatorBodyClass(): ?string
+	{
+		return $this->duplicatorBodyClass;
+	}
+
+
+	public function getDuplicatorFooterClass(): ?string
+	{
+		return $this->duplicatorFooterClass;
+	}
+
+
+	public function getDuplicatorContainerClass(): ?string
+	{
+		return $this->duplicatorContainerClass;
+	}
+
+
+	public function getDuplicatorItemClass(): ?string
+	{
+		return $this->duplicatorItemClass;
 	}
 }

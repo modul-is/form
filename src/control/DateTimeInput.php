@@ -11,6 +11,67 @@ class DateTimeInput extends \Nette\Forms\Controls\DateTimeControl implements Inp
 	use Helper\Field;
 	use Helper\Signals;
 
+	private bool $picker = false;
+
+	private int $dateType;
+
+
+	/**
+	 * @param self::TypeDate|self::TypeTime|self::TypeDateTime $type
+	 */
+	public function __construct
+	(
+		string|\Stringable|null $label = null,
+		int $type = self::TypeDate,
+		bool $withSeconds = false
+	)
+	{
+		parent::__construct($label, $type, $withSeconds);
+
+		$this->dateType = $type;
+	}
+
+
+	/**
+	 * Bootstrap datepicker instead of the native date input of the browser (date only, not time)
+	 */
+	public function setPicker(bool $picker = true): static
+	{
+		if($picker && $this->dateType !== self::TypeDate)
+		{
+			throw new \Nette\InvalidStateException('Datepicker is available for addDate() only, input "' . $this->getName() . '".');
+		}
+
+		$this->picker = $picker;
+
+		return $this;
+	}
+
+
+	public function isPicker(): bool
+	{
+		return $this->picker;
+	}
+
+
+	/**
+	 * Limit of the Min / Max rule in Y-m-d for the datepicker
+	 */
+	public function getPickerLimit(string $validator): ?string
+	{
+		foreach($this->getRules() as $rule)
+		{
+			if($rule->validator === $validator && $rule->control === $this && !$rule->isNegative && $rule->arg !== null && $rule->arg !== '')
+			{
+				$limit = $this->convertToValueFormat($rule->arg);
+
+				return $limit instanceof \DateTimeInterface ? $limit->format('Y-m-d') : (is_string($limit) ? substr($limit, 0, 10) : null);
+			}
+		}
+
+		return null;
+	}
+
 
 	/**
 	 * Nette compares Min/Max arguments with getValue() as they are, so e.g. addDate() (value 'Y-m-d')

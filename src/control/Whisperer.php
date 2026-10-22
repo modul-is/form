@@ -8,6 +8,9 @@ use ModulIS\Form\Dial\SignalDial;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 
+/**
+ * Select with a search - items are filtered on the client, or loaded from the server with setOnSearchChangeCallback()
+ */
 class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceiver
 {
 	use \ModulIS\Form\Helper\Dependent;
@@ -18,9 +21,22 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	/** @var ?\Closure(mixed, array<string, mixed>): array<int|string, mixed> */
 	private ?\Closure $onSearchChangeCallback = null;
 
-	private ?string $noResultMessage = null;
-
 	private int|string|null $dividerValue = null;
+
+
+	/**
+	 * @param ?array<mixed> $items
+	 */
+	public function __construct
+	(
+		string|\Stringable|null $label = null,
+		?array $items = null
+	)
+	{
+		parent::__construct($label, $items);
+
+		$this->setSearch();
+	}
 
 
 	/**
@@ -105,7 +121,7 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 			}
 
 			/**
-			 * Empty option (needed by chosen for deselect) is added by whisperer.js
+			 * Selected options are kept by combobox.js, the found items are added to them
 			 */
 			$data = call_user_func_array($this->onSearchChangeCallback, [$presenter->getParameter('param'), $parentArray]);
 
@@ -220,11 +236,6 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 			$this->addSignalsToInput($control);
 		}
 
-		if($this->noResultMessage !== null)
-		{
-			$control->attrs['no-result-message'] = $this->translate($this->noResultMessage);
-		}
-
 		if($control->getAttribute('data-placeholder'))
 		{
 			$control->setAttribute('data-placeholder', $this->translate($control->getAttribute('data-placeholder')));
@@ -258,8 +269,8 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 
 
 	/**
-	 * Whisperer already has its own empty item for chosen - a Nette prompt would add a second one
-	 * with key "\t" (submitted as the value), so the prompt is shown as chosen placeholder instead
+	 * Whisperer already has its own empty item (deselects the value) - a Nette prompt would add a second one
+	 * with key "\t" (submitted as the value), so the prompt is shown as the placeholder of the combobox instead
 	 */
 	public function setPrompt(string|\Stringable|false $prompt): static
 	{
@@ -272,21 +283,13 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	}
 
 
-	public function setNoResultMessage(?string $noResultMessage = null): static
-	{
-		$this->noResultMessage = $noResultMessage;
-
-		return $this;
-	}
-
-
 	private function addDividerToOption(Html $control): Html
 	{
 		$value = htmlspecialchars((string) $this->dividerValue, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
 		$optionString = preg_replace(
 			'~<option(?=[^>]*\svalue="' . preg_quote($value, '~') . '")~',
-			'<option class="border-bottom"',
+			'<option data-mis-divider',
 			(string) $control->getChildren()[0],
 			1
 		);

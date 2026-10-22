@@ -11,4 +11,5 @@ class MultiSelectBox extends \Nette\Forms\Controls\MultiSelectBox implements Inp
 {
 	use Helper\Field;
 	use Helper\Signals;
+	use Helper\Combobox;
 }
