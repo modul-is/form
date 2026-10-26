@@ -28,7 +28,8 @@ trait Validation
 
 
 	/**
-	 * is-invalid / is-valid once the form (or the control alone, see setSubmitted()) was submitted
+	 * is-invalid once the form (or the control alone, see setSubmitted()) was submitted, is-valid only for filled
+	 * controls with setValidationSuccessMessage() - otherwise a returned form would mark all valid fields green
 	 */
 	public function getValidationClass(): ?string
 	{
@@ -44,7 +45,7 @@ trait Validation
 			return 'is-invalid';
 		}
 
-		return $this->isFilled() ? 'is-valid' : null;
+		return $this->validationSuccessMessage !== null && $this->isFilled() ? 'is-valid' : null;
 	}
 
 

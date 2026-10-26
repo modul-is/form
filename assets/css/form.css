@@ -104,4 +104,44 @@
 		cursor: help;
 		color: var(--bs-fg-3, currentcolor);
 	}
+
+	/*
+	 * Floating label is a flex container - spaces between the caption, the required mark and the tooltip
+	 * would collapse ("Text*"), the gap keeps them apart
+	 */
+	.form-floating > label
+	{
+		gap: 0.25em;
+	}
+
+	/*
+	 * Big lists (setRenderBig()) - Bootstrap draws the card of a checked item only, unchecked items looked like plain text.
+	 * All items have the border, the checked one is highlighted by the primary color, validation colors the border
+	 * of the card instead of the whole label.
+	 */
+	.form-field-card
+	{
+		border-color: var(--bs-border-color);
+	}
+
+	.form-field-card:has(:checked)
+	{
+		border-color: var(--bs-primary-border);
+	}
+
+	.form-field-card:has(.is-invalid)
+	{
+		border-color: var(--bs-danger-border);
+	}
+
+	.form-field-card:has(.is-valid)
+	{
+		border-color: var(--bs-success-border);
+	}
+
+	/* .form-field raises the specificity to the one of the Bootstrap validation rule (.form-field:has(.check.is-invalid) label) */
+	.form-field.form-field-card:has(.is-invalid, .is-valid) label
+	{
+		color: inherit;
+	}
 }
