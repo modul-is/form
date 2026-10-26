@@ -28,6 +28,15 @@
 		border-color: var(--bs-theme-border, var(--bs-border-color));
 	}
 
+	/*
+	 * Value bubble reuses the tooltip markup and so the z-index of tooltips - it is part of the page, not a floating layer,
+	 * with that z-index it was drawn over the sticky header and its menus (profile menu)
+	 */
+	.form-range-bubble.tooltip
+	{
+		z-index: 1;
+	}
+
 	/* value bubble is positioned above the slider - it would cover the label */
 	.form-range[data-bs-bubble]
 	{
