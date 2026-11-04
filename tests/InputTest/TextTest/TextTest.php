@@ -103,6 +103,58 @@ class TextTest extends TestCase
 	}
 
 
+	public function testRenderFormFloatingTooltip()
+	{
+		$form = $this->getForm();
+
+		$form->setRenderFloating();
+
+		$form->addText('text', 'Text')
+			->setTooltip('Tooltip');
+
+		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingTooltip.latte'));
+
+		Assert::same($html, $form->getComponent('text')->render()->__toString());
+	}
+
+
+	/**
+	 * Floating nastavený jen na inputu – tooltip musí být v labelu stejně jako u floating formuláře,
+	 * jinak se v .form-floating vykreslí mimo input
+	 */
+	public function testRenderInputFloatingTooltip()
+	{
+		$form = $this->getForm();
+
+		$form->addText('text', 'Text')
+			->setRenderFloating()
+			->setTooltip('Tooltip');
+
+		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/floatingTooltip.latte'));
+
+		Assert::same($html, $form->getComponent('text')->render()->__toString());
+	}
+
+
+	/**
+	 * Floating formulář, ale input ho má vypnutý – tooltip patří za label jako u běžného renderu
+	 */
+	public function testRenderFormFloatingInputDisableTooltip()
+	{
+		$form = $this->getForm();
+
+		$form->setRenderFloating();
+
+		$form->addText('text', 'Text')
+			->setRenderFloating(false)
+			->setTooltip('Tooltip');
+
+		$html = str_replace(["\t", "\n", "\r"], '', file_get_contents(__DIR__ . '/tooltip.latte'));
+
+		Assert::same($html, $form->getComponent('text')->render()->__toString());
+	}
+
+
 	public function testRenderOptionId()
 	{
 		$form = $this->getForm();

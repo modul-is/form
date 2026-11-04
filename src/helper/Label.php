@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace ModulIS\Form\Helper;
 
 use Kravcik\LatteFontAwesomeIcon\Extension;
+use ModulIS\Form\Control\FloatingRenderable;
 use ModulIS\Form\Form;
 use Nette\Utils\Html;
 use function assert;
@@ -30,7 +31,10 @@ trait Label
 		$form = $this->getForm();
 		assert($form instanceof Form);
 
-		if($form->getRenderFloating() === true)
+		// Stejné rozhodnutí jako v RenderBasic::render() – floating může být nastavený i jen na inputu
+		$isFloating = $this instanceof FloatingRenderable && ($this->getRenderFloating() ?? $form->getRenderFloating());
+
+		if($isFloating === true)
 		{
 			$label->addHtml(' ');
 			if($this->isRequired())
