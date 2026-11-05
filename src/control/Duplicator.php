@@ -395,7 +395,6 @@ class Duplicator extends Container implements Renderable
 
 			$post = Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, null);
 
-			/** @phpstan-ignore-next-line */
 			$this->httpPost = $post;
 		}
 
