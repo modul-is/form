@@ -65,6 +65,12 @@ Form supports all of the default Nette inputs and adds new ones
 + `addDuplicator()` - container which can be duplicated many times
 + `addDependentSelect()` - select box that can change options via ajax based on change of another input(s) 
 + `addDependentMultiSelect()` - same as DependentSelect, but more options can be selected 
+
+A submitted value of a whisperer or a dependent select has to be one of its items (for a dependent select the items
+of the submitted parents), like for a Nette select box. Any other value (a forged request, a stale page) is dropped –
+`getValue()` returns `null` (`[]` for a multiselect) and the input gets the error `Please select a valid option.`
+(`Nette\Forms\Validator::$messages[SelectBox::Valid]`). The only exception is a whisperer with `setOnSearchChangeCallback()`:
+its items are not known on the server, so the application has to check the value itself.
 + `addDate()` - date input, can limit min and max date; `setPicker()` uses the Bootstrap [datepicker](https://getbootstrap.com/docs/6.0/forms/datepicker/) instead of the browser one (limits are taken from `Min` / `Max` rules)
 + `addSlider()` - range slider, single value or an interval
 + `addMonth()` - month as a `Y-m` string

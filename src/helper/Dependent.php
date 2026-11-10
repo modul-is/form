@@ -105,6 +105,11 @@ trait Dependent
 	{
 		$this->tryLoadItems();
 
+		if(!$this->isSubmittedValueOffered())
+		{
+			return null;
+		}
+
 		if(!in_array($this->tempValue, [null, '', []], true))
 		{
 			return $this->tempValue;
@@ -125,12 +130,70 @@ trait Dependent
 	{
 		parent::setItems($items, $useKeys);
 
-		if(!in_array($this->tempValue, [null, '', []], true))
+		if(!in_array($this->tempValue, [null, '', []], true) && $this->isSubmittedValueOffered())
 		{
 			parent::setValue($this->tempValue);
 		}
 
 		return $this;
+	}
+
+
+	public function validate(): void
+	{
+		parent::validate();
+
+		$this->validateOffered();
+	}
+
+
+	private function validateOffered(): void
+	{
+		if($this->dependentCallback !== null)
+		{
+			$this->tryLoadItems();
+		}
+
+		if(!$this->isDisabled() && !$this->isSubmittedValueOffered())
+		{
+			$this->addError(\Nette\Forms\Validator::$messages[\Nette\Forms\Controls\SelectBox::Valid]);
+		}
+	}
+
+
+	/**
+	 * Submitted value has to be one of the items (for a dependent select the items of the submitted parents) -
+	 * a forged request or a stale page can send anything, such a value is dropped and reported by validate()
+	 */
+	private function isSubmittedValueOffered(): bool
+	{
+		$form = $this->getForm(false);
+
+		if($form === null || !$form->isAnchored() || !$form->isSubmitted())
+		{
+			return true;
+		}
+
+		/**
+		 * Items of a dependent select are not loaded while a parent is invalid - the form fails on the parent
+		 */
+		foreach($this->parents as $parent)
+		{
+			if($parent->hasErrors())
+			{
+				return true;
+			}
+		}
+
+		foreach((array) $this->getHttpData(\Nette\Forms\Form::DataText) as $value)
+		{
+			if($value !== '' && !array_key_exists($value, $this->getItems()))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 

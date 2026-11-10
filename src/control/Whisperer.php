@@ -176,6 +176,14 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 			$this->tryLoadItems();
 		}
 
+		/**
+		 * Items found by the AJAX search are unknown on the server - the application has to check such a value
+		 */
+		if($this->onSearchChangeCallback === null && !$this->isSubmittedValueOffered())
+		{
+			return null;
+		}
+
 		if(!in_array($this->tempValue, [null, '', []], true))
 		{
 			return $this->tempValue;
@@ -254,6 +262,11 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 	public function validate(): void
 	{
 		parent::validate();
+
+		if($this->onSearchChangeCallback === null)
+		{
+			$this->validateOffered();
+		}
 
 		foreach($this->getRules() as $rule)
 		{

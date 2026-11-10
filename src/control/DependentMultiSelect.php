@@ -45,6 +45,15 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	{
 		parent::loadHttpData();
 
+		/**
+		 * A submitted form loads the data as soon as the control is attached, before setDependentCallback() -
+		 * the items are then loaded by tryLoadItems()
+		 */
+		if($this->dependentCallback === null)
+		{
+			return;
+		}
+
 		$parentsValues = [];
 
 		foreach($this->parents as $parent)
@@ -64,6 +73,11 @@ class DependentMultiSelect extends \Nette\Forms\Controls\MultiSelectBox implemen
 	public function getValue(): array
 	{
 		$this->tryLoadItems();
+
+		if(!$this->isSubmittedValueOffered())
+		{
+			return [];
+		}
 
 		if(is_array($this->tempValue) && $this->tempValue !== [])
 		{
