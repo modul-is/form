@@ -142,6 +142,58 @@ class OfferedValueTest extends TestCase
 	}
 
 
+	/**
+	 * Prekresleny formular (chyba validace) polozku z AJAX hledani nezna - vykresli ji z odeslane hodnoty a popisku
+	 */
+	public function testWhispererSearchRendersSubmittedOption(): void
+	{
+		$form = $this->submit(['client' => '3', 'client-label' => 'Three <b>']);
+		$whisperer = $form->addWhisperer('client', 'Client', [])
+			->setOnSearchChangeCallback(fn(string $query): array => []);
+
+		Assert::contains('<option value="3" selected>Three &lt;b&gt;</option>', (string) $whisperer->getControl());
+	}
+
+
+	public function testWhispererSearchRendersSubmittedOptionInContainer(): void
+	{
+		$form = $this->submit(['person' => ['client' => '3', 'client-label' => 'Three']]);
+		$whisperer = $form->addContainer('person')->addWhisperer('client', 'Client', [])
+			->setOnSearchChangeCallback(fn(string $query): array => []);
+
+		Assert::contains('<option value="3" selected>Three</option>', (string) $whisperer->getControl());
+	}
+
+
+	/**
+	 * Bez popisku (formular odeslany bez combobox.js) se zobrazi aspon hodnota
+	 */
+	public function testWhispererSearchRendersSubmittedOptionWithoutLabel(): void
+	{
+		$form = $this->submit(['client' => '3']);
+		$whisperer = $form->addWhisperer('client', 'Client', [])
+			->setOnSearchChangeCallback(fn(string $query): array => []);
+
+		Assert::contains('<option value="3" selected>3</option>', (string) $whisperer->getControl());
+	}
+
+
+	/**
+	 * Polozka, kterou server zna, se nepridava podruhe a popisek z pozadavku se nepouzije
+	 */
+	public function testWhispererSearchKnownItemIsNotDuplicated(): void
+	{
+		$form = $this->submit(['client' => '1', 'client-label' => 'Forged']);
+		$whisperer = $form->addWhisperer('client', 'Client', [1 => 'One'])
+			->setOnSearchChangeCallback(fn(string $query): array => []);
+
+		$html = (string) $whisperer->getControl();
+
+		Assert::same(1, substr_count($html, 'value="1"'));
+		Assert::notContains('Forged', $html);
+	}
+
+
 	public function testDependentOffered(): void
 	{
 		$form = $this->submit(['parent' => 'a', 'dependent' => 'a2']);

@@ -210,6 +210,8 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 			$control = $this->addDividerToOption($control);
 		}
 
+		$this->addSearchedOption($control);
+
 		$presenter = $this->lookup(Presenter::class);
 
 		if($this->parents)
@@ -250,6 +252,42 @@ class Whisperer extends SelectBox implements \Nette\Application\UI\SignalReceive
 		}
 
 		return $control;
+	}
+
+
+	/**
+	 * Item found by the AJAX search is not among the items of the server, so a redrawn form (validation error)
+	 * would lose it - the option is rendered again from the submitted value and its label sent by combobox.js
+	 */
+	private function addSearchedOption(Html $control): void
+	{
+		$form = $this->getForm(false);
+
+		if($this->onSearchChangeCallback === null || $form === null || !$form->isAnchored() || !$form->isSubmitted())
+		{
+			return;
+		}
+
+		$value = $this->getValue();
+
+		if(!is_scalar($value) || $value === '' || array_key_exists($value, $this->getItems()))
+		{
+			return;
+		}
+
+		$label = $form->getHttpData(\Nette\Forms\Form::DataLine, self::getLabelHtmlName($this->getHtmlName()));
+
+		$control->addHtml(Html::el('option', ['value' => (string) $value, 'selected' => true])
+			->setText(is_string($label) && $label !== '' ? $label : (string) $value));
+	}
+
+
+	/**
+	 * Name of the hidden input with the label of the selected item (client[id] => client[id-label])
+	 */
+	public static function getLabelHtmlName(string $htmlName): string
+	{
+		return str_ends_with($htmlName, ']') ? substr($htmlName, 0, -1) . '-label]' : $htmlName . '-label';
 	}
 
 

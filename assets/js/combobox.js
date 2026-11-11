@@ -17,6 +17,28 @@ const Caret = '<svg class="combobox-caret" xmlns="http://www.w3.org/2000/svg" wi
 const SearchDelay = 400;
 
 
+function isEmptyOption(option)
+{
+	return option.value === '' && option.text === '';
+}
+
+
+function setSelected(item, selected)
+{
+	item.classList.toggle('selected', selected);
+	item.setAttribute('aria-selected', String(selected));
+}
+
+
+/**
+ * Name of the hidden input with the label of the selected item (client[id] => client[id-label]), see Whisperer::getLabelHtmlName()
+ */
+function getLabelName(name)
+{
+	return name.endsWith(']') ? `${name.slice(0, -1)}-label]` : `${name}-label`;
+}
+
+
 function createItem(option, config)
 {
 	const item = document.createElement('button');
@@ -25,9 +47,10 @@ function createItem(option, config)
 	item.className = 'menu-item';
 	item.dataset.bsValue = option.value;
 	item.setAttribute('role', 'option');
-	item.setAttribute('aria-selected', String(option.selected));
-	item.classList.toggle('selected', option.selected);
 	item.disabled = option.disabled;
+
+	// the empty option only deselects the value - it is never highlighted as the selected item
+	setSelected(item, option.selected && !isEmptyOption(option));
 
 	if (option.dataset.misImage)
 	{
@@ -43,7 +66,7 @@ function createItem(option, config)
 	const label = document.createElement('span');
 
 	// the empty option of a single select deselects the value - shown as the placeholder
-	if (option.value === '' && option.text === '')
+	if (isEmptyOption(option))
 	{
 		label.textContent = config.placeholder ?? '';
 		label.className = 'fg-3';
@@ -163,6 +186,9 @@ function enableRemoteSearch(select, menu, config, refresh)
 					select.replaceChildren(...kept, ...found);
 					refresh();
 
+					// the rebuilt menu lost the filter of the combobox - the item which deselects the value does not match the query
+					menu.querySelectorAll(':scope > .menu-item[data-bs-value=""]').forEach((item) => item.style.display = 'none');
+
 					noResults.textContent = config.noResults;
 					noResults.classList.toggle('d-none', found.length > 0);
 				})
@@ -248,6 +274,32 @@ register('select[data-mis-combobox]', (select) =>
 
 	updateDisplay(select, toggle, config);
 
+	// items of a remote search are not known on the server - the label of the selected one is submitted with the form,
+	// so the server can render the option again when it redraws the form (validation error)
+	let labelInput = null;
+
+	const syncLabel = () =>
+	{
+		if (!select.dataset.whisperer || select.multiple)
+		{
+			return;
+		}
+
+		if (!labelInput)
+		{
+			labelInput = document.createElement('input');
+			labelInput.type = 'hidden';
+			labelInput.name = getLabelName(select.name);
+			labelInput.setAttribute('data-mis-whisperer-label', '');
+			select.before(labelInput);
+		}
+
+		labelInput.value = select.value === '' ? '' : (select.selectedOptions[0]?.text ?? '');
+		labelInput.disabled = select.disabled || select.value === '';
+	};
+
+	syncLabel();
+
 	toggle.addEventListener('change.bs.combobox', (event) =>
 	{
 		const values = [event.value].flat().map(String);
@@ -257,7 +309,11 @@ register('select[data-mis-combobox]', (select) =>
 			option.selected = values.includes(option.value);
 		}
 
+		// the combobox highlights the clicked item - the one which deselects the value stays plain
+		menu.querySelectorAll(':scope > .menu-item[data-bs-value=""]').forEach((item) => setSelected(item, false));
+
 		updateDisplay(select, toggle, config);
+		syncLabel();
 		select.dispatchEvent(new Event('change', { bubbles: true }));
 
 		if (select.dataset.whispererOnselect)

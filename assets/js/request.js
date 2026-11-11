@@ -51,15 +51,17 @@ export function request(method, url, data = {}, options = {})
 
 
 /**
- * Form values as a query string - the format the PHP side parses (Helper\FormData), files are left out
+ * Form values as a query string - the format the PHP side parses (Helper\FormData), files are left out,
+ * so are the labels of whisperers (combobox.js) - they are not values of the form
  */
 export function serializeForm(form)
 {
 	const params = new URLSearchParams;
+	const labels = new Set([...form.querySelectorAll('[data-mis-whisperer-label]')].map((input) => input.name));
 
 	for (const [key, value] of new FormData(form))
 	{
-		if (typeof value === 'string')
+		if (typeof value === 'string' && !labels.has(key))
 		{
 			params.append(key, value);
 		}

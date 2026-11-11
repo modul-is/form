@@ -70,7 +70,10 @@ A submitted value of a whisperer or a dependent select has to be one of its item
 of the submitted parents), like for a Nette select box. Any other value (a forged request, a stale page) is dropped –
 `getValue()` returns `null` (`[]` for a multiselect) and the input gets the error `Please select a valid option.`
 (`Nette\Forms\Validator::$messages[SelectBox::Valid]`). The only exception is a whisperer with `setOnSearchChangeCallback()`:
-its items are not known on the server, so the application has to check the value itself.
+its items are not known on the server, so the application has to check the value itself. When the form is redrawn
+(a validation error), the selected item is rendered again from the submitted value and its label, which the combobox
+sends in a hidden input `<name>-label` – the label is only displayed, it is not a value of the form. A default value
+(editing a record) still has to be among the items passed to `addWhisperer()`.
 + `addDate()` - date input, can limit min and max date; `setPicker()` uses the Bootstrap [datepicker](https://getbootstrap.com/docs/6.0/forms/datepicker/) instead of the browser one (limits are taken from `Min` / `Max` rules)
 + `addSlider()` - range slider, single value or an interval
 + `addMonth()` - month as a `Y-m` string
